@@ -4,8 +4,9 @@ import Link from 'next/link';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Trending Topics - Free Crypto News',
-  description: 'See what\'s trending in crypto news right now. Real-time analysis of the hottest topics.',
+  title: 'Trending Topics - Crypto Data Aggregator',
+  description:
+    "See what's trending in crypto news right now. Real-time analysis of the hottest topics.",
 };
 
 // Force dynamic rendering to avoid self-referential API call during build
@@ -20,9 +21,12 @@ interface TrendingTopic {
 
 async function getTrending(): Promise<{ trending: TrendingTopic[]; articlesAnalyzed: number }> {
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL || 'https://free-crypto-news.vercel.app'}/api/trending?limit=20`, {
-      next: { revalidate: 300 },
-    });
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_BASE_URL || 'https://crypto-data-aggregator.vercel.app'}/api/trending?limit=20`,
+      {
+        next: { revalidate: 300 },
+      }
+    );
     if (!res.ok) throw new Error('Failed to fetch');
     return res.json();
   } catch {
@@ -48,7 +52,8 @@ export default async function TrendingPage() {
           <div className="mb-8">
             <h1 className="text-4xl font-bold mb-2">🔥 Trending Topics</h1>
             <p className="text-gray-600">
-              Real-time analysis of what&apos;s hot in crypto news • {data.articlesAnalyzed} articles analyzed
+              Real-time analysis of what&apos;s hot in crypto news • {data.articlesAnalyzed}{' '}
+              articles analyzed
             </p>
           </div>
 
@@ -64,8 +69,11 @@ export default async function TrendingPage() {
                       <span className="text-2xl font-bold text-gray-300">#{index + 1}</span>
                       <h3 className="text-xl font-bold">{topic.topic}</h3>
                     </div>
-                    <span className={`px-2 py-1 rounded-full text-xs font-medium ${sentimentConfig[topic.sentiment].bg} ${sentimentConfig[topic.sentiment].color}`}>
-                      {sentimentConfig[topic.sentiment].emoji} {sentimentConfig[topic.sentiment].label}
+                    <span
+                      className={`px-2 py-1 rounded-full text-xs font-medium ${sentimentConfig[topic.sentiment].bg} ${sentimentConfig[topic.sentiment].color}`}
+                    >
+                      {sentimentConfig[topic.sentiment].emoji}{' '}
+                      {sentimentConfig[topic.sentiment].label}
                     </span>
                   </div>
 
@@ -75,7 +83,9 @@ export default async function TrendingPage() {
 
                   {topic.recentHeadlines.length > 0 && (
                     <div className="space-y-2">
-                      <p className="text-xs text-gray-500 uppercase font-medium">Recent Headlines</p>
+                      <p className="text-xs text-gray-500 uppercase font-medium">
+                        Recent Headlines
+                      </p>
                       {topic.recentHeadlines.slice(0, 3).map((headline, i) => (
                         <p key={i} className="text-sm text-gray-700 line-clamp-2">
                           • {headline}

@@ -1,9 +1,9 @@
 /**
- * Market Data Service for Free Crypto News
+ * Market Data Service for Crypto Data Aggregator
  * Adapted from https://github.com/nirholas/crypto-market-data
- * 
+ *
  * Integrates CoinGecko and DeFiLlama APIs for live market data
- * 
+ *
  * @module market-data
  * @description Comprehensive cryptocurrency market data service with caching,
  * rate limiting, and Edge Runtime compatibility.
@@ -586,21 +586,21 @@ const cache = new Map<string, CacheEntry<unknown>>();
  */
 function getCached<T>(key: string): { data: T; isStale: boolean } | null {
   const cached = cache.get(key) as CacheEntry<T> | undefined;
-  
+
   if (!cached) {
     return null;
   }
-  
+
   const now = Date.now();
   const isExpired = now - cached.timestamp > cached.ttl * 1000;
   const isStale = now - cached.timestamp > cached.staleTimestamp * 1000;
-  
+
   // If completely expired (past stale window), return null
   if (isExpired && now - cached.timestamp > cached.ttl * 2 * 1000) {
     cache.delete(key);
     return null;
   }
-  
+
   return { data: cached.data, isStale };
 }
 
@@ -653,18 +653,18 @@ const MAX_REQUESTS_PER_WINDOW = 25; // Conservative limit for free tier
  */
 function canMakeRequest(): boolean {
   const now = Date.now();
-  
+
   // Check if we're in a retry backoff period
   if (rateLimitState.retryAfter > now) {
     return false;
   }
-  
+
   // Reset window if expired
   if (now - rateLimitState.windowStart > RATE_LIMIT_WINDOW) {
     rateLimitState.requestCount = 0;
     rateLimitState.windowStart = now;
   }
-  
+
   return rateLimitState.requestCount < MAX_REQUESTS_PER_WINDOW;
 }
 
@@ -714,28 +714,28 @@ async function fetchWithTimeout(url: string, timeout = 10000): Promise<Response>
   if (!canMakeRequest()) {
     throw new MarketDataError('Rate limit exceeded. Please try again later.', 429, true);
   }
-  
+
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), timeout);
 
   try {
     recordRequest();
-    
+
     const response = await fetch(url, {
       signal: controller.signal,
       headers: {
-        'Accept': 'application/json',
+        Accept: 'application/json',
         'User-Agent': 'FreeCryptoNews/2.0',
       },
       next: { revalidate: 60 }, // Next.js cache for 60 seconds
     });
-    
+
     // Handle rate limiting from API
     if (response.status === 429) {
       handleRateLimitError(response.headers.get('retry-after') || undefined);
       throw new MarketDataError('Rate limited by CoinGecko API', 429, true);
     }
-    
+
     return response;
   } finally {
     clearTimeout(timeoutId);
@@ -757,7 +757,7 @@ async function fetchWithCache<T>(
 ): Promise<T> {
   // Check cache first
   const cached = getCached<T>(cacheKey);
-  
+
   if (cached) {
     // If data is stale, trigger background refresh
     if (cached.isStale) {
@@ -768,7 +768,7 @@ async function fetchWithCache<T>(
     }
     return cached.data;
   }
-  
+
   // No cache, fetch fresh data
   return fetchAndCache<T>(url, cacheKey, ttl, fallbackValue);
 }
@@ -784,15 +784,12 @@ async function fetchAndCache<T>(
 ): Promise<T> {
   try {
     const response = await fetchWithTimeout(url);
-    
+
     if (!response.ok) {
-      throw new MarketDataError(
-        `API request failed: ${response.statusText}`,
-        response.status
-      );
+      throw new MarketDataError(`API request failed: ${response.statusText}`, response.status);
     }
-    
-    const data = await response.json() as T;
+
+    const data = (await response.json()) as T;
     setCache(cacheKey, data, ttl);
     return data;
   } catch (error) {
@@ -801,12 +798,12 @@ async function fetchAndCache<T>(
     if (cached) {
       return cached.data;
     }
-    
+
     // Return fallback value if provided
     if (fallbackValue !== undefined) {
       return fallbackValue;
     }
-    
+
     throw error;
   }
 }
@@ -828,11 +825,11 @@ export async function getSimplePrices(): Promise<SimplePrices> {
     const response = await fetchWithTimeout(
       `${COINGECKO_BASE}/simple/price?ids=bitcoin,ethereum,solana&vs_currencies=usd&include_24hr_change=true`
     );
-    
+
     if (!response.ok) {
       throw new Error('Failed to fetch prices');
     }
-    
+
     const data = await response.json();
     setCache(cacheKey, data, CACHE_TTL.prices);
     return data;
@@ -861,11 +858,11 @@ export async function getTopCoins(limit = 50): Promise<TokenPrice[]> {
     const response = await fetchWithTimeout(
       `${COINGECKO_BASE}/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=${limit}&page=1&sparkline=true&price_change_percentage=7d`
     );
-    
+
     if (!response.ok) {
       throw new Error('Failed to fetch top coins');
     }
-    
+
     const data = await response.json();
     setCache(cacheKey, data, CACHE_TTL.prices);
     return data;
@@ -886,11 +883,11 @@ export async function getTrending(): Promise<TrendingCoin[]> {
 
   try {
     const response = await fetchWithTimeout(`${COINGECKO_BASE}/search/trending`);
-    
+
     if (!response.ok) {
       throw new Error('Failed to fetch trending');
     }
-    
+
     const data = await response.json();
     const trending = data.coins.map((c: { item: TrendingCoin }) => c.item);
     setCache(cacheKey, trending, CACHE_TTL.global);
@@ -912,11 +909,11 @@ export async function getGlobalMarketData(): Promise<GlobalMarketData | null> {
 
   try {
     const response = await fetchWithTimeout(`${COINGECKO_BASE}/global`);
-    
+
     if (!response.ok) {
       throw new Error('Failed to fetch global data');
     }
-    
+
     const data = await response.json();
     setCache(cacheKey, data.data, CACHE_TTL.global);
     return data.data;
@@ -940,11 +937,11 @@ export async function getCoinDetails(coinId: string) {
     const response = await fetchWithTimeout(
       `${COINGECKO_BASE}/coins/${coinId}?localization=false&tickers=false&community_data=false&developer_data=false`
     );
-    
+
     if (!response.ok) {
       throw new Error('Failed to fetch coin details');
     }
-    
+
     const data = await response.json();
     setCache(cacheKey, data, CACHE_TTL.global);
     return data;
@@ -969,11 +966,11 @@ export async function getFearGreedIndex(): Promise<FearGreedIndex | null> {
 
   try {
     const response = await fetchWithTimeout(`${ALTERNATIVE_ME}/fng/`);
-    
+
     if (!response.ok) {
       throw new Error('Failed to fetch fear & greed index');
     }
-    
+
     const data = await response.json();
     const fng = data.data?.[0];
     if (fng) {
@@ -1002,17 +999,17 @@ export async function getTopProtocols(limit = 20): Promise<ProtocolTVL[]> {
 
   try {
     const response = await fetchWithTimeout(`${DEFILLAMA_BASE}/protocols`);
-    
+
     if (!response.ok) {
       throw new Error('Failed to fetch protocols');
     }
-    
+
     const data = await response.json();
     const top = data
       .filter((p: ProtocolTVL) => p.tvl > 0)
       .sort((a: ProtocolTVL, b: ProtocolTVL) => b.tvl - a.tvl)
       .slice(0, limit);
-    
+
     setCache(cacheKey, top, CACHE_TTL.global);
     return top;
   } catch (error) {
@@ -1033,16 +1030,16 @@ export async function getTopChains(limit = 20): Promise<ChainTVL[]> {
 
   try {
     const response = await fetchWithTimeout(`${DEFILLAMA_BASE}/v2/chains`);
-    
+
     if (!response.ok) {
       throw new Error('Failed to fetch chains');
     }
-    
+
     const data = await response.json();
     const top = data
       .sort((a: ChainTVL, b: ChainTVL) => (b.tvl || 0) - (a.tvl || 0))
       .slice(0, limit);
-    
+
     setCache(cacheKey, top, CACHE_TTL.global);
     return top;
   } catch (error) {
@@ -1106,8 +1103,9 @@ export async function getHistoricalPrices(
   const daysParam = days === 'max' ? 'max' : days.toString();
   const intervalParam = interval ? `&interval=${interval}` : '';
   const cacheKey = `historical-${coinId}-${daysParam}-${interval || 'auto'}`;
-  const cacheTTL = typeof days === 'number' ? getHistoricalCacheTTL(days) : CACHE_TTL.historical_90d;
-  
+  const cacheTTL =
+    typeof days === 'number' ? getHistoricalCacheTTL(days) : CACHE_TTL.historical_90d;
+
   const cached = getCached<HistoricalData>(cacheKey);
   if (cached) return cached.data;
 
@@ -1115,11 +1113,11 @@ export async function getHistoricalPrices(
     const response = await fetchWithTimeout(
       `${COINGECKO_BASE}/coins/${coinId}/market_chart?vs_currency=usd&days=${daysParam}${intervalParam}`
     );
-    
+
     if (!response.ok) {
       throw new MarketDataError('Failed to fetch historical prices', response.status);
     }
-    
+
     const data: HistoricalData = await response.json();
     setCache(cacheKey, data, cacheTTL);
     return data;
@@ -1138,13 +1136,13 @@ export async function getHistoricalPrices(
 export async function getOHLC(coinId: string, days: number): Promise<OHLCData[]> {
   // Validate days parameter (CoinGecko only supports specific values)
   const validDays = [1, 7, 14, 30, 90, 180, 365];
-  const normalizedDays = validDays.reduce((prev, curr) => 
+  const normalizedDays = validDays.reduce((prev, curr) =>
     Math.abs(curr - days) < Math.abs(prev - days) ? curr : prev
   );
-  
+
   const cacheKey = `ohlc-${coinId}-${normalizedDays}`;
   const cacheTTL = getHistoricalCacheTTL(normalizedDays);
-  
+
   const cached = getCached<OHLCData[]>(cacheKey);
   if (cached) return cached.data;
 
@@ -1152,11 +1150,11 @@ export async function getOHLC(coinId: string, days: number): Promise<OHLCData[]>
     const response = await fetchWithTimeout(
       `${COINGECKO_BASE}/coins/${coinId}/ohlc?vs_currency=usd&days=${normalizedDays}`
     );
-    
+
     if (!response.ok) {
       throw new MarketDataError('Failed to fetch OHLC data', response.status);
     }
-    
+
     // CoinGecko returns [[timestamp, open, high, low, close], ...]
     const rawData: [number, number, number, number, number][] = await response.json();
     const ohlcData: OHLCData[] = rawData.map(([timestamp, open, high, low, close]) => ({
@@ -1166,7 +1164,7 @@ export async function getOHLC(coinId: string, days: number): Promise<OHLCData[]>
       low,
       close,
     }));
-    
+
     setCache(cacheKey, ohlcData, cacheTTL);
     return ohlcData;
   } catch (error) {
@@ -1186,7 +1184,7 @@ export async function getHistoricalPrice(
   date: string
 ): Promise<HistoricalSnapshot | null> {
   const cacheKey = `historical-snapshot-${coinId}-${date}`;
-  
+
   const cached = getCached<HistoricalSnapshot>(cacheKey);
   if (cached) return cached.data;
 
@@ -1194,11 +1192,11 @@ export async function getHistoricalPrice(
     const response = await fetchWithTimeout(
       `${COINGECKO_BASE}/coins/${coinId}/history?date=${date}&localization=false`
     );
-    
+
     if (!response.ok) {
       throw new MarketDataError('Failed to fetch historical price', response.status);
     }
-    
+
     const data: HistoricalSnapshot = await response.json();
     // Historical snapshots are immutable, cache for a long time
     setCache(cacheKey, data, CACHE_TTL.static);
@@ -1219,12 +1217,9 @@ export async function getHistoricalPrice(
  * @param page - Page number for pagination
  * @returns Ticker data with exchange information
  */
-export async function getCoinTickers(
-  coinId: string,
-  page: number = 1
-): Promise<TickerData> {
+export async function getCoinTickers(coinId: string, page: number = 1): Promise<TickerData> {
   const cacheKey = `tickers-${coinId}-${page}`;
-  
+
   const cached = getCached<TickerData>(cacheKey);
   if (cached) return cached.data;
 
@@ -1232,11 +1227,11 @@ export async function getCoinTickers(
     const response = await fetchWithTimeout(
       `${COINGECKO_BASE}/coins/${coinId}/tickers?page=${page}&include_exchange_logo=true&order=volume_desc`
     );
-    
+
     if (!response.ok) {
       throw new MarketDataError('Failed to fetch coin tickers', response.status);
     }
-    
+
     const data: TickerData = await response.json();
     setCache(cacheKey, data, CACHE_TTL.tickers);
     return data;
@@ -1252,12 +1247,9 @@ export async function getCoinTickers(
  * @param page - Page number
  * @returns Array of exchanges
  */
-export async function getExchanges(
-  perPage: number = 100,
-  page: number = 1
-): Promise<Exchange[]> {
+export async function getExchanges(perPage: number = 100, page: number = 1): Promise<Exchange[]> {
   const cacheKey = `exchanges-${perPage}-${page}`;
-  
+
   const cached = getCached<Exchange[]>(cacheKey);
   if (cached) return cached.data;
 
@@ -1265,11 +1257,11 @@ export async function getExchanges(
     const response = await fetchWithTimeout(
       `${COINGECKO_BASE}/exchanges?per_page=${perPage}&page=${page}`
     );
-    
+
     if (!response.ok) {
       throw new MarketDataError('Failed to fetch exchanges', response.status);
     }
-    
+
     const data: Exchange[] = await response.json();
     setCache(cacheKey, data, CACHE_TTL.static);
     return data;
@@ -1284,23 +1276,19 @@ export async function getExchanges(
  * @param exchangeId - CoinGecko exchange ID
  * @returns Detailed exchange information
  */
-export async function getExchangeDetails(
-  exchangeId: string
-): Promise<ExchangeDetails | null> {
+export async function getExchangeDetails(exchangeId: string): Promise<ExchangeDetails | null> {
   const cacheKey = `exchange-${exchangeId}`;
-  
+
   const cached = getCached<ExchangeDetails>(cacheKey);
   if (cached) return cached.data;
 
   try {
-    const response = await fetchWithTimeout(
-      `${COINGECKO_BASE}/exchanges/${exchangeId}`
-    );
-    
+    const response = await fetchWithTimeout(`${COINGECKO_BASE}/exchanges/${exchangeId}`);
+
     if (!response.ok) {
       throw new MarketDataError('Failed to fetch exchange details', response.status);
     }
-    
+
     const data: ExchangeDetails = await response.json();
     setCache(cacheKey, data, CACHE_TTL.tickers);
     return data;
@@ -1320,19 +1308,17 @@ export async function getExchangeDetails(
  */
 export async function getCategories(): Promise<Category[]> {
   const cacheKey = 'categories';
-  
+
   const cached = getCached<Category[]>(cacheKey);
   if (cached) return cached.data;
 
   try {
-    const response = await fetchWithTimeout(
-      `${COINGECKO_BASE}/coins/categories`
-    );
-    
+    const response = await fetchWithTimeout(`${COINGECKO_BASE}/coins/categories`);
+
     if (!response.ok) {
       throw new MarketDataError('Failed to fetch categories', response.status);
     }
-    
+
     const data: Category[] = await response.json();
     setCache(cacheKey, data, CACHE_TTL.static);
     return data;
@@ -1355,7 +1341,7 @@ export async function getCategoryCoins(
   page: number = 1
 ): Promise<TokenPrice[]> {
   const cacheKey = `category-coins-${categoryId}-${perPage}-${page}`;
-  
+
   const cached = getCached<TokenPrice[]>(cacheKey);
   if (cached) return cached.data;
 
@@ -1363,11 +1349,11 @@ export async function getCategoryCoins(
     const response = await fetchWithTimeout(
       `${COINGECKO_BASE}/coins/markets?vs_currency=usd&category=${encodeURIComponent(categoryId)}&order=market_cap_desc&per_page=${perPage}&page=${page}&sparkline=false`
     );
-    
+
     if (!response.ok) {
       throw new MarketDataError('Failed to fetch category coins', response.status);
     }
-    
+
     const data: TokenPrice[] = await response.json();
     setCache(cacheKey, data, CACHE_TTL.global);
     return data;
@@ -1390,9 +1376,9 @@ export async function searchCoins(query: string): Promise<SearchResult> {
   if (!query || query.length < 2) {
     return { coins: [], exchanges: [], categories: [], nfts: [] };
   }
-  
+
   const cacheKey = `search-${query.toLowerCase()}`;
-  
+
   const cached = getCached<SearchResult>(cacheKey);
   if (cached) return cached.data;
 
@@ -1400,11 +1386,11 @@ export async function searchCoins(query: string): Promise<SearchResult> {
     const response = await fetchWithTimeout(
       `${COINGECKO_BASE}/search?query=${encodeURIComponent(query)}`
     );
-    
+
     if (!response.ok) {
       throw new MarketDataError('Failed to search coins', response.status);
     }
-    
+
     const data: SearchResult = await response.json();
     setCache(cacheKey, data, CACHE_TTL.search);
     return data;
@@ -1423,11 +1409,11 @@ export async function compareCoins(coinIds: string[]): Promise<CompareData> {
   if (coinIds.length === 0) {
     return { coins: [], comparison_date: new Date().toISOString() };
   }
-  
+
   // Limit to 25 coins to avoid API limits
   const limitedIds = coinIds.slice(0, 25);
   const cacheKey = `compare-${limitedIds.sort().join(',')}`;
-  
+
   const cached = getCached<CompareData>(cacheKey);
   if (cached) return cached.data;
 
@@ -1435,11 +1421,11 @@ export async function compareCoins(coinIds: string[]): Promise<CompareData> {
     const response = await fetchWithTimeout(
       `${COINGECKO_BASE}/coins/markets?vs_currency=usd&ids=${limitedIds.join(',')}&order=market_cap_desc&per_page=25&page=1&sparkline=false&price_change_percentage=7d,30d`
     );
-    
+
     if (!response.ok) {
       throw new MarketDataError('Failed to compare coins', response.status);
     }
-    
+
     const rawData = await response.json();
     const coins: CompareCoin[] = rawData.map((coin: Record<string, unknown>) => ({
       id: coin.id as string,
@@ -1451,8 +1437,8 @@ export async function compareCoins(coinIds: string[]): Promise<CompareData> {
       market_cap_rank: coin.market_cap_rank as number,
       total_volume: coin.total_volume as number,
       price_change_percentage_24h: coin.price_change_percentage_24h as number,
-      price_change_percentage_7d: coin.price_change_percentage_7d_in_currency as number || 0,
-      price_change_percentage_30d: coin.price_change_percentage_30d_in_currency as number || 0,
+      price_change_percentage_7d: (coin.price_change_percentage_7d_in_currency as number) || 0,
+      price_change_percentage_30d: (coin.price_change_percentage_30d_in_currency as number) || 0,
       circulating_supply: coin.circulating_supply as number,
       total_supply: coin.total_supply as number | null,
       max_supply: coin.max_supply as number | null,
@@ -1463,12 +1449,12 @@ export async function compareCoins(coinIds: string[]): Promise<CompareData> {
       atl_change_percentage: coin.atl_change_percentage as number,
       atl_date: coin.atl_date as string,
     }));
-    
+
     const result: CompareData = {
       coins,
       comparison_date: new Date().toISOString(),
     };
-    
+
     setCache(cacheKey, result, CACHE_TTL.prices);
     return result;
   } catch (error) {
@@ -1483,19 +1469,17 @@ export async function compareCoins(coinIds: string[]): Promise<CompareData> {
  */
 export async function getCoinsList(): Promise<CoinListItem[]> {
   const cacheKey = 'coins-list';
-  
+
   const cached = getCached<CoinListItem[]>(cacheKey);
   if (cached) return cached.data;
 
   try {
-    const response = await fetchWithTimeout(
-      `${COINGECKO_BASE}/coins/list`
-    );
-    
+    const response = await fetchWithTimeout(`${COINGECKO_BASE}/coins/list`);
+
     if (!response.ok) {
       throw new MarketDataError('Failed to fetch coins list', response.status);
     }
-    
+
     const data: CoinListItem[] = await response.json();
     setCache(cacheKey, data, CACHE_TTL.static);
     return data;
@@ -1514,11 +1498,9 @@ export async function getCoinsList(): Promise<CoinListItem[]> {
  * @param coinId - CoinGecko coin ID
  * @returns Developer data including commits, forks, stars
  */
-export async function getCoinDeveloperData(
-  coinId: string
-): Promise<DeveloperData | null> {
+export async function getCoinDeveloperData(coinId: string): Promise<DeveloperData | null> {
   const cacheKey = `developer-${coinId}`;
-  
+
   const cached = getCached<DeveloperData>(cacheKey);
   if (cached) return cached.data;
 
@@ -1526,11 +1508,11 @@ export async function getCoinDeveloperData(
     const response = await fetchWithTimeout(
       `${COINGECKO_BASE}/coins/${coinId}?localization=false&tickers=false&market_data=false&community_data=false&developer_data=true&sparkline=false`
     );
-    
+
     if (!response.ok) {
       throw new MarketDataError('Failed to fetch developer data', response.status);
     }
-    
+
     const data = await response.json();
     const developerData: DeveloperData = data.developer_data || {
       forks: 0,
@@ -1544,7 +1526,7 @@ export async function getCoinDeveloperData(
       last_4_weeks_commit_activity_series: [],
       code_additions_deletions_4_weeks: { additions: null, deletions: null },
     };
-    
+
     setCache(cacheKey, developerData, CACHE_TTL.social);
     return developerData;
   } catch (error) {
@@ -1558,11 +1540,9 @@ export async function getCoinDeveloperData(
  * @param coinId - CoinGecko coin ID
  * @returns Community data including Twitter, Reddit, Telegram stats
  */
-export async function getCoinCommunityData(
-  coinId: string
-): Promise<CommunityData | null> {
+export async function getCoinCommunityData(coinId: string): Promise<CommunityData | null> {
   const cacheKey = `community-${coinId}`;
-  
+
   const cached = getCached<CommunityData>(cacheKey);
   if (cached) return cached.data;
 
@@ -1570,11 +1550,11 @@ export async function getCoinCommunityData(
     const response = await fetchWithTimeout(
       `${COINGECKO_BASE}/coins/${coinId}?localization=false&tickers=false&market_data=false&community_data=true&developer_data=false&sparkline=false`
     );
-    
+
     if (!response.ok) {
       throw new MarketDataError('Failed to fetch community data', response.status);
     }
-    
+
     const data = await response.json();
     const communityData: CommunityData = data.community_data || {
       twitter_followers: null,
@@ -1585,7 +1565,7 @@ export async function getCoinCommunityData(
       telegram_channel_user_count: null,
       facebook_likes: null,
     };
-    
+
     setCache(cacheKey, communityData, CACHE_TTL.social);
     return communityData;
   } catch (error) {
@@ -1604,19 +1584,17 @@ export async function getCoinCommunityData(
  */
 export async function getGlobalDeFiData(): Promise<GlobalDeFi | null> {
   const cacheKey = 'global-defi';
-  
+
   const cached = getCached<GlobalDeFi>(cacheKey);
   if (cached) return cached.data;
 
   try {
-    const response = await fetchWithTimeout(
-      `${COINGECKO_BASE}/global/decentralized_finance_defi`
-    );
-    
+    const response = await fetchWithTimeout(`${COINGECKO_BASE}/global/decentralized_finance_defi`);
+
     if (!response.ok) {
       throw new MarketDataError('Failed to fetch global DeFi data', response.status);
     }
-    
+
     const { data }: { data: GlobalDeFi } = await response.json();
     setCache(cacheKey, data, CACHE_TTL.global);
     return data;
@@ -1636,19 +1614,17 @@ export async function getGlobalDeFiData(): Promise<GlobalDeFi | null> {
  */
 export async function getDerivativesTickers(): Promise<DerivativeTicker[]> {
   const cacheKey = 'derivatives-tickers';
-  
+
   const cached = getCached<DerivativeTicker[]>(cacheKey);
   if (cached) return cached.data;
 
   try {
-    const response = await fetchWithTimeout(
-      `${COINGECKO_BASE}/derivatives`
-    );
-    
+    const response = await fetchWithTimeout(`${COINGECKO_BASE}/derivatives`);
+
     if (!response.ok) {
       throw new MarketDataError('Failed to fetch derivatives tickers', response.status);
     }
-    
+
     const data: DerivativeTicker[] = await response.json();
     setCache(cacheKey, data, CACHE_TTL.tickers);
     return data;
@@ -1668,9 +1644,13 @@ export function formatPrice(price: number | null | undefined): string {
     return '$' + price.toLocaleString('en-US', { maximumFractionDigits: 0 });
   }
   if (price >= 1) {
-    return '$' + price.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    return (
+      '$' + price.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+    );
   }
-  return '$' + price.toLocaleString('en-US', { minimumFractionDigits: 4, maximumFractionDigits: 6 });
+  return (
+    '$' + price.toLocaleString('en-US', { minimumFractionDigits: 4, maximumFractionDigits: 6 })
+  );
 }
 
 export function formatNumber(num: number | null | undefined): string {

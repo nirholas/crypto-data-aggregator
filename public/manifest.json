@@ -1,7 +1,7 @@
 {
-  "name": "Free Crypto News",
+  "name": "Crypto Data Aggregator",
   "short_name": "CryptoNews",
-  "description": "🆓 100% FREE crypto news API. No API keys. No rate limits. Real-time cryptocurrency news at your fingertips.",
+  "description": "🆓 100% Crypto Data Aggregator API. No API keys. No rate limits. Real-time cryptocurrency news at your fingertips.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#0a0a0a",

@@ -16,6 +16,7 @@ interface PriceBoxProps {
   priceInEth?: number;
   lastUpdated?: string;
   symbol: string;
+  isLive?: boolean;
 }
 
 type Currency = 'usd' | 'btc' | 'eth';
@@ -27,12 +28,14 @@ function formatPrice(price: number, currency: Currency = 'usd'): string {
   if (currency === 'eth') {
     return price.toFixed(6) + ' ETH';
   }
-  
+
   if (price >= 1000) {
     return '$' + price.toLocaleString('en-US', { maximumFractionDigits: 0 });
   }
   if (price >= 1) {
-    return '$' + price.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    return (
+      '$' + price.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+    );
   }
   if (price >= 0.01) {
     return '$' + price.toFixed(4);
@@ -49,6 +52,7 @@ export default function PriceBox({
   priceInEth,
   lastUpdated,
   symbol,
+  isLive = false,
 }: PriceBoxProps) {
   const [currency, setCurrency] = useState<Currency>('usd');
   const [lastPrice, setLastPrice] = useState(price);
@@ -95,28 +99,25 @@ export default function PriceBox({
   }, [price, high24h, low24h]);
 
   const isPositive = change24h >= 0;
-  const displayPrice = currency === 'btc' && priceInBtc 
-    ? priceInBtc 
-    : currency === 'eth' && priceInEth 
-      ? priceInEth 
-      : price;
+  const displayPrice =
+    currency === 'btc' && priceInBtc
+      ? priceInBtc
+      : currency === 'eth' && priceInEth
+        ? priceInEth
+        : price;
 
   return (
     <div className="bg-gray-800/50 rounded-2xl border border-gray-700/50 p-6 h-full">
       {/* Currency Selector */}
       <div className="flex items-center justify-between mb-4">
-        <span className="text-xs text-gray-500 uppercase tracking-wide">
-          {symbol} Price
-        </span>
+        <span className="text-xs text-gray-500 uppercase tracking-wide">{symbol} Price</span>
         <div className="flex bg-gray-900 rounded-lg p-0.5">
           {(['usd', 'btc', 'eth'] as Currency[]).map((c) => (
             <button
               key={c}
               onClick={() => setCurrency(c)}
               className={`px-2 py-1 text-xs font-medium rounded-md transition-colors ${
-                currency === c
-                  ? 'bg-gray-700 text-white'
-                  : 'text-gray-500 hover:text-gray-300'
+                currency === c ? 'bg-gray-700 text-white' : 'text-gray-500 hover:text-gray-300'
               }`}
             >
               {c.toUpperCase()}
@@ -136,8 +137,8 @@ export default function PriceBox({
               priceFlash === 'up'
                 ? 'text-green-400'
                 : priceFlash === 'down'
-                ? 'text-red-400'
-                : 'text-white'
+                  ? 'text-red-400'
+                  : 'text-white'
             }`}
           >
             {formatPrice(displayPrice, currency)}
@@ -199,12 +200,14 @@ export default function PriceBox({
       </div>
 
       {/* Last updated */}
-      {timeSinceUpdate && (
+      {(timeSinceUpdate || isLive) && (
         <div className="mt-4 pt-4 border-t border-gray-700/50 flex items-center justify-between">
-          <span className="text-xs text-gray-500">Last updated</span>
+          <span className="text-xs text-gray-500">{isLive ? 'Live price' : 'Last updated'}</span>
           <span className="text-xs text-gray-400 flex items-center gap-1">
-            <span className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse" />
-            {timeSinceUpdate}
+            <span
+              className={`w-1.5 h-1.5 rounded-full ${isLive ? 'bg-green-500 animate-pulse' : 'bg-yellow-500'}`}
+            />
+            {isLive ? 'Connected' : timeSinceUpdate}
           </span>
         </div>
       )}

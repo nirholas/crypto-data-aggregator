@@ -1,6 +1,6 @@
 /// <reference lib="webworker" />
 
-// Service Worker for Free Crypto News PWA
+// Service Worker for Crypto Data Aggregator PWA
 // Version: 1.0.0
 
 const CACHE_VERSION = 'v1';
@@ -33,7 +33,7 @@ const API_ROUTES = [
 
 // Cache duration settings (in seconds)
 const CACHE_DURATIONS = {
-  api: 5 * 60,        // 5 minutes for API responses
+  api: 5 * 60, // 5 minutes for API responses
   static: 7 * 24 * 60 * 60, // 7 days for static assets
   images: 30 * 24 * 60 * 60, // 30 days for images
   dynamic: 24 * 60 * 60, // 24 hours for dynamic content
@@ -53,12 +53,12 @@ const MAX_CACHE_ITEMS = {
 // ============================================
 self.addEventListener('install', (event) => {
   console.log('[SW] Installing service worker...');
-  
+
   event.waitUntil(
     (async () => {
       const cache = await caches.open(STATIC_CACHE);
       console.log('[SW] Caching static assets');
-      
+
       // Cache static assets one by one to handle failures gracefully
       for (const asset of STATIC_ASSETS) {
         try {
@@ -68,7 +68,7 @@ self.addEventListener('install', (event) => {
           console.warn(`[SW] Failed to cache: ${asset}`, error);
         }
       }
-      
+
       // Skip waiting to activate immediately
       await self.skipWaiting();
     })()
@@ -80,13 +80,13 @@ self.addEventListener('install', (event) => {
 // ============================================
 self.addEventListener('activate', (event) => {
   console.log('[SW] Activating service worker...');
-  
+
   event.waitUntil(
     (async () => {
       // Clean up old caches
       const cacheNames = await caches.keys();
       const currentCaches = [STATIC_CACHE, DYNAMIC_CACHE, API_CACHE, IMAGE_CACHE];
-      
+
       await Promise.all(
         cacheNames
           .filter((name) => !currentCaches.includes(name))
@@ -95,7 +95,7 @@ self.addEventListener('activate', (event) => {
             return caches.delete(name);
           })
       );
-      
+
       // Take control of all clients immediately
       await self.clients.claim();
       console.log('[SW] Service worker activated and controlling all clients');
@@ -109,12 +109,12 @@ self.addEventListener('activate', (event) => {
 self.addEventListener('fetch', (event) => {
   const { request } = event;
   const url = new URL(request.url);
-  
+
   // Only handle same-origin requests and GET requests
   if (url.origin !== location.origin || request.method !== 'GET') {
     return;
   }
-  
+
   // Route to appropriate strategy
   if (url.pathname.startsWith('/api/')) {
     event.respondWith(networkFirstStrategy(request, API_CACHE, CACHE_DURATIONS.api));
@@ -140,35 +140,35 @@ self.addEventListener('fetch', (event) => {
 async function networkFirstStrategy(request, cacheName, maxAge) {
   try {
     const networkResponse = await fetchWithTimeout(request, 10000);
-    
+
     if (networkResponse.ok) {
       const cache = await caches.open(cacheName);
       const responseToCache = networkResponse.clone();
-      
+
       // Add timestamp header for cache expiration
       const headers = new Headers(responseToCache.headers);
       headers.set('sw-cache-timestamp', Date.now().toString());
-      
+
       const modifiedResponse = new Response(responseToCache.body, {
         status: responseToCache.status,
         statusText: responseToCache.statusText,
         headers,
       });
-      
+
       await cache.put(request, modifiedResponse);
       await trimCache(cacheName, MAX_CACHE_ITEMS.api);
     }
-    
+
     return networkResponse;
   } catch (error) {
     console.log('[SW] Network failed, trying cache:', request.url);
-    
+
     const cachedResponse = await caches.match(request);
-    
+
     if (cachedResponse && !isCacheExpired(cachedResponse, maxAge)) {
       return cachedResponse;
     }
-    
+
     // Return a JSON error response for API requests
     return new Response(
       JSON.stringify({
@@ -190,45 +190,45 @@ async function networkFirstStrategy(request, cacheName, maxAge) {
  */
 async function cacheFirstStrategy(request, cacheName, maxAge) {
   const cachedResponse = await caches.match(request);
-  
+
   if (cachedResponse && !isCacheExpired(cachedResponse, maxAge)) {
     return cachedResponse;
   }
-  
+
   try {
     const networkResponse = await fetch(request);
-    
+
     if (networkResponse.ok) {
       const cache = await caches.open(cacheName);
-      
+
       const headers = new Headers(networkResponse.headers);
       headers.set('sw-cache-timestamp', Date.now().toString());
-      
+
       const modifiedResponse = new Response(networkResponse.clone().body, {
         status: networkResponse.status,
         statusText: networkResponse.statusText,
         headers,
       });
-      
+
       await cache.put(request, modifiedResponse);
-      
+
       if (cacheName === IMAGE_CACHE) {
         await trimCache(cacheName, MAX_CACHE_ITEMS.images);
       }
     }
-    
+
     return networkResponse;
   } catch (error) {
     // Return cached even if expired, better than nothing
     if (cachedResponse) {
       return cachedResponse;
     }
-    
+
     // Return placeholder for images
     if (isImageRequest(request)) {
       return createPlaceholderImage();
     }
-    
+
     throw error;
   }
 }
@@ -240,27 +240,27 @@ async function cacheFirstStrategy(request, cacheName, maxAge) {
 async function staleWhileRevalidate(request, cacheName) {
   const cache = await caches.open(cacheName);
   const cachedResponse = await cache.match(request);
-  
+
   // Fetch fresh in background
   const fetchPromise = fetch(request)
     .then(async (networkResponse) => {
       if (networkResponse.ok) {
         const headers = new Headers(networkResponse.headers);
         headers.set('sw-cache-timestamp', Date.now().toString());
-        
+
         const modifiedResponse = new Response(networkResponse.clone().body, {
           status: networkResponse.status,
           statusText: networkResponse.statusText,
           headers,
         });
-        
+
         await cache.put(request, modifiedResponse);
         await trimCache(cacheName, MAX_CACHE_ITEMS.dynamic);
       }
       return networkResponse;
     })
     .catch(() => cachedResponse);
-  
+
   return cachedResponse || fetchPromise;
 }
 
@@ -271,29 +271,29 @@ async function staleWhileRevalidate(request, cacheName) {
 async function networkFirstWithOfflineFallback(request) {
   try {
     const networkResponse = await fetchWithTimeout(request, 10000);
-    
+
     // Cache successful navigation responses
     if (networkResponse.ok) {
       const cache = await caches.open(DYNAMIC_CACHE);
       await cache.put(request, networkResponse.clone());
     }
-    
+
     return networkResponse;
   } catch (error) {
     console.log('[SW] Navigation failed, checking cache:', request.url);
-    
+
     // Try to return cached page
     const cachedResponse = await caches.match(request);
     if (cachedResponse) {
       return cachedResponse;
     }
-    
+
     // Fall back to offline page
     const offlinePage = await caches.match('/offline');
     if (offlinePage) {
       return offlinePage;
     }
-    
+
     // Last resort: return a basic offline response
     return new Response(
       `<!DOCTYPE html>
@@ -301,7 +301,7 @@ async function networkFirstWithOfflineFallback(request) {
       <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Offline - Free Crypto News</title>
+        <title>Offline - Crypto Data Aggregator</title>
         <style>
           body { font-family: system-ui, sans-serif; display: flex; align-items: center; justify-content: center; min-height: 100vh; margin: 0; background: #0a0a0a; color: #fff; }
           .container { text-align: center; padding: 2rem; }
@@ -332,8 +332,7 @@ async function networkFirstWithOfflineFallback(request) {
 function isImageRequest(request) {
   const url = new URL(request.url);
   return (
-    request.destination === 'image' ||
-    /\.(png|jpg|jpeg|gif|svg|webp|ico)$/i.test(url.pathname)
+    request.destination === 'image' || /\.(png|jpg|jpeg|gif|svg|webp|ico)$/i.test(url.pathname)
   );
 }
 
@@ -355,7 +354,7 @@ function isNavigationRequest(request) {
 function isCacheExpired(response, maxAge) {
   const timestamp = response.headers.get('sw-cache-timestamp');
   if (!timestamp) return false;
-  
+
   const age = (Date.now() - parseInt(timestamp, 10)) / 1000;
   return age > maxAge;
 }
@@ -363,7 +362,7 @@ function isCacheExpired(response, maxAge) {
 async function fetchWithTimeout(request, timeout) {
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), timeout);
-  
+
   try {
     const response = await fetch(request, { signal: controller.signal });
     clearTimeout(timeoutId);
@@ -377,7 +376,7 @@ async function fetchWithTimeout(request, timeout) {
 async function trimCache(cacheName, maxItems) {
   const cache = await caches.open(cacheName);
   const keys = await cache.keys();
-  
+
   if (keys.length > maxItems) {
     // Remove oldest entries first
     const toDelete = keys.slice(0, keys.length - maxItems);
@@ -391,7 +390,7 @@ function createPlaceholderImage() {
     <rect width="200" height="200" fill="#1a1a1a"/>
     <text x="100" y="100" fill="#666" text-anchor="middle" font-family="system-ui" font-size="14">Image unavailable</text>
   </svg>`;
-  
+
   return new Response(svg, {
     status: 200,
     headers: { 'Content-Type': 'image/svg+xml' },
@@ -403,12 +402,12 @@ function createPlaceholderImage() {
 // ============================================
 self.addEventListener('push', (event) => {
   console.log('[SW] Push received:', event);
-  
+
   if (!event.data) return;
-  
+
   try {
     const data = event.data.json();
-    
+
     const options = {
       body: data.body || 'New crypto news available!',
       icon: '/icons/icon-192x192.png',
@@ -432,9 +431,9 @@ self.addEventListener('push', (event) => {
         },
       ],
     };
-    
+
     event.waitUntil(
-      self.registration.showNotification(data.title || 'Free Crypto News', options)
+      self.registration.showNotification(data.title || 'Crypto Data Aggregator', options)
     );
   } catch (error) {
     console.error('[SW] Error processing push:', error);
@@ -443,22 +442,22 @@ self.addEventListener('push', (event) => {
 
 self.addEventListener('notificationclick', (event) => {
   console.log('[SW] Notification clicked:', event);
-  
+
   event.notification.close();
-  
+
   if (event.action === 'dismiss') {
     return;
   }
-  
+
   const url = event.notification.data?.url || '/';
-  
+
   event.waitUntil(
     (async () => {
       const windowClients = await self.clients.matchAll({
         type: 'window',
         includeUncontrolled: true,
       });
-      
+
       // Focus existing window if available
       for (const client of windowClients) {
         if (client.url.includes(self.location.origin) && 'focus' in client) {
@@ -469,7 +468,7 @@ self.addEventListener('notificationclick', (event) => {
           return;
         }
       }
-      
+
       // Open new window
       await self.clients.openWindow(url);
     })()
@@ -481,7 +480,7 @@ self.addEventListener('notificationclick', (event) => {
 // ============================================
 self.addEventListener('sync', (event) => {
   console.log('[SW] Background sync:', event.tag);
-  
+
   if (event.tag === 'sync-news') {
     event.waitUntil(syncNews());
   }
@@ -490,10 +489,10 @@ self.addEventListener('sync', (event) => {
 async function syncNews() {
   try {
     console.log('[SW] Syncing news in background...');
-    
+
     // Pre-cache latest news
     const cache = await caches.open(API_CACHE);
-    
+
     for (const route of API_ROUTES) {
       try {
         const response = await fetch(route);
@@ -504,7 +503,7 @@ async function syncNews() {
         console.warn(`[SW] Failed to sync: ${route}`);
       }
     }
-    
+
     console.log('[SW] Background sync complete');
   } catch (error) {
     console.error('[SW] Background sync failed:', error);
@@ -516,7 +515,7 @@ async function syncNews() {
 // ============================================
 self.addEventListener('periodicsync', (event) => {
   console.log('[SW] Periodic sync:', event.tag);
-  
+
   if (event.tag === 'update-news') {
     event.waitUntil(syncNews());
   }
@@ -527,28 +526,30 @@ self.addEventListener('periodicsync', (event) => {
 // ============================================
 self.addEventListener('message', (event) => {
   console.log('[SW] Message received:', event.data);
-  
+
   const { type, payload } = event.data || {};
-  
+
   switch (type) {
     case 'SKIP_WAITING':
       self.skipWaiting();
       break;
-      
+
     case 'CACHE_URLS':
       event.waitUntil(cacheUrls(payload.urls, payload.cacheName || DYNAMIC_CACHE));
       break;
-      
+
     case 'CLEAR_CACHE':
       event.waitUntil(clearCache(payload?.cacheName));
       break;
-      
+
     case 'GET_CACHE_STATUS':
-      event.waitUntil(getCacheStatus().then((status) => {
-        event.ports[0]?.postMessage(status);
-      }));
+      event.waitUntil(
+        getCacheStatus().then((status) => {
+          event.ports[0]?.postMessage(status);
+        })
+      );
       break;
-      
+
     default:
       console.log('[SW] Unknown message type:', type);
   }
@@ -584,13 +585,13 @@ async function clearCache(cacheName) {
 async function getCacheStatus() {
   const keys = await caches.keys();
   const status = {};
-  
+
   for (const key of keys) {
     const cache = await caches.open(key);
     const entries = await cache.keys();
     status[key] = entries.length;
   }
-  
+
   return {
     caches: status,
     version: CACHE_VERSION,

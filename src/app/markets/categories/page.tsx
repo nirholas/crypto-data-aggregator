@@ -9,8 +9,9 @@ import Link from 'next/link';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Cryptocurrency Categories - Free Crypto News',
-  description: 'Browse cryptocurrencies by category: DeFi, NFT, Gaming, Layer 1, Layer 2, Meme coins, and more.',
+  title: 'Cryptocurrency Categories - Crypto Data Aggregator',
+  description:
+    'Browse cryptocurrencies by category: DeFi, NFT, Gaming, Layer 1, Layer 2, Meme coins, and more.',
 };
 
 // Category definitions with descriptions
@@ -175,10 +176,7 @@ export default function CategoriesPage() {
 
           {/* Back link */}
           <div className="mt-8 text-center">
-            <Link
-              href="/markets"
-              className="text-blue-600 dark:text-blue-400 hover:underline"
-            >
+            <Link href="/markets" className="text-blue-600 dark:text-blue-400 hover:underline">
               ← Back to Markets
             </Link>
           </div>

@@ -1,6 +1,6 @@
 /**
  * In-Memory Cache with TTL
- * 
+ *
  * Simple but effective caching layer for API responses.
  * Reduces redundant RSS fetches and AI API calls.
  */
@@ -29,17 +29,17 @@ class MemoryCache {
    */
   get<T>(key: string): T | null {
     const entry = this.cache.get(key) as CacheEntry<T> | undefined;
-    
+
     if (!entry) {
       return null;
     }
-    
+
     // Check if expired
     if (Date.now() > entry.expiresAt) {
       this.cache.delete(key);
       return null;
     }
-    
+
     return entry.data;
   }
 
@@ -51,7 +51,7 @@ class MemoryCache {
     if (this.cache.size >= this.maxSize) {
       this.evictOldest();
     }
-    
+
     this.cache.set(key, {
       data,
       expiresAt: Date.now() + ttlSeconds * 1000,
@@ -108,13 +108,13 @@ class MemoryCache {
    */
   private evictOldest(): void {
     let oldest: { key: string; createdAt: number } | null = null;
-    
+
     for (const [key, entry] of this.cache.entries()) {
       if (!oldest || entry.createdAt < oldest.createdAt) {
         oldest = { key, createdAt: entry.createdAt };
       }
     }
-    
+
     if (oldest) {
       this.cache.delete(oldest.key);
     }
@@ -133,12 +133,46 @@ class MemoryCache {
 }
 
 // Singleton instances for different cache purposes
-export const newsCache = new MemoryCache(500);      // RSS feed cache
-export const aiCache = new MemoryCache(200);        // AI response cache
-export const translationCache = new MemoryCache(300); // Translation cache
 
 /**
- * Cache wrapper for async functions
+ * Shared cache instance for RSS news feed data.
+ * Max 500 entries, used by crypto-news.ts.
+ */
+export const newsCache = new MemoryCache(500);
+
+/**
+ * Shared cache instance for AI-generated content.
+ * Max 200 entries, used for summaries and analysis.
+ */
+export const aiCache = new MemoryCache(200);
+
+/**
+ * Shared cache instance for translated content.
+ * Max 300 entries, used by translate.ts.
+ */
+export const translationCache = new MemoryCache(300);
+
+/**
+ * Wraps an async function with caching logic.
+ * Returns cached data if available, otherwise executes the fetch function
+ * and caches the result.
+ *
+ * @template T - The type of data being cached
+ * @param cache - The MemoryCache instance to use
+ * @param key - Unique cache key for this data
+ * @param ttlSeconds - Time-to-live in seconds
+ * @param fetchFn - Async function to execute on cache miss
+ * @returns The cached or freshly fetched data
+ *
+ * @example
+ * ```typescript
+ * const data = await withCache(
+ *   newsCache,
+ *   'latest-news',
+ *   300, // 5 minutes
+ *   () => fetchLatestNews()
+ * );
+ * ```
  */
 export async function withCache<T>(
   cache: MemoryCache,
@@ -151,7 +185,7 @@ export async function withCache<T>(
   if (cached !== null) {
     return cached;
   }
-  
+
   // Fetch and cache
   const data = await fetchFn();
   cache.set(key, data, ttlSeconds);
@@ -159,15 +193,30 @@ export async function withCache<T>(
 }
 
 /**
- * Generate a cache key from request parameters
+ * Generates a deterministic cache key from request parameters.
+ * Parameters are sorted alphabetically to ensure consistent keys
+ * regardless of parameter order.
+ *
+ * @param prefix - Namespace prefix for the cache key (e.g., 'coins', 'history')
+ * @param params - Object containing query parameters
+ * @returns Formatted cache key string
+ *
+ * @example
+ * ```typescript
+ * generateCacheKey('coins', { limit: 10, page: 1 });
+ * // Returns: 'coins:limit=10&page=1'
+ *
+ * generateCacheKey('coins', {});
+ * // Returns: 'coins:default'
+ * ```
  */
 export function generateCacheKey(prefix: string, params: Record<string, unknown>): string {
   const sortedParams = Object.keys(params)
     .sort()
-    .filter(k => params[k] !== undefined && params[k] !== null)
-    .map(k => `${k}=${params[k]}`)
+    .filter((k) => params[k] !== undefined && params[k] !== null)
+    .map((k) => `${k}=${params[k]}`)
     .join('&');
-  
+
   return `${prefix}:${sortedParams || 'default'}`;
 }
 

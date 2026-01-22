@@ -21,6 +21,7 @@ import {
   type CoinTab,
 } from './components';
 import { PriceChart } from '@/components/coin-charts';
+import { useLivePrices } from '@/lib/price-websocket';
 import type { Ticker, OHLCData, DeveloperData, CommunityData } from '@/lib/market-data';
 
 interface Article {
@@ -123,6 +124,10 @@ export default function CoinPageClient({
   const [isWatchlisted, setIsWatchlisted] = useState(false);
   const [showAlertModal, setShowAlertModal] = useState(false);
 
+  // Live price updates via WebSocket
+  const { prices: livePrices, isConnected: isPriceLive } = useLivePrices([coinData.id]);
+  const livePrice = livePrices[coinData.id]?.price ?? priceData.price;
+
   // Convert OHLC to chart format
   const chartData = ohlcData.map((d) => ({
     timestamp: d.timestamp,
@@ -160,14 +165,15 @@ export default function CoinPageClient({
         {/* Price Box - 1 column on desktop */}
         <div className="lg:col-span-1">
           <PriceBox
-            price={priceData.price}
+            price={livePrice}
             change24h={priceData.change24h}
             high24h={priceData.high24h}
             low24h={priceData.low24h}
             priceInBtc={priceData.priceInBtc}
             priceInEth={priceData.priceInEth}
-            lastUpdated={priceData.lastUpdated}
+            lastUpdated={isPriceLive ? new Date().toISOString() : priceData.lastUpdated}
             symbol={coinData.symbol}
+            isLive={isPriceLive}
           />
         </div>
       </div>
@@ -200,12 +206,7 @@ export default function CoinPageClient({
                   <h3 className="text-lg font-semibold text-white mb-4">
                     {coinData.symbol.toUpperCase()} Price Chart
                   </h3>
-                  <PriceChart
-                    data={chartData}
-                    type="area"
-                    height={350}
-                    showGrid={true}
-                  />
+                  <PriceChart data={chartData} type="area" height={350} showGrid={true} />
                 </div>
               )}
 
@@ -264,8 +265,18 @@ export default function CoinPageClient({
                 <div>
                   <div className="flex items-center justify-between mb-4">
                     <div className="flex items-center gap-2">
-                      <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
+                      <svg
+                        className="w-5 h-5 text-white"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"
+                        />
                       </svg>
                       <h3 className="text-lg font-semibold text-white">
                         Latest {coinData.name} News
@@ -289,10 +300,7 @@ export default function CoinPageClient({
           )}
 
           {activeTab === 'markets' && (
-            <MarketsTable
-              tickers={tickers}
-              coinSymbol={coinData.symbol}
-            />
+            <MarketsTable tickers={tickers} coinSymbol={coinData.symbol} />
           )}
 
           {activeTab === 'historical' && (
@@ -305,11 +313,7 @@ export default function CoinPageClient({
           )}
 
           {activeTab === 'news' && (
-            <CoinNews
-              articles={articles}
-              coinName={coinData.name}
-              coinSymbol={coinData.symbol}
-            />
+            <CoinNews articles={articles} coinName={coinData.name} coinSymbol={coinData.symbol} />
           )}
         </motion.div>
       </AnimatePresence>
@@ -337,7 +341,7 @@ export default function CoinPageClient({
               <p className="text-gray-400 mb-4">
                 Get notified when {coinData.name} reaches your target price.
               </p>
-              
+
               <div className="space-y-4">
                 <div>
                   <label className="block text-sm text-neutral-400 mb-1">
@@ -352,11 +356,9 @@ export default function CoinPageClient({
                     </button>
                   </div>
                 </div>
-                
+
                 <div>
-                  <label className="block text-sm text-neutral-400 mb-1">
-                    Target Price (USD)
-                  </label>
+                  <label className="block text-sm text-neutral-400 mb-1">Target Price (USD)</label>
                   <input
                     type="number"
                     placeholder={priceData.price.toString()}

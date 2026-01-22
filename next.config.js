@@ -2,7 +2,7 @@
 const nextConfig = {
   // Compress responses
   compress: true,
-  
+
   // Security headers
   async headers() {
     return [
@@ -118,28 +118,30 @@ const nextConfig = {
   },
   // Disable x-powered-by header
   poweredByHeader: false,
-  
+
   // Enable React strict mode
   reactStrictMode: true,
-  
+
   // Optimize images
   images: {
     formats: ['image/avif', 'image/webp'],
     minimumCacheTTL: 60 * 60 * 24 * 30, // 30 days
   },
-  
+
   // Experimental features for better performance
   experimental: {
     // Enable optimized loading of CSS
     optimizeCss: true,
+    // Limit concurrent static page generation to avoid API rate limits
+    staticGenerationMaxConcurrency: 1,
   },
-  
+
   // Reduce bundle size
   modularizeImports: {
-    'lodash': {
+    lodash: {
       transform: 'lodash/{{member}}',
     },
   },
-}
+};
 
-module.exports = nextConfig
+module.exports = nextConfig;

@@ -24,10 +24,11 @@ import CoinsTable from './components/CoinsTable';
 import type { SortField, SortOrder } from './components/SortableHeader';
 
 export const metadata: Metadata = {
-  title: 'Crypto Markets - Free Crypto News',
-  description: 'Live cryptocurrency prices, market data, charts, and analytics. Browse and discover cryptocurrencies.',
+  title: 'Crypto Markets - Crypto Data Aggregator',
+  description:
+    'Live cryptocurrency prices, market data, charts, and analytics. Browse and discover cryptocurrencies.',
   openGraph: {
-    title: 'Crypto Markets - Free Crypto News',
+    title: 'Crypto Markets - Crypto Data Aggregator',
     description: 'Live cryptocurrency prices, market data, charts, and analytics.',
   },
 };
@@ -76,9 +77,7 @@ function filterCoins(
   if (params.search) {
     const query = params.search.toLowerCase();
     filtered = filtered.filter(
-      (coin) =>
-        coin.name.toLowerCase().includes(query) ||
-        coin.symbol.toLowerCase().includes(query)
+      (coin) => coin.name.toLowerCase().includes(query) || coin.symbol.toLowerCase().includes(query)
     );
   }
 
@@ -139,11 +138,7 @@ function filterCoins(
 }
 
 // Sort coins based on URL params
-function sortCoins(
-  coins: TokenPrice[],
-  sortField: SortField,
-  order: SortOrder
-): TokenPrice[] {
+function sortCoins(coins: TokenPrice[], sortField: SortField, order: SortOrder): TokenPrice[] {
   const sorted = [...coins];
 
   sorted.sort((a, b) => {
@@ -195,13 +190,11 @@ function sortCoins(
 
 export default async function MarketsPage({ searchParams }: MarketsPageProps) {
   const params = await searchParams;
-  
+
   // Parse URL params
   const currentPage = Math.max(1, parseInt(params.page || '1', 10));
   const sortField = (
-    VALID_SORT_FIELDS.includes(params.sort as SortField) 
-      ? params.sort 
-      : 'market_cap_rank'
+    VALID_SORT_FIELDS.includes(params.sort as SortField) ? params.sort : 'market_cap_rank'
   ) as SortField;
   const sortOrder = (params.order === 'asc' ? 'asc' : 'desc') as SortOrder;
   const perPage = [20, 50, 100].includes(parseInt(params.perPage || '50', 10))
@@ -245,15 +238,26 @@ export default async function MarketsPage({ searchParams }: MarketsPageProps) {
           {/* Page Header */}
           <div className="mb-6">
             <div className="flex items-center gap-3">
-              <svg className="w-7 h-7 text-neutral-900 dark:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+              <svg
+                className="w-7 h-7 text-neutral-900 dark:text-white"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+                />
               </svg>
               <h1 className="text-3xl font-bold text-neutral-900 dark:text-white">
                 Cryptocurrency Markets
               </h1>
             </div>
             <p className="text-neutral-600 dark:text-neutral-400 mt-2">
-              Live prices, charts, and market data for {totalCount.toLocaleString()} cryptocurrencies
+              Live prices, charts, and market data for {totalCount.toLocaleString()}{' '}
+              cryptocurrencies
             </p>
           </div>
 
@@ -328,10 +332,7 @@ function TrendingSectionSkeleton() {
         <div className="h-6 w-32 bg-neutral-200 dark:bg-neutral-700 rounded mb-3 animate-pulse" />
         <div className="space-y-2">
           {[1, 2, 3, 4, 5].map((i) => (
-            <div
-              key={i}
-              className="h-8 bg-neutral-100 dark:bg-neutral-800 rounded animate-pulse"
-            />
+            <div key={i} className="h-8 bg-neutral-100 dark:bg-neutral-800 rounded animate-pulse" />
           ))}
         </div>
       </div>

@@ -31,8 +31,20 @@ export const metadata: Metadata = {
     default: 'Crypto Data Aggregator',
     template: '%s | Crypto Data Aggregator',
   },
-  description: 'Real-time cryptocurrency market data, DeFi analytics, portfolio tracking, and comprehensive market insights. Your complete crypto data dashboard.',
-  keywords: ['crypto', 'cryptocurrency', 'bitcoin', 'ethereum', 'market-data', 'defi', 'portfolio', 'watchlist', 'coingecko', 'trading'],
+  description:
+    'Real-time cryptocurrency market data, DeFi analytics, portfolio tracking, and comprehensive market insights. Your complete crypto data dashboard.',
+  keywords: [
+    'crypto',
+    'cryptocurrency',
+    'bitcoin',
+    'ethereum',
+    'market-data',
+    'defi',
+    'portfolio',
+    'watchlist',
+    'coingecko',
+    'trading',
+  ],
   authors: [{ name: 'Crypto Data Aggregator' }],
   creator: 'Crypto Data Aggregator',
   publisher: 'Crypto Data Aggregator',
@@ -86,9 +98,7 @@ export const metadata: Metadata = {
       { url: '/icons/icon-16x16.png', sizes: '16x16', type: 'image/png' },
     ],
     shortcut: '/favicon.svg',
-    apple: [
-      { url: '/apple-touch-icon.svg', sizes: '180x180', type: 'image/svg+xml' },
-    ],
+    apple: [{ url: '/apple-touch-icon.svg', sizes: '180x180', type: 'image/svg+xml' }],
     other: [
       {
         rel: 'mask-icon',
@@ -104,31 +114,38 @@ export const metadata: Metadata = {
     startupImage: [
       {
         url: '/splash/apple-splash-2048-2732.png',
-        media: '(device-width: 1024px) and (device-height: 1366px) and (-webkit-device-pixel-ratio: 2)',
+        media:
+          '(device-width: 1024px) and (device-height: 1366px) and (-webkit-device-pixel-ratio: 2)',
       },
       {
         url: '/splash/apple-splash-1668-2388.png',
-        media: '(device-width: 834px) and (device-height: 1194px) and (-webkit-device-pixel-ratio: 2)',
+        media:
+          '(device-width: 834px) and (device-height: 1194px) and (-webkit-device-pixel-ratio: 2)',
       },
       {
         url: '/splash/apple-splash-1536-2048.png',
-        media: '(device-width: 768px) and (device-height: 1024px) and (-webkit-device-pixel-ratio: 2)',
+        media:
+          '(device-width: 768px) and (device-height: 1024px) and (-webkit-device-pixel-ratio: 2)',
       },
       {
         url: '/splash/apple-splash-1125-2436.png',
-        media: '(device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3)',
+        media:
+          '(device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3)',
       },
       {
         url: '/splash/apple-splash-1242-2688.png',
-        media: '(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 3)',
+        media:
+          '(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 3)',
       },
       {
         url: '/splash/apple-splash-750-1334.png',
-        media: '(device-width: 375px) and (device-height: 667px) and (-webkit-device-pixel-ratio: 2)',
+        media:
+          '(device-width: 375px) and (device-height: 667px) and (-webkit-device-pixel-ratio: 2)',
       },
       {
         url: '/splash/apple-splash-640-1136.png',
-        media: '(device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2)',
+        media:
+          '(device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2)',
       },
     ],
   },
@@ -144,27 +161,37 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+import { OrganizationStructuredData, WebsiteStructuredData } from '@/components/StructuredData';
+
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" dir="ltr" suppressHydrationWarning>
       <head>
         {/* Theme Script - prevents flash of wrong theme */}
         <ThemeScript />
-        
+
+        {/* Global Structured Data */}
+        <OrganizationStructuredData />
+        <WebsiteStructuredData />
+
         {/* Preconnect to external resources */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        
+
         {/* DNS prefetch for API endpoints */}
         <link rel="dns-prefetch" href="https://api.coingecko.com" />
-        
+
         {/* PWA splash screens for iOS */}
-        <link rel="apple-touch-startup-image" href="/splash/apple-splash-dark.png" media="(prefers-color-scheme: dark)" />
-        <link rel="apple-touch-startup-image" href="/splash/apple-splash-light.png" media="(prefers-color-scheme: light)" />
+        <link
+          rel="apple-touch-startup-image"
+          href="/splash/apple-splash-dark.png"
+          media="(prefers-color-scheme: dark)"
+        />
+        <link
+          rel="apple-touch-startup-image"
+          href="/splash/apple-splash-light.png"
+          media="(prefers-color-scheme: light)"
+        />
       </head>
       <body className="bg-gray-50 dark:bg-slate-900 antialiased min-h-screen text-gray-900 dark:text-slate-100 transition-colors duration-200">
         {/* Skip Link for Accessibility */}

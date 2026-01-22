@@ -34,7 +34,7 @@ const coinMeta: Record<string, { name: string; symbol: string; keywords: string[
   bitcoin: { name: 'Bitcoin', symbol: 'BTC', keywords: ['bitcoin', 'btc'] },
   ethereum: { name: 'Ethereum', symbol: 'ETH', keywords: ['ethereum', 'eth', 'vitalik'] },
   solana: { name: 'Solana', symbol: 'SOL', keywords: ['solana', 'sol'] },
-  'binancecoin': { name: 'BNB', symbol: 'BNB', keywords: ['bnb', 'binance'] },
+  binancecoin: { name: 'BNB', symbol: 'BNB', keywords: ['bnb', 'binance'] },
   ripple: { name: 'XRP', symbol: 'XRP', keywords: ['xrp', 'ripple'] },
   cardano: { name: 'Cardano', symbol: 'ADA', keywords: ['cardano', 'ada'] },
   dogecoin: { name: 'Dogecoin', symbol: 'DOGE', keywords: ['dogecoin', 'doge'] },
@@ -51,13 +51,13 @@ const coinMeta: Record<string, { name: string; symbol: string; keywords: string[
 // Generate metadata for SEO
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { coinId } = await params;
-  
+
   try {
     const coinData = await getCoinDetails(coinId);
-    
+
     if (!coinData) {
       return {
-        title: 'Coin Not Found | Free Crypto News',
+        title: 'Coin Not Found | Crypto Data Aggregator',
         description: 'The requested cryptocurrency could not be found.',
       };
     }
@@ -68,13 +68,22 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     const name = coinData.name || coinId;
 
     return {
-      title: `${name} (${symbol}) Price, Chart & Market Cap | Free Crypto News`,
+      title: `${name} (${symbol}) Price, Chart & Market Cap | Crypto Data Aggregator`,
       description: `Get ${name} (${symbol}) price, market cap, trading volume, chart, and info. ${name} is currently trading at ${formatPrice(price)} with a ${change24h >= 0 ? '+' : ''}${change24h.toFixed(2)}% change in 24h.`,
-      keywords: [name.toLowerCase(), symbol.toLowerCase(), `${symbol} price`, `${name} news`, 'cryptocurrency', 'crypto'],
+      keywords: [
+        name.toLowerCase(),
+        symbol.toLowerCase(),
+        `${symbol} price`,
+        `${name} news`,
+        'cryptocurrency',
+        'crypto',
+      ],
       openGraph: {
         title: `${name} Price: ${formatPrice(price)} | ${symbol}`,
         description: `${symbol} ${formatPercent(change24h)} in 24h. Market Cap: $${formatNumber(coinData.market_data?.market_cap?.usd)}`,
-        images: coinData.image?.large ? [{ url: coinData.image.large, width: 250, height: 250, alt: name }] : [],
+        images: coinData.image?.large
+          ? [{ url: coinData.image.large, width: 250, height: 250, alt: name }]
+          : [],
         type: 'website',
       },
       twitter: {
@@ -90,14 +99,37 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   } catch {
     const meta = coinMeta[coinId];
     return {
-      title: `${meta?.name || coinId} Price & News | Free Crypto News`,
+      title: `${meta?.name || coinId} Price & News | Crypto Data Aggregator`,
       description: `Latest ${meta?.name || coinId} news, price, and market data.`,
     };
   }
 }
 
-// Revalidate every 60 seconds
-export const revalidate = 60;
+// ISR: Cache static page content for 1 hour (prices update via WebSocket)
+// The page shell with descriptions, links, etc. rarely changes
+export const revalidate = 3600;
+
+// Allow dynamic coin pages (not just pre-generated ones)
+export const dynamicParams = true;
+
+// Pre-generate top coins at build time to avoid rate limits
+export async function generateStaticParams() {
+  // Only pre-generate a small set of popular coins to stay within rate limits
+  const popularCoins = [
+    'bitcoin',
+    'ethereum',
+    'solana',
+    'binancecoin',
+    'ripple',
+    'cardano',
+    'dogecoin',
+    'polkadot',
+    'avalanche-2',
+    'chainlink',
+  ];
+
+  return popularCoins.map((coinId) => ({ coinId }));
+}
 
 // Define coin data interface for type safety
 interface CoinData {
@@ -167,14 +199,15 @@ export default async function CoinPage({ params, searchParams }: Props) {
   const meta = coinMeta[coinId];
 
   // Fetch all data in parallel for performance
-  const [coinData, tickersData, ohlcData, developerData, communityData, newsData] = await Promise.all([
-    getCoinDetails(coinId) as Promise<CoinData | null>,
-    getCoinTickers(coinId, 1).catch(() => ({ name: coinId, tickers: [] as Ticker[] })),
-    getOHLC(coinId, 30).catch(() => [] as OHLCData[]),
-    getCoinDeveloperData(coinId).catch(() => null as DeveloperData | null),
-    getCoinCommunityData(coinId).catch(() => null as CommunityData | null),
-    searchNews(meta?.keywords?.join(',') || coinId, 30).catch(() => ({ articles: [] })),
-  ]);
+  const [coinData, tickersData, ohlcData, developerData, communityData, newsData] =
+    await Promise.all([
+      getCoinDetails(coinId) as Promise<CoinData | null>,
+      getCoinTickers(coinId, 1).catch(() => ({ name: coinId, tickers: [] as Ticker[] })),
+      getOHLC(coinId, 30).catch(() => [] as OHLCData[]),
+      getCoinDeveloperData(coinId).catch(() => null as DeveloperData | null),
+      getCoinCommunityData(coinId).catch(() => null as CommunityData | null),
+      searchNews(meta?.keywords?.join(',') || coinId, 30).catch(() => ({ articles: [] })),
+    ]);
 
   if (!coinData) {
     notFound();
@@ -309,11 +342,4 @@ export default async function CoinPage({ params, searchParams }: Props) {
       </div>
     </>
   );
-}
-
-// Generate static paths for popular coins
-export async function generateStaticParams() {
-  return Object.keys(coinMeta).map((coinId) => ({
-    coinId,
-  }));
 }

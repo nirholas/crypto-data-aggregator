@@ -1,10 +1,11 @@
 # Article Card Components
 
-A suite of premium, accessible article card components for the Free Crypto News site.
+A suite of premium, accessible article card components for the Crypto Data Aggregator site.
 
 ## Overview
 
-The card system provides 4 variants optimized for different use cases, plus utility components for enhanced functionality.
+The card system provides 4 variants optimized for different use cases, plus utility components for
+enhanced functionality.
 
 ## Card Variants
 
@@ -17,11 +18,12 @@ import { ArticleCardLarge } from '@/components/cards';
 
 <ArticleCardLarge
   article={article}
-  externalLink={false}  // Link to internal article page (default)
-/>
+  externalLink={false} // Link to internal article page (default)
+/>;
 ```
 
 **Features:**
+
 - Responsive: stacked on mobile, horizontal on desktop
 - 320px height on desktop
 - Animated mesh gradient backgrounds
@@ -37,13 +39,11 @@ Vertical card for grid display layouts.
 ```tsx
 import { ArticleCardMedium } from '@/components/cards';
 
-<ArticleCardMedium
-  article={article}
-  externalLink={false}
-/>
+<ArticleCardMedium article={article} externalLink={false} />;
 ```
 
 **Features:**
+
 - 200px gradient image area
 - Category badge overlay
 - Glassmorphism effects
@@ -60,13 +60,14 @@ import { ArticleCardSmall } from '@/components/cards';
 
 <ArticleCardSmall
   article={article}
-  rank={1}           // Optional ranking number
-  showRank={true}    // Show numbered ranking
+  rank={1} // Optional ranking number
+  showRank={true} // Show numbered ranking
   showBookmark={true}
-/>
+/>;
 ```
 
 **Features:**
+
 - Minimal footprint
 - Optional rank indicator (1, 2, 3...)
 - Top 3 ranks highlighted with brand color
@@ -81,14 +82,11 @@ Full-width horizontal card for "More Stories" sections.
 ```tsx
 import { ArticleCardList } from '@/components/cards';
 
-<ArticleCardList
-  article={article}
-  showBookmark={true}
-  showShare={true}
-/>
+<ArticleCardList article={article} showBookmark={true} showShare={true} />;
 ```
 
 **Features:**
+
 - 96-112px thumbnail
 - Single-line description on desktop
 - Compact meta row
@@ -126,12 +124,12 @@ import Posts from '@/components/Posts';
 Show loading states while fetching data:
 
 ```tsx
-import { 
+import {
   ArticleCardLargeSkeleton,
   ArticleCardMediumSkeleton,
   ArticleCardSmallSkeleton,
   ArticleCardListSkeleton,
-  ArticleGridSkeleton 
+  ArticleGridSkeleton
 } from '@/components/cards';
 
 // Individual skeleton
@@ -155,13 +153,13 @@ Smart image with lazy loading and gradient fallback:
 import { CardImage } from '@/components/cards';
 
 <CardImage
-  src={article.imageUrl}      // Optional - falls back to gradient
+  src={article.imageUrl} // Optional - falls back to gradient
   alt={article.title}
-  source={article.source}     // Used for gradient color
-  size="md"                   // 'sm' | 'md' | 'lg'
-  showSourceInitial={true}    // Show source letter in fallback
+  source={article.source} // Used for gradient color
+  size="md" // 'sm' | 'md' | 'lg'
+  showSourceInitial={true} // Show source letter in fallback
   className="absolute inset-0"
-/>
+/>;
 ```
 
 ### CardBookmarkButton
@@ -173,9 +171,9 @@ import { CardBookmarkButton } from '@/components/cards';
 
 <CardBookmarkButton
   article={article}
-  size="sm"           // 'sm' | 'md'
+  size="sm" // 'sm' | 'md'
   className="absolute top-4 right-4"
-/>
+/>;
 ```
 
 ### QuickShareButton
@@ -185,10 +183,7 @@ Share button with native share API + clipboard fallback:
 ```tsx
 import { QuickShareButton } from '@/components/cards';
 
-<QuickShareButton
-  title={article.title}
-  url={articleUrl}
-/>
+<QuickShareButton title={article.title} url={articleUrl} />;
 ```
 
 ### SentimentBadge
@@ -198,10 +193,10 @@ Market sentiment indicator:
 ```tsx
 import { SentimentBadge } from '@/components/cards';
 
-<SentimentBadge 
-  sentiment="bullish"   // 'bullish' | 'bearish' | 'neutral'
-  size="sm"             // 'sm' | 'md'
-/>
+<SentimentBadge
+  sentiment="bullish" // 'bullish' | 'bearish' | 'neutral'
+  size="sm" // 'sm' | 'md'
+/>;
 ```
 
 ### ReadingProgress
@@ -211,10 +206,10 @@ Progress bar for partially read articles:
 ```tsx
 import { ReadingProgress } from '@/components/cards';
 
-<ReadingProgress 
-  progress={45}         // 0-100
+<ReadingProgress
+  progress={45} // 0-100
   className="mt-2"
-/>
+/>;
 ```
 
 ---
@@ -230,7 +225,7 @@ interface Article {
   source: string;
   pubDate: string;
   timeAgo: string;
-  
+
   // Optional fields
   description?: string;
   category?: string;
@@ -238,7 +233,7 @@ interface Article {
   id?: string;
   imageUrl?: string;
   sentiment?: 'bullish' | 'bearish' | 'neutral';
-  readProgress?: number;  // 0-100
+  readProgress?: number; // 0-100
 }
 ```
 
@@ -248,15 +243,15 @@ interface Article {
 
 Each source gets unique gradient and badge colors:
 
-| Source | Gradient | Badge |
-|--------|----------|-------|
-| CoinDesk | Blue | `bg-blue-500` |
-| The Block | Purple | `bg-purple-500` |
-| Decrypt | Emerald | `bg-emerald-500` |
-| CoinTelegraph | Orange | `bg-orange-500` |
-| Bitcoin Magazine | Amber | `bg-amber-500` |
-| Blockworks | Indigo | `bg-indigo-500` |
-| The Defiant | Pink | `bg-pink-500` |
+| Source           | Gradient | Badge            |
+| ---------------- | -------- | ---------------- |
+| CoinDesk         | Blue     | `bg-blue-500`    |
+| The Block        | Purple   | `bg-purple-500`  |
+| Decrypt          | Emerald  | `bg-emerald-500` |
+| CoinTelegraph    | Orange   | `bg-orange-500`  |
+| Bitcoin Magazine | Amber    | `bg-amber-500`   |
+| Blockworks       | Indigo   | `bg-indigo-500`  |
+| The Defiant      | Pink     | `bg-pink-500`    |
 
 Access colors programmatically:
 
@@ -284,7 +279,7 @@ All cards include:
 
 ```tsx
 // Animations disabled for users who prefer reduced motion
-className="motion-reduce:transition-none motion-reduce:hover:scale-100"
+className = 'motion-reduce:transition-none motion-reduce:hover:scale-100';
 ```
 
 ---
@@ -294,7 +289,7 @@ className="motion-reduce:transition-none motion-reduce:hover:scale-100"
 All components support dark mode automatically via Tailwind's `dark:` variants:
 
 ```tsx
-className="bg-white dark:bg-gray-900 text-gray-900 dark:text-white"
+className = 'bg-white dark:bg-gray-900 text-gray-900 dark:text-white';
 ```
 
 ---
@@ -329,11 +324,11 @@ import { ArticleCardLarge, ArticleCardMedium } from '@/components/cards';
 import * as Cards from '@/components/cards';
 
 // Import utilities
-import { 
-  sourceColors, 
+import {
+  sourceColors,
   sourceGradients,
   getSourceColors,
   estimateReadTime,
-  type Article 
+  type Article,
 } from '@/components/cards';
 ```

@@ -38,19 +38,15 @@ export default function CoinPageError({ error, reset }: ErrorProps) {
           </svg>
         </div>
 
-        <h1 className="text-2xl font-bold text-white mb-2">
-          Something went wrong
-        </h1>
-        
+        <h1 className="text-2xl font-bold text-white mb-2">Something went wrong</h1>
+
         <p className="text-gray-400 mb-6">
-          We couldn&apos;t load the coin data. This might be a temporary issue with our
-          data provider.
+          We couldn&apos;t load the coin data. This might be a temporary issue with our data
+          provider.
         </p>
 
         {error.digest && (
-          <p className="text-xs text-gray-500 mb-6 font-mono">
-            Error ID: {error.digest}
-          </p>
+          <p className="text-xs text-gray-500 mb-6 font-mono">Error ID: {error.digest}</p>
         )}
 
         <div className="flex flex-col sm:flex-row gap-3 justify-center">
@@ -60,7 +56,7 @@ export default function CoinPageError({ error, reset }: ErrorProps) {
           >
             Try again
           </button>
-          
+
           <Link
             href="/markets"
             className="px-6 py-3 bg-gray-700 hover:bg-gray-600 text-white font-medium rounded-xl transition-colors"
@@ -73,7 +69,7 @@ export default function CoinPageError({ error, reset }: ErrorProps) {
           <p className="text-sm text-gray-500">
             If this problem persists, please{' '}
             <a
-              href="https://github.com/nirholas/free-crypto-news/issues"
+              href="https://github.com/nirholas/crypto-data-aggregator/issues"
               target="_blank"
               rel="noopener noreferrer"
               className="text-amber-500 hover:text-amber-400"

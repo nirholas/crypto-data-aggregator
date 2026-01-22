@@ -54,10 +54,9 @@ interface ExchangePageProps {
 
 async function getExchangeDetails(id: string): Promise<ExchangeDetails | null> {
   try {
-    const response = await fetch(
-      `https://api.coingecko.com/api/v3/exchanges/${id}`,
-      { next: { revalidate: 300 } }
-    );
+    const response = await fetch(`https://api.coingecko.com/api/v3/exchanges/${id}`, {
+      next: { revalidate: 300 },
+    });
     if (!response.ok) return null;
     return response.json();
   } catch {
@@ -68,14 +67,16 @@ async function getExchangeDetails(id: string): Promise<ExchangeDetails | null> {
 export async function generateMetadata({ params }: ExchangePageProps): Promise<Metadata> {
   const { id } = await params;
   const exchange = await getExchangeDetails(id);
-  
+
   if (!exchange) {
     return { title: 'Exchange Not Found' };
   }
-  
+
   return {
-    title: `${exchange.name} - Cryptocurrency Exchange - Free Crypto News`,
-    description: exchange.description || `${exchange.name} exchange information, trading pairs, and volume statistics.`,
+    title: `${exchange.name} - Cryptocurrency Exchange - Crypto Data Aggregator`,
+    description:
+      exchange.description ||
+      `${exchange.name} exchange information, trading pairs, and volume statistics.`,
   };
 }
 
@@ -119,7 +120,10 @@ export default async function ExchangeDetailPage({ params }: ExchangePageProps) 
               Markets
             </Link>
             <span>/</span>
-            <Link href="/markets/exchanges" className="hover:text-blue-600 dark:hover:text-blue-400">
+            <Link
+              href="/markets/exchanges"
+              className="hover:text-blue-600 dark:hover:text-blue-400"
+            >
               Exchanges
             </Link>
             <span>/</span>
@@ -166,7 +170,12 @@ export default async function ExchangeDetailPage({ params }: ExchangePageProps) 
                   >
                     Visit Exchange
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+                      />
                     </svg>
                   </a>
                   {exchange.twitter_handle && (
@@ -223,13 +232,27 @@ export default async function ExchangeDetailPage({ params }: ExchangePageProps) 
               <table className="w-full">
                 <thead>
                   <tr className="bg-gray-50 dark:bg-gray-900/50 border-b border-gray-200 dark:border-gray-700">
-                    <th className="text-left text-gray-500 dark:text-gray-400 text-sm font-medium p-4">#</th>
-                    <th className="text-left text-gray-500 dark:text-gray-400 text-sm font-medium p-4">Pair</th>
-                    <th className="text-right text-gray-500 dark:text-gray-400 text-sm font-medium p-4">Price</th>
-                    <th className="text-right text-gray-500 dark:text-gray-400 text-sm font-medium p-4 hidden sm:table-cell">24h Volume</th>
-                    <th className="text-right text-gray-500 dark:text-gray-400 text-sm font-medium p-4 hidden md:table-cell">Spread</th>
-                    <th className="text-center text-gray-500 dark:text-gray-400 text-sm font-medium p-4">Trust</th>
-                    <th className="text-center text-gray-500 dark:text-gray-400 text-sm font-medium p-4">Trade</th>
+                    <th className="text-left text-gray-500 dark:text-gray-400 text-sm font-medium p-4">
+                      #
+                    </th>
+                    <th className="text-left text-gray-500 dark:text-gray-400 text-sm font-medium p-4">
+                      Pair
+                    </th>
+                    <th className="text-right text-gray-500 dark:text-gray-400 text-sm font-medium p-4">
+                      Price
+                    </th>
+                    <th className="text-right text-gray-500 dark:text-gray-400 text-sm font-medium p-4 hidden sm:table-cell">
+                      24h Volume
+                    </th>
+                    <th className="text-right text-gray-500 dark:text-gray-400 text-sm font-medium p-4 hidden md:table-cell">
+                      Spread
+                    </th>
+                    <th className="text-center text-gray-500 dark:text-gray-400 text-sm font-medium p-4">
+                      Trust
+                    </th>
+                    <th className="text-center text-gray-500 dark:text-gray-400 text-sm font-medium p-4">
+                      Trade
+                    </th>
                   </tr>
                 </thead>
                 <tbody>
@@ -238,16 +261,12 @@ export default async function ExchangeDetailPage({ params }: ExchangePageProps) 
                       key={`${ticker.base}-${ticker.target}-${index}`}
                       className="border-b border-gray-100 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors"
                     >
-                      <td className="p-4 text-gray-500 dark:text-gray-400">
-                        {index + 1}
-                      </td>
+                      <td className="p-4 text-gray-500 dark:text-gray-400">{index + 1}</td>
                       <td className="p-4">
                         <span className="font-medium text-gray-900 dark:text-white">
                           {ticker.base}
                         </span>
-                        <span className="text-gray-500 dark:text-gray-400">
-                          /{ticker.target}
-                        </span>
+                        <span className="text-gray-500 dark:text-gray-400">/{ticker.target}</span>
                       </td>
                       <td className="p-4 text-right font-medium text-gray-900 dark:text-white">
                         {formatPrice(ticker.converted_last?.usd || ticker.last)}
@@ -259,7 +278,7 @@ export default async function ExchangeDetailPage({ params }: ExchangePageProps) 
                         {ticker.bid_ask_spread_percentage?.toFixed(2) || '—'}%
                       </td>
                       <td className="p-4 text-center">
-                        <span 
+                        <span
                           className={`inline-block w-3 h-3 rounded-full ${getTrustScoreColor(ticker.trust_score)}`}
                           title={ticker.trust_score || 'Unknown'}
                         />
@@ -293,10 +312,7 @@ export default async function ExchangeDetailPage({ params }: ExchangePageProps) 
             >
               ← All Exchanges
             </Link>
-            <Link
-              href="/markets"
-              className="text-blue-600 dark:text-blue-400 hover:underline"
-            >
+            <Link href="/markets" className="text-blue-600 dark:text-blue-400 hover:underline">
               Back to Markets
             </Link>
           </div>

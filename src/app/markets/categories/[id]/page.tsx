@@ -77,18 +77,150 @@ const CATEGORY_META: Record<string, { name: string; icon: string; description: s
 
 // Example coin mappings by category (in production, use CoinGecko categories API)
 const CATEGORY_COINS: Record<string, string[]> = {
-  defi: ['uniswap', 'aave', 'lido-dao', 'maker', 'curve-dao-token', 'compound-governance-token', 'sushi', 'yearn-finance', '1inch', 'pancakeswap-token'],
-  nft: ['blur', 'apecoin', 'immutable-x', 'flow', 'theta-token', 'enjincoin', 'decentraland', 'the-sandbox', 'axie-infinity', 'looks-rare'],
-  gaming: ['axie-infinity', 'the-sandbox', 'gala', 'illuvium', 'stepn', 'vulcan-forged', 'ultra', 'magic', 'yield-guild-games', 'merit-circle'],
-  'layer-1': ['bitcoin', 'ethereum', 'solana', 'avalanche-2', 'near', 'aptos', 'sui', 'fantom', 'tron', 'cosmos'],
-  'layer-2': ['matic-network', 'arbitrum', 'optimism', 'starknet', 'immutable-x', 'loopring', 'metis-token', 'mantle', 'base', 'scroll'],
-  meme: ['dogecoin', 'shiba-inu', 'pepe', 'floki', 'bonk', 'dogwifcoin', 'memecoin', 'wojak', 'book-of-meme', 'brett'],
-  ai: ['render-token', 'fetch-ai', 'ocean-protocol', 'singularitynet', 'numeraire', 'worldcoin-wld', 'arkham', 'bittensor', 'phala-network', 'cortex'],
-  exchange: ['binancecoin', 'okb', 'kucoin-shares', 'crypto-com-chain', 'huobi-token', 'ftx-token', 'bitget-token', 'mx-token', 'bitmax-token', 'leo-token'],
-  stablecoin: ['tether', 'usd-coin', 'dai', 'frax', 'trueusd', 'paxos-standard', 'paypal-usd', 'liquity-usd', 'celo-dollar', 'reserve-rights-token'],
-  privacy: ['monero', 'zcash', 'dash', 'secret', 'horizen', 'verge', 'beam', 'decred', 'pivx', 'firo'],
-  storage: ['filecoin', 'arweave', 'storj', 'siacoin', 'bittorent', 'internet-computer', 'crust-network', 'bluzelle', 'opacity', 'stratos'],
-  oracle: ['chainlink', 'band-protocol', 'api3', 'uma', 'tellor', 'dia-data', 'pyth-network', 'flux', 'nest-protocol', 'razor-network'],
+  defi: [
+    'uniswap',
+    'aave',
+    'lido-dao',
+    'maker',
+    'curve-dao-token',
+    'compound-governance-token',
+    'sushi',
+    'yearn-finance',
+    '1inch',
+    'pancakeswap-token',
+  ],
+  nft: [
+    'blur',
+    'apecoin',
+    'immutable-x',
+    'flow',
+    'theta-token',
+    'enjincoin',
+    'decentraland',
+    'the-sandbox',
+    'axie-infinity',
+    'looks-rare',
+  ],
+  gaming: [
+    'axie-infinity',
+    'the-sandbox',
+    'gala',
+    'illuvium',
+    'stepn',
+    'vulcan-forged',
+    'ultra',
+    'magic',
+    'yield-guild-games',
+    'merit-circle',
+  ],
+  'layer-1': [
+    'bitcoin',
+    'ethereum',
+    'solana',
+    'avalanche-2',
+    'near',
+    'aptos',
+    'sui',
+    'fantom',
+    'tron',
+    'cosmos',
+  ],
+  'layer-2': [
+    'matic-network',
+    'arbitrum',
+    'optimism',
+    'starknet',
+    'immutable-x',
+    'loopring',
+    'metis-token',
+    'mantle',
+    'base',
+    'scroll',
+  ],
+  meme: [
+    'dogecoin',
+    'shiba-inu',
+    'pepe',
+    'floki',
+    'bonk',
+    'dogwifcoin',
+    'memecoin',
+    'wojak',
+    'book-of-meme',
+    'brett',
+  ],
+  ai: [
+    'render-token',
+    'fetch-ai',
+    'ocean-protocol',
+    'singularitynet',
+    'numeraire',
+    'worldcoin-wld',
+    'arkham',
+    'bittensor',
+    'phala-network',
+    'cortex',
+  ],
+  exchange: [
+    'binancecoin',
+    'okb',
+    'kucoin-shares',
+    'crypto-com-chain',
+    'huobi-token',
+    'ftx-token',
+    'bitget-token',
+    'mx-token',
+    'bitmax-token',
+    'leo-token',
+  ],
+  stablecoin: [
+    'tether',
+    'usd-coin',
+    'dai',
+    'frax',
+    'trueusd',
+    'paxos-standard',
+    'paypal-usd',
+    'liquity-usd',
+    'celo-dollar',
+    'reserve-rights-token',
+  ],
+  privacy: [
+    'monero',
+    'zcash',
+    'dash',
+    'secret',
+    'horizen',
+    'verge',
+    'beam',
+    'decred',
+    'pivx',
+    'firo',
+  ],
+  storage: [
+    'filecoin',
+    'arweave',
+    'storj',
+    'siacoin',
+    'bittorent',
+    'internet-computer',
+    'crust-network',
+    'bluzelle',
+    'opacity',
+    'stratos',
+  ],
+  oracle: [
+    'chainlink',
+    'band-protocol',
+    'api3',
+    'uma',
+    'tellor',
+    'dia-data',
+    'pyth-network',
+    'flux',
+    'nest-protocol',
+    'razor-network',
+  ],
 };
 
 interface CategoryPageProps {
@@ -99,9 +231,9 @@ export async function generateMetadata({ params }: CategoryPageProps): Promise<M
   const { id } = await params;
   const category = CATEGORY_META[id];
   if (!category) return { title: 'Category Not Found' };
-  
+
   return {
-    title: `${category.name} Cryptocurrencies - Free Crypto News`,
+    title: `${category.name} Cryptocurrencies - Crypto Data Aggregator`,
     description: `Browse ${category.name} cryptocurrencies. ${category.description}`,
   };
 }
@@ -113,19 +245,20 @@ export function generateStaticParams() {
 export default async function CategoryDetailPage({ params }: CategoryPageProps) {
   const { id } = await params;
   const category = CATEGORY_META[id];
-  
+
   if (!category) {
     notFound();
   }
 
   const allCoins = await getTopCoins(250);
   const categoryCoins = CATEGORY_COINS[id] || [];
-  
+
   // Filter coins that belong to this category
-  const coins = allCoins.filter((coin) => 
-    categoryCoins.some((catCoin) => 
-      coin.id.toLowerCase() === catCoin.toLowerCase() ||
-      coin.symbol.toLowerCase() === catCoin.toLowerCase()
+  const coins = allCoins.filter((coin) =>
+    categoryCoins.some(
+      (catCoin) =>
+        coin.id.toLowerCase() === catCoin.toLowerCase() ||
+        coin.symbol.toLowerCase() === catCoin.toLowerCase()
     )
   );
 
@@ -141,7 +274,10 @@ export default async function CategoryDetailPage({ params }: CategoryPageProps) 
               Markets
             </Link>
             <span>/</span>
-            <Link href="/markets/categories" className="hover:text-blue-600 dark:hover:text-blue-400">
+            <Link
+              href="/markets/categories"
+              className="hover:text-blue-600 dark:hover:text-blue-400"
+            >
               Categories
             </Link>
             <span>/</span>
@@ -165,13 +301,27 @@ export default async function CategoryDetailPage({ params }: CategoryPageProps) 
                 <table className="w-full">
                   <thead>
                     <tr className="bg-gray-50 dark:bg-gray-900/50 border-b border-gray-200 dark:border-gray-700">
-                      <th className="text-left text-gray-500 dark:text-gray-400 text-sm font-medium p-4">#</th>
-                      <th className="text-left text-gray-500 dark:text-gray-400 text-sm font-medium p-4">Coin</th>
-                      <th className="text-right text-gray-500 dark:text-gray-400 text-sm font-medium p-4">Price</th>
-                      <th className="text-right text-gray-500 dark:text-gray-400 text-sm font-medium p-4">24h %</th>
-                      <th className="text-right text-gray-500 dark:text-gray-400 text-sm font-medium p-4 hidden md:table-cell">7d %</th>
-                      <th className="text-right text-gray-500 dark:text-gray-400 text-sm font-medium p-4 hidden lg:table-cell">Market Cap</th>
-                      <th className="text-right text-gray-500 dark:text-gray-400 text-sm font-medium p-4 hidden lg:table-cell">Volume (24h)</th>
+                      <th className="text-left text-gray-500 dark:text-gray-400 text-sm font-medium p-4">
+                        #
+                      </th>
+                      <th className="text-left text-gray-500 dark:text-gray-400 text-sm font-medium p-4">
+                        Coin
+                      </th>
+                      <th className="text-right text-gray-500 dark:text-gray-400 text-sm font-medium p-4">
+                        Price
+                      </th>
+                      <th className="text-right text-gray-500 dark:text-gray-400 text-sm font-medium p-4">
+                        24h %
+                      </th>
+                      <th className="text-right text-gray-500 dark:text-gray-400 text-sm font-medium p-4 hidden md:table-cell">
+                        7d %
+                      </th>
+                      <th className="text-right text-gray-500 dark:text-gray-400 text-sm font-medium p-4 hidden lg:table-cell">
+                        Market Cap
+                      </th>
+                      <th className="text-right text-gray-500 dark:text-gray-400 text-sm font-medium p-4 hidden lg:table-cell">
+                        Volume (24h)
+                      </th>
                     </tr>
                   </thead>
                   <tbody>
@@ -257,10 +407,7 @@ export default async function CategoryDetailPage({ params }: CategoryPageProps) 
             >
               ← All Categories
             </Link>
-            <Link
-              href="/markets"
-              className="text-blue-600 dark:text-blue-400 hover:underline"
-            >
+            <Link href="/markets" className="text-blue-600 dark:text-blue-400 hover:underline">
               Back to Markets
             </Link>
           </div>

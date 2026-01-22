@@ -11,7 +11,7 @@ import { formatNumber } from '@/lib/market-data';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Cryptocurrency Exchanges - Free Crypto News',
+  title: 'Cryptocurrency Exchanges - Crypto Data Aggregator',
   description: 'Browse cryptocurrency exchanges ranked by 24h trading volume and trust score.',
 };
 
@@ -34,10 +34,9 @@ interface Exchange {
 // Fetch exchanges from CoinGecko
 async function getExchanges(): Promise<Exchange[]> {
   try {
-    const response = await fetch(
-      'https://api.coingecko.com/api/v3/exchanges?per_page=100',
-      { next: { revalidate: 300 } }
-    );
+    const response = await fetch('https://api.coingecko.com/api/v3/exchanges?per_page=100', {
+      next: { revalidate: 300 },
+    });
     if (!response.ok) return [];
     return response.json();
   } catch {
@@ -99,14 +98,30 @@ export default async function ExchangesPage() {
               <table className="w-full">
                 <thead>
                   <tr className="bg-gray-50 dark:bg-gray-900/50 border-b border-gray-200 dark:border-gray-700">
-                    <th className="text-left text-gray-500 dark:text-gray-400 text-sm font-medium p-4">#</th>
-                    <th className="text-left text-gray-500 dark:text-gray-400 text-sm font-medium p-4">Exchange</th>
-                    <th className="text-center text-gray-500 dark:text-gray-400 text-sm font-medium p-4">Trust Score</th>
-                    <th className="text-right text-gray-500 dark:text-gray-400 text-sm font-medium p-4">24h Volume (BTC)</th>
-                    <th className="text-right text-gray-500 dark:text-gray-400 text-sm font-medium p-4 hidden md:table-cell">24h Volume (USD)</th>
-                    <th className="text-right text-gray-500 dark:text-gray-400 text-sm font-medium p-4 hidden lg:table-cell">Year Est.</th>
-                    <th className="text-right text-gray-500 dark:text-gray-400 text-sm font-medium p-4 hidden lg:table-cell">Country</th>
-                    <th className="text-center text-gray-500 dark:text-gray-400 text-sm font-medium p-4 hidden sm:table-cell">Visit</th>
+                    <th className="text-left text-gray-500 dark:text-gray-400 text-sm font-medium p-4">
+                      #
+                    </th>
+                    <th className="text-left text-gray-500 dark:text-gray-400 text-sm font-medium p-4">
+                      Exchange
+                    </th>
+                    <th className="text-center text-gray-500 dark:text-gray-400 text-sm font-medium p-4">
+                      Trust Score
+                    </th>
+                    <th className="text-right text-gray-500 dark:text-gray-400 text-sm font-medium p-4">
+                      24h Volume (BTC)
+                    </th>
+                    <th className="text-right text-gray-500 dark:text-gray-400 text-sm font-medium p-4 hidden md:table-cell">
+                      24h Volume (USD)
+                    </th>
+                    <th className="text-right text-gray-500 dark:text-gray-400 text-sm font-medium p-4 hidden lg:table-cell">
+                      Year Est.
+                    </th>
+                    <th className="text-right text-gray-500 dark:text-gray-400 text-sm font-medium p-4 hidden lg:table-cell">
+                      Country
+                    </th>
+                    <th className="text-center text-gray-500 dark:text-gray-400 text-sm font-medium p-4 hidden sm:table-cell">
+                      Visit
+                    </th>
                   </tr>
                 </thead>
                 <tbody>
@@ -150,7 +165,10 @@ export default async function ExchangesPage() {
                         ₿ {formatNumber(exchange.trade_volume_24h_btc_normalized)}
                       </td>
                       <td className="p-4 text-right text-gray-700 dark:text-gray-300 hidden md:table-cell">
-                        ${formatNumber(exchange.trade_volume_24h_btc_normalized * BTC_PRICE_ESTIMATE)}
+                        $
+                        {formatNumber(
+                          exchange.trade_volume_24h_btc_normalized * BTC_PRICE_ESTIMATE
+                        )}
                       </td>
                       <td className="p-4 text-right text-gray-700 dark:text-gray-300 hidden lg:table-cell">
                         {exchange.year_established || '—'}
@@ -166,8 +184,18 @@ export default async function ExchangesPage() {
                           className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-gray-100 dark:bg-gray-700 hover:bg-blue-100 dark:hover:bg-blue-900/30 text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
                           title={`Visit ${exchange.name}`}
                         >
-                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                          <svg
+                            className="w-4 h-4"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+                            />
                           </svg>
                         </a>
                       </td>
@@ -183,12 +211,11 @@ export default async function ExchangesPage() {
             <div className="flex items-start gap-3">
               <span className="text-xl">ℹ️</span>
               <div className="text-sm">
-                <p className="text-blue-800 dark:text-blue-200 font-medium">
-                  About Trust Score
-                </p>
+                <p className="text-blue-800 dark:text-blue-200 font-medium">About Trust Score</p>
                 <p className="text-blue-600 dark:text-blue-300">
-                  Trust score is calculated based on liquidity, scale of operations, cyber security, and regulatory compliance. 
-                  Volume shown is normalized to account for potential wash trading.
+                  Trust score is calculated based on liquidity, scale of operations, cyber security,
+                  and regulatory compliance. Volume shown is normalized to account for potential
+                  wash trading.
                 </p>
               </div>
             </div>
@@ -196,10 +223,7 @@ export default async function ExchangesPage() {
 
           {/* Back link */}
           <div className="mt-8 text-center">
-            <Link
-              href="/markets"
-              className="text-blue-600 dark:text-blue-400 hover:underline"
-            >
+            <Link href="/markets" className="text-blue-600 dark:text-blue-400 hover:underline">
               ← Back to Markets
             </Link>
           </div>

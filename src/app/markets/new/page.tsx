@@ -11,7 +11,7 @@ import { getTopCoins, formatPrice, formatPercent, formatNumber } from '@/lib/mar
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Newly Listed Coins - Crypto Markets - Free Crypto News',
+  title: 'Newly Listed Coins - Crypto Markets - Crypto Data Aggregator',
   description: 'Discover newly listed cryptocurrencies and recent additions to the market.',
 };
 
@@ -19,7 +19,7 @@ export const revalidate = 60;
 
 export default async function NewCoinsPage() {
   const coins = await getTopCoins(250);
-  
+
   // Sort by last_updated to get recently active coins
   // Note: In a real implementation, you'd want a dedicated "new listings" API
   const newCoins = [...coins]
@@ -56,11 +56,10 @@ export default async function NewCoinsPage() {
             <div className="flex items-start gap-3">
               <span className="text-xl">💡</span>
               <div>
-                <p className="text-blue-800 dark:text-blue-200 font-medium">
-                  New listing alert
-                </p>
+                <p className="text-blue-800 dark:text-blue-200 font-medium">New listing alert</p>
                 <p className="text-blue-600 dark:text-blue-300 text-sm">
-                  New cryptocurrencies can be highly volatile. Always do your own research before investing.
+                  New cryptocurrencies can be highly volatile. Always do your own research before
+                  investing.
                 </p>
               </div>
             </div>
@@ -118,10 +117,7 @@ export default async function NewCoinsPage() {
 
           {/* Back link */}
           <div className="mt-8 text-center">
-            <Link
-              href="/markets"
-              className="text-blue-600 dark:text-blue-400 hover:underline"
-            >
+            <Link href="/markets" className="text-blue-600 dark:text-blue-400 hover:underline">
               ← Back to Markets
             </Link>
           </div>
