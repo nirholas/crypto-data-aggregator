@@ -1,6 +1,6 @@
 /**
  * Price & Keyword Alerts System
- * 
+ *
  * Features:
  * - Price threshold alerts (above/below)
  * - Percent change alerts (24h)
@@ -73,7 +73,36 @@ function generateId(prefix: string): string {
 }
 
 /**
- * Create a price alert
+ * Creates a new price alert for a cryptocurrency.
+ * Supports price thresholds (above/below) and percentage change alerts.
+ *
+ * @param userId - Unique identifier for the user
+ * @param options - Alert configuration
+ * @param options.coin - Coin display name (e.g., 'Bitcoin')
+ * @param options.coinId - CoinGecko coin ID (e.g., 'bitcoin')
+ * @param options.condition - Alert trigger condition
+ * @param options.threshold - Price or percentage threshold
+ * @param options.notifyVia - Notification channels (default: ['push'])
+ * @returns The created price alert object
+ *
+ * @example
+ * ```typescript
+ * // Alert when Bitcoin goes above $50,000
+ * await createPriceAlert('user_123', {
+ *   coin: 'Bitcoin',
+ *   coinId: 'bitcoin',
+ *   condition: 'above',
+ *   threshold: 50000
+ * });
+ *
+ * // Alert when ETH drops 10% in 24h
+ * await createPriceAlert('user_123', {
+ *   coin: 'Ethereum',
+ *   coinId: 'ethereum',
+ *   condition: 'percent_down',
+ *   threshold: 10
+ * });
+ * ```
  */
 export async function createPriceAlert(
   userId: string,
@@ -103,7 +132,24 @@ export async function createPriceAlert(
 }
 
 /**
- * Create a keyword alert
+ * Creates a keyword alert to monitor news articles.
+ * Triggers when articles contain specified keywords.
+ *
+ * @param userId - Unique identifier for the user
+ * @param options - Alert configuration
+ * @param options.keywords - Keywords to monitor (case-insensitive)
+ * @param options.sources - Optional: limit to specific news sources
+ * @param options.notifyVia - Notification channels (default: ['push'])
+ * @returns The created keyword alert object
+ *
+ * @example
+ * ```typescript
+ * // Alert on SEC-related news
+ * await createKeywordAlert('user_123', {
+ *   keywords: ['sec', 'lawsuit', 'regulation'],
+ *   notifyVia: ['push', 'email']
+ * });
+ * ```
  */
 export async function createKeywordAlert(
   userId: string,
@@ -116,7 +162,7 @@ export async function createKeywordAlert(
   const alert: KeywordAlert = {
     id: generateId('ka'),
     userId,
-    keywords: options.keywords.map(k => k.toLowerCase()),
+    keywords: options.keywords.map((k) => k.toLowerCase()),
     sources: options.sources,
     notifyVia: options.notifyVia || ['push'],
     active: true,
@@ -128,7 +174,16 @@ export async function createKeywordAlert(
 }
 
 /**
- * Delete an alert
+ * Deletes an alert (either price or keyword alert).
+ *
+ * @param alertId - Alert ID to delete (format: 'pa_...' or 'ka_...')
+ * @returns True if alert was deleted, false if not found
+ *
+ * @example
+ * ```typescript
+ * const deleted = await deleteAlert('pa_123456_abc');
+ * console.log(deleted ? 'Alert removed' : 'Alert not found');
+ * ```
  */
 export async function deleteAlert(alertId: string): Promise<boolean> {
   if (priceAlerts.has(alertId)) {
@@ -143,7 +198,20 @@ export async function deleteAlert(alertId: string): Promise<boolean> {
 }
 
 /**
- * Toggle alert active status
+ * Enables or disables an alert without deleting it.
+ *
+ * @param alertId - Alert ID to toggle
+ * @param active - Whether the alert should be active
+ * @returns True if alert was found and updated, false if not found
+ *
+ * @example
+ * ```typescript
+ * // Temporarily disable an alert
+ * await toggleAlert('pa_123', false);
+ *
+ * // Re-enable later
+ * await toggleAlert('pa_123', true);
+ * ```
  */
 export async function toggleAlert(alertId: string, active: boolean): Promise<boolean> {
   const priceAlert = priceAlerts.get(alertId);
@@ -152,39 +220,62 @@ export async function toggleAlert(alertId: string, active: boolean): Promise<boo
     priceAlerts.set(alertId, priceAlert);
     return true;
   }
-  
+
   const keywordAlert = keywordAlerts.get(alertId);
   if (keywordAlert) {
     keywordAlert.active = active;
     keywordAlerts.set(alertId, keywordAlert);
     return true;
   }
-  
+
   return false;
 }
 
 /**
- * Get alerts for a user
+ * Retrieves all alerts for a specific user.
+ *
+ * @param userId - User ID to get alerts for
+ * @returns Object containing arrays of price and keyword alerts
+ *
+ * @example
+ * ```typescript
+ * const { priceAlerts, keywordAlerts } = getUserAlerts('user_123');
+ * console.log(`${priceAlerts.length} price alerts`);
+ * console.log(`${keywordAlerts.length} keyword alerts`);
+ * ```
  */
 export function getUserAlerts(userId: string): {
   priceAlerts: PriceAlert[];
   keywordAlerts: KeywordAlert[];
 } {
   return {
-    priceAlerts: Array.from(priceAlerts.values()).filter(a => a.userId === userId),
-    keywordAlerts: Array.from(keywordAlerts.values()).filter(a => a.userId === userId),
+    priceAlerts: Array.from(priceAlerts.values()).filter((a) => a.userId === userId),
+    keywordAlerts: Array.from(keywordAlerts.values()).filter((a) => a.userId === userId),
   };
 }
 
 /**
- * Check all price alerts against current prices
+ * Evaluates all active price alerts against current market prices.
+ * Triggers and marks alerts that meet their conditions.
+ * Should be called periodically (e.g., every 30 seconds).
+ *
+ * @returns Array of notifications for triggered alerts
+ *
+ * @example
+ * ```typescript
+ * // In a scheduled job
+ * setInterval(async () => {
+ *   const notifications = await checkPriceAlerts();
+ *   notifications.forEach(n => sendPushNotification(n));
+ * }, 30000);
+ * ```
  */
 export async function checkPriceAlerts(): Promise<AlertNotification[]> {
   const notifications: AlertNotification[] = [];
-  
+
   try {
     const coins = await getTopCoins(100);
-    const coinMap = new Map(coins.map(c => [c.id, c]));
+    const coinMap = new Map(coins.map((c) => [c.id, c]));
 
     for (const [, alert] of priceAlerts) {
       if (!alert.active || alert.triggered) continue;
@@ -244,7 +335,7 @@ export async function checkPriceAlerts(): Promise<AlertNotification[]> {
         };
 
         notifications.push(notification);
-        
+
         // Store in history
         const history = alertHistory.get(alert.userId) || [];
         history.unshift(notification);
@@ -259,14 +350,26 @@ export async function checkPriceAlerts(): Promise<AlertNotification[]> {
 }
 
 /**
- * Check keyword alerts against latest news
+ * Checks latest news articles against active keyword alerts.
+ * Triggers alerts when articles contain monitored keywords.
+ * Includes debouncing to avoid duplicate notifications for same article.
+ *
+ * @returns Array of notifications for triggered alerts
+ *
+ * @example
+ * ```typescript
+ * const notifications = await checkKeywordAlerts();
+ * notifications.forEach(n => {
+ *   console.log(`Match: ${n.title} - ${n.message}`);
+ * });
+ * ```
  */
 export async function checkKeywordAlerts(): Promise<AlertNotification[]> {
   const notifications: AlertNotification[] = [];
-  
+
   try {
     const news = await getLatestNews(50);
-    
+
     for (const [, alert] of keywordAlerts) {
       if (!alert.active) continue;
 
@@ -279,16 +382,16 @@ export async function checkKeywordAlerts(): Promise<AlertNotification[]> {
         // Check keywords
         const titleLower = article.title.toLowerCase();
         const descLower = (article.description || '').toLowerCase();
-        
+
         const matchedKeywords = alert.keywords.filter(
-          kw => titleLower.includes(kw) || descLower.includes(kw)
+          (kw) => titleLower.includes(kw) || descLower.includes(kw)
         );
 
         if (matchedKeywords.length > 0) {
           // Debounce: don't alert for same article twice
           const history = alertHistory.get(alert.userId) || [];
           const alreadyNotified = history.some(
-            n => n.type === 'keyword' && (n.data as any).link === article.link
+            (n) => n.type === 'keyword' && (n.data as any).link === article.link
           );
 
           if (!alreadyNotified) {
@@ -310,7 +413,7 @@ export async function checkKeywordAlerts(): Promise<AlertNotification[]> {
             };
 
             notifications.push(notification);
-            
+
             // Store in history
             history.unshift(notification);
             alertHistory.set(alert.userId, history.slice(0, 100));
@@ -352,10 +455,10 @@ export function getAlertStats(): {
 
   return {
     totalPriceAlerts: allPrice.length,
-    activePriceAlerts: allPrice.filter(a => a.active).length,
-    triggeredPriceAlerts: allPrice.filter(a => a.triggered).length,
+    activePriceAlerts: allPrice.filter((a) => a.active).length,
+    triggeredPriceAlerts: allPrice.filter((a) => a.triggered).length,
     totalKeywordAlerts: allKeyword.length,
-    activeKeywordAlerts: allKeyword.filter(a => a.active).length,
+    activeKeywordAlerts: allKeyword.filter((a) => a.active).length,
   };
 }
 // =============================================================================
@@ -406,7 +509,7 @@ export function getAllAlertRules(): AlertRule[] {
  * Get enabled alert rules
  */
 export function getEnabledAlertRules(): AlertRule[] {
-  return getAllAlertRules().filter(r => r.enabled);
+  return getAllAlertRules().filter((r) => r.enabled);
 }
 
 /**
@@ -522,21 +625,27 @@ export function updateLastTriggered(ruleId: string): void {
  */
 export async function evaluateCondition(
   condition: AlertCondition
-): Promise<{ triggered: boolean; currentValue: number | string; context?: Record<string, unknown> } | null> {
+): Promise<{
+  triggered: boolean;
+  currentValue: number | string;
+  context?: Record<string, unknown>;
+} | null> {
   try {
     switch (condition.type) {
       case 'price_above':
       case 'price_below': {
         const coins = await getTopCoins(100);
         const coin = coins.find(
-          c => c.id.toLowerCase() === condition.coin.toLowerCase() ||
-               c.symbol.toLowerCase() === condition.coin.toLowerCase()
+          (c) =>
+            c.id.toLowerCase() === condition.coin.toLowerCase() ||
+            c.symbol.toLowerCase() === condition.coin.toLowerCase()
         );
         if (!coin) return null;
 
-        const triggered = condition.type === 'price_above'
-          ? coin.current_price >= condition.threshold
-          : coin.current_price <= condition.threshold;
+        const triggered =
+          condition.type === 'price_above'
+            ? coin.current_price >= condition.threshold
+            : coin.current_price <= condition.threshold;
 
         return {
           triggered,
@@ -553,20 +662,23 @@ export async function evaluateCondition(
       case 'price_change_pct': {
         const coins = await getTopCoins(100);
         const coin = coins.find(
-          c => c.id.toLowerCase() === condition.coin.toLowerCase() ||
-               c.symbol.toLowerCase() === condition.coin.toLowerCase()
+          (c) =>
+            c.id.toLowerCase() === condition.coin.toLowerCase() ||
+            c.symbol.toLowerCase() === condition.coin.toLowerCase()
         );
         if (!coin) return null;
 
         // For 24h, use the built-in value; for 1h, we'd need historical data
         // Using 24h change as approximation for now
-        const changeValue = condition.timeframe === '24h'
-          ? coin.price_change_percentage_24h
-          : coin.price_change_percentage_24h / 24; // Rough approximation
+        const changeValue =
+          condition.timeframe === '24h'
+            ? coin.price_change_percentage_24h
+            : coin.price_change_percentage_24h / 24; // Rough approximation
 
-        const triggered = condition.threshold > 0
-          ? changeValue >= condition.threshold
-          : changeValue <= condition.threshold;
+        const triggered =
+          condition.threshold > 0
+            ? changeValue >= condition.threshold
+            : changeValue <= condition.threshold;
 
         return {
           triggered,
@@ -584,8 +696,9 @@ export async function evaluateCondition(
       case 'volume_spike': {
         const coins = await getTopCoins(100);
         const coin = coins.find(
-          c => c.id.toLowerCase() === condition.coin.toLowerCase() ||
-               c.symbol.toLowerCase() === condition.coin.toLowerCase()
+          (c) =>
+            c.id.toLowerCase() === condition.coin.toLowerCase() ||
+            c.symbol.toLowerCase() === condition.coin.toLowerCase()
         );
         if (!coin) return null;
 
@@ -616,11 +729,12 @@ export async function evaluateCondition(
         }
 
         const matchingArticles = condition.keywords?.length
-          ? news.articles.filter(article => {
+          ? news.articles.filter((article) => {
               const titleLower = article.title.toLowerCase();
               const descLower = (article.description || '').toLowerCase();
               return condition.keywords!.some(
-                kw => titleLower.includes(kw.toLowerCase()) || descLower.includes(kw.toLowerCase())
+                (kw) =>
+                  titleLower.includes(kw.toLowerCase()) || descLower.includes(kw.toLowerCase())
               );
             })
           : news.articles;
@@ -630,7 +744,7 @@ export async function evaluateCondition(
             triggered: true,
             currentValue: matchingArticles.length,
             context: {
-              articles: matchingArticles.slice(0, 3).map(a => ({
+              articles: matchingArticles.slice(0, 3).map((a) => ({
                 title: a.title,
                 source: a.source,
                 link: a.link,
@@ -645,14 +759,14 @@ export async function evaluateCondition(
       case 'ticker_mention': {
         const news = await getLatestNews(50);
         const tickerLower = condition.ticker.toLowerCase();
-        
-        const matchingArticles = news.articles.filter(article => {
+
+        const matchingArticles = news.articles.filter((article) => {
           const titleLower = article.title.toLowerCase();
           const descLower = (article.description || '').toLowerCase();
           const mentions = titleLower.includes(tickerLower) || descLower.includes(tickerLower);
-          
+
           if (!mentions) return false;
-          
+
           // Check sentiment if specified
           if (condition.minSentiment !== undefined) {
             const sentiment = (article as unknown as Record<string, unknown>).sentiment;
@@ -660,7 +774,7 @@ export async function evaluateCondition(
               return false;
             }
           }
-          
+
           return true;
         });
 
@@ -670,7 +784,7 @@ export async function evaluateCondition(
             currentValue: matchingArticles.length,
             context: {
               ticker: condition.ticker,
-              articles: matchingArticles.slice(0, 3).map(a => ({
+              articles: matchingArticles.slice(0, 3).map((a) => ({
                 title: a.title,
                 source: a.source,
                 link: a.link,
@@ -693,7 +807,7 @@ export async function evaluateCondition(
         if (!fearGreed) return null;
 
         const currentValue = fearGreed.value;
-        
+
         if (lastFearGreedValue === null) {
           lastFearGreedValue = currentValue;
           return { triggered: false, currentValue: 0 };
@@ -701,7 +815,7 @@ export async function evaluateCondition(
 
         const change = Math.abs(currentValue - lastFearGreedValue);
         const triggered = change >= condition.threshold;
-        
+
         const result = {
           triggered,
           currentValue: change,
@@ -732,13 +846,14 @@ export function createAlertEvent(
   rule: AlertRule,
   evalResult: { currentValue: number | string; context?: Record<string, unknown> }
 ): AlertEvent {
-  const threshold = 'threshold' in rule.condition
-    ? (rule.condition as { threshold: number }).threshold
-    : 'multiplier' in rule.condition
-    ? (rule.condition as { multiplier: number }).multiplier
-    : 'minUSD' in rule.condition
-    ? (rule.condition as { minUSD: number }).minUSD
-    : 0;
+  const threshold =
+    'threshold' in rule.condition
+      ? (rule.condition as { threshold: number }).threshold
+      : 'multiplier' in rule.condition
+        ? (rule.condition as { multiplier: number }).multiplier
+        : 'minUSD' in rule.condition
+          ? (rule.condition as { minUSD: number }).minUSD
+          : 0;
 
   const event: AlertEvent = {
     id: generateEventId(),
@@ -800,7 +915,7 @@ export async function evaluateAllAlerts(): Promise<AlertEvent[]> {
 
     try {
       const result = await evaluateCondition(rule.condition);
-      
+
       if (result?.triggered) {
         const event = createAlertEvent(rule, result);
         events.push(event);
@@ -851,9 +966,7 @@ export function getAlertEvents(limit = 100): AlertEvent[] {
  * Get events for a specific rule
  */
 export function getAlertEventsByRule(ruleId: string, limit = 50): AlertEvent[] {
-  return alertEventsCache
-    .filter(e => e.ruleId === ruleId)
-    .slice(0, limit);
+  return alertEventsCache.filter((e) => e.ruleId === ruleId).slice(0, limit);
 }
 
 /**
@@ -876,7 +989,7 @@ export function getEnhancedAlertStats(): {
 
   return {
     totalRules: rules.length,
-    enabledRules: rules.filter(r => r.enabled).length,
+    enabledRules: rules.filter((r) => r.enabled).length,
     totalEvents: alertEventsCache.length,
     rulesByType,
     recentEvents: alertEventsCache.slice(0, 10),

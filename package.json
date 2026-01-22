@@ -46,6 +46,7 @@
   "author": "nirholas",
   "license": "MIT",
   "dependencies": {
+    "@heroicons/react": "^2.2.0",
     "@types/recharts": "^1.8.29",
     "critters": "^0.0.23",
     "framer-motion": "^12.28.1",

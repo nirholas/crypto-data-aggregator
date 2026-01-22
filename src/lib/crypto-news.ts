@@ -277,6 +277,31 @@ function filterByDateRange(
   return filtered;
 }
 
+/**
+ * Fetches the latest crypto news from all or specific sources.
+ * Supports pagination and date filtering.
+ *
+ * @param limit - Maximum articles to return (default: 10, max: 50)
+ * @param source - Optional: filter to specific source key
+ * @param options - Additional query options
+ * @param options.from - Filter articles after this date
+ * @param options.to - Filter articles before this date
+ * @param options.page - Page number for pagination
+ * @param options.perPage - Articles per page
+ * @returns News response with articles, counts, and pagination info
+ *
+ * @example
+ * ```typescript
+ * // Get latest 10 articles
+ * const news = await getLatestNews();
+ *
+ * // Get CoinDesk articles only
+ * const coindesk = await getLatestNews(20, 'coindesk');
+ *
+ * // With pagination
+ * const page2 = await getLatestNews(10, undefined, { page: 2, perPage: 10 });
+ * ```
+ */
 export async function getLatestNews(
   limit: number = 10,
   source?: string,
@@ -354,6 +379,21 @@ export async function searchNews(keywords: string, limit: number = 10): Promise<
   };
 }
 
+/**
+ * Fetches breaking news from the last 2 hours.
+ * Useful for real-time news tickers and alerts.
+ *
+ * @param limit - Maximum articles (default: 5, max: 20)
+ * @returns News response with recent articles only
+ *
+ * @example
+ * ```typescript
+ * const breaking = await getBreakingNews(5);
+ * if (breaking.articles.length > 0) {
+ *   showNotification(breaking.articles[0].title);
+ * }
+ * ```
+ */
 export async function getBreakingNews(limit: number = 5): Promise<NewsResponse> {
   const normalizedLimit = Math.min(Math.max(1, limit), 20);
   const twoHoursAgo = new Date(Date.now() - 2 * 60 * 60 * 1000);
@@ -373,7 +413,22 @@ export async function getBreakingNews(limit: number = 5): Promise<NewsResponse> 
 }
 
 /**
- * Get news by category (bitcoin, ethereum, defi, nft, regulation, markets, etc.)
+ * Fetches news articles for a specific category.
+ * Uses keyword matching to categorize articles.
+ *
+ * Supported categories:
+ * - bitcoin, ethereum, defi, nft, regulation
+ * - markets, mining, stablecoin, exchange, layer2
+ *
+ * @param category - Category slug (case-insensitive)
+ * @param limit - Maximum articles (default: 30, max: 50)
+ * @returns News response with category-filtered articles
+ *
+ * @example
+ * ```typescript
+ * const defiNews = await getNewsByCategory('defi', 20);
+ * console.log(`${defiNews.totalCount} DeFi articles found`);
+ * ```
  */
 export async function getNewsByCategory(
   category: string,
@@ -529,6 +584,19 @@ export async function getNewsByCategory(
   };
 }
 
+/**
+ * Returns information about all available news sources.
+ * Includes source status (active/unavailable).
+ *
+ * @returns Object with array of source info objects
+ *
+ * @example
+ * ```typescript
+ * const { sources } = await getSources();
+ * const active = sources.filter(s => s.status === 'active');
+ * console.log(`${active.length} sources available`);
+ * ```
+ */
 export async function getSources(): Promise<{ sources: SourceInfo[] }> {
   const sourceChecks = await Promise.allSettled(
     (Object.keys(RSS_SOURCES) as SourceKey[]).map(async (key) => {
@@ -564,17 +632,50 @@ export async function getSources(): Promise<{ sources: SourceInfo[] }> {
   };
 }
 
-// Convenience function for DeFi-specific news
+/**
+ * Convenience function to fetch DeFi-related news.
+ * Shorthand for getNewsByCategory('defi', limit).
+ *
+ * @param limit - Maximum articles (default: 10)
+ * @returns News response with DeFi articles
+ *
+ * @example
+ * ```typescript
+ * const defi = await getDefiNews(15);
+ * ```
+ */
 export async function getDefiNews(limit: number = 10): Promise<NewsResponse> {
   return getNewsByCategory('defi', limit);
 }
 
-// Convenience function for Bitcoin-specific news
+/**
+ * Convenience function to fetch Bitcoin-related news.
+ * Shorthand for getNewsByCategory('bitcoin', limit).
+ *
+ * @param limit - Maximum articles (default: 10)
+ * @returns News response with Bitcoin articles
+ *
+ * @example
+ * ```typescript
+ * const btc = await getBitcoinNews(10);
+ * ```
+ */
 export async function getBitcoinNews(limit: number = 10): Promise<NewsResponse> {
   return getNewsByCategory('bitcoin', limit);
 }
 
-// Convenience function for Ethereum-specific news
+/**
+ * Convenience function to fetch Ethereum-related news.
+ * Shorthand for getNewsByCategory('ethereum', limit).
+ *
+ * @param limit - Maximum articles (default: 10)
+ * @returns News response with Ethereum articles
+ *
+ * @example
+ * ```typescript
+ * const eth = await getEthereumNews(10);
+ * ```
+ */
 export async function getEthereumNews(limit: number = 10): Promise<NewsResponse> {
   return getNewsByCategory('ethereum', limit);
 }

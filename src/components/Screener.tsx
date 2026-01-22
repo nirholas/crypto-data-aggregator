@@ -10,6 +10,7 @@ import {
   MagnifyingGlassIcon,
 } from '@heroicons/react/24/outline';
 import { StarIcon } from '@heroicons/react/24/solid';
+import { ExportButton, exportMarketData } from './ExportData';
 
 interface Coin {
   id: string;
@@ -272,6 +273,24 @@ export function Screener({ coins }: { coins: Coin[] }) {
             Clear
           </button>
         )}
+        <ExportButton
+          label="Export"
+          getData={() =>
+            exportMarketData(
+              filteredCoins.map((c) => ({
+                rank: c.market_cap_rank,
+                symbol: c.symbol,
+                name: c.name,
+                price: c.current_price,
+                change24h: c.price_change_percentage_24h,
+                change7d: c.price_change_percentage_7d_in_currency,
+                marketCap: c.market_cap,
+                volume: c.total_volume,
+                athChange: c.ath_change_percentage,
+              }))
+            )
+          }
+        />
       </div>
 
       {/* Preset Filters */}

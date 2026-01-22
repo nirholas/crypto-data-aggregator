@@ -12,6 +12,7 @@ import { AlertsProvider } from '@/components/alerts';
 import { PortfolioProvider } from '@/components/portfolio';
 import { GlobalSearch } from '@/components/GlobalSearch';
 import { ToastProvider } from '@/components/Toast';
+import { CurrencyProvider } from '@/components/CurrencySelector';
 
 export const viewport: Viewport = {
   themeColor: [
@@ -199,25 +200,27 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           Skip to main content
         </a>
         <ThemeProvider>
-          <ToastProvider>
-            <KeyboardShortcutsProvider>
-              <WatchlistProvider>
-                <AlertsProvider>
-                  <PortfolioProvider>
-                    <BookmarksProvider>
-                      <PWAProvider>
-                        {children}
-                        <GlobalSearch />
-                        <InstallPrompt />
-                        <UpdatePrompt />
-                        <OfflineIndicator />
-                      </PWAProvider>
-                    </BookmarksProvider>
-                  </PortfolioProvider>
-                </AlertsProvider>
-              </WatchlistProvider>
-            </KeyboardShortcutsProvider>
-          </ToastProvider>
+          <CurrencyProvider>
+            <ToastProvider>
+              <KeyboardShortcutsProvider>
+                <WatchlistProvider>
+                  <AlertsProvider>
+                    <PortfolioProvider>
+                      <BookmarksProvider>
+                        <PWAProvider>
+                          {children}
+                          <GlobalSearch />
+                          <InstallPrompt />
+                          <UpdatePrompt />
+                          <OfflineIndicator />
+                        </PWAProvider>
+                      </BookmarksProvider>
+                    </PortfolioProvider>
+                  </AlertsProvider>
+                </WatchlistProvider>
+              </KeyboardShortcutsProvider>
+            </ToastProvider>
+          </CurrencyProvider>
         </ThemeProvider>
       </body>
     </html>

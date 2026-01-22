@@ -7,6 +7,8 @@ import { ThemeToggle } from './ThemeProvider';
 import { SearchModal } from './SearchModal';
 import { CommandPalette } from './CommandPalette';
 
+import { CurrencySelector } from './CurrencySelector';
+
 // Lazy load PriceWidget
 const PriceWidget = lazy(() => import('./PriceWidget'));
 
@@ -24,13 +26,18 @@ const navItems = [
             { label: 'All Cryptocurrencies', href: '/', icon: null },
             { label: 'Top Movers', href: '/movers', icon: null },
             { label: 'Trending', href: '/trending', icon: null },
+            { label: 'Market Heatmap', href: '/heatmap', icon: null },
+            { label: 'Dominance', href: '/dominance', icon: null },
           ],
         },
         {
           title: 'Analysis',
           links: [
+            { label: 'Screener', href: '/screener', icon: null },
             { label: 'Sentiment', href: '/sentiment', icon: null },
+            { label: 'Correlation', href: '/correlation', icon: null },
             { label: 'Compare Coins', href: '/compare', icon: null },
+            { label: 'Social Buzz', href: '/buzz', icon: null },
           ],
         },
       ],
@@ -38,6 +45,34 @@ const navItems = [
         title: 'Market Overview',
         description: 'Real-time crypto market data and analytics',
         href: '/',
+      },
+    },
+  },
+  {
+    label: 'Tools',
+    href: '/calculator',
+    icon: null,
+    megaMenu: {
+      sections: [
+        {
+          title: 'Calculators',
+          links: [
+            { label: 'Crypto Calculator', href: '/calculator', icon: null },
+            { label: 'Gas Tracker', href: '/gas', icon: null },
+          ],
+        },
+        {
+          title: 'Trading',
+          links: [
+            { label: 'Liquidations', href: '/liquidations', icon: null },
+            { label: 'Screener', href: '/screener', icon: null },
+          ],
+        },
+      ],
+      featured: {
+        title: 'Trading Tools',
+        description: 'Calculators, gas tracker, and more',
+        href: '/calculator',
       },
     },
   },
@@ -372,6 +407,11 @@ export default function Header() {
 
             {/* Theme Toggle */}
             <ThemeToggle />
+
+            {/* Currency Selector */}
+            <div className="hidden sm:block">
+              <CurrencySelector />
+            </div>
 
             {/* GitHub Link */}
             <a

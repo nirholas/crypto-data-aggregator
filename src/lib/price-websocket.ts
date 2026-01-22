@@ -291,6 +291,20 @@ async function fetchFromCoinGecko(assets: string[]): Promise<Record<string, numb
 
 let priceWebSocket: PriceWebSocket | null = null;
 
+/**
+ * Returns the singleton PriceWebSocket instance.
+ * Creates the instance on first call.
+ *
+ * @returns PriceWebSocket singleton instance
+ *
+ * @example
+ * ```typescript
+ * const ws = getPriceWebSocket();
+ * const unsubscribe = ws.subscribe(['bitcoin'], prices => {
+ *   console.log(prices.bitcoin?.price);
+ * });
+ * ```
+ */
 export function getPriceWebSocket(): PriceWebSocket {
   if (!priceWebSocket) {
     priceWebSocket = new PriceWebSocket();
@@ -346,7 +360,18 @@ export function useLivePrices(assetIds: string[]) {
 // =============================================================================
 
 /**
- * Format price for display
+ * Formats a price number for display with appropriate decimal places.
+ * Uses fewer decimals for higher prices, more for small prices.
+ *
+ * @param price - Price value to format
+ * @returns Formatted price string with $ prefix
+ *
+ * @example
+ * ```typescript
+ * formatLivePrice(45000);    // '$45,000.00'
+ * formatLivePrice(1.5);      // '$1.50'
+ * formatLivePrice(0.00005);  // '$0.00005000'
+ * ```
  */
 export function formatLivePrice(price: number): string {
   if (price >= 1000) {
@@ -361,7 +386,18 @@ export function formatLivePrice(price: number): string {
 }
 
 /**
- * Get price change indicator
+ * Returns a CSS class name based on price direction.
+ * Useful for adding green/red coloring to price displays.
+ *
+ * @param currentPrice - Current price value
+ * @param previousPrice - Previous price to compare against
+ * @returns Tailwind CSS class: 'text-green-500', 'text-red-500', or ''
+ *
+ * @example
+ * ```typescript
+ * const className = getPriceChangeClass(45100, 45000);
+ * // Returns: 'text-green-500'
+ * ```
  */
 export function getPriceChangeClass(currentPrice: number, previousPrice: number): string {
   if (currentPrice > previousPrice) return 'text-green-500';
