@@ -18,6 +18,31 @@ html, body {
   scroll-behavior: smooth;
 }
 
+/* Force ALL text to be white - no grey text */
+*, *::before, *::after {
+  color: inherit;
+}
+
+h1, h2, h3, h4, h5, h6, p, span, div, label, li, td, th, a, button, input, select, textarea {
+  color: #ffffff !important;
+}
+
+/* Override any grey/gray text colors */
+[class*="text-gray-"],
+[class*="text-slate-"],
+[class*="text-neutral-"],
+[class*="text-zinc-"],
+.text-muted,
+.text-muted-foreground {
+  color: #ffffff !important;
+}
+
+/* Placeholder text - slightly dimmer but still readable */
+::placeholder {
+  color: rgba(255, 255, 255, 0.6) !important;
+  opacity: 1;
+}
+
 /* Override white backgrounds to near-black for components */
 .dark .bg-white,
 .bg-white {
@@ -54,24 +79,63 @@ html, body {
   border-color: rgba(255, 255, 255, 0.08) !important;
   box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.04),
               0 4px 20px rgba(0, 0, 0, 0.3);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Enhanced hover state */
+/* Enhanced hover glow effect for cards */
 [class*="rounded-xl"]:hover,
-[class*="rounded-2xl"]:hover {
-  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.1),
+[class*="rounded-2xl"]:hover,
+[class*="rounded-lg"]:hover {
+  border-color: rgba(255, 255, 255, 0.15) !important;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.12),
+              0 0 20px rgba(255, 255, 255, 0.04),
               0 8px 32px rgba(0, 0, 0, 0.5);
+  transform: translateY(-1px);
+}
+
+/* Glow utility class - apply with .glow-hover */
+.glow-hover {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.glow-hover:hover {
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.15),
+              0 0 30px rgba(255, 255, 255, 0.08),
+              0 10px 40px rgba(0, 0, 0, 0.4);
+  transform: translateY(-2px);
+}
+
+/* Subtle pulse glow for interactive elements */
+.glow-pulse {
+  animation: glowPulse 3s ease-in-out infinite;
+}
+
+@keyframes glowPulse {
+  0%, 100% {
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.06);
+  }
+  50% {
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.12),
+                0 0 15px rgba(255, 255, 255, 0.04);
+  }
 }
 
 /* Buttons - subtle glow */
 button, .btn, [role="button"] {
   box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.08);
-  transition: all 0.2s ease;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 button:hover, .btn:hover, [role="button"]:hover {
-  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.15),
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.2),
+              0 0 20px rgba(255, 255, 255, 0.06),
               0 4px 16px rgba(0, 0, 0, 0.4);
+  transform: translateY(-1px);
+}
+
+button:active, .btn:active, [role="button"]:active {
+  transform: translateY(0);
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.1);
 }
 
 /* Input fields - elevated appearance */
