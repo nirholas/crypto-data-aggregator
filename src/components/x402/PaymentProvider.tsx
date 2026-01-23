@@ -251,11 +251,12 @@ export function PaymentProvider({ children, testnet = true }: PaymentProviderPro
 
   // Update ETH and USDC balances
   const updateBalances = async (address: Address, chainId: number) => {
-    if (!window.ethereum) return;
+    const ethereum = window.ethereum;
+    if (!ethereum) return;
 
     try {
       // Get ETH balance
-      const balance = (await window.ethereum.request({
+      const balance = (await ethereum.request({
         method: 'eth_getBalance',
         params: [address, 'latest'],
       })) as string;
@@ -268,7 +269,7 @@ export function PaymentProvider({ children, testnet = true }: PaymentProviderPro
 
       if (usdcAddress) {
         const balanceOfData = `0x70a08231000000000000000000000000${address.slice(2)}`;
-        const usdcResult = (await window.ethereum.request({
+        const usdcResult = (await ethereum.request({
           method: 'eth_call',
           params: [{ to: usdcAddress, data: balanceOfData }, 'latest'],
         })) as string;
@@ -289,7 +290,8 @@ export function PaymentProvider({ children, testnet = true }: PaymentProviderPro
 
   // Connect wallet
   const connect = useCallback(async () => {
-    if (typeof window === 'undefined' || !window.ethereum) {
+    const ethereum = window.ethereum;
+    if (typeof window === 'undefined' || !ethereum) {
       setError('No Ethereum wallet found. Please install MetaMask or Coinbase Wallet.');
       return;
     }
@@ -298,11 +300,11 @@ export function PaymentProvider({ children, testnet = true }: PaymentProviderPro
     setError(null);
 
     try {
-      const accounts = (await window.ethereum.request({
+      const accounts = (await ethereum.request({
         method: 'eth_requestAccounts',
       })) as string[];
 
-      const chainId = (await window.ethereum.request({
+      const chainId = (await ethereum.request({
         method: 'eth_chainId',
       })) as string;
 
@@ -340,13 +342,14 @@ export function PaymentProvider({ children, testnet = true }: PaymentProviderPro
 
   // Switch to correct chain
   const switchChain = useCallback(async () => {
-    if (!window.ethereum) return;
+    const ethereum = window.ethereum;
+    if (!ethereum) return;
 
     const hexChainId = `0x${targetChainId.toString(16)}`;
     const params = CHAIN_PARAMS[targetChainId];
 
     try {
-      await window.ethereum.request({
+      await ethereum.request({
         method: 'wallet_switchEthereumChain',
         params: [{ chainId: hexChainId }],
       });
@@ -354,7 +357,7 @@ export function PaymentProvider({ children, testnet = true }: PaymentProviderPro
       const err = e as { code: number };
       // Chain not added, try to add it
       if (err.code === 4902) {
-        await window.ethereum.request({
+        await ethereum.request({
           method: 'wallet_addEthereumChain',
           params: [
             {
