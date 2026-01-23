@@ -293,8 +293,8 @@ export async function search(query: string): Promise<{
   tags: unknown[];
 }> {
   const cacheKey = `coinpaprika:search:${query}`;
-  const cached = cache.get<ReturnType<typeof search>>(cacheKey);
-  if (cached) return cached as Awaited<ReturnType<typeof search>>;
+  const cached = cache.get<Awaited<ReturnType<typeof search>>>(cacheKey);
+  if (cached) return cached;
 
   const response = await fetch(`${BASE_URL}/search?q=${encodeURIComponent(query)}`);
 

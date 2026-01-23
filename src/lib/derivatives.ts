@@ -126,8 +126,8 @@ export async function getBybitFundingHistory(
   limit = 50
 ): Promise<Array<{ symbol: string; fundingRate: string; fundingRateTimestamp: string }>> {
   const cacheKey = `bybit:funding:${symbol}:${limit}`;
-  const cached = cache.get<ReturnType<typeof getBybitFundingHistory>>(cacheKey);
-  if (cached) return cached as Awaited<ReturnType<typeof getBybitFundingHistory>>;
+  const cached = cache.get<Awaited<ReturnType<typeof getBybitFundingHistory>>>(cacheKey);
+  if (cached) return cached;
 
   const response = await fetch(
     `${EXTERNAL_APIS.BYBIT}/market/funding/history?category=linear&symbol=${symbol}&limit=${limit}`
@@ -153,8 +153,8 @@ export async function getBybitOpenInterest(
   limit = 50
 ): Promise<Array<{ openInterest: string; timestamp: string }>> {
   const cacheKey = `bybit:oi:${symbol}:${intervalTime}:${limit}`;
-  const cached = cache.get<ReturnType<typeof getBybitOpenInterest>>(cacheKey);
-  if (cached) return cached as Awaited<ReturnType<typeof getBybitOpenInterest>>;
+  const cached = cache.get<Awaited<ReturnType<typeof getBybitOpenInterest>>>(cacheKey);
+  if (cached) return cached;
 
   const response = await fetch(
     `${EXTERNAL_APIS.BYBIT}/market/open-interest?category=linear&symbol=${symbol}&intervalTime=${intervalTime}&limit=${limit}`
@@ -224,8 +224,8 @@ export async function getOKXOpenInterest(
   instType: 'SWAP' | 'FUTURES' = 'SWAP'
 ): Promise<Array<{ instId: string; oi: string; oiCcy: string; ts: string }>> {
   const cacheKey = `okx:oi:${instType}`;
-  const cached = cache.get<ReturnType<typeof getOKXOpenInterest>>(cacheKey);
-  if (cached) return cached as Awaited<ReturnType<typeof getOKXOpenInterest>>;
+  const cached = cache.get<Awaited<ReturnType<typeof getOKXOpenInterest>>>(cacheKey);
+  if (cached) return cached;
 
   const response = await fetch(`${EXTERNAL_APIS.OKX}/public/open-interest?instType=${instType}`);
 
@@ -273,8 +273,8 @@ export async function getDydxOrderbook(market: string): Promise<{
   bids: Array<{ price: string; size: string }>;
 }> {
   const cacheKey = `dydx:orderbook:${market}`;
-  const cached = cache.get<ReturnType<typeof getDydxOrderbook>>(cacheKey);
-  if (cached) return cached as Awaited<ReturnType<typeof getDydxOrderbook>>;
+  const cached = cache.get<Awaited<ReturnType<typeof getDydxOrderbook>>>(cacheKey);
+  if (cached) return cached;
 
   const response = await fetch(`${EXTERNAL_APIS.DYDX}/orderbook/${market}`);
 
@@ -304,8 +304,8 @@ export async function getDydxTrades(
   }>
 > {
   const cacheKey = `dydx:trades:${market}:${limit}`;
-  const cached = cache.get<ReturnType<typeof getDydxTrades>>(cacheKey);
-  if (cached) return cached as Awaited<ReturnType<typeof getDydxTrades>>;
+  const cached = cache.get<Awaited<ReturnType<typeof getDydxTrades>>>(cacheKey);
+  if (cached) return cached;
 
   const response = await fetch(`${EXTERNAL_APIS.DYDX}/trades/${market}?limit=${limit}`);
 

@@ -126,8 +126,8 @@ export async function getMempoolBlocks(): Promise<
   }>
 > {
   const cacheKey = 'mempool:blocks';
-  const cached = cache.get<ReturnType<typeof getMempoolBlocks>>(cacheKey);
-  if (cached) return cached as Awaited<ReturnType<typeof getMempoolBlocks>>;
+  const cached = cache.get<Awaited<ReturnType<typeof getMempoolBlocks>>>(cacheKey);
+  if (cached) return cached;
 
   const response = await fetch(`${EXTERNAL_APIS.MEMPOOL}/v1/fees/mempool-blocks`);
 
@@ -346,8 +346,8 @@ export async function getBtcPrice(): Promise<
   Record<string, { last: number; buy: number; sell: number; symbol: string }>
 > {
   const cacheKey = 'blockchain:price';
-  const cached = cache.get<ReturnType<typeof getBtcPrice>>(cacheKey);
-  if (cached) return cached as Awaited<ReturnType<typeof getBtcPrice>>;
+  const cached = cache.get<Awaited<ReturnType<typeof getBtcPrice>>>(cacheKey);
+  if (cached) return cached;
 
   const response = await fetch(`${EXTERNAL_APIS.BLOCKCHAIN_INFO}/ticker`);
 

@@ -28,7 +28,7 @@ import { PAYMENT_ADDRESS, CURRENT_NETWORK } from './config';
  */
 export function getPaymentMiddleware() {
   // Cast routes to expected type - RouteConfig is compatible with x402 expectations
-  return paymentProxy(createRoutes() as Parameters<typeof paymentProxy>[0], x402Server);
+  return paymentProxy(createRoutes() as unknown as Parameters<typeof paymentProxy>[0], x402Server);
 }
 
 // =============================================================================

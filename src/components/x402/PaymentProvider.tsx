@@ -171,13 +171,15 @@ export function PaymentProvider({ children, testnet = true }: PaymentProviderPro
     if (typeof window === 'undefined' || !window.ethereum) return;
 
     const checkConnection = async () => {
+      const ethereum = window.ethereum;
+      if (!ethereum) return;
       try {
-        const accounts = (await window.ethereum.request({
+        const accounts = (await ethereum.request({
           method: 'eth_accounts',
         })) as string[];
 
         if (accounts.length > 0) {
-          const chainId = (await window.ethereum.request({
+          const chainId = (await ethereum.request({
             method: 'eth_chainId',
           })) as string;
 
@@ -234,12 +236,16 @@ export function PaymentProvider({ children, testnet = true }: PaymentProviderPro
       }));
     };
 
-    window.ethereum?.on('accountsChanged', handleAccountsChanged);
-    window.ethereum?.on('chainChanged', handleChainChanged);
+    if (window.ethereum?.on) {
+      window.ethereum.on('accountsChanged', handleAccountsChanged);
+      window.ethereum.on('chainChanged', handleChainChanged);
+    }
 
     return () => {
-      window.ethereum?.removeListener('accountsChanged', handleAccountsChanged);
-      window.ethereum?.removeListener('chainChanged', handleChainChanged);
+      if (window.ethereum?.removeListener) {
+        window.ethereum.removeListener('accountsChanged', handleAccountsChanged);
+        window.ethereum.removeListener('chainChanged', handleChainChanged);
+      }
     };
   }, [targetChainId]);
 
