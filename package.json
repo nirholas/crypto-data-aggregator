@@ -47,7 +47,11 @@
   "license": "MIT",
   "dependencies": {
     "@heroicons/react": "^2.2.0",
+    "@tanstack/react-query": "^5.90.19",
     "@types/recharts": "^1.8.29",
+    "@x402/core": "^2.2.0",
+    "@x402/evm": "^2.2.0",
+    "@x402/next": "^2.2.0",
     "critters": "^0.0.23",
     "framer-motion": "^12.28.1",
     "lucide-react": "^0.562.0",
@@ -56,7 +60,9 @@
     "react-dom": "^19.2.3",
     "recharts": "^2.15.4",
     "sanitize-html": "^2.17.0",
-    "swr": "^2.3.8"
+    "swr": "^2.3.8",
+    "viem": "^2.44.4",
+    "wagmi": "^3.4.1"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4.1.18",
