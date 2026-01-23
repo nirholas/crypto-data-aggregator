@@ -280,7 +280,7 @@ export default async function CoinPage({ params, searchParams }: Props) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
       />
 
-      <div className="min-h-screen bg-gradient-to-b from-gray-900 via-gray-900 to-gray-950">
+      <div className="min-h-screen bg-black">
         <div className="max-w-7xl mx-auto">
           <Header />
 

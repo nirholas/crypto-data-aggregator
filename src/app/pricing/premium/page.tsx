@@ -101,7 +101,7 @@ const passes = [
 
 export default function PremiumPricingPage() {
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="min-h-screen bg-white dark:bg-black">
       {/* Hero */}
       <section className="bg-gradient-to-br from-blue-600 to-purple-700 text-white py-20 px-4">
         <div className="max-w-6xl mx-auto text-center">

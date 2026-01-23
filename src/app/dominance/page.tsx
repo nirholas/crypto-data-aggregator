@@ -30,7 +30,7 @@ export default async function DominancePage() {
   const coins = await getCoins();
 
   return (
-    <div className="min-h-screen bg-white dark:bg-neutral-900">
+    <div className="min-h-screen bg-white dark:bg-black">
       <Header />
       <main id="main-content" className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="mb-8">

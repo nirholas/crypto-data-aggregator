@@ -109,13 +109,13 @@ export default async function ExchangeDetailPage({ params }: ExchangePageProps) 
     .slice(0, 100);
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-950">
+    <div className="min-h-screen bg-white dark:bg-black">
       <div className="max-w-7xl mx-auto">
         <Header />
 
         <main className="px-4 py-6">
           {/* Breadcrumb */}
-          <nav className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400 mb-6">
+          <nav className="flex items-center gap-2 text-sm text-neutral-500 dark:text-neutral-400 mb-6">
             <Link href="/markets" className="hover:text-blue-600 dark:hover:text-blue-400">
               Markets
             </Link>

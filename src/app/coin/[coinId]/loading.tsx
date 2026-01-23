@@ -4,7 +4,7 @@
 
 export default function CoinPageLoading() {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-900 via-gray-900 to-gray-950">
+    <div className="min-h-screen bg-black">
       <div className="max-w-7xl mx-auto px-4 py-8">
         {/* Breadcrumb skeleton */}
         <div className="h-5 w-48 bg-gray-800 rounded animate-pulse mb-6" />

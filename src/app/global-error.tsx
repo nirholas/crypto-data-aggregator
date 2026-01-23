@@ -11,7 +11,7 @@ export default function GlobalError({
 }) {
   return (
     <html>
-      <body className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900 px-4">
+      <body className="min-h-screen flex items-center justify-center bg-white dark:bg-black px-4">
         <ErrorFallback
           error={error}
           onRetry={reset}

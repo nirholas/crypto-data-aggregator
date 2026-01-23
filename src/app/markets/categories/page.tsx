@@ -116,7 +116,7 @@ const CATEGORIES = [
 
 export default function CategoriesPage() {
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-950">
+    <div className="min-h-screen bg-white dark:bg-black">
       <div className="max-w-7xl mx-auto">
         <Header />
 

@@ -44,7 +44,7 @@ export default async function TrendingPage() {
   const data = await getTrending();
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-white dark:bg-black">
       <div className="max-w-7xl mx-auto">
         <Header />
 

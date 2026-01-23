@@ -278,7 +278,16 @@ module.exports = {
         120: '30rem',
       },
       borderRadius: {
-        '4xl': '2rem',
+        none: '0',
+        sm: '0.125rem',
+        DEFAULT: '0.25rem',
+        md: '0.25rem',
+        lg: '0.375rem',
+        xl: '0.375rem',
+        '2xl': '0.5rem',
+        '3xl': '0.5rem',
+        '4xl': '0.5rem',
+        full: '9999px',
       },
       boxShadow: {
         soft: '0 2px 8px -2px rgba(0, 0, 0, 0.1)',

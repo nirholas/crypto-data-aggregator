@@ -234,7 +234,7 @@ export default async function MarketsPage({ searchParams }: MarketsPageProps) {
   const paginatedCoins = filteredCoins.slice(startIndex, startIndex + perPage);
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-950">
+    <div className="min-h-screen bg-white dark:bg-black">
       <div className="max-w-7xl mx-auto">
         <Header />
 
@@ -244,10 +244,10 @@ export default async function MarketsPage({ searchParams }: MarketsPageProps) {
         <main className="px-4 py-6">
           {/* Page Header */}
           <div className="mb-6">
-            <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
+            <h1 className="text-3xl font-bold text-black dark:text-white mb-2">
               📊 Cryptocurrency Markets
             </h1>
-            <p className="text-gray-600 dark:text-gray-400">
+            <p className="text-neutral-600 dark:text-neutral-400">
               Live prices, charts, and market data for {totalCount.toLocaleString()} cryptocurrencies
             </p>
           </div>
