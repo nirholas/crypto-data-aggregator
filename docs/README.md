@@ -22,6 +22,7 @@ contribute to the project.
 | [Performance](PERFORMANCE.md)         | Optimization strategies                 | Developers   |
 | [Security](SECURITY.md)               | Security guidelines                     | Everyone     |
 | [PWA](PWA.md)                         | Progressive Web App features            | Developers   |
+| [x402 Integration](X402_INTEGRATION.md) | x402 payment protocol guide           | Developers   |
 | [Troubleshooting](TROUBLESHOOTING.md) | Common issues and solutions             | Everyone     |
 | [Changelog](CHANGELOG.md)             | Version history and changes             | Everyone     |
 
