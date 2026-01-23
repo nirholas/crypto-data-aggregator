@@ -16,17 +16,17 @@ interface PriceAlertModalProps {
 
 type AlertCondition = 'above' | 'below' | 'percent_up' | 'percent_down';
 
-export function PriceAlertModal({
-  isOpen,
-  onClose,
-  coinId,
-  coinName,
-  coinSymbol,
-  currentPrice,
+export function PriceAlertModal({ 
+  isOpen, 
+  onClose, 
+  coinId, 
+  coinName, 
+  coinSymbol, 
+  currentPrice 
 }: PriceAlertModalProps) {
   const { addAlert, getAlertsForCoin, removeAlert } = useAlerts();
   const { addToast } = useToast();
-
+  
   const [condition, setCondition] = useState<AlertCondition>('above');
   const [targetPrice, setTargetPrice] = useState('');
   const [targetPercent, setTargetPercent] = useState('');
@@ -77,7 +77,7 @@ export function PriceAlertModal({
         setError('Please enter a valid price');
         return;
       }
-
+      
       // Warning for potentially wrong direction
       if (condition === 'above' && price <= currentPrice) {
         setError('Target price is already above current price. Alert will trigger immediately.');
@@ -117,13 +117,13 @@ export function PriceAlertModal({
   if (!isOpen) return null;
 
   return (
-    <div
+    <div 
       className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm"
       onClick={onClose}
     >
-      <div
-        className="bg-white dark:bg-black rounded-2xl shadow-2xl max-w-md w-full overflow-hidden"
-        onClick={(e) => e.stopPropagation()}
+      <div 
+        className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl max-w-md w-full overflow-hidden"
+        onClick={e => e.stopPropagation()}
       >
         {/* Header */}
         <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between">
@@ -132,7 +132,9 @@ export function PriceAlertModal({
               <Bell className="w-5 h-5 text-blue-600 dark:text-blue-400" />
             </div>
             <div>
-              <h2 className="font-semibold text-gray-900 dark:text-white">Price Alert</h2>
+              <h2 className="font-semibold text-gray-900 dark:text-white">
+                Price Alert
+              </h2>
               <p className="text-sm text-gray-500 dark:text-gray-400">
                 {coinName} ({coinSymbol.toUpperCase()})
               </p>
@@ -140,21 +142,17 @@ export function PriceAlertModal({
           </div>
           <button
             onClick={onClose}
-            className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-black text-gray-500 transition-colors"
+            className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-500 transition-colors"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
         {/* Current Price */}
-        <div className="px-6 py-4 bg-gray-50 dark:bg-black/50">
+        <div className="px-6 py-4 bg-gray-50 dark:bg-gray-800/50">
           <p className="text-sm text-gray-500 dark:text-gray-400">Current Price</p>
           <p className="text-2xl font-bold text-gray-900 dark:text-white">
-            $
-            {currentPrice.toLocaleString(undefined, {
-              minimumFractionDigits: 2,
-              maximumFractionDigits: 6,
-            })}
+            ${currentPrice.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 6 })}
           </p>
         </div>
 
@@ -227,12 +225,12 @@ export function PriceAlertModal({
                 <input
                   type="number"
                   value={targetPercent}
-                  onChange={(e) => setTargetPercent(e.target.value)}
+                  onChange={e => setTargetPercent(e.target.value)}
                   placeholder="e.g. 10"
                   step="0.1"
                   min="0.1"
                   max="1000"
-                  className="w-full px-4 py-3 pr-12 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-black text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-4 py-3 pr-12 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
                 <span className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500">%</span>
               </div>
@@ -242,18 +240,17 @@ export function PriceAlertModal({
                 <input
                   type="number"
                   value={targetPrice}
-                  onChange={(e) => setTargetPrice(e.target.value)}
+                  onChange={e => setTargetPrice(e.target.value)}
                   placeholder="0.00"
                   step="any"
                   min="0"
-                  className="w-full px-4 py-3 pl-8 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-black text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-4 py-3 pl-8 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
               </div>
             )}
             {!isPercentCondition && targetPrice && (
               <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
-                {(((parseFloat(targetPrice) - currentPrice) / currentPrice) * 100).toFixed(2)}%{' '}
-                {parseFloat(targetPrice) >= currentPrice ? 'above' : 'below'} current price
+                {((parseFloat(targetPrice) - currentPrice) / currentPrice * 100).toFixed(2)}% {parseFloat(targetPrice) >= currentPrice ? 'above' : 'below'} current price
               </p>
             )}
           </div>
@@ -264,7 +261,7 @@ export function PriceAlertModal({
               <input
                 type="checkbox"
                 checked={repeat}
-                onChange={(e) => setRepeat(e.target.checked)}
+                onChange={e => setRepeat(e.target.checked)}
                 className="w-4 h-4 rounded border-gray-300 dark:border-gray-600 text-blue-600 focus:ring-blue-500"
               />
               <span className="text-sm text-gray-700 dark:text-gray-300">
@@ -275,7 +272,7 @@ export function PriceAlertModal({
               <input
                 type="checkbox"
                 checked={notifyBrowser}
-                onChange={(e) => setNotifyBrowser(e.target.checked)}
+                onChange={e => setNotifyBrowser(e.target.checked)}
                 className="w-4 h-4 rounded border-gray-300 dark:border-gray-600 text-blue-600 focus:ring-blue-500"
               />
               <span className="text-sm text-gray-700 dark:text-gray-300">
@@ -310,13 +307,13 @@ export function PriceAlertModal({
                 Active Alerts for {coinSymbol.toUpperCase()}
               </h3>
               <div className="space-y-2 max-h-40 overflow-y-auto">
-                {existingAlerts.map((alert) => (
+                {existingAlerts.map(alert => (
                   <div
                     key={alert.id}
                     className={`flex items-center justify-between p-3 rounded-lg ${
                       alert.triggered
                         ? 'bg-green-50 dark:bg-green-900/20'
-                        : 'bg-gray-50 dark:bg-black/50'
+                        : 'bg-gray-50 dark:bg-gray-700/50'
                     }`}
                   >
                     <div className="flex items-center gap-2">
@@ -326,11 +323,7 @@ export function PriceAlertModal({
                         <Bell className="w-4 h-4 text-gray-400" />
                       )}
                       <span className="text-sm text-gray-700 dark:text-gray-300">
-                        {getConditionText(
-                          alert.condition,
-                          alert.targetPercent || alert.targetPrice,
-                          !!alert.targetPercent
-                        )}
+                        {getConditionText(alert.condition, alert.targetPercent || alert.targetPrice, !!alert.targetPercent)}
                       </span>
                     </div>
                     <button
@@ -361,7 +354,7 @@ function getConditionText(condition: AlertCondition, value: number, isPercent: b
         return `changes by ${value}%`;
     }
   }
-
+  
   const priceStr = `$${value.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 6 })}`;
   switch (condition) {
     case 'above':

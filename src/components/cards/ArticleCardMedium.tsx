@@ -52,18 +52,15 @@ interface ArticleCardMediumProps {
 }
 
 // Source-specific gradient configurations with mesh backgrounds
-const sourceStyles: Record<
-  string,
-  {
-    gradient: string;
-    mesh: string;
-    accent: string;
-    badge: string;
-    badgeText: string;
-    glow: string;
-  }
-> = {
-  CoinDesk: {
+const sourceStyles: Record<string, {
+  gradient: string;
+  mesh: string;
+  accent: string;
+  badge: string;
+  badgeText: string;
+  glow: string;
+}> = {
+  'CoinDesk': {
     gradient: 'from-blue-600 via-blue-700 to-indigo-800',
     mesh: 'radial-gradient(circle at 30% 20%, rgba(59, 130, 246, 0.5) 0%, transparent 50%), radial-gradient(circle at 70% 80%, rgba(99, 102, 241, 0.4) 0%, transparent 50%)',
     accent: 'bg-blue-500',
@@ -79,7 +76,7 @@ const sourceStyles: Record<
     badgeText: 'text-white',
     glow: 'group-hover:shadow-purple-500/25',
   },
-  Decrypt: {
+  'Decrypt': {
     gradient: 'from-emerald-600 via-emerald-700 to-teal-800',
     mesh: 'radial-gradient(circle at 20% 40%, rgba(16, 185, 129, 0.5) 0%, transparent 50%), radial-gradient(circle at 80% 60%, rgba(20, 184, 166, 0.4) 0%, transparent 50%)',
     accent: 'bg-emerald-500',
@@ -87,7 +84,7 @@ const sourceStyles: Record<
     badgeText: 'text-white',
     glow: 'group-hover:shadow-emerald-500/25',
   },
-  CoinTelegraph: {
+  'CoinTelegraph': {
     gradient: 'from-orange-600 via-orange-700 to-red-800',
     mesh: 'radial-gradient(circle at 30% 25%, rgba(249, 115, 22, 0.5) 0%, transparent 50%), radial-gradient(circle at 70% 75%, rgba(239, 68, 68, 0.4) 0%, transparent 50%)',
     accent: 'bg-orange-500',
@@ -103,7 +100,7 @@ const sourceStyles: Record<
     badgeText: 'text-black',
     glow: 'group-hover:shadow-amber-500/25',
   },
-  Blockworks: {
+  'Blockworks': {
     gradient: 'from-indigo-600 via-indigo-700 to-blue-800',
     mesh: 'radial-gradient(circle at 25% 35%, rgba(99, 102, 241, 0.5) 0%, transparent 50%), radial-gradient(circle at 75% 65%, rgba(79, 70, 229, 0.4) 0%, transparent 50%)',
     accent: 'bg-indigo-500',
@@ -131,13 +128,13 @@ const defaultStyle = {
 };
 
 function ArticleCardMedium({ article, externalLink = false }: ArticleCardMediumProps) {
-  const articleId = article.id || generateArticleId(article.title, article.source);
+  const articleId = article.id || generateArticleId(article.link);
   const href = externalLink ? article.link : `/article/${articleId}`;
   const style = sourceStyles[article.source] || defaultStyle;
 
   const CardWrapper = externalLink ? 'a' : Link;
-  const linkProps = externalLink
-    ? { href, target: '_blank', rel: 'noopener noreferrer' }
+  const linkProps = externalLink 
+    ? { href, target: '_blank', rel: 'noopener noreferrer' } 
     : { href };
 
   return (
@@ -146,7 +143,7 @@ function ArticleCardMedium({ article, externalLink = false }: ArticleCardMediumP
         {...linkProps}
         className={`
           flex flex-col h-full rounded-2xl overflow-hidden
-          bg-white dark:bg-black
+          bg-white dark:bg-gray-900
           shadow-lg hover:shadow-2xl ${style.glow}
           dark:shadow-none dark:border dark:border-gray-800 dark:hover:border-gray-600
           transform transition-all duration-300 ease-out
@@ -158,20 +155,20 @@ function ArticleCardMedium({ article, externalLink = false }: ArticleCardMediumP
         {/* Image Placeholder with animated gradient mesh */}
         <div className="relative h-[200px] overflow-hidden">
           {/* Base gradient */}
-          <div
+          <div 
             className={`absolute inset-0 bg-gradient-to-br ${style.gradient} transition-transform duration-500 group-hover:scale-110 motion-reduce:transition-none motion-reduce:group-hover:scale-100`}
             aria-hidden="true"
           />
-
+          
           {/* Animated mesh overlay */}
-          <div
+          <div 
             className="absolute inset-0 opacity-70 group-hover:opacity-90 transition-opacity duration-500 motion-reduce:transition-none"
             style={{ background: style.mesh }}
             aria-hidden="true"
           />
-
+          
           {/* Floating orb animation */}
-          <div
+          <div 
             className={`
               absolute -top-10 -right-10 w-32 h-32 rounded-full blur-2xl
               ${style.accent} opacity-30
@@ -180,16 +177,16 @@ function ArticleCardMedium({ article, externalLink = false }: ArticleCardMediumP
             `}
             aria-hidden="true"
           />
-
+          
           {/* Grid pattern */}
-          <div
+          <div 
             className="absolute inset-0 opacity-[0.05] bg-[length:20px_20px]"
             style={{
               backgroundImage: `linear-gradient(to right, white 1px, transparent 1px), linear-gradient(to bottom, white 1px, transparent 1px)`,
             }}
             aria-hidden="true"
           />
-
+          
           {/* Source initial with glow */}
           <div className="absolute inset-0 flex items-center justify-center">
             <span className="text-white/90 text-4xl font-black tracking-tight [text-shadow:0_0_40px_rgba(255,255,255,0.3)]">
@@ -200,7 +197,7 @@ function ArticleCardMedium({ article, externalLink = false }: ArticleCardMediumP
           {/* Category Badge - Glassmorphism */}
           {article.category && (
             <div className="absolute top-4 left-4">
-              <span className="inline-flex items-center gap-1.5 text-xs font-bold px-3 py-1.5 rounded-full bg-white/95 dark:bg-black/95 text-gray-900 dark:text-white backdrop-blur-md shadow-lg">
+              <span className="inline-flex items-center gap-1.5 text-xs font-bold px-3 py-1.5 rounded-full bg-white/95 dark:bg-gray-900/95 text-gray-900 dark:text-white backdrop-blur-md shadow-lg">
                 <span className={`w-1.5 h-1.5 rounded-full ${style.accent}`} aria-hidden="true" />
                 {article.category}
               </span>
@@ -210,30 +207,22 @@ function ArticleCardMedium({ article, externalLink = false }: ArticleCardMediumP
           {/* External link indicator with hover effect */}
           {externalLink && (
             <div className="absolute top-4 right-4">
-              <span className="flex items-center justify-center w-8 h-8 rounded-full bg-white/95 dark:bg-black/95 backdrop-blur-md shadow-lg group-hover:scale-110 transition-transform duration-300 motion-reduce:transition-none motion-reduce:group-hover:scale-100">
-                <svg
-                  className="w-4 h-4 text-gray-700 dark:text-gray-300"
-                  fill="none"
-                  stroke="currentColor"
+              <span className="flex items-center justify-center w-8 h-8 rounded-full bg-white/95 dark:bg-gray-900/95 backdrop-blur-md shadow-lg group-hover:scale-110 transition-transform duration-300 motion-reduce:transition-none motion-reduce:group-hover:scale-100">
+                <svg 
+                  className="w-4 h-4 text-gray-700 dark:text-gray-300" 
+                  fill="none" 
+                  stroke="currentColor" 
                   viewBox="0 0 24 24"
                   aria-label="Opens in new tab"
                 >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
-                  />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
                 </svg>
               </span>
             </div>
           )}
-
+          
           {/* Bottom gradient fade for text protection */}
-          <div
-            className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-white dark:from-gray-900 to-transparent"
-            aria-hidden="true"
-          />
+          <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-white dark:from-gray-900 to-transparent" aria-hidden="true" />
         </div>
 
         {/* Content */}
@@ -247,31 +236,18 @@ function ArticleCardMedium({ article, externalLink = false }: ArticleCardMediumP
           <div className="flex items-center justify-between mt-4 pt-3 border-t border-gray-100 dark:border-gray-800">
             <div className="flex items-center gap-2">
               {/* Source Pill with gradient */}
-              <span
-                className={`text-xs font-bold px-2.5 py-1 rounded-full ${style.badge} ${style.badgeText} backdrop-blur-sm shadow-sm`}
-              >
+              <span className={`text-xs font-bold px-2.5 py-1 rounded-full ${style.badge} ${style.badgeText} backdrop-blur-sm shadow-sm`}>
                 {article.source}
               </span>
             </div>
-
+            
             {/* Time with icon */}
-            <time
+            <time 
               className="flex items-center gap-1.5 text-xs text-gray-500 dark:text-gray-400"
               dateTime={article.pubDate}
             >
-              <svg
-                className="w-3.5 h-3.5"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                aria-hidden="true"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-                />
+              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
               {article.timeAgo}
             </time>

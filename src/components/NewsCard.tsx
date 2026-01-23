@@ -134,7 +134,7 @@ export default function NewsCard({
   showDescription = true,
   priority,
 }: NewsCardProps) {
-  const articleId = generateArticleId(article.title, article.source);
+  const articleId = generateArticleId(article.link);
   const style = sourceColors[article.source] || defaultStyle;
 
   const readingTime = estimateReadingTime(article.title, article.description);

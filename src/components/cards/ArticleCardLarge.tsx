@@ -55,18 +55,15 @@ interface ArticleCardLargeProps {
 }
 
 // Source-specific premium gradient configurations
-const sourceStyles: Record<
-  string,
-  {
-    gradient: string;
-    mesh: string;
-    accent: string;
-    badge: string;
-    badgeText: string;
-    glow: string;
-  }
-> = {
-  CoinDesk: {
+const sourceStyles: Record<string, {
+  gradient: string;
+  mesh: string;
+  accent: string;
+  badge: string;
+  badgeText: string;
+  glow: string;
+}> = {
+  'CoinDesk': {
     gradient: 'from-blue-700 via-blue-800 to-indigo-900',
     mesh: 'radial-gradient(ellipse at 20% 30%, rgba(59, 130, 246, 0.6) 0%, transparent 60%), radial-gradient(ellipse at 80% 70%, rgba(99, 102, 241, 0.4) 0%, transparent 60%)',
     accent: 'bg-blue-500',
@@ -82,7 +79,7 @@ const sourceStyles: Record<
     badgeText: 'text-white',
     glow: 'group-hover:shadow-purple-500/30',
   },
-  Decrypt: {
+  'Decrypt': {
     gradient: 'from-emerald-700 via-emerald-800 to-teal-900',
     mesh: 'radial-gradient(ellipse at 20% 40%, rgba(16, 185, 129, 0.6) 0%, transparent 60%), radial-gradient(ellipse at 80% 60%, rgba(20, 184, 166, 0.4) 0%, transparent 60%)',
     accent: 'bg-emerald-500',
@@ -90,7 +87,7 @@ const sourceStyles: Record<
     badgeText: 'text-white',
     glow: 'group-hover:shadow-emerald-500/30',
   },
-  CoinTelegraph: {
+  'CoinTelegraph': {
     gradient: 'from-orange-700 via-red-800 to-amber-900',
     mesh: 'radial-gradient(ellipse at 30% 20%, rgba(249, 115, 22, 0.6) 0%, transparent 60%), radial-gradient(ellipse at 70% 80%, rgba(239, 68, 68, 0.4) 0%, transparent 60%)',
     accent: 'bg-orange-500',
@@ -106,7 +103,7 @@ const sourceStyles: Record<
     badgeText: 'text-black',
     glow: 'group-hover:shadow-amber-500/30',
   },
-  Blockworks: {
+  'Blockworks': {
     gradient: 'from-indigo-700 via-indigo-800 to-blue-900',
     mesh: 'radial-gradient(ellipse at 25% 35%, rgba(99, 102, 241, 0.6) 0%, transparent 60%), radial-gradient(ellipse at 75% 65%, rgba(79, 70, 229, 0.4) 0%, transparent 60%)',
     accent: 'bg-indigo-500',
@@ -141,19 +138,19 @@ function getReadingTime(text: string | undefined): string {
 }
 
 function ArticleCardLarge({ article, externalLink = false }: ArticleCardLargeProps) {
-  const articleId = article.id || generateArticleId(article.title, article.source);
+  const articleId = article.id || generateArticleId(article.link);
   const href = externalLink ? article.link : '/article/' + articleId;
   const style = sourceStyles[article.source] || defaultStyle;
   const readTime = article.readTime || getReadingTime(article.description);
 
   const CardWrapper = externalLink ? 'a' : Link;
-  const linkProps = externalLink
-    ? { href, target: '_blank', rel: 'noopener noreferrer' }
+  const linkProps = externalLink 
+    ? { href, target: '_blank', rel: 'noopener noreferrer' } 
     : { href };
 
   const cardClasses = [
     'flex flex-col md:flex-row h-auto md:h-[320px] rounded-3xl overflow-hidden',
-    'bg-white dark:bg-black',
+    'bg-white dark:bg-gray-900',
     'shadow-xl hover:shadow-2xl',
     style.glow,
     'dark:shadow-none dark:border dark:border-gray-800 dark:hover:border-gray-600',
@@ -176,36 +173,37 @@ function ArticleCardLarge({ article, externalLink = false }: ArticleCardLargePro
     'opacity-40 animate-[pulse_8s_ease-in-out_infinite] motion-reduce:animate-none',
   ].join(' ');
 
-  const categoryClasses =
-    'inline-flex items-center gap-1.5 text-xs font-bold px-3 py-1.5 rounded-full bg-gray-100 dark:bg-black text-gray-800 dark:text-gray-200';
-
-  const badgeClasses = [
-    'text-xs font-bold px-3 py-1.5 rounded-full shadow-lg',
-    style.badge,
-    style.badgeText,
-  ].join(' ');
+  const categoryClasses = 'inline-flex items-center gap-1.5 text-xs font-bold px-3 py-1.5 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200';
+  
+  const badgeClasses = ['text-xs font-bold px-3 py-1.5 rounded-full shadow-lg', style.badge, style.badgeText].join(' ');
 
   return (
     <article className="group">
-      <CardWrapper {...linkProps} className={cardClasses}>
+      <CardWrapper
+        {...linkProps}
+        className={cardClasses}
+      >
         <div className="relative w-full md:w-[45%] h-[200px] md:h-full flex-shrink-0 overflow-hidden">
-          <div className={gradientClasses} aria-hidden="true" />
-          <div
+          <div 
+            className={gradientClasses}
+            aria-hidden="true"
+          />
+          <div 
             className="absolute inset-0 opacity-80 group-hover:opacity-100 transition-opacity duration-700 motion-reduce:transition-none"
             style={{ background: style.mesh }}
             aria-hidden="true"
           />
-          <div className={accentClasses} aria-hidden="true" />
-          <div
+          <div 
+            className={accentClasses}
+            aria-hidden="true"
+          />
+          <div 
             className="absolute -bottom-16 -left-16 w-40 h-40 rounded-full blur-3xl bg-white opacity-10 animate-[pulse_10s_ease-in-out_infinite_2s] motion-reduce:animate-none"
             aria-hidden="true"
           />
-          <div
+          <div 
             className="absolute inset-0 opacity-[0.04] bg-[length:30px_30px]"
-            style={{
-              backgroundImage:
-                'linear-gradient(to right, white 1px, transparent 1px), linear-gradient(to bottom, white 1px, transparent 1px)',
-            }}
+            style={{ backgroundImage: 'linear-gradient(to right, white 1px, transparent 1px), linear-gradient(to bottom, white 1px, transparent 1px)' }}
             aria-hidden="true"
           />
           <div className="absolute inset-0 flex items-center justify-center">
@@ -213,14 +211,8 @@ function ArticleCardLarge({ article, externalLink = false }: ArticleCardLargePro
               {article.source.charAt(0)}
             </span>
           </div>
-          <div
-            className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-white dark:from-gray-900 to-transparent md:hidden"
-            aria-hidden="true"
-          />
-          <div
-            className="absolute top-0 bottom-0 right-0 w-24 bg-gradient-to-l from-white dark:from-gray-900 to-transparent hidden md:block"
-            aria-hidden="true"
-          />
+          <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-white dark:from-gray-900 to-transparent md:hidden" aria-hidden="true" />
+          <div className="absolute top-0 bottom-0 right-0 w-24 bg-gradient-to-l from-white dark:from-gray-900 to-transparent hidden md:block" aria-hidden="true" />
         </div>
 
         <div className="flex-1 p-6 md:p-8 flex flex-col justify-between">
@@ -232,7 +224,9 @@ function ArticleCardLarge({ article, externalLink = false }: ArticleCardLargePro
                   {article.category}
                 </span>
               )}
-              <span className={badgeClasses}>{article.source}</span>
+              <span className={badgeClasses}>
+                {article.source}
+              </span>
             </div>
             <h3 className="text-xl md:text-2xl font-extrabold text-gray-900 dark:text-white group-hover:text-brand-700 dark:group-hover:text-brand-400 transition-colors duration-300 line-clamp-2 leading-tight mb-4">
               {article.title}
@@ -246,55 +240,22 @@ function ArticleCardLarge({ article, externalLink = false }: ArticleCardLargePro
           <div className="flex items-center justify-between pt-5 border-t border-gray-100 dark:border-gray-800 mt-4">
             <div className="flex items-center gap-4 text-sm text-gray-500 dark:text-gray-400">
               <time className="flex items-center gap-1.5" dateTime={article.pubDate}>
-                <svg
-                  className="w-4 h-4"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                  aria-hidden="true"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-                  />
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
                 {article.timeAgo}
               </time>
               <span className="flex items-center gap-1.5">
-                <svg
-                  className="w-4 h-4"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                  aria-hidden="true"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
-                  />
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
                 </svg>
                 {readTime} read
               </span>
             </div>
             <div className="flex items-center gap-2 font-bold text-brand-700 dark:text-brand-400 group-hover:text-brand-800 dark:group-hover:text-brand-300 transition-colors">
               <span className="hidden sm:inline">Read More</span>
-              <svg
-                className="w-5 h-5 transform transition-transform duration-300 group-hover:translate-x-2 motion-reduce:transition-none"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                aria-hidden="true"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2.5}
-                  d="M17 8l4 4m0 0l-4 4m4-4H3"
-                />
+              <svg className="w-5 h-5 transform transition-transform duration-300 group-hover:translate-x-2 motion-reduce:transition-none" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M17 8l4 4m0 0l-4 4m4-4H3" />
               </svg>
             </div>
           </div>

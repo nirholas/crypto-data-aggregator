@@ -1,6 +1,6 @@
 /**
- * Crypto Data Aggregator - RSS Feed Aggregator
- *
+ * Free Crypto News - RSS Feed Aggregator
+ * 
  * 100% FREE - no API keys required!
  * Aggregates news from 7 major crypto sources.
  */
@@ -109,35 +109,29 @@ export interface SourceInfo {
 /**
  * Parse RSS XML to extract articles
  */
-function parseRSSFeed(
-  xml: string,
-  sourceKey: string,
-  sourceName: string,
-  category: string
-): NewsArticle[] {
+function parseRSSFeed(xml: string, sourceKey: string, sourceName: string, category: string): NewsArticle[] {
   const articles: NewsArticle[] = [];
-
+  
   const itemRegex = /<item>([\s\S]*?)<\/item>/gi;
   const titleRegex = /<title><!\[CDATA\[(.*?)\]\]>|<title>(.*?)<\/title>/i;
   const linkRegex = /<link>(.*?)<\/link>|<link><!\[CDATA\[(.*?)\]\]>/i;
-  const descRegex =
-    /<description><!\[CDATA\[([\s\S]*?)\]\]>|<description>([\s\S]*?)<\/description>/i;
+  const descRegex = /<description><!\[CDATA\[([\s\S]*?)\]\]>|<description>([\s\S]*?)<\/description>/i;
   const pubDateRegex = /<pubDate>(.*?)<\/pubDate>/i;
-
+  
   let match;
   while ((match = itemRegex.exec(xml)) !== null) {
     const itemXml = match[1];
-
+    
     const titleMatch = itemXml.match(titleRegex);
     const linkMatch = itemXml.match(linkRegex);
     const descMatch = itemXml.match(descRegex);
     const pubDateMatch = itemXml.match(pubDateRegex);
-
+    
     const title = (titleMatch?.[1] || titleMatch?.[2] || '').trim();
     const link = (linkMatch?.[1] || linkMatch?.[2] || '').trim();
     const description = sanitizeDescription(descMatch?.[1] || descMatch?.[2] || '');
     const pubDateStr = pubDateMatch?.[1] || '';
-
+    
     if (title && link) {
       const pubDate = pubDateStr ? new Date(pubDateStr) : new Date();
       articles.push({
@@ -152,7 +146,7 @@ function parseRSSFeed(
       });
     }
   }
-
+  
   return articles;
 }
 
@@ -178,7 +172,7 @@ function getTimeAgo(date: Date): string {
   const diffMins = Math.floor(diffMs / 60000);
   const diffHours = Math.floor(diffMins / 60);
   const diffDays = Math.floor(diffHours / 24);
-
+  
   if (diffMins < 1) return 'just now';
   if (diffMins < 60) return `${diffMins}m ago`;
   if (diffHours < 24) return `${diffHours}h ago`;
@@ -194,30 +188,30 @@ import { newsCache, withCache } from './cache';
  */
 async function fetchFeed(sourceKey: SourceKey): Promise<NewsArticle[]> {
   const cacheKey = `feed:${sourceKey}`;
-
+  
   return withCache(newsCache, cacheKey, 180, async () => {
     const source = RSS_SOURCES[sourceKey];
-
+    
     try {
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 10000); // 10s timeout
-
+      
       const response = await fetch(source.url, {
         headers: {
-          Accept: 'application/rss+xml, application/xml, text/xml',
-          'User-Agent': 'FreeCryptoNews/1.0 (github.com/nirholas/crypto-data-aggregator)',
+          'Accept': 'application/rss+xml, application/xml, text/xml',
+          'User-Agent': 'FreeCryptoNews/1.0 (github.com/nirholas/free-crypto-news)',
         },
         signal: controller.signal,
         next: { revalidate: 300 },
       });
-
+      
       clearTimeout(timeoutId);
-
+      
       if (!response.ok) {
         console.warn(`Failed to fetch ${source.name}: ${response.status}`);
         return [];
       }
-
+      
       const xml = await response.text();
       return parseRSSFeed(xml, sourceKey, source.name, source.category);
     } catch (error) {
@@ -232,16 +226,20 @@ async function fetchFeed(sourceKey: SourceKey): Promise<NewsArticle[]> {
  */
 async function fetchMultipleSources(sourceKeys: SourceKey[]): Promise<NewsArticle[]> {
   // Fetch all sources in parallel
-  const results = await Promise.allSettled(sourceKeys.map((key) => fetchFeed(key)));
-
+  const results = await Promise.allSettled(
+    sourceKeys.map(key => fetchFeed(key))
+  );
+  
   const articles: NewsArticle[] = [];
   for (const result of results) {
     if (result.status === 'fulfilled') {
       articles.push(...result.value);
     }
   }
-
-  return articles.sort((a, b) => new Date(b.pubDate).getTime() - new Date(a.pubDate).getTime());
+  
+  return articles.sort((a, b) => 
+    new Date(b.pubDate).getTime() - new Date(a.pubDate).getTime()
+  );
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -257,82 +255,53 @@ export interface NewsQueryOptions {
   perPage?: number;
 }
 
-function filterByDateRange(
-  articles: NewsArticle[],
-  from?: Date | string,
-  to?: Date | string
-): NewsArticle[] {
-  let filtered = articles.filter((a) => a && a.pubDate);
-
+function filterByDateRange(articles: NewsArticle[], from?: Date | string, to?: Date | string): NewsArticle[] {
+  let filtered = articles.filter(a => a && a.pubDate);
+  
   if (from) {
     const fromDate = typeof from === 'string' ? new Date(from) : from;
-    filtered = filtered.filter((a) => new Date(a.pubDate) >= fromDate);
+    filtered = filtered.filter(a => new Date(a.pubDate) >= fromDate);
   }
-
+  
   if (to) {
     const toDate = typeof to === 'string' ? new Date(to) : to;
-    filtered = filtered.filter((a) => new Date(a.pubDate) <= toDate);
+    filtered = filtered.filter(a => new Date(a.pubDate) <= toDate);
   }
-
+  
   return filtered;
 }
 
-/**
- * Fetches the latest crypto news from all or specific sources.
- * Supports pagination and date filtering.
- *
- * @param limit - Maximum articles to return (default: 10, max: 50)
- * @param source - Optional: filter to specific source key
- * @param options - Additional query options
- * @param options.from - Filter articles after this date
- * @param options.to - Filter articles before this date
- * @param options.page - Page number for pagination
- * @param options.perPage - Articles per page
- * @returns News response with articles, counts, and pagination info
- *
- * @example
- * ```typescript
- * // Get latest 10 articles
- * const news = await getLatestNews();
- *
- * // Get CoinDesk articles only
- * const coindesk = await getLatestNews(20, 'coindesk');
- *
- * // With pagination
- * const page2 = await getLatestNews(10, undefined, { page: 2, perPage: 10 });
- * ```
- */
 export async function getLatestNews(
   limit: number = 10,
   source?: string,
   options?: NewsQueryOptions
 ): Promise<NewsResponse> {
   const normalizedLimit = Math.min(Math.max(1, limit), 50);
-
+  
   let sourceKeys: SourceKey[];
   if (source && source in RSS_SOURCES) {
     sourceKeys = [source as SourceKey];
   } else {
     sourceKeys = Object.keys(RSS_SOURCES) as SourceKey[];
   }
-
+  
   let articles = await fetchMultipleSources(sourceKeys);
-
+  
   // Apply date filtering
   if (options?.from || options?.to) {
     articles = filterByDateRange(articles, options.from, options.to);
   }
-
+  
   // Handle pagination
   const page = options?.page || 1;
   const perPage = options?.perPage || normalizedLimit;
   const startIndex = (page - 1) * perPage;
   const paginatedArticles = articles.slice(startIndex, startIndex + perPage);
-
+  
   return {
     articles: paginatedArticles,
     totalCount: articles.length,
-    sources: sourceKeys.map((k) => RSS_SOURCES[k].name),
+    sources: sourceKeys.map(k => RSS_SOURCES[k].name),
     fetchedAt: new Date().toISOString(),
     ...(options?.page && {
       pagination: {
@@ -340,19 +309,18 @@ export async function getLatestNews(
         perPage,
         totalPages: Math.ceil(articles.length / perPage),
         hasMore: startIndex + perPage < articles.length,
-      },
+      }
     }),
   } as NewsResponse;
 }
 
-export async function searchNews(keywords: string, limit: number = 10): Promise<NewsResponse> {
+export async function searchNews(
+  keywords: string,
+  limit: number = 10
+): Promise<NewsResponse> {
   const normalizedLimit = Math.min(Math.max(1, limit), 30);
-  const searchTerms = (keywords || '')
-    .toLowerCase()
-    .split(',')
-    .map((k) => k.trim())
-    .filter(Boolean);
-
+  const searchTerms = (keywords || '').toLowerCase().split(',').map(k => k.trim()).filter(Boolean);
+  
   // If no valid search terms, return empty result
   if (searchTerms.length === 0) {
     return {
@@ -362,73 +330,43 @@ export async function searchNews(keywords: string, limit: number = 10): Promise<
       fetchedAt: new Date().toISOString(),
     };
   }
-
+  
   const allArticles = await fetchMultipleSources(Object.keys(RSS_SOURCES) as SourceKey[]);
-
-  const matchingArticles = allArticles.filter((article) => {
+  
+  const matchingArticles = allArticles.filter(article => {
     if (!article || !article.title) return false;
     const searchText = `${article.title} ${article.description || ''}`.toLowerCase();
-    return searchTerms.some((term) => searchText.includes(term));
+    return searchTerms.some(term => searchText.includes(term));
   });
-
+  
   return {
     articles: matchingArticles.slice(0, normalizedLimit),
     totalCount: matchingArticles.length,
-    sources: [...new Set(matchingArticles.map((a) => a.source))],
+    sources: [...new Set(matchingArticles.map(a => a.source))],
     fetchedAt: new Date().toISOString(),
   };
 }
 
-/**
- * Fetches breaking news from the last 2 hours.
- * Useful for real-time news tickers and alerts.
- *
- * @param limit - Maximum articles (default: 5, max: 20)
- * @returns News response with recent articles only
- *
- * @example
- * ```typescript
- * const breaking = await getBreakingNews(5);
- * if (breaking.articles.length > 0) {
- *   showNotification(breaking.articles[0].title);
- * }
- * ```
- */
 export async function getBreakingNews(limit: number = 5): Promise<NewsResponse> {
   const normalizedLimit = Math.min(Math.max(1, limit), 20);
   const twoHoursAgo = new Date(Date.now() - 2 * 60 * 60 * 1000);
-
+  
   const allArticles = await fetchMultipleSources(Object.keys(RSS_SOURCES) as SourceKey[]);
-
-  const recentArticles = allArticles.filter(
-    (article) => article && article.pubDate && new Date(article.pubDate) > twoHoursAgo
+  
+  const recentArticles = allArticles.filter(article => 
+    article && article.pubDate && new Date(article.pubDate) > twoHoursAgo
   );
-
+  
   return {
     articles: recentArticles.slice(0, normalizedLimit),
     totalCount: recentArticles.length,
-    sources: [...new Set(recentArticles.map((a) => a.source))],
+    sources: [...new Set(recentArticles.map(a => a.source))],
     fetchedAt: new Date().toISOString(),
   };
 }
 
 /**
- * Fetches news articles for a specific category.
- * Uses keyword matching to categorize articles.
- *
- * Supported categories:
- * - bitcoin, ethereum, defi, nft, regulation
- * - markets, mining, stablecoin, exchange, layer2
- *
- * @param category - Category slug (case-insensitive)
- * @param limit - Maximum articles (default: 30, max: 50)
- * @returns News response with category-filtered articles
- *
- * @example
- * ```typescript
- * const defiNews = await getNewsByCategory('defi', 20);
- * console.log(`${defiNews.totalCount} DeFi articles found`);
- * ```
+ * Get news by category (bitcoin, ethereum, defi, nft, regulation, markets, etc.)
  */
 export async function getNewsByCategory(
   category: string,
@@ -442,164 +380,51 @@ export async function getNewsByCategory(
       fetchedAt: new Date().toISOString(),
     };
   }
-
+  
   const normalizedLimit = Math.min(Math.max(1, limit), 50);
-
+  
   const allArticles = await fetchMultipleSources(Object.keys(RSS_SOURCES) as SourceKey[]);
-
+  
   // Category keyword mappings
   const categoryKeywords: Record<string, string[]> = {
-    bitcoin: [
-      'bitcoin',
-      'btc',
-      'satoshi',
-      'lightning',
-      'halving',
-      'miner',
-      'ordinals',
-      'inscription',
-      'sats',
-    ],
-    ethereum: [
-      'ethereum',
-      'eth',
-      'vitalik',
-      'erc-20',
-      'erc-721',
-      'layer 2',
-      'l2',
-      'rollup',
-      'arbitrum',
-      'optimism',
-      'base',
-    ],
-    defi: [
-      'defi',
-      'yield',
-      'lending',
-      'liquidity',
-      'amm',
-      'dex',
-      'aave',
-      'uniswap',
-      'compound',
-      'curve',
-      'maker',
-      'lido',
-      'staking',
-      'vault',
-      'protocol',
-      'tvl',
-    ],
-    nft: [
-      'nft',
-      'non-fungible',
-      'opensea',
-      'blur',
-      'ordinals',
-      'inscription',
-      'collection',
-      'pfp',
-      'digital art',
-    ],
-    regulation: [
-      'regulation',
-      'sec',
-      'cftc',
-      'lawsuit',
-      'legal',
-      'compliance',
-      'tax',
-      'government',
-      'congress',
-      'senate',
-      'bill',
-      'law',
-      'policy',
-      'ban',
-      'restrict',
-    ],
-    markets: [
-      'market',
-      'price',
-      'trading',
-      'bull',
-      'bear',
-      'rally',
-      'crash',
-      'etf',
-      'futures',
-      'options',
-      'liquidation',
-      'volume',
-      'chart',
-      'analysis',
-    ],
+    bitcoin: ['bitcoin', 'btc', 'satoshi', 'lightning', 'halving', 'miner', 'ordinals', 'inscription', 'sats'],
+    ethereum: ['ethereum', 'eth', 'vitalik', 'erc-20', 'erc-721', 'layer 2', 'l2', 'rollup', 'arbitrum', 'optimism', 'base'],
+    defi: ['defi', 'yield', 'lending', 'liquidity', 'amm', 'dex', 'aave', 'uniswap', 'compound', 'curve', 'maker', 'lido', 'staking', 'vault', 'protocol', 'tvl'],
+    nft: ['nft', 'non-fungible', 'opensea', 'blur', 'ordinals', 'inscription', 'collection', 'pfp', 'digital art'],
+    regulation: ['regulation', 'sec', 'cftc', 'lawsuit', 'legal', 'compliance', 'tax', 'government', 'congress', 'senate', 'bill', 'law', 'policy', 'ban', 'restrict'],
+    markets: ['market', 'price', 'trading', 'bull', 'bear', 'rally', 'crash', 'etf', 'futures', 'options', 'liquidation', 'volume', 'chart', 'analysis'],
     mining: ['mining', 'miner', 'hashrate', 'difficulty', 'pow', 'proof of work', 'asic', 'pool'],
     stablecoin: ['stablecoin', 'usdt', 'usdc', 'dai', 'tether', 'circle', 'peg', 'depeg'],
-    exchange: [
-      'exchange',
-      'binance',
-      'coinbase',
-      'kraken',
-      'okx',
-      'bybit',
-      'trading',
-      'listing',
-      'delist',
-    ],
-    layer2: [
-      'layer 2',
-      'l2',
-      'rollup',
-      'arbitrum',
-      'optimism',
-      'base',
-      'zksync',
-      'polygon',
-      'scaling',
-    ],
+    exchange: ['exchange', 'binance', 'coinbase', 'kraken', 'okx', 'bybit', 'trading', 'listing', 'delist'],
+    layer2: ['layer 2', 'l2', 'rollup', 'arbitrum', 'optimism', 'base', 'zksync', 'polygon', 'scaling'],
   };
-
+  
   const keywords = categoryKeywords[category.toLowerCase()] || [category.toLowerCase()];
-
-  const filteredArticles = allArticles.filter((article) => {
+  
+  const filteredArticles = allArticles.filter(article => {
     if (!article || !article.title) return false;
-
+    
     // Check source category first
     if (article.category === category.toLowerCase()) return true;
     if (category === 'bitcoin' && article.sourceKey === 'bitcoinmagazine') return true;
     if (category === 'defi' && article.sourceKey === 'defiant') return true;
-
+    
     // Then check keywords
     const searchText = `${article.title} ${article.description || ''}`.toLowerCase();
-    return keywords.some((term) => searchText.includes(term));
+    return keywords.some(term => searchText.includes(term));
   });
-
+  
   return {
     articles: filteredArticles.slice(0, normalizedLimit),
     totalCount: filteredArticles.length,
-    sources: [...new Set(filteredArticles.map((a) => a.source))],
+    sources: [...new Set(filteredArticles.map(a => a.source))],
     fetchedAt: new Date().toISOString(),
   };
 }
 
-/**
- * Returns information about all available news sources.
- * Includes source status (active/unavailable).
- *
- * @returns Object with array of source info objects
- *
- * @example
- * ```typescript
- * const { sources } = await getSources();
- * const active = sources.filter(s => s.status === 'active');
- * console.log(`${active.length} sources available`);
- * ```
- */
 export async function getSources(): Promise<{ sources: SourceInfo[] }> {
   const sourceChecks = await Promise.allSettled(
-    (Object.keys(RSS_SOURCES) as SourceKey[]).map(async (key) => {
+    (Object.keys(RSS_SOURCES) as SourceKey[]).map(async key => {
       const source = RSS_SOURCES[key];
       try {
         const response = await fetch(source.url, {
@@ -624,58 +449,142 @@ export async function getSources(): Promise<{ sources: SourceInfo[] }> {
       }
     })
   );
-
+  
   return {
     sources: sourceChecks
       .filter((r): r is PromiseFulfilledResult<SourceInfo> => r.status === 'fulfilled')
-      .map((r) => r.value),
+      .map(r => r.value),
   };
 }
 
-/**
- * Convenience function to fetch DeFi-related news.
- * Shorthand for getNewsByCategory('defi', limit).
- *
- * @param limit - Maximum articles (default: 10)
- * @returns News response with DeFi articles
- *
- * @example
- * ```typescript
- * const defi = await getDefiNews(15);
- * ```
- */
+// Convenience function for DeFi-specific news
 export async function getDefiNews(limit: number = 10): Promise<NewsResponse> {
   return getNewsByCategory('defi', limit);
 }
 
-/**
- * Convenience function to fetch Bitcoin-related news.
- * Shorthand for getNewsByCategory('bitcoin', limit).
- *
- * @param limit - Maximum articles (default: 10)
- * @returns News response with Bitcoin articles
- *
- * @example
- * ```typescript
- * const btc = await getBitcoinNews(10);
- * ```
- */
+// Convenience function for Bitcoin-specific news  
 export async function getBitcoinNews(limit: number = 10): Promise<NewsResponse> {
   return getNewsByCategory('bitcoin', limit);
 }
 
-/**
- * Convenience function to fetch Ethereum-related news.
- * Shorthand for getNewsByCategory('ethereum', limit).
- *
- * @param limit - Maximum articles (default: 10)
- * @returns News response with Ethereum articles
- *
- * @example
- * ```typescript
- * const eth = await getEthereumNews(10);
- * ```
- */
+// Convenience function for Ethereum-specific news
 export async function getEthereumNews(limit: number = 10): Promise<NewsResponse> {
   return getNewsByCategory('ethereum', limit);
+}
+
+// ═══════════════════════════════════════════════════════════════
+// INTERNATIONAL NEWS INTEGRATION
+// ═══════════════════════════════════════════════════════════════
+
+// Re-export international news functions for convenience
+export {
+  getInternationalNews,
+  getNewsByLanguage,
+  getNewsByRegion,
+  getInternationalSources,
+  getSourceHealthStats,
+  INTERNATIONAL_SOURCES,
+  KOREAN_SOURCES,
+  CHINESE_SOURCES,
+  JAPANESE_SOURCES,
+  SPANISH_SOURCES,
+  SOURCES_BY_LANGUAGE,
+  SOURCES_BY_REGION,
+} from './international-sources';
+
+export type {
+  InternationalSource,
+  InternationalArticle,
+  InternationalNewsResponse,
+  InternationalNewsOptions,
+} from './international-sources';
+
+// Re-export translation functions
+export {
+  translateInternationalArticles,
+  translateInternationalNewsResponse,
+  isTranslationAvailable,
+  getInternationalTranslationCacheStats,
+  clearInternationalTranslationCache,
+} from './source-translator';
+
+/**
+ * Get combined news from both English and international sources
+ * Returns a mixed feed sorted by publication date
+ */
+export async function getGlobalNews(
+  limit: number = 20,
+  options?: {
+    includeInternational?: boolean;
+    translateInternational?: boolean;
+    languages?: ('ko' | 'zh' | 'ja' | 'es')[];
+  }
+): Promise<NewsResponse & { internationalCount: number }> {
+  const { 
+    includeInternational = true, 
+    translateInternational = false,
+    languages,
+  } = options || {};
+
+  const normalizedLimit = Math.min(Math.max(1, limit), 100);
+
+  // Fetch English news
+  const englishNews = await getLatestNews(normalizedLimit);
+  
+  if (!includeInternational) {
+    return {
+      ...englishNews,
+      internationalCount: 0,
+    };
+  }
+
+  // Import dynamically to avoid circular dependencies
+  const { getInternationalNews: fetchIntlNews } = await import('./international-sources');
+  const { translateInternationalNewsResponse: translateIntlNews, isTranslationAvailable: checkTranslation } = await import('./source-translator');
+
+  // Fetch international news
+  let intlNews = await fetchIntlNews({
+    language: languages?.length === 1 ? languages[0] : 'all',
+    limit: Math.ceil(normalizedLimit / 2),
+  });
+
+  // Translate if requested and available
+  if (translateInternational && checkTranslation()) {
+    try {
+      intlNews = await translateIntlNews(intlNews);
+    } catch (error) {
+      console.warn('Failed to translate international news:', error);
+    }
+  }
+
+  // Filter by specific languages if provided
+  let intlArticles = intlNews.articles;
+  if (languages && languages.length > 0) {
+    intlArticles = intlArticles.filter(a => languages.includes(a.language as 'ko' | 'zh' | 'ja' | 'es'));
+  }
+
+  // Convert international articles to standard format
+  const convertedIntlArticles: NewsArticle[] = intlArticles.map(article => ({
+    title: article.titleEnglish || article.title,
+    link: article.link,
+    description: article.descriptionEnglish || article.description,
+    pubDate: article.pubDate,
+    source: article.source,
+    sourceKey: article.sourceKey,
+    category: article.category,
+    timeAgo: article.timeAgo,
+  }));
+
+  // Merge and sort by date
+  const allArticles = [...englishNews.articles, ...convertedIntlArticles]
+    .sort((a, b) => new Date(b.pubDate).getTime() - new Date(a.pubDate).getTime())
+    .slice(0, normalizedLimit);
+
+  return {
+    articles: allArticles,
+    totalCount: englishNews.totalCount + intlNews.total,
+    sources: [...englishNews.sources, ...new Set(intlArticles.map(a => a.source))],
+    fetchedAt: new Date().toISOString(),
+    internationalCount: convertedIntlArticles.length,
+  };
 }

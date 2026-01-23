@@ -133,6 +133,37 @@ export function NewsArticleStructuredData({
 }
 
 /**
+ * ArticleStructuredData - Alias for NewsArticleStructuredData
+ * Used in article pages for SEO
+ */
+export interface ArticleStructuredDataProps {
+  article: {
+    title: string;
+    description?: string;
+    pubDate?: string;
+    updatedAt?: string;
+    author?: string;
+    source?: string;
+    image?: string;
+  };
+  url: string;
+}
+
+export function ArticleStructuredData({ article, url }: ArticleStructuredDataProps) {
+  return (
+    <NewsArticleStructuredData
+      headline={article.title}
+      description={article.description}
+      datePublished={article.pubDate || new Date().toISOString()}
+      dateModified={article.updatedAt || article.pubDate}
+      author={article.author || article.source || 'Crypto Data Aggregator'}
+      image={article.image}
+      url={url}
+    />
+  );
+}
+
+/**
  * NewsArticle List Schema - For news feeds
  */
 export function NewsListStructuredData({

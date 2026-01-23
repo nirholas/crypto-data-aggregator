@@ -1,0 +1,183 @@
+'use client';
+
+import { useState } from 'react';
+
+interface Example {
+  id: string;
+  name: string;
+  icon: string;
+  description: string;
+  language: string;
+  filename: string;
+  code: string;
+  setup?: string;
+  envVars?: string[];
+}
+
+interface ExamplesContentProps {
+  examples: Example[];
+}
+
+export function ExamplesContent({ examples }: ExamplesContentProps) {
+  const [selectedExample, setSelectedExample] = useState(examples[0]?.id);
+  const [copied, setCopied] = useState(false);
+
+  const currentExample = examples.find((e) => e.id === selectedExample) || examples[0];
+
+  const copyToClipboard = async (text: string) => {
+    await navigator.clipboard.writeText(text);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  const getLanguageColor = (lang: string) => {
+    const colors: Record<string, string> = {
+      javascript: 'bg-yellow-500',
+      typescript: 'bg-blue-500',
+      python: 'bg-green-500',
+      bash: 'bg-gray-500',
+    };
+    return colors[lang] || 'bg-gray-400';
+  };
+
+  return (
+    <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+      {/* Sidebar - Example Selection */}
+      <div className="lg:col-span-1">
+        <div className="sticky top-4 bg-white rounded-xl shadow-sm border p-4">
+          <h3 className="font-semibold text-gray-900 mb-4">Examples</h3>
+          <nav className="space-y-1">
+            {examples.map((example) => (
+              <button
+                key={example.id}
+                onClick={() => setSelectedExample(example.id)}
+                className={`w-full text-left px-3 py-2 rounded-lg transition-colors flex items-center gap-2 ${
+                  selectedExample === example.id
+                    ? 'bg-blue-50 text-blue-700 font-medium'
+                    : 'hover:bg-gray-50 text-gray-700'
+                }`}
+              >
+                <span className="text-lg">{example.icon}</span>
+                <span className="truncate">{example.name}</span>
+              </button>
+            ))}
+          </nav>
+        </div>
+      </div>
+
+      {/* Main Content - Code Display */}
+      <div className="lg:col-span-3">
+        {currentExample && (
+          <div className="bg-white rounded-xl shadow-sm border overflow-hidden">
+            {/* Header */}
+            <div className="border-b px-6 py-4">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <span className="text-2xl">{currentExample.icon}</span>
+                  <div>
+                    <h2 className="text-xl font-semibold text-gray-900">{currentExample.name}</h2>
+                    <p className="text-gray-500 text-sm">{currentExample.description}</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span
+                    className={`px-2 py-1 rounded text-xs text-white ${getLanguageColor(currentExample.language)}`}
+                  >
+                    {currentExample.language}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            {/* Setup Instructions */}
+            {(currentExample.setup || currentExample.envVars) && (
+              <div className="border-b px-6 py-3 bg-gray-50">
+                <div className="flex flex-wrap gap-4 text-sm">
+                  {currentExample.setup && (
+                    <div className="flex items-center gap-2">
+                      <span className="text-gray-500">Setup:</span>
+                      <code className="bg-gray-200 px-2 py-0.5 rounded text-gray-800">
+                        {currentExample.setup}
+                      </code>
+                    </div>
+                  )}
+                  {currentExample.envVars && currentExample.envVars.length > 0 && (
+                    <div className="flex items-center gap-2">
+                      <span className="text-gray-500">Required:</span>
+                      {currentExample.envVars.map((envVar) => (
+                        <code
+                          key={envVar}
+                          className="bg-yellow-100 text-yellow-800 px-2 py-0.5 rounded"
+                        >
+                          {envVar}
+                        </code>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+
+            {/* Code Block */}
+            <div className="relative">
+              <button
+                onClick={() => copyToClipboard(currentExample.code)}
+                className="absolute top-3 right-3 px-3 py-1.5 bg-gray-700 hover:bg-gray-600 text-white text-sm rounded-md transition-colors flex items-center gap-1"
+              >
+                {copied ? (
+                  <>
+                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M5 13l4 4L19 7"
+                      />
+                    </svg>
+                    Copied!
+                  </>
+                ) : (
+                  <>
+                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"
+                      />
+                    </svg>
+                    Copy
+                  </>
+                )}
+              </button>
+              <pre className="overflow-x-auto p-6 bg-gray-900 text-gray-100 text-sm leading-relaxed">
+                <code>{currentExample.code}</code>
+              </pre>
+            </div>
+
+            {/* File Name */}
+            <div className="border-t px-6 py-3 bg-gray-50 flex justify-between items-center">
+              <span className="text-sm text-gray-500">{currentExample.filename}</span>
+              <a
+                href={`https://github.com/nirholas/free-crypto-news/tree/main/examples/${currentExample.filename}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-sm text-blue-600 hover:text-blue-700 flex items-center gap-1"
+              >
+                View on GitHub
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+                  />
+                </svg>
+              </a>
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}

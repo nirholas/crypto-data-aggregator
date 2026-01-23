@@ -100,7 +100,8 @@ export async function GET(request: NextRequest) {
 ${JSON.stringify(articlesForAnalysis, null, 2)}`;
 
     const result = await promptGroqJson<SentimentResponse>(
-      SYSTEM_PROMPT + '\n\n' + userPrompt
+      SYSTEM_PROMPT,
+      userPrompt
     );
 
     if (!result) {

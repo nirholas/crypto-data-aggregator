@@ -1,6 +1,6 @@
 /**
  * Portfolio Tracker
- *
+ * 
  * Features:
  * - Track coin holdings
  * - Calculate portfolio value
@@ -61,17 +61,7 @@ function generateId(): string {
 }
 
 /**
- * Creates a new portfolio for a user.
- *
- * @param userId - Unique identifier for the user
- * @param name - Display name for the portfolio (default: 'My Portfolio')
- * @returns The newly created portfolio object
- *
- * @example
- * ```typescript
- * const portfolio = await createPortfolio('user_123', 'Main Portfolio');
- * console.log(portfolio.id); // 'pf_1234567890_abc123'
- * ```
+ * Create a new portfolio
  */
 export async function createPortfolio(
   userId: string,
@@ -91,62 +81,21 @@ export async function createPortfolio(
 }
 
 /**
- * Retrieves all portfolios belonging to a user.
- *
- * @param userId - Unique identifier for the user
- * @returns Array of portfolio objects (empty array if none exist)
- *
- * @example
- * ```typescript
- * const portfolios = getUserPortfolios('user_123');
- * portfolios.forEach(p => console.log(p.name));
- * ```
+ * Get user's portfolios
  */
 export function getUserPortfolios(userId: string): Portfolio[] {
-  return Array.from(portfolios.values()).filter((p) => p.userId === userId);
+  return Array.from(portfolios.values()).filter(p => p.userId === userId);
 }
 
 /**
- * Retrieves a specific portfolio by ID.
- *
- * @param portfolioId - Unique portfolio identifier
- * @returns Portfolio object or null if not found
- *
- * @example
- * ```typescript
- * const portfolio = getPortfolio('pf_123');
- * if (portfolio) {
- *   console.log(portfolio.holdings.length);
- * }
- * ```
+ * Get portfolio by ID
  */
 export function getPortfolio(portfolioId: string): Portfolio | null {
   return portfolios.get(portfolioId) || null;
 }
 
 /**
- * Adds a cryptocurrency holding to a portfolio.
- * If the coin already exists, updates the amount and recalculates average buy price.
- *
- * @param portfolioId - Portfolio to add holding to
- * @param holding - Holding details including coin info and purchase data
- * @param holding.coinId - CoinGecko coin ID (e.g., 'bitcoin')
- * @param holding.symbol - Coin ticker symbol (e.g., 'btc')
- * @param holding.name - Coin display name (e.g., 'Bitcoin')
- * @param holding.amount - Quantity of coins held
- * @param holding.averageBuyPrice - Average purchase price in USD
- * @returns Updated portfolio or null if portfolio not found
- *
- * @example
- * ```typescript
- * await addHolding('pf_123', {
- *   coinId: 'bitcoin',
- *   symbol: 'btc',
- *   name: 'Bitcoin',
- *   amount: 0.5,
- *   averageBuyPrice: 40000
- * });
- * ```
+ * Add holding to portfolio
  */
 export async function addHolding(
   portfolioId: string,
@@ -162,15 +111,14 @@ export async function addHolding(
   if (!portfolio) return null;
 
   // Check if coin already exists
-  const existingIndex = portfolio.holdings.findIndex((h) => h.coinId === holding.coinId);
-
+  const existingIndex = portfolio.holdings.findIndex(h => h.coinId === holding.coinId);
+  
   if (existingIndex >= 0) {
     // Update existing holding (average the buy price)
     const existing = portfolio.holdings[existingIndex];
     const totalAmount = existing.amount + holding.amount;
-    const totalCost =
-      existing.amount * existing.averageBuyPrice + holding.amount * holding.averageBuyPrice;
-
+    const totalCost = (existing.amount * existing.averageBuyPrice) + (holding.amount * holding.averageBuyPrice);
+    
     portfolio.holdings[existingIndex] = {
       ...existing,
       amount: totalAmount,
@@ -186,21 +134,12 @@ export async function addHolding(
 
   portfolio.updatedAt = new Date().toISOString();
   portfolios.set(portfolioId, portfolio);
-
+  
   return portfolio;
 }
 
 /**
- * Removes a cryptocurrency holding from a portfolio.
- *
- * @param portfolioId - Portfolio to remove holding from
- * @param coinId - CoinGecko coin ID to remove (e.g., 'bitcoin')
- * @returns Updated portfolio or null if portfolio not found
- *
- * @example
- * ```typescript
- * await removeHolding('pf_123', 'bitcoin');
- * ```
+ * Remove holding from portfolio
  */
 export async function removeHolding(
   portfolioId: string,
@@ -209,7 +148,7 @@ export async function removeHolding(
   const portfolio = portfolios.get(portfolioId);
   if (!portfolio) return null;
 
-  portfolio.holdings = portfolio.holdings.filter((h) => h.coinId !== coinId);
+  portfolio.holdings = portfolio.holdings.filter(h => h.coinId !== coinId);
   portfolio.updatedAt = new Date().toISOString();
   portfolios.set(portfolioId, portfolio);
 
@@ -217,21 +156,7 @@ export async function removeHolding(
 }
 
 /**
- * Updates an existing holding's amount or average buy price.
- *
- * @param portfolioId - Portfolio containing the holding
- * @param coinId - CoinGecko coin ID to update
- * @param updates - Fields to update (amount and/or averageBuyPrice)
- * @returns Updated portfolio or null if portfolio/holding not found
- *
- * @example
- * ```typescript
- * await updateHolding('pf_123', 'bitcoin', { amount: 1.5 });
- * await updateHolding('pf_123', 'bitcoin', {
- *   amount: 2.0,
- *   averageBuyPrice: 42000
- * });
- * ```
+ * Update holding amount
  */
 export async function updateHolding(
   portfolioId: string,
@@ -241,7 +166,7 @@ export async function updateHolding(
   const portfolio = portfolios.get(portfolioId);
   if (!portfolio) return null;
 
-  const holdingIndex = portfolio.holdings.findIndex((h) => h.coinId === coinId);
+  const holdingIndex = portfolio.holdings.findIndex(h => h.coinId === coinId);
   if (holdingIndex < 0) return null;
 
   if (updates.amount !== undefined) {
@@ -258,22 +183,11 @@ export async function updateHolding(
 }
 
 /**
- * Calculates the current value and performance metrics of a portfolio.
- * Fetches live prices and computes P&L, allocation percentages, and 24h changes.
- *
- * @param portfolioId - Portfolio to calculate value for
- * @returns Portfolio value breakdown or null if portfolio not found
- *
- * @example
- * ```typescript
- * const value = await calculatePortfolioValue('pf_123');
- * if (value) {
- *   console.log(`Total: $${value.totalValue}`);
- *   console.log(`P&L: ${value.totalProfitLossPercent}%`);
- * }
- * ```
+ * Calculate portfolio value with current prices
  */
-export async function calculatePortfolioValue(portfolioId: string): Promise<PortfolioValue | null> {
+export async function calculatePortfolioValue(
+  portfolioId: string
+): Promise<PortfolioValue | null> {
   const portfolio = portfolios.get(portfolioId);
   if (!portfolio) return null;
 
@@ -291,12 +205,12 @@ export async function calculatePortfolioValue(portfolioId: string): Promise<Port
   // Fetch current prices
   const coins = await getTopCoins(250);
   const priceMap = new Map<string, TokenPrice>();
-  coins.forEach((c) => priceMap.set(c.id, c));
+  coins.forEach(c => priceMap.set(c.id, c));
 
   let totalValue = 0;
   let totalCost = 0;
 
-  const holdingsWithValue = portfolio.holdings.map((holding) => {
+  const holdingsWithValue = portfolio.holdings.map(holding => {
     const coinData = priceMap.get(holding.coinId);
     const currentPrice = coinData?.current_price || 0;
     const value = holding.amount * currentPrice;
@@ -325,7 +239,7 @@ export async function calculatePortfolioValue(portfolioId: string): Promise<Port
   });
 
   // Calculate allocations
-  holdingsWithValue.forEach((h) => {
+  holdingsWithValue.forEach(h => {
     h.allocation = totalValue > 0 ? (h.value / totalValue) * 100 : 0;
   });
 
@@ -346,18 +260,7 @@ export async function calculatePortfolioValue(portfolioId: string): Promise<Port
 }
 
 /**
- * Finds news articles related to coins in a portfolio.
- * Searches article titles and descriptions for coin names/symbols.
- *
- * @param portfolioId - Portfolio to find relevant news for
- * @param limit - Maximum number of articles to return (default: 20)
- * @returns Object with relevant articles and list of mentioned coins
- *
- * @example
- * ```typescript
- * const { articles, relevantCoins } = await getPortfolioNews('pf_123');
- * console.log(`Found ${articles.length} articles about ${relevantCoins.join(', ')}`);
- * ```
+ * Get news related to portfolio holdings
  */
 export async function getPortfolioNews(
   portfolioId: string,
@@ -369,7 +272,7 @@ export async function getPortfolioNews(
   }
 
   // Get coin symbols/names for search
-  const searchTerms = portfolio.holdings.flatMap((h) => [
+  const searchTerms = portfolio.holdings.flatMap(h => [
     h.symbol.toLowerCase(),
     h.name.toLowerCase(),
   ]);
@@ -379,18 +282,20 @@ export async function getPortfolioNews(
   const news = await getLatestNews(100);
 
   // Filter news that mentions any of the portfolio coins
-  const relevantArticles = news.articles.filter((article) => {
+  const relevantArticles = news.articles.filter(article => {
     const titleLower = article.title.toLowerCase();
     const descLower = (article.description || '').toLowerCase();
-
-    return searchTerms.some((term) => titleLower.includes(term) || descLower.includes(term));
+    
+    return searchTerms.some(term => 
+      titleLower.includes(term) || descLower.includes(term)
+    );
   });
 
   // Track which coins were mentioned
   const mentionedCoins = new Set<string>();
-  relevantArticles.forEach((article) => {
+  relevantArticles.forEach(article => {
     const text = (article.title + ' ' + (article.description || '')).toLowerCase();
-    portfolio.holdings.forEach((h) => {
+    portfolio.holdings.forEach(h => {
       if (text.includes(h.symbol.toLowerCase()) || text.includes(h.name.toLowerCase())) {
         mentionedCoins.add(h.symbol);
       }
@@ -404,33 +309,14 @@ export async function getPortfolioNews(
 }
 
 /**
- * Permanently deletes a portfolio and all its holdings.
- *
- * @param portfolioId - Portfolio to delete
- * @returns True if deleted, false if portfolio not found
- *
- * @example
- * ```typescript
- * const deleted = await deletePortfolio('pf_123');
- * console.log(deleted ? 'Portfolio deleted' : 'Portfolio not found');
- * ```
+ * Delete portfolio
  */
 export async function deletePortfolio(portfolioId: string): Promise<boolean> {
   return portfolios.delete(portfolioId);
 }
 
 /**
- * Returns aggregate statistics across all portfolios.
- * Useful for admin dashboards and analytics.
- *
- * @returns Statistics object with portfolio counts and popular coins
- *
- * @example
- * ```typescript
- * const stats = getPortfolioStats();
- * console.log(`${stats.totalPortfolios} portfolios`);
- * console.log(`Top coin: ${stats.topCoins[0]?.coinId}`);
- * ```
+ * Get portfolio stats for admin
  */
 export function getPortfolioStats(): {
   totalPortfolios: number;
@@ -442,9 +328,9 @@ export function getPortfolioStats(): {
   const coinCounts = new Map<string, number>();
 
   let totalHoldings = 0;
-  all.forEach((p) => {
+  all.forEach(p => {
     totalHoldings += p.holdings.length;
-    p.holdings.forEach((h) => {
+    p.holdings.forEach(h => {
       coinCounts.set(h.coinId, (coinCounts.get(h.coinId) || 0) + 1);
     });
   });

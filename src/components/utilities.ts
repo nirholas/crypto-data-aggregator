@@ -12,4 +12,14 @@ export {
   LoadingState,
 } from './EmptyState';
 export { BackToTop } from './BackToTop';
-
+export { 
+  ScrollRestoration, 
+  RouteAnnouncer, 
+  NavigationAccessibility,
+  useFocusOnRouteChange,
+} from './ScrollRestoration';
+export { 
+  useFocusTrap, 
+  useRovingFocus, 
+  FocusTrap,
+} from './FocusManagement';

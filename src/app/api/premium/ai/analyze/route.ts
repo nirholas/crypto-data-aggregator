@@ -18,7 +18,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { withX402 } from '@x402/next';
 import { x402Server, getRouteConfig } from '@/lib/x402-server';
 import { getCoinDetails, getHistoricalPrices, getFearGreedIndex } from '@/lib/market-data';
-import { groqClient, isGroqConfigured } from '@/lib/groq';
+import { callGroq, parseGroqJson, isGroqConfigured, type GroqMessage } from '@/lib/groq';
 
 export const runtime = 'nodejs';
 
@@ -226,21 +226,23 @@ Response format:
   }
 
   try {
-    const completion = await groqClient.chat.completions.create({
-      model: 'llama-3.3-70b-versatile',
-      messages: [
+    const response = await callGroq(
+      [
         {
           role: 'system',
           content: 'You are a cryptocurrency analyst. Respond only with valid JSON.',
         },
         { role: 'user', content: prompt },
       ],
-      temperature: 0.3,
-      max_tokens: 1000,
-      response_format: { type: 'json_object' },
-    });
+      {
+        model: 'llama-3.3-70b-versatile',
+        temperature: 0.3,
+        maxTokens: 1000,
+        jsonMode: true,
+      }
+    );
 
-    const content = completion.choices[0]?.message?.content || '{}';
+    const content = response.content || '{}';
     const parsed = JSON.parse(content);
 
     return {

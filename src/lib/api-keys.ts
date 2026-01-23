@@ -8,7 +8,45 @@
  */
 
 import { kv } from '@vercel/kv';
-import { createHash, randomBytes } from 'crypto';
+
+// ============================================================================
+// Edge-compatible crypto utilities (using Web Crypto API)
+// ============================================================================
+
+/**
+ * Generate cryptographically secure random bytes (Edge compatible)
+ */
+function getRandomBytes(length: number): Uint8Array {
+  const array = new Uint8Array(length);
+  crypto.getRandomValues(array);
+  return array;
+}
+
+/**
+ * Convert bytes to base64url string
+ */
+function toBase64Url(bytes: Uint8Array): string {
+  const base64 = btoa(String.fromCharCode(...bytes));
+  return base64.replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+}
+
+/**
+ * Convert bytes to hex string
+ */
+function toHex(bytes: Uint8Array): string {
+  return Array.from(bytes)
+    .map((b) => b.toString(16).padStart(2, '0'))
+    .join('');
+}
+
+/**
+ * SHA-256 hash using Web Crypto API (Edge compatible)
+ */
+async function sha256(message: string): Promise<string> {
+  const msgBuffer = new TextEncoder().encode(message);
+  const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+  return toHex(new Uint8Array(hashBuffer));
+}
 
 // ============================================================================
 // Types
@@ -78,7 +116,7 @@ const KEY_PREFIXES = {
 } as const;
 
 // ============================================================================
-// Key Generation
+// Key Generation (Edge-compatible)
 // ============================================================================
 
 /**
@@ -86,22 +124,37 @@ const KEY_PREFIXES = {
  */
 export function generateApiKey(tier: 'free' | 'pro' | 'enterprise' = 'free'): string {
   const prefix = KEY_PREFIXES[tier];
-  const randomPart = randomBytes(24).toString('base64url');
+  const randomPart = toBase64Url(getRandomBytes(24));
   return `${prefix}${randomPart}`;
 }
 
 /**
- * Hash an API key for secure storage
+ * Hash an API key for secure storage (async for Edge compatibility)
  */
-export function hashApiKey(key: string): string {
-  return createHash('sha256').update(key).digest('hex');
+export async function hashApiKey(key: string): Promise<string> {
+  return sha256(key);
+}
+
+/**
+ * Synchronous hash for validation (simple hash for lookups)
+ * Note: Uses a simple non-crypto hash for sync operations
+ */
+export function hashApiKeySync(key: string): string {
+  // Simple deterministic hash for sync operations
+  let hash = 0;
+  for (let i = 0; i < key.length; i++) {
+    const char = key.charCodeAt(i);
+    hash = (hash << 5) - hash + char;
+    hash = hash & hash; // Convert to 32bit integer
+  }
+  return Math.abs(hash).toString(16).padStart(8, '0');
 }
 
 /**
  * Generate a unique ID for the key record
  */
 function generateKeyId(): string {
-  return `key_${Date.now()}_${randomBytes(4).toString('hex')}`;
+  return `key_${Date.now()}_${toHex(getRandomBytes(4))}`;
 }
 
 // ============================================================================
@@ -145,7 +198,7 @@ export async function createApiKey(params: {
 
   // Generate new key
   const rawKey = generateApiKey(tier);
-  const hashedKey = hashApiKey(rawKey);
+  const hashedKey = await hashApiKey(rawKey);
   const keyId = generateKeyId();
 
   const tierConfig = API_KEY_TIERS[tier];
@@ -197,7 +250,7 @@ export async function validateApiKey(rawKey: string): Promise<ApiKeyData | null>
     return null;
   }
 
-  const hashedKey = hashApiKey(rawKey);
+  const hashedKey = await hashApiKey(rawKey);
 
   try {
     const keyData = await kv.get<ApiKeyData>(`${KV_PREFIX.key}${hashedKey}`);
