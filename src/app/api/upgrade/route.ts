@@ -30,7 +30,7 @@ export const runtime = 'nodejs';
 // Upgrade pricing (in USD)
 const UPGRADE_PRICING = {
   pro_monthly: {
-    price: '29.00',
+    price: '5.00', // Temporarily reduced for testing
     tier: 'pro' as const,
     duration: 30, // days
     description: 'Pro Monthly Subscription - 10,000 requests/day',
@@ -72,7 +72,7 @@ export async function GET(request: NextRequest) {
       {
         type: 'pro_monthly',
         name: 'Pro Monthly',
-        price: '$29.00',
+        price: '$5.00', // Temporarily reduced for testing
         tier: 'pro',
         duration: '30 days',
         features: API_KEY_TIERS.pro.features,
