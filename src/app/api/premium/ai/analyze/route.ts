@@ -428,7 +428,7 @@ async function handler(
         metadata: {
           generatedAt: new Date().toISOString(),
           dataFreshness: 'real-time',
-          model: isGroqConfigured ? 'llama-3.3-70b-versatile' : 'rule-based',
+          model: isGroqConfigured() ? 'llama-3.3-70b-versatile' : 'rule-based',
         },
       },
       {

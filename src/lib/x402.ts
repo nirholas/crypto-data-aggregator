@@ -11,7 +11,13 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { x402ResourceServer, HTTPFacilitatorClient } from '@x402/core/server';
-import type { PaymentRequirements, PaymentRequired, PaymentPayload, SettleResponse, VerifyResponse } from '@x402/core/types';
+import type {
+  PaymentRequirements,
+  PaymentRequired,
+  PaymentPayload,
+  SettleResponse,
+  VerifyResponse,
+} from '@x402/core/types';
 import { registerExactEvmScheme } from '@x402/evm/exact/server';
 
 // =============================================================================
@@ -34,16 +40,27 @@ export const FACILITATOR_URL = process.env.X402_FACILITATOR_URL || 'https://x402
  * - Production: Base mainnet (eip155:8453)
  * - Development: Base Sepolia testnet (eip155:84532)
  */
-export const NETWORK = process.env.NODE_ENV === 'production'
-  ? 'eip155:8453'  // Base mainnet
-  : 'eip155:84532'; // Base Sepolia testnet
+export const NETWORK =
+  process.env.NODE_ENV === 'production'
+    ? 'eip155:8453' // Base mainnet
+    : 'eip155:84532'; // Base Sepolia testnet
+
+/**
+ * Network identifiers for x402
+ */
+export const NETWORKS = {
+  BASE_MAINNET: 'eip155:8453',
+  BASE_SEPOLIA: 'eip155:84532',
+} as const;
+
+export type NetworkId = (typeof NETWORKS)[keyof typeof NETWORKS];
 
 /**
  * USDC contract addresses by network
  */
 export const USDC_ADDRESSES: Record<string, `0x${string}`> = {
-  'eip155:8453': '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913',   // Base mainnet USDC
-  'eip155:84532': '0x036CbD53842c5426634e7929541eC2318f3dCF7e',  // Base Sepolia USDC
+  'eip155:8453': '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913', // Base mainnet USDC
+  'eip155:84532': '0x036CbD53842c5426634e7929541eC2318f3dCF7e', // Base Sepolia USDC
 };
 
 // =============================================================================
@@ -211,33 +228,54 @@ export function createPaymentRequired(
 /**
  * Get payment required response for a premium route
  */
-export function getRoutePaymentRequired(
-  pathname: string,
-  baseUrl: string
-): PaymentRequired | null {
+export function getRoutePaymentRequired(pathname: string, baseUrl: string): PaymentRequired | null {
   const resource = `${baseUrl}${pathname}`;
 
   // Match route patterns
   if (pathname.match(/^\/api\/premium\/coins\/[^/]+$/)) {
-    return createPaymentRequired(PRICING.coinDetails, 'Detailed coin data with developer and social metrics', resource);
+    return createPaymentRequired(
+      PRICING.coinDetails,
+      'Detailed coin data with developer and social metrics',
+      resource
+    );
   }
   if (pathname === '/api/premium/coins') {
     return createPaymentRequired(PRICING.coinDetails, 'Batch detailed coin data', resource);
   }
   if (pathname === '/api/premium/portfolio/value') {
-    return createPaymentRequired(PRICING.portfolioValuation, 'Portfolio valuation with performance analytics', resource);
+    return createPaymentRequired(
+      PRICING.portfolioValuation,
+      'Portfolio valuation with performance analytics',
+      resource
+    );
   }
   if (pathname.match(/^\/api\/premium\/analytics/)) {
-    return createPaymentRequired(PRICING.analytics, 'Advanced market analytics and insights', resource);
+    return createPaymentRequired(
+      PRICING.analytics,
+      'Advanced market analytics and insights',
+      resource
+    );
   }
   if (pathname.match(/^\/api\/premium\/export/)) {
-    return createPaymentRequired(PRICING.export, 'Export historical price data (CSV/JSON)', resource);
+    return createPaymentRequired(
+      PRICING.export,
+      'Export historical price data (CSV/JSON)',
+      resource
+    );
   }
   if (pathname === '/api/premium/screener') {
-    return createPaymentRequired(PRICING.screener, 'Advanced coin screener with custom filters', resource);
+    return createPaymentRequired(
+      PRICING.screener,
+      'Advanced coin screener with custom filters',
+      resource
+    );
   }
   if (pathname.match(/^\/api\/premium\/historical/)) {
-    return createPaymentRequired(PRICING.historicalPerYear, 'Historical price data access', resource);
+    return createPaymentRequired(
+      PRICING.historicalPerYear,
+      'Historical price data access',
+      resource
+    );
   }
 
   // Default premium route pricing
@@ -376,9 +414,7 @@ export function checkRateLimit(
 /**
  * Create 402 Payment Required response with x402 headers
  */
-export function create402Response(
-  paymentRequired: PaymentRequired
-): NextResponse {
+export function create402Response(paymentRequired: PaymentRequired): NextResponse {
   const encoded = Buffer.from(JSON.stringify(paymentRequired)).toString('base64');
 
   return NextResponse.json(
@@ -407,9 +443,7 @@ export function create402Response(
 /**
  * Main x402 middleware for premium API routes
  */
-export async function x402Middleware(
-  request: NextRequest
-): Promise<NextResponse | null> {
+export async function x402Middleware(request: NextRequest): Promise<NextResponse | null> {
   const pathname = request.nextUrl.pathname;
   const baseUrl = `${request.nextUrl.protocol}//${request.nextUrl.host}`;
 
@@ -522,3 +556,150 @@ export function isTestnet(): boolean {
   return process.env.NODE_ENV !== 'production';
 }
 
+// =============================================================================
+// ENDPOINT METADATA
+// =============================================================================
+
+export interface EndpointMetadata {
+  path: string;
+  priceUsd: string;
+  description: string;
+  rateLimit?: number;
+}
+
+/**
+ * Get metadata for a premium endpoint
+ */
+export function getEndpointMetadata(pathname: string): EndpointMetadata | null {
+  if (pathname.match(/^\/api\/premium\/coins\/[^/]+$/)) {
+    return {
+      path: pathname,
+      priceUsd: PRICING.coinDetails,
+      description: 'Detailed coin data with developer and social metrics',
+    };
+  }
+  if (pathname === '/api/premium/coins') {
+    return {
+      path: pathname,
+      priceUsd: PRICING.coinDetails,
+      description: 'Batch detailed coin data',
+    };
+  }
+  if (pathname === '/api/premium/portfolio/value') {
+    return {
+      path: pathname,
+      priceUsd: PRICING.portfolioValuation,
+      description: 'Portfolio valuation with performance analytics',
+    };
+  }
+  if (pathname.match(/^\/api\/premium\/analytics/)) {
+    return {
+      path: pathname,
+      priceUsd: PRICING.analytics,
+      description: 'Advanced market analytics and insights',
+    };
+  }
+  if (pathname.match(/^\/api\/premium\/export/)) {
+    return {
+      path: pathname,
+      priceUsd: PRICING.export,
+      description: 'Export historical price data (CSV/JSON)',
+    };
+  }
+  if (pathname === '/api/premium/screener') {
+    return {
+      path: pathname,
+      priceUsd: PRICING.screener,
+      description: 'Advanced coin screener with custom filters',
+    };
+  }
+  if (pathname.match(/^\/api\/premium\/historical/)) {
+    return {
+      path: pathname,
+      priceUsd: PRICING.historicalPerYear,
+      description: 'Historical price data access',
+    };
+  }
+  if (pathname.startsWith('/api/premium')) {
+    return { path: pathname, priceUsd: PRICING.coinDetails, description: 'Premium API access' };
+  }
+  return null;
+}
+
+// =============================================================================
+// HYBRID AUTH MIDDLEWARE
+// =============================================================================
+
+/**
+ * Hybrid authentication middleware supporting both API keys and x402 payments
+ * For use in v1 endpoints that accept either authentication method
+ */
+export async function hybridAuthMiddleware(
+  request: NextRequest,
+  endpoint: string
+): Promise<NextResponse | null> {
+  const baseUrl = `${request.nextUrl.protocol}//${request.nextUrl.host}`;
+
+  // Check for API key first (subscription model)
+  const keyInfo = await checkApiKey(request);
+
+  if (keyInfo) {
+    const tierConfig = API_TIERS[keyInfo.tier];
+
+    if (tierConfig.requestsPerDay === -1) {
+      return null; // Unlimited (enterprise)
+    }
+
+    const clientId = request.headers.get('X-API-Key') || 'anonymous';
+    const rateLimit = checkRateLimit(clientId, tierConfig.requestsPerDay);
+
+    if (!rateLimit.allowed) {
+      return NextResponse.json(
+        {
+          error: 'Rate limit exceeded',
+          message: `You have exceeded your ${tierConfig.name} tier limit`,
+          resetAt: new Date(rateLimit.resetAt).toISOString(),
+        },
+        {
+          status: 429,
+          headers: {
+            'X-RateLimit-Limit': tierConfig.requestsPerDay.toString(),
+            'X-RateLimit-Remaining': rateLimit.remaining.toString(),
+            'X-RateLimit-Reset': rateLimit.resetAt.toString(),
+          },
+        }
+      );
+    }
+
+    return null; // Allow request with valid API key
+  }
+
+  // No API key - check if x402 is enabled and require payment
+  if (!isX402Enabled()) {
+    // x402 not configured, deny access without valid API key
+    return NextResponse.json(
+      {
+        error: 'Unauthorized',
+        message: 'Valid API key required. Get one at /pricing',
+      },
+      { status: 401 }
+    );
+  }
+
+  // Get payment requirements
+  const paymentRequired = createPaymentRequired(
+    PRICING.coinDetails,
+    `API access: ${endpoint}`,
+    `${baseUrl}${endpoint}`
+  );
+
+  // Check for x402 payment
+  const paymentResult = await verifyX402Payment(request, paymentRequired);
+
+  if (paymentResult.valid) {
+    return null; // Payment verified
+  }
+
+  // No valid payment - return 402
+  return create402Response(paymentRequired);
+}
