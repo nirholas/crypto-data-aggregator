@@ -204,9 +204,10 @@ export default function Footer() {
                 { href: '/calculator', label: 'Calculator' },
                 { href: '/gas', label: 'Gas Tracker' },
                 { href: '/halving', label: 'Halving Countdown' },
-                { href: '/volatility', label: 'Volatility' },
-                { href: '/digest', label: 'Daily Digest' },
-                { href: '/sources', label: 'News Sources' },
+                { href: '/liquidations', label: 'Liquidations' },
+                { href: '/correlation', label: 'Correlation Matrix' },
+                { href: '/buzz', label: 'Social Buzz' },
+                { href: '/bookmarks', label: 'Bookmarks' },
               ].map((item) => (
                 <li key={item.href}>
                   <Link
@@ -277,7 +278,7 @@ export default function Footer() {
 
         {/* Bottom bar */}
         <div className="border-t border-surface-border mt-12 pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
-          <p className="text-text-muted text-sm flex items-center gap-2">
+          <p className="text-text-muted text-sm flex items-center gap-2 flex-wrap">
             <span className="inline-flex items-center gap-1.5 bg-primary text-text-primary px-3 py-1 rounded-full text-xs font-semibold">
               MIT Licensed
             </span>
@@ -294,6 +295,21 @@ export default function Footer() {
               </a>
             </span>
           </p>
+          <div className="flex items-center gap-4 text-sm text-text-muted">
+            <Link
+              href="/install"
+              className="flex items-center gap-1.5 hover:text-text-primary transition-colors"
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+              </svg>
+              Install App
+            </Link>
+            <span className="text-surface-border">|</span>
+            <span className="flex items-center gap-1.5">
+              Press <kbd className="px-1.5 py-0.5 bg-surface rounded text-xs font-medium border border-surface-border">?</kbd> for shortcuts
+            </span>
+          </div>
         </div>
       </div>
     </footer>

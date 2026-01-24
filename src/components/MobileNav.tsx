@@ -25,13 +25,24 @@ const mainNavItems = [
   { href: '/defi', label: 'DeFi Dashboard', icon: Landmark },
   { href: '/trending', label: 'Trending', icon: Flame },
   { href: '/movers', label: 'Top Movers', icon: Rocket },
-  { href: '/sources', label: 'News Sources', icon: Folder },
-  { href: '/topics', label: 'Topics', icon: Tag },
+  { href: '/watchlist', label: 'Watchlist', icon: Star },
   { href: '/search', label: 'Search', icon: Search },
 ];
 
+const toolsLinks = [
+  { href: '/screener', label: 'Screener', icon: Search },
+  { href: '/correlation', label: 'Correlation Matrix', icon: TrendingUp },
+  { href: '/buzz', label: 'Social Buzz', icon: Flame },
+  { href: '/liquidations', label: 'Liquidations', icon: Rocket },
+  { href: '/volatility', label: 'Volatility', icon: TrendingUp },
+  { href: '/halving', label: 'Bitcoin Halving', icon: Landmark },
+  { href: '/bookmarks', label: 'Bookmarks', icon: Star },
+];
+
 const resourceLinks = [
-  { href: '/examples', label: 'Code Examples', icon: Code },
+  { href: '/developers', label: 'API Docs', icon: Code },
+  { href: '/pricing', label: 'API Pricing', icon: Info },
+  { href: '/install', label: 'Install App', icon: Folder },
   { href: '/about', label: 'About', icon: Info },
 ];
 
@@ -271,6 +282,55 @@ export function MobileNav() {
                     <span className="font-medium">{cat.name}</span>
                   </Link>
                 ))}
+              </div>
+            </div>
+
+            {/* Tools Section - Collapsible */}
+            <div>
+              <button
+                onClick={() => toggleSection('tools')}
+                className="w-full flex items-center justify-between px-4 py-2 text-xs font-semibold text-[var(--text-muted)] uppercase tracking-wider hover:text-[var(--text-secondary)] transition-colors focus-ring rounded-lg"
+                aria-expanded={expandedSection === 'tools'}
+              >
+                <span>Advanced Tools</span>
+                <svg
+                  className={`w-4 h-4 transition-transform duration-200 ${expandedSection === 'tools' ? 'rotate-180' : ''}`}
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  aria-hidden="true"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M19 9l-7 7-7-7"
+                  />
+                </svg>
+              </button>
+              <div
+                className={`space-y-1 mt-2 overflow-hidden transition-all duration-300 ${
+                  expandedSection === 'tools'
+                    ? 'max-h-[400px] opacity-100'
+                    : 'max-h-0 opacity-0'
+                }`}
+              >
+                {toolsLinks.map((item) => {
+                  const IconComponent = item.icon;
+                  return (
+                    <Link
+                      key={item.href}
+                      href={item.href}
+                      onClick={closeMenu}
+                      className="flex items-center gap-3 px-4 py-3 text-text-secondary hover:text-text-primary hover:bg-surface-hover rounded-xl transition-colors focus-ring"
+                    >
+                      <span className="w-5 flex justify-center" aria-hidden="true">
+                        <IconComponent className="w-5 h-5" />
+                      </span>
+                      <span className="font-medium">{item.label}</span>
+                    </Link>
+                  );
+                })}
               </div>
             </div>
 

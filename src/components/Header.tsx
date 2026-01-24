@@ -133,15 +133,17 @@ const navItems = [
         {
           title: 'Developer',
           links: [
-            { label: 'API Documentation', href: '/docs/api', icon: null },
-            { label: 'Pricing', href: '/pricing', icon: null },
+            { label: 'API Documentation', href: '/developers', icon: null },
+            { label: 'Pricing & Tiers', href: '/pricing', icon: null },
+            { label: 'LLM Integration', href: '/llms.txt', icon: null },
           ],
         },
         {
-          title: 'Payments',
+          title: 'AI Features',
           links: [
+            { label: 'AI Analysis', href: '/pricing/premium', icon: null },
+            { label: 'Ask AI', href: '/ask', icon: null },
             { label: 'x402 Micropayments', href: '/pricing#x402', icon: null },
-            { label: 'API Tiers', href: '/pricing', icon: null },
           ],
         },
       ],
@@ -447,6 +449,32 @@ export default function Header() {
             <div className="hidden sm:block">
               <PriceAlerts />
             </div>
+
+            {/* Install App Button */}
+            <Link
+              href="/install"
+              className="hidden lg:flex items-center gap-1.5 px-3 py-2 text-[var(--text-secondary)] hover:text-white hover:bg-[var(--surface-hover)] rounded-lg transition-all duration-200 focus-ring text-sm"
+              aria-label="Install as app"
+              title="Install as native app"
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+              </svg>
+              <span className="hidden xl:inline">Install</span>
+            </Link>
+
+            {/* Keyboard Shortcuts Hint */}
+            <button
+              onClick={() => {
+                const event = new KeyboardEvent('keydown', { key: '?' });
+                document.dispatchEvent(event);
+              }}
+              className="hidden lg:flex items-center gap-1 px-2 py-1.5 text-[var(--text-muted)] hover:text-white hover:bg-[var(--surface-hover)] rounded-lg transition-all duration-200 focus-ring"
+              aria-label="Keyboard shortcuts"
+              title="View keyboard shortcuts"
+            >
+              <kbd className="px-1.5 py-0.5 bg-[var(--surface)] rounded text-[10px] font-medium border border-[var(--surface-border)]">?</kbd>
+            </button>
 
             {/* GitHub Link */}
             <a
