@@ -167,7 +167,7 @@ export default async function CategoryPage({ params }: Props) {
             {/* Sidebar */}
             <aside className="hidden lg:block">
               <div className="sticky top-4">
-                <TrendingSidebar />
+                <TrendingSidebar trendingArticles={data.articles.slice(0, 5)} />
               </div>
             </aside>
           </div>
