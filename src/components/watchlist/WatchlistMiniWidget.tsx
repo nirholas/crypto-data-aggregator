@@ -74,7 +74,7 @@ export function WatchlistMiniWidget({
           <div className="flex items-center gap-2">
             <Star className="w-5 h-5 text-yellow-500 fill-yellow-500" />
             <h3 className="font-semibold text-text-primary">Watchlist</h3>
-            <span className="text-xs bg-yellow-500/20 text-yellow-600 dark:text-yellow-400 px-2 py-0.5 rounded-full">
+            <span className="text-xs bg-warning/20 text-warning px-2 py-0.5 rounded-full">
               {watchlist.length}
             </span>
           </div>
@@ -113,7 +113,7 @@ export function WatchlistMiniWidget({
         <div className="flex items-center gap-2">
           <Star className="w-5 h-5 text-yellow-500 fill-yellow-500" />
           <h3 className="font-semibold text-text-primary">Watchlist</h3>
-          <span className="text-xs bg-yellow-500/20 text-yellow-600 dark:text-yellow-400 px-2 py-0.5 rounded-full">
+          <span className="text-xs bg-yellow-500/20 text-yellow-500 px-2 py-0.5 rounded-full">
             {watchlist.length}
           </span>
         </div>

@@ -334,9 +334,9 @@ export default async function CategoryDetailPage({ params }: CategoryPageProps) 
                     {coins.map((coin, index) => (
                       <tr
                         key={coin.id}
-                        className="border-b border-gray-100 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-black/50 transition-colors"
+                        className="border-b border-surface-border hover:bg-surface-hover transition-colors"
                       >
-                        <td className="p-4 text-gray-500 dark:text-gray-400">{index + 1}</td>
+                        <td className="p-4 text-text-muted">{index + 1}</td>
                         <td className="p-4">
                           <Link href={`/coin/${coin.id}`} className="flex items-center gap-3">
                             <div className="relative w-8 h-8">
@@ -351,23 +351,23 @@ export default async function CategoryDetailPage({ params }: CategoryPageProps) 
                               )}
                             </div>
                             <div>
-                              <span className="font-medium text-gray-900 dark:text-white hover:text-blue-600 dark:hover:text-blue-400">
+                              <span className="font-medium text-text-primary hover:text-primary">
                                 {coin.name}
                               </span>
-                              <span className="text-gray-500 dark:text-gray-400 text-sm ml-2">
+                              <span className="text-text-muted text-sm ml-2">
                                 {coin.symbol.toUpperCase()}
                               </span>
                             </div>
                           </Link>
                         </td>
-                        <td className="p-4 text-right font-medium text-gray-900 dark:text-white">
+                        <td className="p-4 text-right font-medium text-text-primary">
                           {formatPrice(coin.current_price)}
                         </td>
                         <td
                           className={`p-4 text-right font-medium ${
                             (coin.price_change_percentage_24h || 0) >= 0
-                              ? 'text-green-600 dark:text-green-400'
-                              : 'text-red-600 dark:text-red-400'
+                              ? 'text-gain'
+                              : 'text-loss'
                           }`}
                         >
                           {formatPercent(coin.price_change_percentage_24h)}
@@ -375,16 +375,16 @@ export default async function CategoryDetailPage({ params }: CategoryPageProps) 
                         <td
                           className={`p-4 text-right hidden md:table-cell ${
                             (coin.price_change_percentage_7d_in_currency || 0) >= 0
-                              ? 'text-green-600 dark:text-green-400'
-                              : 'text-red-600 dark:text-red-400'
+                              ? 'text-gain'
+                              : 'text-loss'
                           }`}
                         >
                           {formatPercent(coin.price_change_percentage_7d_in_currency)}
                         </td>
-                        <td className="p-4 text-right text-gray-700 dark:text-gray-300 hidden lg:table-cell">
+                        <td className="p-4 text-right text-text-secondary hidden lg:table-cell">
                           ${formatNumber(coin.market_cap)}
                         </td>
-                        <td className="p-4 text-right text-gray-700 dark:text-gray-300 hidden lg:table-cell">
+                        <td className="p-4 text-right text-text-secondary hidden lg:table-cell">
                           ${formatNumber(coin.total_volume)}
                         </td>
                       </tr>
@@ -394,14 +394,14 @@ export default async function CategoryDetailPage({ params }: CategoryPageProps) 
               </div>
             </div>
           ) : (
-            <div className="bg-surface rounded-xl border border-gray-200 dark:border-gray-700 p-8 text-center">
+            <div className="bg-surface rounded-xl border border-surface-border p-8 text-center">
               <div className="flex justify-center mb-4">
-                <Search className="w-10 h-10 text-gray-400" />
+                <Search className="w-10 h-10 text-text-muted" />
               </div>
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+              <h3 className="text-lg font-semibold text-text-primary mb-2">
                 No coins found
               </h3>
-              <p className="text-gray-500 dark:text-gray-400">
+              <p className="text-text-muted">
                 No cryptocurrencies available in this category at the moment.
               </p>
             </div>
@@ -411,11 +411,11 @@ export default async function CategoryDetailPage({ params }: CategoryPageProps) 
           <div className="mt-8 text-center flex justify-center gap-6">
             <Link
               href="/markets/categories"
-              className="text-blue-600 dark:text-blue-400 hover:underline"
+              className="text-primary hover:underline"
             >
               ← All Categories
             </Link>
-            <Link href="/markets" className="text-blue-600 dark:text-blue-400 hover:underline">
+            <Link href="/markets" className="text-primary hover:underline">
               Back to Markets
             </Link>
           </div>

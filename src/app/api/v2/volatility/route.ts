@@ -8,6 +8,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { hybridAuthMiddleware } from '@/lib/x402';
 import { getVolatilityMetrics, DataSourceError } from '@/lib/data-sources';
+import { validateQuery, volatilityQuerySchema, validationErrorResponse } from '@/lib/api-schemas';
+import { createRequestContext, completeRequest } from '@/lib/monitoring';
 
 const ENDPOINT = '/api/v2/volatility';
 
@@ -21,39 +23,51 @@ const SECURITY_HEADERS = {
 const DEFAULT_COINS = ['bitcoin', 'ethereum', 'solana', 'cardano', 'ripple', 'dogecoin', 'polkadot', 'avalanche-2'];
 
 export async function GET(request: NextRequest) {
+  const ctx = createRequestContext(ENDPOINT);
+  
   const authResponse = await hybridAuthMiddleware(request, ENDPOINT);
-  if (authResponse) return authResponse;
+  if (authResponse) {
+    completeRequest(ctx, 401);
+    return authResponse;
+  }
 
-  const searchParams = request.nextUrl.searchParams;
-  const idsParam = searchParams.get('ids');
-  const ids = idsParam ? idsParam.split(',').filter(Boolean).slice(0, 10) : DEFAULT_COINS;
+  const validation = validateQuery(request, volatilityQuerySchema);
+  if (!validation.success) {
+    completeRequest(ctx, 400, validation.error);
+    return validationErrorResponse(validation.error, validation.details);
+  }
+
+  const ids = validation.data.ids?.slice(0, 10) || DEFAULT_COINS;
 
   try {
-    const metrics = await getVolatilityMetrics(ids);
+    const metricsData = await getVolatilityMetrics(ids);
 
     // Calculate market-wide stats
-    const avgVolatility = metrics.reduce((sum, m) => sum + m.volatility30d, 0) / metrics.length;
-    const highRiskCount = metrics.filter(m => m.riskLevel === 'high' || m.riskLevel === 'extreme').length;
+    const avgVolatility = metricsData.reduce((sum, m) => sum + m.volatility30d, 0) / metricsData.length;
+    const highRiskCount = metricsData.filter(m => m.riskLevel === 'high' || m.riskLevel === 'extreme').length;
+
+    completeRequest(ctx, 200);
 
     return NextResponse.json(
       {
         success: true,
         data: {
-          metrics,
+          metrics: metricsData,
           summary: {
             averageVolatility30d: Math.round(avgVolatility * 10) / 10,
             highRiskAssets: highRiskCount,
-            totalAnalyzed: metrics.length,
+            totalAnalyzed: metricsData.length,
             riskDistribution: {
-              low: metrics.filter(m => m.riskLevel === 'low').length,
-              medium: metrics.filter(m => m.riskLevel === 'medium').length,
-              high: metrics.filter(m => m.riskLevel === 'high').length,
-              extreme: metrics.filter(m => m.riskLevel === 'extreme').length,
+              low: metricsData.filter(m => m.riskLevel === 'low').length,
+              medium: metricsData.filter(m => m.riskLevel === 'medium').length,
+              high: metricsData.filter(m => m.riskLevel === 'high').length,
+              extreme: metricsData.filter(m => m.riskLevel === 'extreme').length,
             },
           },
         },
         meta: {
           endpoint: ENDPOINT,
+          requestId: ctx.requestId,
           coins: ids,
           timestamp: new Date().toISOString(),
           methodology: {
@@ -71,11 +85,14 @@ export async function GET(request: NextRequest) {
       ? error.message 
       : 'Volatility data unavailable';
 
+    completeRequest(ctx, 503, error instanceof Error ? error : message);
+
     return NextResponse.json(
       {
         success: false,
         error: message,
         code: 'SERVICE_UNAVAILABLE',
+        requestId: ctx.requestId,
       },
       { status: 503, headers: SECURITY_HEADERS }
     );

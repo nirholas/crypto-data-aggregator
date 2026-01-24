@@ -116,22 +116,22 @@ export default async function ExchangeDetailPage({ params }: ExchangePageProps) 
         <main className="px-4 py-6">
           {/* Breadcrumb */}
           <nav className="flex items-center gap-2 text-sm text-text-muted mb-6">
-            <Link href="/markets" className="hover:text-blue-600 dark:hover:text-blue-400">
+            <Link href="/markets" className="hover:text-primary">
               Markets
             </Link>
             <span>/</span>
             <Link
               href="/markets/exchanges"
-              className="hover:text-blue-600 dark:hover:text-blue-400"
+              className="hover:text-primary"
             >
               Exchanges
             </Link>
             <span>/</span>
-            <span className="text-gray-900 dark:text-white">{exchange.name}</span>
+            <span className="text-text-primary">{exchange.name}</span>
           </nav>
 
           {/* Exchange Header */}
-          <div className="bg-surface rounded-xl border border-gray-200 dark:border-gray-700 p-6 mb-6">
+          <div className="bg-surface rounded-xl border border-surface-border p-6 mb-6">
             <div className="flex flex-col md:flex-row md:items-center gap-6">
               <div className="relative w-20 h-20 flex-shrink-0">
                 {exchange.image && (
@@ -146,18 +146,18 @@ export default async function ExchangeDetailPage({ params }: ExchangePageProps) 
               </div>
               <div className="flex-1">
                 <div className="flex flex-wrap items-center gap-3 mb-2">
-                  <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
+                  <h1 className="text-3xl font-bold text-text-primary">
                     {exchange.name}
                   </h1>
-                  <span className="px-3 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 rounded-full text-sm font-medium">
+                  <span className="px-3 py-1 bg-primary/10 text-primary rounded-full text-sm font-medium">
                     Rank #{exchange.trust_score_rank}
                   </span>
-                  <span className="px-3 py-1 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 rounded-full text-sm font-medium">
+                  <span className="px-3 py-1 bg-gain/10 text-gain rounded-full text-sm font-medium">
                     Trust Score: {exchange.trust_score}/10
                   </span>
                 </div>
                 {exchange.description && (
-                  <p className="text-gray-600 dark:text-gray-400 text-sm mb-4 line-clamp-2">
+                  <p className="text-text-secondary text-sm mb-4 line-clamp-2">
                     {exchange.description}
                   </p>
                 )}
@@ -183,7 +183,7 @@ export default async function ExchangeDetailPage({ params }: ExchangePageProps) 
                       href={`https://twitter.com/${exchange.twitter_handle}`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-2 px-4 py-2 bg-gray-100 dark:bg-black hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 rounded-lg text-sm font-medium transition-colors"
+                      className="inline-flex items-center gap-2 px-4 py-2 bg-surface-alt hover:bg-surface-hover text-text-secondary rounded-lg text-sm font-medium transition-colors"
                     >
                       Twitter
                     </a>
@@ -195,62 +195,62 @@ export default async function ExchangeDetailPage({ params }: ExchangePageProps) 
 
           {/* Stats Grid */}
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-            <div className="bg-surface rounded-xl border border-gray-200 dark:border-gray-700 p-4">
-              <p className="text-gray-500 dark:text-gray-400 text-sm">24h Volume (BTC)</p>
-              <p className="text-xl font-bold text-gray-900 dark:text-white">
+            <div className="bg-surface rounded-xl border border-surface-border p-4">
+              <p className="text-text-muted text-sm">24h Volume (BTC)</p>
+              <p className="text-xl font-bold text-text-primary">
                 ₿ {formatNumber(exchange.trade_volume_24h_btc_normalized)}
               </p>
             </div>
-            <div className="bg-surface rounded-xl border border-gray-200 dark:border-gray-700 p-4">
-              <p className="text-gray-500 dark:text-gray-400 text-sm">24h Volume (USD)</p>
-              <p className="text-xl font-bold text-gray-900 dark:text-white">
+            <div className="bg-surface rounded-xl border border-surface-border p-4">
+              <p className="text-text-muted text-sm">24h Volume (USD)</p>
+              <p className="text-xl font-bold text-text-primary">
                 ${formatNumber(exchange.trade_volume_24h_btc_normalized * BTC_PRICE_ESTIMATE)}
               </p>
             </div>
-            <div className="bg-surface rounded-xl border border-gray-200 dark:border-gray-700 p-4">
-              <p className="text-gray-500 dark:text-gray-400 text-sm">Year Established</p>
-              <p className="text-xl font-bold text-gray-900 dark:text-white">
+            <div className="bg-surface rounded-xl border border-surface-border p-4">
+              <p className="text-text-muted text-sm">Year Established</p>
+              <p className="text-xl font-bold text-text-primary">
                 {exchange.year_established || 'Unknown'}
               </p>
             </div>
-            <div className="bg-surface rounded-xl border border-gray-200 dark:border-gray-700 p-4">
-              <p className="text-gray-500 dark:text-gray-400 text-sm">Country</p>
-              <p className="text-xl font-bold text-gray-900 dark:text-white">
+            <div className="bg-surface rounded-xl border border-surface-border p-4">
+              <p className="text-text-muted text-sm">Country</p>
+              <p className="text-xl font-bold text-text-primary">
                 {exchange.country || 'Unknown'}
               </p>
             </div>
           </div>
 
           {/* Trading Pairs */}
-          <div className="bg-surface rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden">
-            <div className="p-4 border-b border-gray-200 dark:border-gray-700">
-              <h2 className="text-lg font-bold text-gray-900 dark:text-white">
+          <div className="bg-surface rounded-xl border border-surface-border overflow-hidden">
+            <div className="p-4 border-b border-surface-border">
+              <h2 className="text-lg font-bold text-text-primary">
                 Top Trading Pairs ({topTickers.length})
               </h2>
             </div>
             <div className="overflow-x-auto">
               <table className="w-full">
                 <thead>
-                  <tr className="bg-gray-50 dark:bg-black/50 border-b border-gray-200 dark:border-gray-700">
-                    <th className="text-left text-gray-500 dark:text-gray-400 text-sm font-medium p-4">
+                  <tr className="bg-surface-alt border-b border-surface-border">
+                    <th className="text-left text-text-muted text-sm font-medium p-4">
                       #
                     </th>
-                    <th className="text-left text-gray-500 dark:text-gray-400 text-sm font-medium p-4">
+                    <th className="text-left text-text-muted text-sm font-medium p-4">
                       Pair
                     </th>
-                    <th className="text-right text-gray-500 dark:text-gray-400 text-sm font-medium p-4">
+                    <th className="text-right text-text-muted text-sm font-medium p-4">
                       Price
                     </th>
-                    <th className="text-right text-gray-500 dark:text-gray-400 text-sm font-medium p-4 hidden sm:table-cell">
+                    <th className="text-right text-text-muted text-sm font-medium p-4 hidden sm:table-cell">
                       24h Volume
                     </th>
-                    <th className="text-right text-gray-500 dark:text-gray-400 text-sm font-medium p-4 hidden md:table-cell">
+                    <th className="text-right text-text-muted text-sm font-medium p-4 hidden md:table-cell">
                       Spread
                     </th>
-                    <th className="text-center text-gray-500 dark:text-gray-400 text-sm font-medium p-4">
+                    <th className="text-center text-text-muted text-sm font-medium p-4">
                       Trust
                     </th>
-                    <th className="text-center text-gray-500 dark:text-gray-400 text-sm font-medium p-4">
+                    <th className="text-center text-text-muted text-sm font-medium p-4">
                       Trade
                     </th>
                   </tr>
@@ -259,22 +259,22 @@ export default async function ExchangeDetailPage({ params }: ExchangePageProps) 
                   {topTickers.map((ticker, index) => (
                     <tr
                       key={`${ticker.base}-${ticker.target}-${index}`}
-                      className="border-b border-gray-100 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-black/50 transition-colors"
+                      className="border-b border-surface-border hover:bg-surface-hover transition-colors"
                     >
-                      <td className="p-4 text-gray-500 dark:text-gray-400">{index + 1}</td>
+                      <td className="p-4 text-text-muted">{index + 1}</td>
                       <td className="p-4">
-                        <span className="font-medium text-gray-900 dark:text-white">
+                        <span className="font-medium text-text-primary">
                           {ticker.base}
                         </span>
-                        <span className="text-gray-500 dark:text-gray-400">/{ticker.target}</span>
+                        <span className="text-text-muted">/{ticker.target}</span>
                       </td>
-                      <td className="p-4 text-right font-medium text-gray-900 dark:text-white">
+                      <td className="p-4 text-right font-medium text-text-primary">
                         {formatPrice(ticker.converted_last?.usd || ticker.last)}
                       </td>
-                      <td className="p-4 text-right text-gray-700 dark:text-gray-300 hidden sm:table-cell">
+                      <td className="p-4 text-right text-text-secondary hidden sm:table-cell">
                         ${formatNumber(ticker.converted_volume?.usd || 0)}
                       </td>
-                      <td className="p-4 text-right text-gray-700 dark:text-gray-300 hidden md:table-cell">
+                      <td className="p-4 text-right text-text-secondary hidden md:table-cell">
                         {ticker.bid_ask_spread_percentage?.toFixed(2) || '—'}%
                       </td>
                       <td className="p-4 text-center">
@@ -289,12 +289,12 @@ export default async function ExchangeDetailPage({ params }: ExchangePageProps) 
                             href={ticker.trade_url}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="inline-flex items-center justify-center px-3 py-1 bg-blue-100 dark:bg-blue-900/30 hover:bg-blue-200 dark:hover:bg-blue-900/50 text-blue-700 dark:text-blue-300 rounded-lg text-sm font-medium transition-colors"
+                            className="inline-flex items-center justify-center px-3 py-1 bg-primary/10 hover:bg-primary/20 text-primary rounded-lg text-sm font-medium transition-colors"
                           >
                             Trade
                           </a>
                         ) : (
-                          <span className="text-gray-400">—</span>
+                          <span className="text-text-muted">—</span>
                         )}
                       </td>
                     </tr>
@@ -308,11 +308,11 @@ export default async function ExchangeDetailPage({ params }: ExchangePageProps) 
           <div className="mt-8 text-center flex justify-center gap-6">
             <Link
               href="/markets/exchanges"
-              className="text-blue-600 dark:text-blue-400 hover:underline"
+              className="text-primary hover:underline"
             >
               ← All Exchanges
             </Link>
-            <Link href="/markets" className="text-blue-600 dark:text-blue-400 hover:underline">
+            <Link href="/markets" className="text-primary hover:underline">
               Back to Markets
             </Link>
           </div>

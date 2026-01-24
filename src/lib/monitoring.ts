@@ -144,6 +144,13 @@ class Logger {
   private log(level: LogLevel, message: string, extra?: Record<string, unknown>): void {
     if (LOG_LEVELS[level] < MIN_LOG_LEVEL) return;
 
+    const errorData = extra?.error 
+      ? this.formatError(extra.error as Error | string)
+      : undefined;
+
+    // Exclude error from context spread
+    const { error: _ctxError, ...contextWithoutError } = this.context;
+
     const entry: LogEntry = {
       timestamp: new Date().toISOString(),
       level,
@@ -151,10 +158,8 @@ class Logger {
       service: SERVICE_NAME,
       version: SERVICE_VERSION,
       environment: ENVIRONMENT,
-      ...this.context,
-      ...(extra?.error && {
-        error: this.formatError(extra.error as Error | string),
-      }),
+      ...contextWithoutError,
+      error: errorData,
       metadata: extra?.error ? undefined : extra,
     };
 

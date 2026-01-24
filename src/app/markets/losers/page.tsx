@@ -69,7 +69,7 @@ export default async function LosersPage() {
             <div className="overflow-x-auto">
               <table className="w-full">
                 <thead>
-                  <tr className="bg-neutral-50 dark:bg-black/50 border-b border-surface-border">
+                  <tr className="bg-surface-alt border-b border-surface-border">
                     <th className="text-left text-text-muted text-sm font-medium p-4">#</th>
                     <th className="text-left text-text-muted text-sm font-medium p-4">Coin</th>
                     <th className="text-right text-text-muted text-sm font-medium p-4">Price</th>
@@ -91,7 +91,7 @@ export default async function LosersPage() {
                   {losers.map((coin, index) => (
                     <tr
                       key={coin.id}
-                      className="border-b border-neutral-100 dark:border-neutral-800 hover:bg-neutral-50 dark:hover:bg-black/50 transition-colors"
+                      className="border-b border-surface-border hover:bg-surface-hover transition-colors"
                     >
                       <td className="p-4 text-text-muted">{index + 1}</td>
                       <td className="p-4">
@@ -108,7 +108,7 @@ export default async function LosersPage() {
                             )}
                           </div>
                           <div>
-                            <span className="font-medium text-text-primary hover:text-neutral-700 dark:hover:text-neutral-300">
+                            <span className="font-medium text-text-primary hover:text-text-secondary">
                               {coin.name}
                             </span>
                             <span className="text-text-muted text-sm ml-2">

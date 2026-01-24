@@ -200,9 +200,12 @@ export default function Footer() {
               {[
                 { href: '/portfolio', label: 'Portfolio' },
                 { href: '/watchlist', label: 'Watchlist' },
-                { href: '/compare', label: 'Compare Coins' },
-                { href: '/coin/bitcoin', label: 'Bitcoin' },
-                { href: '/coin/ethereum', label: 'Ethereum' },
+                { href: '/calculator', label: 'Calculator' },
+                { href: '/gas', label: 'Gas Tracker' },
+                { href: '/halving', label: 'Halving Countdown' },
+                { href: '/volatility', label: 'Volatility' },
+                { href: '/digest', label: 'Daily Digest' },
+                { href: '/sources', label: 'News Sources' },
               ].map((item) => (
                 <li key={item.href}>
                   <Link

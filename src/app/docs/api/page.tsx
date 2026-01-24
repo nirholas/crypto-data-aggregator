@@ -126,51 +126,51 @@ const errorCodes = [
 
 export default function DocsPage() {
   return (
-    <main className="min-h-screen bg-white dark:bg-black">
+    <main className="min-h-screen bg-surface">
       <div className="max-w-5xl mx-auto px-4 py-16 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="mb-12">
-          <h1 className="text-4xl font-bold text-black dark:text-white mb-4">API Documentation</h1>
-          <p className="text-xl text-neutral-600 dark:text-neutral-400">
+          <h1 className="text-4xl font-bold text-text-primary mb-4">API Documentation</h1>
+          <p className="text-xl text-text-secondary">
             RESTful API for cryptocurrency market data with x402 micropayment support.
           </p>
         </div>
 
         {/* Base URL */}
         <section className="mb-12">
-          <h2 className="text-2xl font-bold text-black dark:text-white mb-4">Base URL</h2>
-          <code className="block p-4 bg-neutral-100 dark:bg-black rounded-lg font-mono text-sm text-black dark:text-white">
+          <h2 className="text-2xl font-bold text-text-primary mb-4">Base URL</h2>
+          <code className="block p-4 bg-surface-alt rounded-lg font-mono text-sm text-text-primary">
             https://cryptodata.example.com/api/v1
           </code>
         </section>
 
         {/* Authentication */}
         <section className="mb-12">
-          <h2 className="text-2xl font-bold text-black dark:text-white mb-4">Authentication</h2>
+          <h2 className="text-2xl font-bold text-text-primary mb-4">Authentication</h2>
           <div className="space-y-4">
-            <div className="p-4 border border-neutral-200 dark:border-neutral-800 rounded-lg">
-              <h3 className="font-medium text-black dark:text-white mb-2">Option 1: API Key</h3>
-              <p className="text-neutral-600 dark:text-neutral-400 mb-3">
+            <div className="p-4 border border-surface-border rounded-lg">
+              <h3 className="font-medium text-text-primary mb-2">Option 1: API Key</h3>
+              <p className="text-text-secondary mb-3">
                 Include your API key in the request header or query parameter.
               </p>
-              <code className="block p-3 bg-neutral-100 dark:bg-black rounded font-mono text-sm text-black dark:text-white">
+              <code className="block p-3 bg-surface-alt rounded font-mono text-sm text-text-primary">
                 curl -H &quot;X-API-Key: your_api_key&quot; https://api.example.com/v1/coins
               </code>
             </div>
 
-            <div className="p-4 border border-neutral-200 dark:border-neutral-800 rounded-lg">
-              <h3 className="font-medium text-black dark:text-white mb-2">
+            <div className="p-4 border border-surface-border rounded-lg">
+              <h3 className="font-medium text-text-primary mb-2">
                 Option 2: x402 Micropayments
               </h3>
-              <p className="text-neutral-600 dark:text-neutral-400 mb-3">
+              <p className="text-text-secondary mb-3">
                 Pay per request using USDC on Base. No subscription needed.
               </p>
-              <ol className="list-decimal list-inside space-y-2 text-neutral-600 dark:text-neutral-400 text-sm">
+              <ol className="list-decimal list-inside space-y-2 text-text-secondary text-sm">
                 <li>Make request, receive 402 with payment requirement</li>
                 <li>Send USDC to the provided address on Base</li>
                 <li>
                   Include tx hash in header:{' '}
-                  <code className="bg-neutral-100 dark:bg-black px-1 rounded">
+                  <code className="bg-surface-alt px-1 rounded">
                     X-Payment-Proof: {`{"txHash": "0x..."}`}
                   </code>
                 </li>
@@ -181,22 +181,22 @@ export default function DocsPage() {
 
         {/* Endpoints */}
         <section className="mb-12">
-          <h2 className="text-2xl font-bold text-black dark:text-white mb-6">Endpoints</h2>
+          <h2 className="text-2xl font-bold text-text-primary mb-6">Endpoints</h2>
           <div className="space-y-8">
             {endpoints.map((endpoint) => (
               <div
                 key={endpoint.path}
-                className="border border-neutral-200 dark:border-neutral-800 rounded-lg overflow-hidden"
+                className="border border-surface-border rounded-lg overflow-hidden"
               >
-                <div className="p-4 bg-neutral-50 dark:bg-black border-b border-neutral-200 dark:border-neutral-800">
+                <div className="p-4 bg-surface-alt border-b border-surface-border">
                   <div className="flex items-center gap-3">
-                    <span className="px-2 py-1 bg-black dark:bg-white text-white dark:text-black text-xs font-bold rounded">
+                    <span className="px-2 py-1 bg-text-primary text-surface text-xs font-bold rounded">
                       {endpoint.method}
                     </span>
-                    <code className="font-mono text-black dark:text-white">{endpoint.path}</code>
-                    <span className="ml-auto text-sm text-neutral-500">{endpoint.price}</span>
+                    <code className="font-mono text-text-primary">{endpoint.path}</code>
+                    <span className="ml-auto text-sm text-text-muted">{endpoint.price}</span>
                   </div>
-                  <p className="text-neutral-600 dark:text-neutral-400 mt-2">
+                  <p className="text-text-secondary mt-2">
                     {endpoint.description}
                   </p>
                 </div>
@@ -204,25 +204,25 @@ export default function DocsPage() {
                 <div className="p-4">
                   {endpoint.params && (
                     <div className="mb-4">
-                      <h4 className="text-sm font-medium text-neutral-500 mb-2">Parameters</h4>
+                      <h4 className="text-sm font-medium text-text-muted mb-2">Parameters</h4>
                       <table className="w-full text-sm">
                         <tbody>
                           {endpoint.params.map((param) => (
                             <tr
                               key={param.name}
-                              className="border-b border-neutral-100 dark:border-neutral-900"
+                              className="border-b border-surface-border"
                             >
                               <td className="py-2 pr-4">
-                                <code className="text-black dark:text-white">{param.name}</code>
+                                <code className="text-text-primary">{param.name}</code>
                                 {'required' in param && param.required && (
-                                  <span className="ml-2 text-xs text-red-600">required</span>
+                                  <span className="ml-2 text-xs text-loss">required</span>
                                 )}
                               </td>
-                              <td className="py-2 pr-4 text-neutral-500">{param.type}</td>
-                              <td className="py-2 text-neutral-600 dark:text-neutral-400">
+                              <td className="py-2 pr-4 text-text-muted">{param.type}</td>
+                              <td className="py-2 text-text-secondary">
                                 {param.description}
                                 {'default' in param && (
-                                  <span className="ml-2 text-neutral-400">
+                                  <span className="ml-2 text-text-muted">
                                     (default: {param.default})
                                   </span>
                                 )}
@@ -235,8 +235,8 @@ export default function DocsPage() {
                   )}
 
                   <div>
-                    <h4 className="text-sm font-medium text-neutral-500 mb-2">Response</h4>
-                    <pre className="p-3 bg-neutral-100 dark:bg-black rounded text-xs font-mono text-black dark:text-white overflow-x-auto">
+                    <h4 className="text-sm font-medium text-text-muted mb-2">Response</h4>
+                    <pre className="p-3 bg-surface-alt rounded text-xs font-mono text-text-primary overflow-x-auto">
                       {endpoint.response}
                     </pre>
                   </div>
@@ -248,24 +248,24 @@ export default function DocsPage() {
 
         {/* Error Codes */}
         <section className="mb-12">
-          <h2 className="text-2xl font-bold text-black dark:text-white mb-4">Error Codes</h2>
+          <h2 className="text-2xl font-bold text-text-primary mb-4">Error Codes</h2>
           <table className="w-full">
             <thead>
-              <tr className="border-b border-neutral-200 dark:border-neutral-800">
-                <th className="text-left py-3 pr-4 text-neutral-500 font-medium">Code</th>
-                <th className="text-left py-3 pr-4 text-neutral-500 font-medium">Name</th>
-                <th className="text-left py-3 text-neutral-500 font-medium">Description</th>
+              <tr className="border-b border-surface-border">
+                <th className="text-left py-3 pr-4 text-text-muted font-medium">Code</th>
+                <th className="text-left py-3 pr-4 text-text-muted font-medium">Name</th>
+                <th className="text-left py-3 text-text-muted font-medium">Description</th>
               </tr>
             </thead>
             <tbody>
               {errorCodes.map((error) => (
                 <tr
                   key={error.code}
-                  className="border-b border-neutral-100 dark:border-neutral-900"
+                  className="border-b border-surface-border"
                 >
-                  <td className="py-3 pr-4 font-mono text-black dark:text-white">{error.code}</td>
-                  <td className="py-3 pr-4 text-black dark:text-white">{error.name}</td>
-                  <td className="py-3 text-neutral-600 dark:text-neutral-400">
+                  <td className="py-3 pr-4 font-mono text-text-primary">{error.code}</td>
+                  <td className="py-3 pr-4 text-text-primary">{error.name}</td>
+                  <td className="py-3 text-text-secondary">
                     {error.description}
                   </td>
                 </tr>
@@ -276,11 +276,11 @@ export default function DocsPage() {
 
         {/* Rate Limits */}
         <section className="mb-12">
-          <h2 className="text-2xl font-bold text-black dark:text-white mb-4">Rate Limits</h2>
-          <p className="text-neutral-600 dark:text-neutral-400 mb-4">
+          <h2 className="text-2xl font-bold text-text-primary mb-4">Rate Limits</h2>
+          <p className="text-text-secondary mb-4">
             Rate limits are enforced per API key. Check response headers for current status:
           </p>
-          <div className="p-4 bg-neutral-100 dark:bg-black rounded-lg font-mono text-sm space-y-1 text-black dark:text-white">
+          <div className="p-4 bg-surface-alt rounded-lg font-mono text-sm space-y-1 text-text-primary">
             <div>X-RateLimit-Limit: 10000</div>
             <div>X-RateLimit-Remaining: 9542</div>
             <div>X-RateLimit-Reset: 1706054400</div>
@@ -289,15 +289,15 @@ export default function DocsPage() {
 
         {/* SDKs */}
         <section>
-          <h2 className="text-2xl font-bold text-black dark:text-white mb-4">SDKs & Examples</h2>
+          <h2 className="text-2xl font-bold text-text-primary mb-4">SDKs & Examples</h2>
           <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-4">
             {['JavaScript', 'Python', 'Go', 'PHP', 'TypeScript', 'React'].map((lang) => (
               <div
                 key={lang}
-                className="p-4 border border-neutral-200 dark:border-neutral-800 rounded-lg hover:border-black dark:hover:border-white transition-colors cursor-pointer"
+                className="p-4 border border-surface-border rounded-lg hover:border-primary transition-colors cursor-pointer"
               >
-                <span className="text-black dark:text-white font-medium">{lang}</span>
-                <span className="block text-sm text-neutral-500 mt-1">View SDK →</span>
+                <span className="text-text-primary font-medium">{lang}</span>
+                <span className="block text-sm text-text-muted mt-1">View SDK →</span>
               </div>
             ))}
           </div>

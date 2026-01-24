@@ -6,6 +6,7 @@ import { MobileNav } from './MobileNav';
 import { SearchModal } from './SearchModal';
 import { CommandPalette } from './CommandPalette';
 import { CurrencySelector } from './CurrencySelector';
+import { PriceAlerts } from './PriceAlerts';
 
 // Lazy load PriceWidget
 const PriceWidget = lazy(() => import('./PriceWidget'));
@@ -34,6 +35,7 @@ const navItems = [
             { label: 'Screener', href: '/screener', icon: null },
             { label: 'Sentiment', href: '/sentiment', icon: null },
             { label: 'Correlation', href: '/correlation', icon: null },
+            { label: 'Volatility', href: '/volatility', icon: null },
             { label: 'Compare Coins', href: '/compare', icon: null },
             { label: 'Social Buzz', href: '/buzz', icon: null },
           ],
@@ -64,7 +66,14 @@ const navItems = [
           title: 'Trading',
           links: [
             { label: 'Liquidations', href: '/liquidations', icon: null },
-            { label: 'Screener', href: '/screener', icon: null },
+            { label: 'Volatility', href: '/volatility', icon: null },
+          ],
+        },
+        {
+          title: 'News',
+          links: [
+            { label: 'Daily Digest', href: '/digest', icon: null },
+            { label: 'News Sources', href: '/sources', icon: null },
           ],
         },
       ],
@@ -426,6 +435,11 @@ export default function Header() {
             {/* Currency Selector */}
             <div className="hidden sm:block">
               <CurrencySelector />
+            </div>
+
+            {/* Price Alerts */}
+            <div className="hidden sm:block">
+              <PriceAlerts />
             </div>
 
             {/* GitHub Link */}

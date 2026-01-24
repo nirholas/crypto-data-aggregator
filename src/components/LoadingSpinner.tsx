@@ -134,8 +134,7 @@ export default function LoadingSpinner({
           className={`
             relative ${sizeClasses[size]}
             rounded-full
-            bg-gradient-to-r from-gray-200 to-gray-100
-            dark:from-gray-800 dark:to-gray-700
+            bg-gradient-to-r from-surface-alt to-surface
           `}
         >
           {/* Animated gradient spinner */}

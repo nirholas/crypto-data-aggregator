@@ -5,6 +5,7 @@
  */
 
 export * from './crypto';
+export * from './data-sources';
 export {
   useMarketMood,
   useMarketMood as default,

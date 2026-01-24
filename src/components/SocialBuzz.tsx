@@ -190,7 +190,7 @@ export function SocialBuzz() {
       )}
 
       {/* Disclaimer */}
-      <p className="text-xs text-neutral-400 dark:text-neutral-500 text-center">
+      <p className="text-xs text-text-muted text-center">
         Data from CoinGecko trending. Social metrics are estimated based on trending rank.
       </p>
     </div>
@@ -231,7 +231,7 @@ export function SocialBuzzWidget() {
 
   return (
     <div className="space-y-2">
-      <div className="flex items-center gap-2 text-sm font-medium text-neutral-900 dark:text-white mb-3">
+      <div className="flex items-center gap-2 text-sm font-medium text-text-primary mb-3">
         <FireIcon className="w-4 h-4" />
         Trending Now
       </div>
@@ -243,14 +243,14 @@ export function SocialBuzzWidget() {
         >
           <span className="text-xs font-medium text-neutral-400 w-4">{i + 1}</span>
           <img src={coin.thumb} alt="" className="w-5 h-5 rounded-full" />
-          <span className="text-sm font-medium text-neutral-900 dark:text-white truncate flex-1">
+          <span className="text-sm font-medium text-text-primary truncate flex-1">
             {coin.symbol.toUpperCase()}
           </span>
         </a>
       ))}
       <a
         href="/buzz"
-        className="block text-xs text-center text-neutral-500 hover:text-neutral-700 dark:hover:text-neutral-300 pt-2"
+        className="block text-xs text-center text-text-muted hover:text-text-secondary pt-2"
       >
         View all trending
       </a>

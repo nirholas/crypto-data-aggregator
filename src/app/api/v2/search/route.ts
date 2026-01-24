@@ -7,6 +7,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { hybridAuthMiddleware } from '@/lib/x402';
 import { searchCoins, DataSourceError } from '@/lib/data-sources';
+import { validateQuery, searchQuerySchema, validationErrorResponse } from '@/lib/api-schemas';
+import { createRequestContext, completeRequest } from '@/lib/monitoring';
 
 const ENDPOINT = '/api/v2/search';
 
@@ -17,33 +19,21 @@ const SECURITY_HEADERS = {
 };
 
 export async function GET(request: NextRequest) {
+  const ctx = createRequestContext(ENDPOINT);
+  
   const authResponse = await hybridAuthMiddleware(request, ENDPOINT);
-  if (authResponse) return authResponse;
-
-  const searchParams = request.nextUrl.searchParams;
-  const query = searchParams.get('q') || searchParams.get('query');
-
-  if (!query || query.length < 2) {
-    return NextResponse.json(
-      {
-        success: false,
-        error: 'Query must be at least 2 characters',
-        code: 'INVALID_REQUEST',
-      },
-      { status: 400, headers: SECURITY_HEADERS }
-    );
+  if (authResponse) {
+    completeRequest(ctx, 401);
+    return authResponse;
   }
 
-  if (query.length > 100) {
-    return NextResponse.json(
-      {
-        success: false,
-        error: 'Query too long (max 100 characters)',
-        code: 'INVALID_REQUEST',
-      },
-      { status: 400, headers: SECURITY_HEADERS }
-    );
+  const validation = validateQuery(request, searchQuerySchema);
+  if (!validation.success) {
+    completeRequest(ctx, 400, validation.error);
+    return validationErrorResponse(validation.error, validation.details);
   }
+
+  const { query } = validation.data;
 
   try {
     const results = await searchCoins(query);
@@ -51,6 +41,8 @@ export async function GET(request: NextRequest) {
     // Group by type
     const coins = results.filter(r => r.type === 'coin');
     const exchanges = results.filter(r => r.type === 'exchange');
+
+    completeRequest(ctx, 200);
 
     return NextResponse.json(
       {
@@ -62,6 +54,7 @@ export async function GET(request: NextRequest) {
         },
         meta: {
           endpoint: ENDPOINT,
+          requestId: ctx.requestId,
           query,
           timestamp: new Date().toISOString(),
         },
@@ -73,11 +66,14 @@ export async function GET(request: NextRequest) {
       ? error.message 
       : 'Search unavailable';
 
+    completeRequest(ctx, 503, error instanceof Error ? error : message);
+
     return NextResponse.json(
       {
         success: false,
         error: message,
         code: 'SERVICE_UNAVAILABLE',
+        requestId: ctx.requestId,
       },
       { status: 503, headers: SECURITY_HEADERS }
     );

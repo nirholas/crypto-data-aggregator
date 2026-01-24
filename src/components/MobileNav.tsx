@@ -352,11 +352,11 @@ export function MobileNav() {
 
         {/* Footer CTA */}
         <div className="sticky bottom-0 bg-[var(--bg-secondary)] border-t border-[var(--surface-border)] p-4">
-          <div className="bg-gradient-to-br from-brand-50 to-brand-100 dark:from-brand-900/30 dark:to-brand-800/30 rounded-2xl p-4 border border-brand-200/50 dark:border-brand-700/50">
-            <h3 className="font-semibold text-brand-800 dark:text-brand-200 mb-1">
+          <div className="bg-gradient-to-br from-brand-50 to-brand-100 rounded-2xl p-4 border border-brand-200/50">
+            <h3 className="font-semibold text-brand-800 mb-1">
               Free Crypto API
             </h3>
-            <p className="text-sm text-brand-700/80 dark:text-brand-300/80 mb-3">
+            <p className="text-sm text-brand-700/80 mb-3">
               No keys required. Start building today.
             </p>
             <Link

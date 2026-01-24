@@ -462,7 +462,7 @@ function UpgradeContent() {
               <button
                 onClick={() => handleUpgrade(upgrade.type)}
                 disabled={upgrading || !wallet.connected || !wallet.isCorrectChain}
-                className="w-full py-3 px-4 bg-black text-white rounded-lg font-medium hover:bg-neutral-800 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 dark:bg-white dark:text-black dark:hover:bg-neutral-200"
+                className="w-full py-3 px-4 bg-text-primary text-surface rounded-lg font-medium hover:opacity-80 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
               >
                 {upgrading ? (
                   <>
