@@ -265,7 +265,6 @@ export default async function ArticlePage({ params }: Props) {
                       />
                       <BookmarkButton 
                         article={toNewsArticle(article)} 
-                        variant="button"
                       />
                     </div>
                     <ArticleReactions articleId={article.id} />
