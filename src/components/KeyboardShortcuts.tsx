@@ -300,7 +300,7 @@ function ShortcutsHelp({ onClose }: { onClose: () => void }) {
             aria-label="Close"
           >
             <svg
-              className="w-5 h-5 text-gray-500"
+              className="w-5 h-5 text-text-muted"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -324,15 +324,15 @@ function ShortcutsHelp({ onClose }: { onClose: () => void }) {
               <div className="space-y-2">
                 {section.items.map((shortcut) => (
                   <div key={shortcut.description} className="flex items-center justify-between">
-                    <span className="text-gray-700 dark:text-gray-300">{shortcut.description}</span>
+                    <span className="text-text-secondary">{shortcut.description}</span>
                     <div className="flex items-center gap-1">
                       {shortcut.keys.map((key, i) => (
                         <span key={i}>
-                          <kbd className="px-2 py-1 text-xs font-semibold text-gray-600 dark:text-gray-300 bg-gray-100 dark:bg-black rounded border border-surface-border">
+                          <kbd className="px-2 py-1 text-xs font-semibold text-text-secondary bg-surface-alt rounded border border-surface-border">
                             {key}
                           </kbd>
                           {i < shortcut.keys.length - 1 && (
-                            <span className="text-gray-400 mx-1">
+                            <span className="text-text-muted mx-1">
                               {'separator' in shortcut ? shortcut.separator : 'then'}
                             </span>
                           )}

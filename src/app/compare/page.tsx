@@ -238,7 +238,7 @@ function ComparePageContent() {
           <div className="flex items-center gap-2">
             <button
               onClick={fetchCoinData}
-              className="p-2 rounded-lg hover:bg-neutral-100 dark:hover:bg-black text-neutral-500 transition-colors"
+              className="p-2 rounded-lg hover:bg-surface-alt text-text-muted transition-colors"
               title="Refresh"
             >
               <RefreshCw className={`w-5 h-5 ${isLoading ? 'animate-spin' : ''}`} />
@@ -272,7 +272,7 @@ function ComparePageContent() {
                       {selectedCoins.length > 1 && (
                         <button
                           onClick={() => removeCoin(coinId)}
-                          className="p-1 rounded-full hover:bg-surface-alt text-neutral-500"
+                          className="p-1 rounded-full hover:bg-surface-alt text-text-muted"
                         >
                           <X className="w-4 h-4" />
                         </button>
@@ -287,7 +287,7 @@ function ComparePageContent() {
               <div className="relative">
                 <button
                   onClick={() => setShowCoinSelector(!showCoinSelector)}
-                  className="flex items-center gap-2 px-3 py-2 border-2 border-dashed border-neutral-300 dark:border-neutral-600 rounded-xl hover:border-neutral-400 dark:hover:border-neutral-500 text-neutral-500 transition-colors"
+                  className="flex items-center gap-2 px-3 py-2 border-2 border-dashed border-surface-border rounded-xl hover:border-surface-border text-text-muted transition-colors"
                 >
                   <Plus className="w-4 h-4" />
                   Add coin
@@ -297,7 +297,7 @@ function ComparePageContent() {
                   <div className="absolute top-full left-0 mt-2 w-72 bg-surface rounded-xl border border-surface-border shadow-xl z-10">
                     <div className="p-3 border-b border-surface-border">
                       <div className="relative">
-                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-400" />
+                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted" />
                         <input
                           type="text"
                           value={searchQuery}
@@ -313,7 +313,7 @@ function ComparePageContent() {
                         <button
                           key={coin.id}
                           onClick={() => addCoin(coin.id)}
-                          className="w-full flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-neutral-100 dark:hover:bg-black transition-colors text-left"
+                          className="w-full flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-surface-alt transition-colors text-left"
                         >
                           {(coin as TokenPrice).image ? (
                             <img
@@ -378,10 +378,10 @@ function ComparePageContent() {
 
           {isLoading ? (
             <div className="h-80 flex items-center justify-center">
-              <RefreshCw className="w-8 h-8 text-neutral-400 animate-spin" />
+              <RefreshCw className="w-8 h-8 text-text-muted animate-spin" />
             </div>
           ) : normalizedData.length > 0 ? (
-            <div className="h-80 flex items-center justify-center bg-neutral-50 dark:bg-black/50 rounded-xl">
+            <div className="h-80 flex items-center justify-center bg-surface-alt rounded-xl">
               {/* Simple visual representation */}
               <div className="text-center">
                 <p className="text-text-muted mb-4">
@@ -438,9 +438,7 @@ function ComparePageContent() {
                     className="w-3 h-3 rounded-full"
                     style={{ backgroundColor: colors[index % colors.length] }}
                   />
-                  <span className="text-sm text-neutral-600 dark:text-neutral-300">
-                    {coin?.name || coinId}
-                  </span>
+                  <span className="text-sm text-text-secondary">{coin?.name || coinId}</span>
                 </div>
               );
             })}
@@ -472,10 +470,8 @@ function ComparePageContent() {
               </thead>
               <tbody>
                 {/* Price */}
-                <tr className="border-b border-neutral-100 dark:border-neutral-800">
-                  <td className="px-6 py-4 text-sm text-neutral-600 dark:text-neutral-300">
-                    Price
-                  </td>
+                <tr className="border-b border-surface-border">
+                  <td className="px-6 py-4 text-sm text-text-secondary">Price</td>
                   {selectedCoins.map((coinId) => {
                     const coin = coinData.get(coinId);
                     return (
@@ -495,18 +491,13 @@ function ComparePageContent() {
                 </tr>
 
                 {/* Market Cap */}
-                <tr className="border-b border-neutral-100 dark:border-neutral-800">
-                  <td className="px-6 py-4 text-sm text-neutral-600 dark:text-neutral-300">
-                    Market Cap
-                  </td>
+                <tr className="border-b border-surface-border">
+                  <td className="px-6 py-4 text-sm text-text-secondary">Market Cap</td>
                   {selectedCoins.map((coinId) => {
                     const coin = coinData.get(coinId);
                     const mcap = coin?.market_cap || 0;
                     return (
-                      <td
-                        key={coinId}
-                        className="px-4 py-4 text-right text-neutral-600 dark:text-neutral-300"
-                      >
+                      <td key={coinId} className="px-4 py-4 text-right text-text-secondary">
                         {mcap >= 1e12
                           ? `$${(mcap / 1e12).toFixed(2)}T`
                           : mcap >= 1e9
@@ -520,10 +511,8 @@ function ComparePageContent() {
                 </tr>
 
                 {/* 24h Change */}
-                <tr className="border-b border-neutral-100 dark:border-neutral-800">
-                  <td className="px-6 py-4 text-sm text-neutral-600 dark:text-neutral-300">
-                    24h Change
-                  </td>
+                <tr className="border-b border-surface-border">
+                  <td className="px-6 py-4 text-sm text-text-secondary">24h Change</td>
                   {selectedCoins.map((coinId) => {
                     const coin = coinData.get(coinId);
                     const change = coin?.price_change_percentage_24h || 0;
@@ -547,10 +536,8 @@ function ComparePageContent() {
                 </tr>
 
                 {/* 7d Change */}
-                <tr className="border-b border-neutral-100 dark:border-neutral-800">
-                  <td className="px-6 py-4 text-sm text-neutral-600 dark:text-neutral-300">
-                    7d Change
-                  </td>
+                <tr className="border-b border-surface-border">
+                  <td className="px-6 py-4 text-sm text-text-secondary">7d Change</td>
                   {selectedCoins.map((coinId) => {
                     const coin = coinData.get(coinId);
                     const change = coin?.price_change_percentage_7d_in_currency || 0;
@@ -570,17 +557,12 @@ function ComparePageContent() {
                 </tr>
 
                 {/* ATH */}
-                <tr className="border-b border-neutral-100 dark:border-neutral-800">
-                  <td className="px-6 py-4 text-sm text-neutral-600 dark:text-neutral-300">
-                    All-Time High
-                  </td>
+                <tr className="border-b border-surface-border">
+                  <td className="px-6 py-4 text-sm text-text-secondary">All-Time High</td>
                   {selectedCoins.map((coinId) => {
                     const coin = coinData.get(coinId);
                     return (
-                      <td
-                        key={coinId}
-                        className="px-4 py-4 text-right text-neutral-600 dark:text-neutral-300"
-                      >
+                      <td key={coinId} className="px-4 py-4 text-right text-text-secondary">
                         $
                         {coin?.ath?.toLocaleString(undefined, {
                           minimumFractionDigits: 2,
@@ -592,10 +574,8 @@ function ComparePageContent() {
                 </tr>
 
                 {/* From ATH */}
-                <tr className="border-b border-neutral-100 dark:border-neutral-800">
-                  <td className="px-6 py-4 text-sm text-neutral-600 dark:text-neutral-300">
-                    From ATH
-                  </td>
+                <tr className="border-b border-surface-border">
+                  <td className="px-6 py-4 text-sm text-text-secondary">From ATH</td>
                   {selectedCoins.map((coinId) => {
                     const coin = coinData.get(coinId);
                     const change = coin?.ath_change_percentage || 0;
@@ -608,18 +588,13 @@ function ComparePageContent() {
                 </tr>
 
                 {/* Volume */}
-                <tr className="border-b border-neutral-100 dark:border-neutral-800">
-                  <td className="px-6 py-4 text-sm text-neutral-600 dark:text-neutral-300">
-                    24h Volume
-                  </td>
+                <tr className="border-b border-surface-border">
+                  <td className="px-6 py-4 text-sm text-text-secondary">24h Volume</td>
                   {selectedCoins.map((coinId) => {
                     const coin = coinData.get(coinId);
                     const vol = coin?.total_volume || 0;
                     return (
-                      <td
-                        key={coinId}
-                        className="px-4 py-4 text-right text-neutral-600 dark:text-neutral-300"
-                      >
+                      <td key={coinId} className="px-4 py-4 text-right text-text-secondary">
                         {vol >= 1e9
                           ? `$${(vol / 1e9).toFixed(2)}B`
                           : vol >= 1e6
@@ -632,17 +607,12 @@ function ComparePageContent() {
 
                 {/* Circulating Supply */}
                 <tr>
-                  <td className="px-6 py-4 text-sm text-neutral-600 dark:text-neutral-300">
-                    Circulating Supply
-                  </td>
+                  <td className="px-6 py-4 text-sm text-text-secondary">Circulating Supply</td>
                   {selectedCoins.map((coinId) => {
                     const coin = coinData.get(coinId);
                     const supply = coin?.circulating_supply || 0;
                     return (
-                      <td
-                        key={coinId}
-                        className="px-4 py-4 text-right text-neutral-600 dark:text-neutral-300"
-                      >
+                      <td key={coinId} className="px-4 py-4 text-right text-text-secondary">
                         {supply >= 1e9
                           ? `${(supply / 1e9).toFixed(2)}B`
                           : supply >= 1e6

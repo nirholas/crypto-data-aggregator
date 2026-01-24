@@ -1,11 +1,11 @@
 /**
  * @fileoverview Infinite Scroll Component
- * 
+ *
  * Loads more articles automatically when scrolling near bottom.
  * Uses Intersection Observer for efficient scroll detection.
- * 
+ *
  * @module components/InfiniteScroll
- * 
+ *
  * @example
  * <InfiniteScroll
  *   loadMore={fetchMoreArticles}
@@ -14,7 +14,7 @@
  * >
  *   {articles.map(article => <NewsCard key={article.id} article={article} />)}
  * </InfiniteScroll>
- * 
+ *
  * @features
  * - Intersection Observer for performance
  * - Loading spinner indicator
@@ -81,14 +81,14 @@ export default function InfiniteScroll({
   return (
     <div className={className}>
       {children}
-      
+
       {/* Observer target */}
       <div ref={observerRef} className="w-full h-4" />
-      
+
       {/* Loading indicator */}
       {loading && (
         <div className="flex justify-center py-8">
-          <div className="flex items-center gap-3 text-gray-500 dark:text-gray-400">
+          <div className="flex items-center gap-3 text-text-muted">
             <svg
               className="animate-spin h-5 w-5"
               xmlns="http://www.w3.org/2000/svg"
@@ -113,20 +113,25 @@ export default function InfiniteScroll({
           </div>
         </div>
       )}
-      
+
       {/* End message */}
-      {!hasMore && !loading && (
-        endMessage || (
+      {!hasMore &&
+        !loading &&
+        (endMessage || (
           <div className="flex justify-center py-8">
-            <div className="flex items-center gap-2 text-gray-400 dark:text-gray-500">
+            <div className="flex items-center gap-2 text-text-muted">
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M5 13l4 4L19 7"
+                />
               </svg>
               <span className="text-sm">You&apos;re all caught up!</span>
             </div>
           </div>
-        )
-      )}
+        ))}
     </div>
   );
 }
@@ -146,15 +151,15 @@ export function useInfiniteScroll<T>(
 
   const loadMore = useCallback(async () => {
     if (loading || !hasMore) return;
-    
+
     setLoading(true);
     setError(null);
-    
+
     try {
       const result = await fetchFn(page);
-      setItems(prev => [...prev, ...result.items]);
+      setItems((prev) => [...prev, ...result.items]);
       setHasMore(result.hasMore);
-      setPage(prev => prev + 1);
+      setPage((prev) => prev + 1);
     } catch (err) {
       setError(err instanceof Error ? err : new Error('Failed to load'));
     } finally {

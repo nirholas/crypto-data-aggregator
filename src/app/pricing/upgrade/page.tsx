@@ -264,9 +264,7 @@ function UpgradeContent() {
           <div className="flex items-center gap-3">
             <Wallet className="w-6 h-6 text-text-secondary" />
             <div>
-              <h2 className="text-lg font-semibold text-black dark:text-white">
-                Wallet Connection
-              </h2>
+              <h2 className="text-lg font-semibold text-text-primary">Wallet Connection</h2>
               <p className="text-sm text-text-secondary">
                 {wallet.connected
                   ? `Connected: ${wallet.address?.slice(0, 6)}...${wallet.address?.slice(-4)}`
@@ -286,7 +284,7 @@ function UpgradeContent() {
             {wallet.connected ? (
               <button
                 onClick={disconnect}
-                className="px-4 py-2 border-2 border-surface-border text-text-secondary rounded-lg font-medium hover:bg-neutral-100 dark:hover:bg-neutral-900"
+                className="px-4 py-2 border-2 border-surface-border text-text-secondary rounded-lg font-medium hover:bg-surface-alt"
               >
                 Disconnect
               </button>
@@ -294,7 +292,7 @@ function UpgradeContent() {
               <button
                 onClick={connect}
                 disabled={isConnecting}
-                className="px-6 py-2 bg-surface-alt text-white dark:text-black rounded-lg font-medium hover:bg-neutral-800 dark:hover:bg-neutral-200 disabled:opacity-50 flex items-center gap-2"
+                className="px-6 py-2 bg-text-primary text-surface rounded-lg font-medium hover:opacity-90 disabled:opacity-50 flex items-center gap-2"
               >
                 {isConnecting ? (
                   <>
@@ -315,35 +313,31 @@ function UpgradeContent() {
           <div className="mt-4 pt-4 border-t border-surface-border">
             <p className="text-sm text-text-secondary">
               USDC Balance:{' '}
-              <span className="text-black dark:text-white font-mono">{wallet.usdcBalance}</span>
+              <span className="text-text-primary font-mono">{wallet.usdcBalance}</span>
             </p>
           </div>
         )}
         {walletError && <p className="mt-2 text-sm text-red-500">{walletError}</p>}
         {isTestnet && (
-          <p className="mt-2 text-xs text-yellow-600 dark:text-yellow-400">
-            ⚠️ Testnet mode - using Base Sepolia
-          </p>
+          <p className="mt-2 text-xs text-text-muted">⚠️ Testnet mode - using Base Sepolia</p>
         )}
       </div>
 
       {/* API Key Input */}
       <div className="border-2 border-surface-border rounded-lg p-6 mb-8">
-        <h2 className="text-lg font-semibold text-black dark:text-white mb-4">
-          Enter Your API Key
-        </h2>
+        <h2 className="text-lg font-semibold text-text-primary mb-4">Enter Your API Key</h2>
         <div className="flex gap-4">
           <input
             type="text"
             value={apiKey}
             onChange={(e) => setApiKey(e.target.value)}
             placeholder="cda_free_..."
-            className="flex-1 px-4 py-2 border-2 border-surface-border rounded-lg bg-surface text-black dark:text-white focus:border-black dark:focus:border-white outline-none font-mono"
+            className="flex-1 px-4 py-2 border-2 border-surface-border rounded-lg bg-surface text-text-primary focus:border-text-primary outline-none font-mono"
           />
           <button
             onClick={loadKeyInfo}
             disabled={loading}
-            className="px-6 py-2 bg-surface-alt text-white dark:text-black rounded-lg font-medium hover:bg-neutral-800 dark:hover:bg-neutral-200 disabled:opacity-50 flex items-center gap-2"
+            className="px-6 py-2 bg-text-primary text-surface rounded-lg font-medium hover:opacity-90 disabled:opacity-50 flex items-center gap-2"
           >
             {loading && <Loader2 className="w-4 h-4 animate-spin" />}
             {loading ? 'Loading...' : 'Load Key'}
@@ -353,21 +347,21 @@ function UpgradeContent() {
 
       {/* Error/Success Messages */}
       {error && (
-        <div className="mb-8 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg text-red-700 dark:text-red-400">
+        <div className="mb-8 p-4 bg-surface-alt border border-surface-border rounded-lg text-text-muted">
           {error}
         </div>
       )}
       {success && (
-        <div className="mb-8 p-4 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg text-green-700 dark:text-green-400">
+        <div className="mb-8 p-4 bg-surface-alt border border-surface-border rounded-lg text-text-primary">
           {success}
         </div>
       )}
 
       {/* Payment Details (when awaiting payment) */}
       {paymentDetails && (
-        <div className="mb-8 p-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg">
-          <h3 className="font-semibold text-blue-900 dark:text-blue-100 mb-2">Payment Required</h3>
-          <div className="text-sm text-blue-800 dark:text-blue-200 space-y-1 font-mono">
+        <div className="mb-8 p-4 bg-surface-alt border border-surface-border rounded-lg">
+          <h3 className="font-semibold text-text-primary mb-2">Payment Required</h3>
+          <div className="text-sm text-text-secondary space-y-1 font-mono">
             <p>Amount: ${(parseInt(paymentDetails.amount) / 1_000_000).toFixed(2)} USDC</p>
             <p>Network: Base {isTestnet ? 'Sepolia (Testnet)' : 'Mainnet'}</p>
             <p>
@@ -382,13 +376,11 @@ function UpgradeContent() {
         <div className="border-2 border-surface-border rounded-lg p-6 mb-8">
           <div className="flex items-center justify-between mb-6">
             <div className="flex items-center gap-3">
-              <div
-                className={`p-2 rounded-lg bg-neutral-100 dark:bg-neutral-900 ${tierColors[keyInfo.tier]}`}
-              >
+              <div className={`p-2 rounded-lg bg-surface-alt ${tierColors[keyInfo.tier]}`}>
                 <TierIcon className="w-6 h-6" />
               </div>
               <div>
-                <h2 className="text-lg font-semibold text-black dark:text-white">
+                <h2 className="text-lg font-semibold text-text-primary">
                   Current Plan: {keyInfo.tier.charAt(0).toUpperCase() + keyInfo.tier.slice(1)}
                 </h2>
                 <p className="text-sm text-text-secondary">Key ID: {keyInfo.id}</p>

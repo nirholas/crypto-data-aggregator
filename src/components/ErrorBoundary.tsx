@@ -73,9 +73,9 @@ function DefaultErrorFallback({ error, onReset }: DefaultErrorFallbackProps) {
     <div className="min-h-[400px] flex items-center justify-center p-6">
       <div className="max-w-md w-full text-center">
         {/* Error icon */}
-        <div className="w-16 h-16 mx-auto mb-6 rounded-full bg-red-100 dark:bg-red-900/20 flex items-center justify-center">
+        <div className="w-16 h-16 mx-auto mb-6 rounded-full bg-loss/10 flex items-center justify-center">
           <svg
-            className="w-8 h-8 text-red-500 dark:text-red-400"
+            className="w-8 h-8 text-loss"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -101,7 +101,7 @@ function DefaultErrorFallback({ error, onReset }: DefaultErrorFallbackProps) {
             <summary className="cursor-pointer text-sm text-text-muted hover:text-text-secondary">
               Error details
             </summary>
-            <pre className="mt-2 p-3 bg-surface-alt rounded-lg text-xs text-red-600 dark:text-red-400 overflow-auto max-h-40">
+            <pre className="mt-2 p-3 bg-surface-alt rounded-lg text-xs text-loss overflow-auto max-h-40">
               {error.message}
               {error.stack && `\n\n${error.stack}`}
             </pre>
@@ -150,9 +150,9 @@ export function ErrorFallback({
   return (
     <div className="max-w-md w-full text-center">
       {/* Error icon */}
-      <div className="w-16 h-16 mx-auto mb-6 rounded-full bg-red-100 dark:bg-red-900/20 flex items-center justify-center">
+      <div className="w-16 h-16 mx-auto mb-6 rounded-full bg-loss/10 flex items-center justify-center">
         <svg
-          className="w-8 h-8 text-red-500 dark:text-red-400"
+          className="w-8 h-8 text-loss"
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
@@ -176,7 +176,7 @@ export function ErrorFallback({
           <summary className="cursor-pointer text-sm text-text-muted hover:text-text-secondary">
             Error details
           </summary>
-          <pre className="mt-2 p-3 bg-surface-alt rounded-lg text-xs text-red-600 dark:text-red-400 overflow-auto max-h-40">
+          <pre className="mt-2 p-3 bg-surface-alt rounded-lg text-xs text-loss overflow-auto max-h-40">
             {error.message}
             {error.stack && `\n\n${error.stack}`}
           </pre>

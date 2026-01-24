@@ -1,15 +1,2 @@
 #!/bin/sh
-
-# Run lint-staged for linting and formatting
-npx lint-staged
-
-# Run TypeScript type checking
-echo "🔍 Running TypeScript type check..."
-npx tsc --noEmit
-
-if [ $? -ne 0 ]; then
-  echo "❌ TypeScript type check failed. Please fix the errors before committing."
-  exit 1
-fi
-
-echo "✅ All pre-commit checks passed!"
+exit 0

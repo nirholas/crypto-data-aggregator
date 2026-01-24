@@ -57,6 +57,7 @@ const navItems = [
           links: [
             { label: 'Crypto Calculator', href: '/calculator', icon: null },
             { label: 'Gas Tracker', href: '/gas', icon: null },
+            { label: 'Halving Countdown', href: '/halving', icon: null },
           ],
         },
         {

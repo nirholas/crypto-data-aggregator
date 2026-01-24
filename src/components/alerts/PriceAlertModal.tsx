@@ -128,8 +128,8 @@ export function PriceAlertModal({
         {/* Header */}
         <div className="px-6 py-4 border-b border-surface-border flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="p-2 rounded-lg bg-blue-100 dark:bg-blue-500/20">
-              <Bell className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+            <div className="p-2 rounded-lg bg-primary/10">
+              <Bell className="w-5 h-5 text-primary" />
             </div>
             <div>
               <h2 className="font-semibold text-text-primary">Price Alert</h2>
@@ -140,7 +140,7 @@ export function PriceAlertModal({
           </div>
           <button
             onClick={onClose}
-            className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-500 transition-colors"
+            className="p-2 rounded-lg hover:bg-surface-hover text-text-muted transition-colors"
           >
             <X className="w-5 h-5" />
           </button>
@@ -319,9 +319,9 @@ export function PriceAlertModal({
                   >
                     <div className="flex items-center gap-2">
                       {alert.triggered ? (
-                        <Check className="w-4 h-4 text-green-600 dark:text-green-400" />
+                        <Check className="w-4 h-4 text-gain" />
                       ) : (
-                        <Bell className="w-4 h-4 text-gray-400" />
+                        <Bell className="w-4 h-4 text-text-muted" />
                       )}
                       <span className="text-sm text-text-secondary">
                         {getConditionText(
@@ -333,7 +333,7 @@ export function PriceAlertModal({
                     </div>
                     <button
                       onClick={() => removeAlert(alert.id)}
-                      className="text-xs text-red-600 dark:text-red-400 hover:underline"
+                      className="text-xs text-loss hover:underline"
                     >
                       Remove
                     </button>

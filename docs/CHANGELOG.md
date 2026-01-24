@@ -11,12 +11,42 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Added
 
+- **MarketMoodRing Component** - Animated SVG circular gauge displaying Fear & Greed Index
+  - Gradient-filled rings with pulsing glow effects
+  - 5 mood states: Extreme Fear, Fear, Neutral, Greed, Extreme Greed
+  - Interactive hover states with detailed tooltips
+  - Multiple size variants (sm, md, lg, xl)
+  - Full accessibility support with ARIA labels
+  - Companion components: `MarketMoodBadge`, `MarketMoodSparkline`
+- **MarketMoodWidget** - Ready-to-use widget with real-time data
+  - Full, compact, and minimal variants
+  - Auto-refresh functionality
+  - Sidebar and header variants included
+- **useMarketMood Hook** - Real-time Fear & Greed Index data fetching
+  - Auto-refresh every 5 minutes
+  - Response caching to reduce API calls
+  - 7-day historical data support
+  - Helper functions: `getMoodColor()`, `getMoodLabel()`
 - Comprehensive documentation overhaul
 - JSDoc comments for all library functions
 - TESTING.md guide for Vitest setup
 - COMPONENTS.md for UI documentation
 - PWA.md for Progressive Web App features
 - SECURITY.md for security best practices
+
+### Changed
+
+- **Design Token Migration (Complete)** - Migrated all components from hardcoded colors to
+  centralized design tokens
+  - Data visualization components: charts.tsx, coin-charts, Screener, MarketStats,
+    SentimentDashboard, CorrelationMatrix, DominanceChart, GasTracker, LiquidationsFeed, PriceWidget
+  - All 16 loading.tsx skeleton files
+  - Error boundary components
+  - Utility components: Skeletons, LoadingSpinner, ErrorBoundary, ExportData, KeyboardShortcuts,
+    PriceAlerts
+  - Portfolio and watchlist components
+  - Replaced `dark:` prefix patterns with semantic tokens
+  - Charts now use `chartColors` from `src/lib/colors.ts` for Recharts compatibility
 
 ---
 

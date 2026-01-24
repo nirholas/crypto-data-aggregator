@@ -44,8 +44,8 @@ export function ExamplesContent({ examples }: ExamplesContentProps) {
     <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
       {/* Sidebar - Example Selection */}
       <div className="lg:col-span-1">
-        <div className="sticky top-4 bg-white rounded-xl shadow-sm border p-4">
-          <h3 className="font-semibold text-gray-900 mb-4">Examples</h3>
+        <div className="sticky top-4 bg-surface rounded-xl shadow-sm border p-4">
+          <h3 className="font-semibold text-text-primary mb-4">Examples</h3>
           <nav className="space-y-1">
             {examples.map((example) => (
               <button
@@ -53,8 +53,8 @@ export function ExamplesContent({ examples }: ExamplesContentProps) {
                 onClick={() => setSelectedExample(example.id)}
                 className={`w-full text-left px-3 py-2 rounded-lg transition-colors flex items-center gap-2 ${
                   selectedExample === example.id
-                    ? 'bg-blue-50 text-blue-700 font-medium'
-                    : 'hover:bg-gray-50 text-gray-700'
+                    ? 'bg-primary/10 text-primary font-medium'
+                    : 'hover:bg-surface-hover text-text-secondary'
                 }`}
               >
                 <span className="text-lg">{example.icon}</span>
@@ -68,15 +68,17 @@ export function ExamplesContent({ examples }: ExamplesContentProps) {
       {/* Main Content - Code Display */}
       <div className="lg:col-span-3">
         {currentExample && (
-          <div className="bg-white rounded-xl shadow-sm border overflow-hidden">
+          <div className="bg-surface rounded-xl shadow-sm border border-surface-border overflow-hidden">
             {/* Header */}
-            <div className="border-b px-6 py-4">
+            <div className="border-b border-surface-border px-6 py-4">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <span className="text-2xl">{currentExample.icon}</span>
                   <div>
-                    <h2 className="text-xl font-semibold text-gray-900">{currentExample.name}</h2>
-                    <p className="text-gray-500 text-sm">{currentExample.description}</p>
+                    <h2 className="text-xl font-semibold text-text-primary">
+                      {currentExample.name}
+                    </h2>
+                    <p className="text-text-muted text-sm">{currentExample.description}</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-2">
@@ -91,19 +93,19 @@ export function ExamplesContent({ examples }: ExamplesContentProps) {
 
             {/* Setup Instructions */}
             {(currentExample.setup || currentExample.envVars) && (
-              <div className="border-b px-6 py-3 bg-gray-50">
+              <div className="border-b border-surface-border px-6 py-3 bg-surface-alt">
                 <div className="flex flex-wrap gap-4 text-sm">
                   {currentExample.setup && (
                     <div className="flex items-center gap-2">
-                      <span className="text-gray-500">Setup:</span>
-                      <code className="bg-gray-200 px-2 py-0.5 rounded text-gray-800">
+                      <span className="text-text-muted">Setup:</span>
+                      <code className="bg-surface-hover px-2 py-0.5 rounded text-text-primary">
                         {currentExample.setup}
                       </code>
                     </div>
                   )}
                   {currentExample.envVars && currentExample.envVars.length > 0 && (
                     <div className="flex items-center gap-2">
-                      <span className="text-gray-500">Required:</span>
+                      <span className="text-text-muted">Required:</span>
                       {currentExample.envVars.map((envVar) => (
                         <code
                           key={envVar}
@@ -156,13 +158,13 @@ export function ExamplesContent({ examples }: ExamplesContentProps) {
             </div>
 
             {/* File Name */}
-            <div className="border-t px-6 py-3 bg-gray-50 flex justify-between items-center">
-              <span className="text-sm text-gray-500">{currentExample.filename}</span>
+            <div className="border-t border-surface-border px-6 py-3 bg-surface-alt flex justify-between items-center">
+              <span className="text-sm text-text-muted">{currentExample.filename}</span>
               <a
                 href={`https://github.com/nirholas/free-crypto-news/tree/main/examples/${currentExample.filename}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-sm text-blue-600 hover:text-blue-700 flex items-center gap-1"
+                className="text-sm text-primary hover:text-primary/80 flex items-center gap-1"
               >
                 View on GitHub
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">

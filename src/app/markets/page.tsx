@@ -348,7 +348,7 @@ function TableSkeleton() {
       <div className="p-4 border-b border-surface-border">
         <div className="h-6 w-48 bg-surface-alt rounded animate-pulse" />
       </div>
-      <div className="divide-y divide-neutral-100 dark:divide-neutral-800">
+      <div className="divide-y divide-surface-border">
         {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((i) => (
           <div key={i} className="flex items-center gap-4 p-4">
             <div className="h-4 w-8 bg-surface-alt rounded animate-pulse" />

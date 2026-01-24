@@ -141,7 +141,7 @@ export function AddHoldingModal({ isOpen, onClose, prefilledCoin }: AddHoldingMo
           </div>
           <button
             onClick={onClose}
-            className="p-2 rounded-lg hover:bg-surface-alt text-gray-500 transition-colors"
+            className="p-2 rounded-lg hover:bg-surface-alt text-text-muted transition-colors"
           >
             <X className="w-5 h-5" />
           </button>
@@ -192,7 +192,7 @@ export function AddHoldingModal({ isOpen, onClose, prefilledCoin }: AddHoldingMo
               <button
                 type="button"
                 onClick={() => setStep('coin')}
-                className="text-sm text-blue-600 dark:text-blue-400 hover:underline"
+                className="text-sm text-primary hover:underline"
               >
                 ← Change coin
               </button>
@@ -200,11 +200,11 @@ export function AddHoldingModal({ isOpen, onClose, prefilledCoin }: AddHoldingMo
 
             {/* Existing holding info */}
             {existingHolding && (
-              <div className="p-3 rounded-lg bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800">
-                <p className="text-sm text-blue-700 dark:text-blue-400">
+              <div className="p-3 rounded-lg bg-primary/10 border border-primary/30">
+                <p className="text-sm text-primary">
                   Current holding: {existingHolding.amount.toLocaleString()}{' '}
                   {selectedCoin?.symbol.toUpperCase()}
-                  <span className="text-blue-500 dark:text-blue-500">
+                  <span className="text-primary/70">
                     {' '}
                     (avg. ${existingHolding.averageBuyPrice.toFixed(2)})
                   </span>
@@ -214,7 +214,7 @@ export function AddHoldingModal({ isOpen, onClose, prefilledCoin }: AddHoldingMo
 
             {/* Transaction Type */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              <label className="block text-sm font-medium text-text-secondary mb-2">
                 Transaction Type
               </label>
               <div className="grid grid-cols-4 gap-2">
@@ -227,9 +227,9 @@ export function AddHoldingModal({ isOpen, onClose, prefilledCoin }: AddHoldingMo
                       className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
                         txType === type
                           ? type === 'buy' || type === 'transfer_in'
-                            ? 'bg-green-100 dark:bg-green-500/20 text-green-700 dark:text-green-400 border-2 border-green-500'
-                            : 'bg-red-100 dark:bg-red-500/20 text-red-700 dark:text-red-400 border-2 border-red-500'
-                          : 'bg-gray-100 dark:bg-black text-text-secondary border-2 border-transparent'
+                            ? 'bg-gain/20 text-gain border-2 border-gain'
+                            : 'bg-loss/20 text-loss border-2 border-loss'
+                          : 'bg-surface-alt text-text-secondary border-2 border-transparent'
                       }`}
                     >
                       {type === 'transfer_in'
@@ -245,9 +245,7 @@ export function AddHoldingModal({ isOpen, onClose, prefilledCoin }: AddHoldingMo
 
             {/* Amount */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                Amount
-              </label>
+              <label className="block text-sm font-medium text-text-secondary mb-2">Amount</label>
               <div className="relative">
                 <input
                   type="number"
@@ -259,7 +257,7 @@ export function AddHoldingModal({ isOpen, onClose, prefilledCoin }: AddHoldingMo
                   className="w-full px-4 py-3 pr-16 rounded-xl border border-surface-border bg-surface text-text-primary focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   required
                 />
-                <span className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 font-medium">
+                <span className="absolute right-4 top-1/2 -translate-y-1/2 text-text-muted font-medium">
                   {selectedCoin?.symbol.toUpperCase()}
                 </span>
               </div>
@@ -267,11 +265,11 @@ export function AddHoldingModal({ isOpen, onClose, prefilledCoin }: AddHoldingMo
 
             {/* Price per coin */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              <label className="block text-sm font-medium text-text-secondary mb-2">
                 Price per Coin
               </label>
               <div className="relative">
-                <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-text-muted" />
                 <input
                   type="number"
                   value={pricePerCoin}
@@ -296,11 +294,9 @@ export function AddHoldingModal({ isOpen, onClose, prefilledCoin }: AddHoldingMo
 
             {/* Date */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                Date
-              </label>
+              <label className="block text-sm font-medium text-text-secondary mb-2">Date</label>
               <div className="relative">
-                <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-text-muted" />
                 <input
                   type="date"
                   value={date}
@@ -315,11 +311,11 @@ export function AddHoldingModal({ isOpen, onClose, prefilledCoin }: AddHoldingMo
             {/* Optional fields */}
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                <label className="block text-sm font-medium text-text-secondary mb-2">
                   Exchange (optional)
                 </label>
                 <div className="relative">
-                  <Building className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                  <Building className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-text-muted" />
                   <input
                     type="text"
                     value={exchange}
@@ -330,11 +326,11 @@ export function AddHoldingModal({ isOpen, onClose, prefilledCoin }: AddHoldingMo
                 </div>
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                <label className="block text-sm font-medium text-text-secondary mb-2">
                   Notes (optional)
                 </label>
                 <div className="relative">
-                  <FileText className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                  <FileText className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-text-muted" />
                   <input
                     type="text"
                     value={notes}
@@ -348,7 +344,7 @@ export function AddHoldingModal({ isOpen, onClose, prefilledCoin }: AddHoldingMo
 
             {/* Error */}
             {error && (
-              <div className="p-3 rounded-lg bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-400 text-sm">
+              <div className="p-3 rounded-lg bg-loss/10 border border-loss/30 text-loss text-sm">
                 {error}
               </div>
             )}
@@ -358,8 +354,8 @@ export function AddHoldingModal({ isOpen, onClose, prefilledCoin }: AddHoldingMo
               type="submit"
               className={`w-full py-3 px-4 rounded-xl font-semibold transition-colors ${
                 txType === 'buy' || txType === 'transfer_in'
-                  ? 'bg-green-600 hover:bg-green-700 text-white'
-                  : 'bg-red-600 hover:bg-red-700 text-white'
+                  ? 'bg-gain hover:bg-gain/90 text-white'
+                  : 'bg-loss hover:bg-loss/90 text-white'
               }`}
             >
               {txType === 'buy'

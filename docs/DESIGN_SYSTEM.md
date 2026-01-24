@@ -2,8 +2,13 @@
 
 ## Overview
 
-This document defines the color migration strategy for Crypto Data Aggregator. All components must
-use the centralized design token system.
+This document defines the color system for Crypto Data Aggregator. All components use the
+centralized design token system.
+
+> **Migration Status: ✅ Complete** (January 2026)
+>
+> All data visualization components, loading states, and core UI have been migrated to design
+> tokens.
 
 ## Source of Truth
 
@@ -167,3 +172,48 @@ Check for:
 - No `text-gray-*` or `bg-gray-*` patterns
 - No `dark:` prefixes (except for specific overrides)
 - All colors using design tokens
+
+## Migrated Components
+
+The following components have been fully migrated to use design tokens:
+
+### Data Visualization
+
+- `charts.tsx` - Uses `chartColors` from colors.ts
+- `coin-charts/index.tsx` - Price, volume, and mini charts
+- `Screener.tsx` - Filter panels and table
+- `MarketStats.tsx` - Market overview cards
+- `SentimentDashboard.tsx` - Gauges and sentiment cards
+- `CorrelationMatrix.tsx` - Correlation heatmap
+- `DominanceChart.tsx` - Donut and bar charts
+- `GasTracker.tsx` - Gas price cards
+- `LiquidationsFeed.tsx` - Liquidation list
+- `PriceWidget.tsx` - Compact price display
+- `MarketMoodRing.tsx` - Fear & Greed circular gauge (NEW)
+- `MarketMoodWidget.tsx` - Complete sentiment widget (NEW)
+
+### Loading States
+
+- All 16 `loading.tsx` files in `/src/app/`
+- `LoadingSpinner.tsx` variants
+- `Skeletons.tsx` components
+
+### Core Components
+
+- `ErrorBoundary.tsx`
+- `ExportData.tsx`
+- `KeyboardShortcuts.tsx`
+- `PriceAlerts.tsx`
+- `SocialBuzz.tsx`
+
+### Portfolio & Watchlist
+
+- `portfolio/AddHoldingModal.tsx`
+- `portfolio/HoldingsTable.tsx`
+- `portfolio/PortfolioSummary.tsx`
+- `watchlist/WatchlistMiniWidget.tsx`
+- `watchlist/WatchlistExport.tsx`
+
+### Custom Hooks
+
+- `useMarketMood.ts` - Fear & Greed Index data fetching with helper functions (NEW)

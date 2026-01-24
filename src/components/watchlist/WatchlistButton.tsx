@@ -75,7 +75,7 @@ export function WatchlistButton({
     return (
       <button
         disabled
-        className={`${sizeClasses[size]} rounded-lg text-gray-300 dark:text-gray-600 ${className}`}
+        className={`${sizeClasses[size]} rounded-lg text-text-muted ${className}`}
         aria-label="Loading watchlist"
       >
         <Star className={`${iconSizes[size]} animate-pulse`} />
@@ -92,8 +92,8 @@ export function WatchlistButton({
         transition-all duration-200
         ${
           isInWatchlist
-            ? 'text-yellow-500 hover:text-yellow-600 dark:text-yellow-400 dark:hover:text-yellow-300 bg-yellow-50 dark:bg-yellow-500/10 hover:bg-yellow-100 dark:hover:bg-yellow-500/20'
-            : 'text-gray-400 hover:text-yellow-500 dark:text-gray-500 dark:hover:text-yellow-400 hover:bg-gray-100 dark:hover:bg-black'
+            ? 'text-yellow-500 hover:text-yellow-600 bg-yellow-500/10 hover:bg-yellow-500/20'
+            : 'text-text-muted hover:text-yellow-500 hover:bg-surface-hover'
         }
         focus:outline-none focus:ring-2 focus:ring-yellow-500/50
         ${className}

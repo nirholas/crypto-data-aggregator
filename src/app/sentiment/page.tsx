@@ -53,11 +53,11 @@ const sentimentColors: Record<string, { text: string; bg: string; border: string
   very_bullish: {
     text: 'text-text-primary',
     bg: 'bg-surface-alt',
-    border: 'border-neutral-300 dark:border-neutral-600',
+    border: 'border-surface-border',
   },
   bullish: {
     text: 'text-text-primary',
-    bg: 'bg-neutral-50 dark:bg-black',
+    bg: 'bg-surface-alt',
     border: 'border-surface-border',
   },
   neutral: {
@@ -67,13 +67,13 @@ const sentimentColors: Record<string, { text: string; bg: string; border: string
   },
   bearish: {
     text: 'text-text-muted',
-    bg: 'bg-neutral-50 dark:bg-black',
+    bg: 'bg-surface-alt',
     border: 'border-surface-border',
   },
   very_bearish: {
     text: 'text-text-muted',
     bg: 'bg-surface-alt',
-    border: 'border-neutral-300 dark:border-neutral-600',
+    border: 'border-surface-border',
   },
 };
 
@@ -210,40 +210,34 @@ export default async function SentimentPage() {
                   {data.articles?.map((article, i) => (
                     <div
                       key={i}
-                      className={`bg-white dark:bg-black rounded-xl border p-5 ${sentimentColors[article.sentiment]?.border || 'border-neutral-200 dark:border-neutral-800'}`}
+                      className={`bg-surface rounded-xl border p-5 ${sentimentColors[article.sentiment]?.border || 'border-surface-border'}`}
                     >
                       <div className="flex items-start justify-between gap-4 mb-3">
                         <div className="flex-1">
-                          <h3 className="font-semibold text-neutral-900 dark:text-white">
-                            {article.title}
-                          </h3>
-                          <p className="text-sm text-neutral-500 dark:text-neutral-400">
-                            {article.source}
-                          </p>
+                          <h3 className="font-semibold text-text-primary">{article.title}</h3>
+                          <p className="text-sm text-text-muted">{article.source}</p>
                         </div>
                         <div className="flex flex-col items-end gap-2">
                           <span
-                            className={`px-3 py-1 rounded-full text-sm font-medium ${sentimentColors[article.sentiment]?.bg || 'bg-neutral-100 dark:bg-black'} ${sentimentColors[article.sentiment]?.text || 'text-neutral-600 dark:text-neutral-400'}`}
+                            className={`px-3 py-1 rounded-full text-sm font-medium ${sentimentColors[article.sentiment]?.bg || 'bg-surface-alt'} ${sentimentColors[article.sentiment]?.text || 'text-text-secondary'}`}
                           >
                             {article.sentiment.replace('_', ' ')}
                           </span>
                           <span
-                            className={`text-xs px-2 py-0.5 rounded ${article.impactLevel === 'high' ? 'bg-neutral-200 dark:bg-black text-neutral-900 dark:text-white font-semibold' : article.impactLevel === 'medium' ? 'bg-neutral-100 dark:bg-black text-neutral-700 dark:text-neutral-300' : 'bg-neutral-100 dark:bg-black text-neutral-600 dark:text-neutral-400'}`}
+                            className={`text-xs px-2 py-0.5 rounded ${article.impactLevel === 'high' ? 'bg-surface-alt text-text-primary font-semibold' : article.impactLevel === 'medium' ? 'bg-surface-alt text-text-secondary' : 'bg-surface-alt text-text-secondary'}`}
                           >
                             {article.impactLevel} impact
                           </span>
                         </div>
                       </div>
-                      <p className="text-sm text-neutral-600 dark:text-neutral-400 mb-3">
-                        {article.reasoning}
-                      </p>
+                      <p className="text-sm text-text-secondary mb-3">{article.reasoning}</p>
                       {article.affectedAssets?.length > 0 && (
                         <div className="flex flex-wrap gap-2">
                           {article.affectedAssets.map((asset) => (
                             <Link
                               key={asset}
                               href={`/search?q=${asset}`}
-                              className="text-xs px-2 py-1 bg-neutral-100 dark:bg-black text-neutral-900 dark:text-white rounded hover:bg-neutral-200 dark:hover:bg-black"
+                              className="text-xs px-2 py-1 bg-surface-alt text-text-primary rounded hover:bg-surface-alt"
                             >
                               {asset}
                             </Link>
@@ -256,7 +250,7 @@ export default async function SentimentPage() {
               </div>
             </div>
           ) : (
-            <div className="text-center py-16 bg-white dark:bg-black rounded-xl border border-neutral-200 dark:border-neutral-800">
+            <div className="text-center py-16 bg-surface rounded-xl border border-surface-border">
               <svg
                 className="w-16 h-16 mx-auto mb-4 text-neutral-400"
                 fill="none"
@@ -270,13 +264,13 @@ export default async function SentimentPage() {
                   d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
                 />
               </svg>
-              <h3 className="text-xl font-semibold text-neutral-700 dark:text-neutral-300 mb-2">
+              <h3 className="text-xl font-semibold text-text-secondary mb-2">
                 Sentiment Analysis Unavailable
               </h3>
-              <p className="text-neutral-500 dark:text-neutral-400 mb-4">
+              <p className="text-text-muted mb-4">
                 AI features require GROQ_API_KEY to be configured
               </p>
-              <Link href="/" className="text-neutral-900 dark:text-white hover:underline">
+              <Link href="/" className="text-text-primary hover:underline">
                 ← Back to latest news
               </Link>
             </div>

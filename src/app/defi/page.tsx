@@ -62,19 +62,19 @@ export default async function DefiPage() {
 
           {/* Stats Overview */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-            <div className="bg-neutral-50 dark:bg-black rounded-xl p-4 border border-surface-border">
+            <div className="bg-surface-alt rounded-xl p-4 border border-surface-border">
               <p className="text-text-muted text-sm">Total DeFi TVL</p>
               <p className="text-2xl font-bold text-text-primary">${formatNumber(totalTVL)}</p>
             </div>
-            <div className="bg-neutral-50 dark:bg-black rounded-xl p-4 border border-surface-border">
+            <div className="bg-surface-alt rounded-xl p-4 border border-surface-border">
               <p className="text-text-muted text-sm">Top Protocols</p>
               <p className="text-2xl font-bold text-text-primary">{protocols.length}+</p>
             </div>
-            <div className="bg-neutral-50 dark:bg-black rounded-xl p-4 border border-surface-border">
+            <div className="bg-surface-alt rounded-xl p-4 border border-surface-border">
               <p className="text-text-muted text-sm">Active Chains</p>
               <p className="text-2xl font-bold text-text-primary">{chains.length}+</p>
             </div>
-            <div className="bg-neutral-50 dark:bg-black rounded-xl p-4 border border-surface-border">
+            <div className="bg-surface-alt rounded-xl p-4 border border-surface-border">
               <p className="text-text-muted text-sm">Chain TVL</p>
               <p className="text-2xl font-bold text-text-primary">${formatNumber(totalChainTVL)}</p>
             </div>
@@ -109,7 +109,7 @@ export default async function DefiPage() {
                 <div className="overflow-x-auto">
                   <table className="w-full">
                     <thead>
-                      <tr className="border-b border-surface-border bg-neutral-50 dark:bg-black text-sm">
+                      <tr className="border-b border-surface-border bg-surface-alt text-sm">
                         <th className="text-left text-text-muted font-medium p-4">#</th>
                         <th className="text-left text-text-muted font-medium p-4">Protocol</th>
                         <th className="text-right text-text-muted font-medium p-4">TVL</th>
@@ -128,7 +128,7 @@ export default async function DefiPage() {
                       {protocols.map((protocol, index) => (
                         <tr
                           key={protocol.id}
-                          className="border-b border-neutral-100 dark:border-neutral-800 hover:bg-neutral-50 dark:hover:bg-black transition"
+                          className="border-b border-surface-border hover:bg-surface-alt transition"
                         >
                           <td className="p-4 text-text-muted">{index + 1}</td>
                           <td className="p-4">
@@ -204,11 +204,11 @@ export default async function DefiPage() {
                     </div>
                   </div>
                 </div>
-                <div className="divide-y divide-neutral-100 dark:divide-neutral-800">
+                <div className="divide-y divide-surface-border">
                   {chains.slice(0, 10).map((chain, index) => (
                     <div
                       key={chain.name}
-                      className="flex items-center justify-between p-4 hover:bg-neutral-50 dark:hover:bg-black transition"
+                      className="flex items-center justify-between p-4 hover:bg-surface-alt transition"
                     >
                       <div className="flex items-center gap-3">
                         <span className="text-neutral-400 text-sm w-5">{index + 1}</span>

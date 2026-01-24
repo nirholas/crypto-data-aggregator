@@ -192,8 +192,8 @@ export default function PricingPage() {
               </table>
             </div>
 
-            <div className="mt-6 p-4 bg-neutral-50 dark:bg-black rounded-lg">
-              <h4 className="font-medium text-black dark:text-white mb-2">How it works:</h4>
+            <div className="mt-6 p-4 bg-surface-alt rounded-lg">
+              <h4 className="font-medium text-text-primary mb-2">How it works:</h4>
               <ol className="list-decimal list-inside space-y-1 text-text-secondary">
                 <li>Make a request to any endpoint</li>
                 <li>Receive HTTP 402 with payment details</li>
@@ -206,12 +206,12 @@ export default function PricingPage() {
 
           {/* FAQ */}
           <div className="max-w-3xl mx-auto">
-            <h2 className="text-2xl font-bold text-black dark:text-white text-center mb-8">
+            <h2 className="text-2xl font-bold text-text-primary text-center mb-8">
               Frequently Asked Questions
             </h2>
             <div className="space-y-6">
               <div>
-                <h3 className="font-medium text-black dark:text-white mb-2">
+                <h3 className="font-medium text-text-primary mb-2">
                   What payment methods do you accept?
                 </h3>
                 <p className="text-text-secondary">
@@ -220,7 +220,7 @@ export default function PricingPage() {
                 </p>
               </div>
               <div>
-                <h3 className="font-medium text-black dark:text-white mb-2">
+                <h3 className="font-medium text-text-primary mb-2">
                   Can I upgrade or downgrade my plan?
                 </h3>
                 <p className="text-text-secondary">

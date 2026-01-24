@@ -63,15 +63,15 @@ export default async function MoversPage() {
 
           {/* Market Sentiment */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-            <div className="bg-neutral-50 dark:bg-black rounded-xl p-4 border border-surface-border">
+            <div className="bg-surface-alt rounded-xl p-4 border border-surface-border">
               <p className="text-text-muted text-sm">Gainers (24h)</p>
               <p className="text-2xl font-bold text-text-primary">{totalGainers}</p>
             </div>
-            <div className="bg-neutral-50 dark:bg-black rounded-xl p-4 border border-surface-border">
+            <div className="bg-surface-alt rounded-xl p-4 border border-surface-border">
               <p className="text-text-muted text-sm">Losers (24h)</p>
               <p className="text-2xl font-bold text-text-muted">{totalLosers}</p>
             </div>
-            <div className="bg-neutral-50 dark:bg-black rounded-xl p-4 border border-surface-border">
+            <div className="bg-surface-alt rounded-xl p-4 border border-surface-border">
               <p className="text-text-muted text-sm">Avg Change</p>
               <p
                 className={`text-2xl font-bold ${avgChange >= 0 ? 'text-text-primary' : 'text-text-muted'}`}
@@ -79,7 +79,7 @@ export default async function MoversPage() {
                 {formatPercent(avgChange)}
               </p>
             </div>
-            <div className="bg-neutral-50 dark:bg-black rounded-xl p-4 border border-surface-border">
+            <div className="bg-surface-alt rounded-xl p-4 border border-surface-border">
               <p className="text-text-muted text-sm">Sentiment</p>
               <p
                 className={`text-2xl font-bold ${totalGainers > totalLosers ? 'text-text-primary' : 'text-text-muted'}`}
@@ -114,12 +114,12 @@ export default async function MoversPage() {
                   </div>
                 </div>
               </div>
-              <div className="divide-y divide-neutral-100 dark:divide-neutral-800 max-h-[600px] overflow-y-auto">
+              <div className="divide-y divide-surface-border max-h-[600px] overflow-y-auto">
                 {gainers.map((coin, index) => (
                   <Link
                     key={coin.id}
                     href={`/coin/${coin.id}`}
-                    className="flex items-center justify-between p-4 hover:bg-neutral-50 dark:hover:bg-black transition"
+                    className="flex items-center justify-between p-4 hover:bg-surface-alt transition"
                   >
                     <div className="flex items-center gap-3">
                       <span className="text-neutral-400 text-sm w-6">{index + 1}</span>
@@ -148,7 +148,7 @@ export default async function MoversPage() {
 
             {/* Top Losers */}
             <div className="bg-surface rounded-xl border border-surface-border overflow-hidden">
-              <div className="p-4 border-b border-surface-border bg-neutral-50 dark:bg-black">
+              <div className="p-4 border-b border-surface-border bg-surface-alt">
                 <div className="flex items-center gap-2">
                   <svg
                     className="w-6 h-6 text-text-muted"
@@ -169,12 +169,12 @@ export default async function MoversPage() {
                   </div>
                 </div>
               </div>
-              <div className="divide-y divide-neutral-100 dark:divide-neutral-800 max-h-[600px] overflow-y-auto">
+              <div className="divide-y divide-surface-border max-h-[600px] overflow-y-auto">
                 {losers.map((coin, index) => (
                   <Link
                     key={coin.id}
                     href={`/coin/${coin.id}`}
-                    className="flex items-center justify-between p-4 hover:bg-neutral-50 dark:hover:bg-black transition"
+                    className="flex items-center justify-between p-4 hover:bg-surface-alt transition"
                   >
                     <div className="flex items-center gap-3">
                       <span className="text-neutral-400 text-sm w-6">{index + 1}</span>
@@ -206,13 +206,13 @@ export default async function MoversPage() {
           <div className="mt-8 flex justify-center gap-4">
             <Link
               href="/markets"
-              className="bg-surface-alt text-white dark:text-neutral-900 px-6 py-3 rounded-lg font-medium hover:bg-black dark:hover:bg-neutral-100 transition"
+              className="bg-text-primary text-surface px-6 py-3 rounded-lg font-medium hover:opacity-90 transition"
             >
               Full Markets Dashboard
             </Link>
             <Link
               href="/category/markets"
-              className="bg-surface border border-surface-border text-text-secondary px-6 py-3 rounded-lg font-medium hover:bg-neutral-50 dark:hover:bg-black transition"
+              className="bg-surface border border-surface-border text-text-secondary px-6 py-3 rounded-lg font-medium hover:bg-surface-alt transition"
             >
               Market News
             </Link>

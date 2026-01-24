@@ -78,6 +78,10 @@
 - [Feedback Components](#feedback-components)
 - [Provider Components](#provider-components)
 - [Utility Components](#utility-components)
+- [Animation Components](#animation-components)
+- [Custom Hooks](#custom-hooks)
+- [Component Patterns](#component-patterns)
+- [Best Practices](#best-practices)
 
 ---
 
@@ -354,6 +358,102 @@ interface PriceTickerProps {
   coins: CoinData[];
   speed?: 'slow' | 'normal' | 'fast';
 }
+```
+
+---
+
+### MarketMoodRing
+
+**Location**: `src/components/MarketMoodRing.tsx`
+
+**Purpose**: Animated circular gauge displaying Fear & Greed Index with visual effects
+
+**Features**:
+
+- Animated SVG rings with gradient fills
+- 5 mood states: Extreme Fear, Fear, Neutral, Greed, Extreme Greed
+- Pulsing glow effects based on market intensity
+- Interactive hover states with detailed tooltips
+- Trend indicator showing change from previous value
+- Multiple size variants (sm, md, lg, xl)
+- Full accessibility support with ARIA labels
+
+**Props**:
+
+```typescript
+interface MarketMoodRingProps {
+  value?: number;           // Fear & Greed index (0-100)
+  previousValue?: number;   // Previous value for trend
+  size?: 'sm' | 'md' | 'lg' | 'xl';
+  showDetails?: boolean;    // Show description panel
+  animated?: boolean;       // Enable animations
+  className?: string;
+}
+```
+
+**Usage**:
+
+```tsx
+import MarketMoodRing, { 
+  MarketMoodBadge, 
+  MarketMoodSparkline 
+} from '@/components/MarketMoodRing';
+
+// Full ring with details
+<MarketMoodRing value={42} previousValue={38} size="lg" />
+
+// Compact badge for headers
+<MarketMoodBadge value={42} />
+
+// Mini sparkline for history
+<MarketMoodSparkline values={[25, 32, 28, 35, 42]} />
+```
+
+**Related Hook**: `useMarketMood` - Fetches real-time Fear & Greed data
+
+---
+
+### MarketMoodWidget
+
+**Location**: `src/components/MarketMoodWidget.tsx`
+
+**Purpose**: Complete widget combining MarketMoodRing with real-time data fetching
+
+**Variants**:
+
+| Variant | Description |
+|---------|-------------|
+| `full` | Complete card with header, ring, sparkline, refresh button |
+| `compact` | Badge with sparkline inline |
+| `minimal` | Just the badge |
+
+**Props**:
+
+```typescript
+interface MarketMoodWidgetProps {
+  variant?: 'full' | 'compact' | 'minimal';
+  showHistory?: boolean;
+  autoRefresh?: boolean;
+  className?: string;
+}
+```
+
+**Usage**:
+
+```tsx
+import MarketMoodWidget, { 
+  MarketMoodSidebar, 
+  MarketMoodHeader 
+} from '@/components/MarketMoodWidget';
+
+// Full widget with auto-refresh
+<MarketMoodWidget />
+
+// Sidebar-optimized version
+<MarketMoodSidebar />
+
+// Ultra-compact header version
+<MarketMoodHeader />
 ```
 
 ---
@@ -699,6 +799,79 @@ interface StructuredDataProps {
     <Card key={item.id} />
   ))}
 </Stagger>
+```
+
+---
+
+## Custom Hooks
+
+### useMarketMood
+
+**Location**: `src/hooks/useMarketMood.ts`
+
+**Purpose**: Fetches real-time Fear & Greed Index data from Alternative.me API
+
+**Features**:
+
+- Auto-refresh every 5 minutes
+- Response caching to reduce API calls
+- 7-day historical data
+- Error handling with fallback
+- Helper functions for mood colors and labels
+
+**Returns**:
+
+```typescript
+interface UseMarketMoodReturn {
+  value: number;              // Current index (0-100)
+  previousValue?: number;     // Yesterday's value
+  history: number[];          // 7-day history (oldest to newest)
+  classification: string;     // "Extreme Fear" | "Fear" | "Neutral" | "Greed" | "Extreme Greed"
+  isLoading: boolean;
+  error: string | null;
+  lastUpdated: Date | null;
+  refresh: () => Promise<void>;
+}
+```
+
+**Usage**:
+
+```tsx
+import { useMarketMood, getMoodColor, getMoodLabel } from '@/hooks/useMarketMood';
+
+function SentimentDisplay() {
+  const { value, previousValue, history, isLoading, error, refresh } = useMarketMood({
+    refreshInterval: 5 * 60 * 1000,  // 5 minutes
+    historyDays: 7,
+    autoRefresh: true,
+  });
+
+  if (isLoading) return <Skeleton />;
+  if (error) return <Error message={error} onRetry={refresh} />;
+
+  return (
+    <div>
+      <span style={{ color: getMoodColor(value) }}>
+        {getMoodLabel(value)}: {value}
+      </span>
+      {previousValue && (
+        <span>{value > previousValue ? '↑' : '↓'}</span>
+      )}
+    </div>
+  );
+}
+```
+
+**Helper Functions**:
+
+```tsx
+import { getMoodColor, getMoodLabel } from '@/hooks/useMarketMood';
+
+getMoodColor(25);  // '#f97316' (orange - Fear)
+getMoodLabel(25);  // 'Fear'
+
+getMoodColor(75);  // '#22c55e' (green - Greed)
+getMoodLabel(75);  // 'Greed'
 ```
 
 ---

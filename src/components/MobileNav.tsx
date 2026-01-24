@@ -324,7 +324,7 @@ export function MobileNav() {
                   href="https://github.com/nirholas/crypto-data-aggregator"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-3 px-4 py-3 text-gray-700 dark:text-slate-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-black rounded-xl transition-colors focus-ring"
+                  className="flex items-center gap-3 px-4 py-3 text-text-secondary hover:text-text-primary hover:bg-surface-hover rounded-xl transition-colors focus-ring"
                 >
                   <span className="w-5 flex justify-center" aria-hidden="true">
                     <Star className="w-5 h-5" />

@@ -83,7 +83,7 @@ export function WatchlistExport({ onClose }: WatchlistExportProps) {
       <div className="px-4 py-3 border-b border-surface-border flex items-center justify-between">
         <h3 className="font-semibold text-text-primary">Export / Import Watchlist</h3>
         {onClose && (
-          <button onClick={onClose} className="p-1 rounded-lg hover:bg-surface-alt text-gray-500">
+          <button onClick={onClose} className="p-1 rounded-lg hover:bg-surface-alt text-text-muted">
             <X className="w-5 h-5" />
           </button>
         )}
@@ -133,7 +133,7 @@ export function WatchlistExport({ onClose }: WatchlistExportProps) {
           <button
             onClick={handleImportClick}
             disabled={isImporting}
-            className="flex items-center gap-2 px-4 py-2 bg-gray-600 hover:bg-black disabled:bg-gray-400 disabled:cursor-not-allowed text-white rounded-lg font-medium transition-colors"
+            className="flex items-center gap-2 px-4 py-2 bg-surface-hover hover:bg-background disabled:opacity-50 disabled:cursor-not-allowed text-text-primary rounded-lg font-medium transition-colors"
           >
             <Upload className="w-4 h-4" />
             {isImporting ? 'Importing...' : 'Import JSON'}
@@ -144,8 +144,8 @@ export function WatchlistExport({ onClose }: WatchlistExportProps) {
             <div
               className={`mt-3 p-3 rounded-lg flex items-center gap-2 ${
                 importResult.success
-                  ? 'bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-400'
-                  : 'bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-400'
+                  ? 'bg-gain/10 text-gain'
+                  : 'bg-loss/10 text-loss'
               }`}
             >
               {importResult.success ? (

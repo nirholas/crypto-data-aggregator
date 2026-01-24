@@ -78,12 +78,12 @@ export function SearchPageContent() {
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Search for crypto news..."
-            className="w-full px-6 py-4 pr-14 text-lg border-2 border-gray-200 rounded-full focus:outline-none focus:border-black transition"
+            className="w-full px-6 py-4 pr-14 text-lg border-2 border-surface-border rounded-full focus:outline-none focus:border-primary transition"
           />
           <button
             type="submit"
             disabled={isLoading}
-            className="absolute right-2 top-1/2 -translate-y-1/2 p-3 bg-black text-white rounded-full hover:bg-gray-800 transition disabled:opacity-50"
+            className="absolute right-2 top-1/2 -translate-y-1/2 p-3 bg-background text-text-primary rounded-full hover:bg-surface-hover transition disabled:opacity-50"
           >
             {isLoading ? (
               <svg className="w-5 h-5 animate-spin" fill="none" viewBox="0 0 24 24">
@@ -102,13 +102,13 @@ export function SearchPageContent() {
       {/* Popular Searches */}
       {!hasSearched && (
         <div className="mb-8">
-          <p className="text-sm text-gray-500 mb-3">Popular searches:</p>
+          <p className="text-sm text-text-muted mb-3">Popular searches:</p>
           <div className="flex flex-wrap gap-2">
             {popularSearches.map((term) => (
               <button
                 key={term}
                 onClick={() => handleQuickSearch(term)}
-                className="px-4 py-2 bg-white border border-gray-200 rounded-full text-sm hover:bg-gray-50 hover:border-gray-300 transition"
+                className="px-4 py-2 bg-surface border border-surface-border rounded-full text-sm hover:bg-surface-hover transition"
               >
                 {term}
               </button>
@@ -121,7 +121,7 @@ export function SearchPageContent() {
       {hasSearched && (
         <div>
           {/* Results Count */}
-          <div className="mb-4 text-gray-600">
+          <div className="mb-4 text-text-secondary">
             {isLoading ? (
               <span>Searching...</span>
             ) : (
@@ -138,19 +138,19 @@ export function SearchPageContent() {
                   href={article.link}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="block bg-white rounded-lg border border-gray-200 p-5 hover:shadow-md hover:border-gray-300 transition"
+                  className="block bg-surface rounded-lg border border-surface-border p-5 hover:shadow-md transition"
                 >
                   <div className="flex items-center gap-2 mb-2">
-                    <span className={`text-xs px-2 py-1 rounded-full ${sourceColors[article.source] || 'bg-gray-100'}`}>
+                    <span className={`text-xs px-2 py-1 rounded-full ${sourceColors[article.source] || 'bg-surface-alt'}`}>
                       {article.source}
                     </span>
-                    <span className="text-xs text-gray-500">{article.timeAgo}</span>
+                    <span className="text-xs text-text-muted">{article.timeAgo}</span>
                   </div>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-2 hover:text-blue-600">
+                  <h3 className="text-lg font-semibold text-text-primary mb-2 hover:text-primary">
                     {article.title}
                   </h3>
                   {article.description && (
-                    <p className="text-gray-600 text-sm line-clamp-2">{article.description}</p>
+                    <p className="text-text-secondary text-sm line-clamp-2">{article.description}</p>
                   )}
                 </a>
               ))}
@@ -158,17 +158,17 @@ export function SearchPageContent() {
           ) : !isLoading && (
             <div className="text-center py-12">
               <div className="text-6xl mb-4">🔍</div>
-              <h3 className="text-xl font-semibold text-gray-700 mb-2">No results found</h3>
-              <p className="text-gray-500">Try searching for something else</p>
+              <h3 className="text-xl font-semibold text-text-secondary mb-2">No results found</h3>
+              <p className="text-text-muted">Try searching for something else</p>
             </div>
           )}
         </div>
       )}
 
       {/* API Info */}
-      <div className="mt-12 p-6 bg-gray-100 rounded-xl">
+      <div className="mt-12 p-6 bg-surface-alt rounded-xl">
         <h3 className="font-semibold mb-2">💡 Pro Tip: Use the API</h3>
-        <p className="text-gray-600 text-sm mb-3">
+        <p className="text-text-secondary text-sm mb-3">
           You can also search programmatically using our free API:
         </p>
         <code className="block bg-gray-800 text-green-400 p-3 rounded text-sm overflow-x-auto">

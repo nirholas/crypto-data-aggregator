@@ -42,12 +42,12 @@ export function EmptyState({
       className={`flex flex-col items-center justify-center py-12 px-4 text-center ${className}`}
     >
       {icon && (
-        <div className="w-16 h-16 mb-4 rounded-full bg-gray-100 dark:bg-black flex items-center justify-center text-3xl">
+        <div className="w-16 h-16 mb-4 rounded-full bg-surface-alt flex items-center justify-center text-3xl">
           {icon}
         </div>
       )}
-      <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">{title}</h3>
-      <p className="text-sm text-gray-500 dark:text-gray-400 max-w-sm mb-6">{description}</p>
+      <h3 className="text-lg font-semibold text-text-primary mb-2">{title}</h3>
+      <p className="text-sm text-text-muted max-w-sm mb-6">{description}</p>
       {(action || secondaryAction) && (
         <div className="flex flex-wrap items-center justify-center gap-3">
           {action &&
@@ -70,14 +70,14 @@ export function EmptyState({
             (secondaryAction.href ? (
               <Link
                 href={secondaryAction.href}
-                className="inline-flex items-center px-4 py-2 bg-gray-100 dark:bg-black hover:bg-gray-200 dark:hover:bg-black text-gray-700 dark:text-gray-300 font-medium rounded-lg transition-colors"
+                className="inline-flex items-center px-4 py-2 bg-surface-alt hover:bg-surface-hover text-text-secondary font-medium rounded-lg transition-colors"
               >
                 {secondaryAction.label}
               </Link>
             ) : (
               <button
                 onClick={secondaryAction.onClick}
-                className="inline-flex items-center px-4 py-2 bg-gray-100 dark:bg-black hover:bg-gray-200 dark:hover:bg-black text-gray-700 dark:text-gray-300 font-medium rounded-lg transition-colors"
+                className="inline-flex items-center px-4 py-2 bg-surface-alt hover:bg-surface-hover text-text-secondary font-medium rounded-lg transition-colors"
               >
                 {secondaryAction.label}
               </button>

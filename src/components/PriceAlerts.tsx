@@ -321,22 +321,22 @@ export function PriceAlerts() {
                     .map((alert) => (
                       <div
                         key={alert.id}
-                        className="flex items-center justify-between p-3 bg-green-50 dark:bg-green-900/20 rounded-lg opacity-60"
+                        className="flex items-center justify-between p-3 bg-gain/10 rounded-lg opacity-60"
                       >
                         <div className="flex items-center gap-3">
-                          <AlertTriangle className="w-4 h-4 text-green-500" />
+                          <AlertTriangle className="w-4 h-4 text-gain" />
                           <div>
                             <div className="font-medium text-sm line-through">
                               {alert.symbol} {alert.direction} ${alert.targetPrice.toLocaleString()}
                             </div>
-                            <div className="text-xs text-gray-500">Triggered</div>
+                            <div className="text-xs text-text-muted">Triggered</div>
                           </div>
                         </div>
                         <button
                           onClick={() => removeAlert(alert.id)}
-                          className="p-1.5 hover:bg-gray-200 dark:hover:bg-black rounded"
+                          className="p-1.5 hover:bg-surface-hover rounded"
                         >
-                          <X className="w-4 h-4 text-gray-400" />
+                          <X className="w-4 h-4 text-text-muted" />
                         </button>
                       </div>
                     ))}

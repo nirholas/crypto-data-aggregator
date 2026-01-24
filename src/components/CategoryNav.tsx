@@ -14,13 +14,13 @@ interface CategoryNavProps {
 
 const categories = [
   { slug: '', label: 'All News', icon: '📰', color: 'bg-surface-alt' },
-  { slug: 'bitcoin', label: 'Bitcoin', icon: '₿', color: 'bg-orange-100 dark:bg-orange-900/30' },
-  { slug: 'ethereum', label: 'Ethereum', icon: 'Ξ', color: 'bg-indigo-100 dark:bg-indigo-900/30' },
-  { slug: 'defi', label: 'DeFi', icon: '🏦', color: 'bg-green-100 dark:bg-green-900/30' },
-  { slug: 'nft', label: 'NFTs', icon: '🎨', color: 'bg-purple-100 dark:bg-purple-900/30' },
-  { slug: 'regulation', label: 'Regulation', icon: '⚖️', color: 'bg-red-100 dark:bg-red-900/30' },
-  { slug: 'markets', label: 'Markets', icon: '📈', color: 'bg-blue-100 dark:bg-blue-900/30' },
-  { slug: 'analysis', label: 'Analysis', icon: '📊', color: 'bg-cyan-100 dark:bg-cyan-900/30' },
+  { slug: 'bitcoin', label: 'Bitcoin', icon: '₿', color: 'bg-orange-500/20' },
+  { slug: 'ethereum', label: 'Ethereum', icon: 'Ξ', color: 'bg-indigo-500/20' },
+  { slug: 'defi', label: 'DeFi', icon: '🏦', color: 'bg-green-500/20' },
+  { slug: 'nft', label: 'NFTs', icon: '🎨', color: 'bg-purple-500/20' },
+  { slug: 'regulation', label: 'Regulation', icon: '⚖️', color: 'bg-red-500/20' },
+  { slug: 'markets', label: 'Markets', icon: '📈', color: 'bg-blue-500/20' },
+  { slug: 'analysis', label: 'Analysis', icon: '📊', color: 'bg-cyan-500/20' },
 ];
 
 export default function CategoryNav({ activeCategory = '' }: CategoryNavProps) {

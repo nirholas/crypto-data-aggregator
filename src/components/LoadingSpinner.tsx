@@ -194,7 +194,7 @@ export function CardSkeleton() {
   return (
     <div className="bg-surface rounded-2xl shadow-lg overflow-hidden border border-surface-border">
       {/* Image placeholder */}
-      <div className="h-[200px] bg-gradient-to-br from-gray-200 to-gray-100 dark:from-gray-800 dark:to-gray-700 animate-pulse motion-reduce:animate-none" />
+      <div className="h-[200px] bg-gradient-to-br from-surface-alt to-surface animate-pulse motion-reduce:animate-none" />
       {/* Content placeholder */}
       <div className="p-5 space-y-4">
         <div className="h-4 bg-surface-alt rounded-full w-3/4 animate-pulse motion-reduce:animate-none" />

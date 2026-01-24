@@ -29,28 +29,28 @@ interface ReaderContentProps {
 }
 
 const sourceColors: Record<string, string> = {
-  'CoinDesk': 'bg-blue-100 text-blue-800 border-blue-200',
+  CoinDesk: 'bg-blue-100 text-blue-800 border-blue-200',
   'The Block': 'bg-purple-100 text-purple-800 border-purple-200',
-  'Decrypt': 'bg-green-100 text-green-800 border-green-200',
-  'CoinTelegraph': 'bg-orange-100 text-orange-800 border-orange-200',
+  Decrypt: 'bg-green-100 text-green-800 border-green-200',
+  CoinTelegraph: 'bg-orange-100 text-orange-800 border-orange-200',
   'Bitcoin Magazine': 'bg-yellow-100 text-yellow-800 border-yellow-200',
-  'Blockworks': 'bg-indigo-100 text-indigo-800 border-indigo-200',
+  Blockworks: 'bg-indigo-100 text-indigo-800 border-indigo-200',
   'The Defiant': 'bg-pink-100 text-pink-800 border-pink-200',
 };
 
 const sentimentConfig = {
   bullish: { emoji: '🟢', label: 'Bullish', color: 'text-green-600 bg-green-50' },
   bearish: { emoji: '🔴', label: 'Bearish', color: 'text-red-600 bg-red-50' },
-  neutral: { emoji: '⚪', label: 'Neutral', color: 'text-gray-600 bg-gray-50' },
+  neutral: { emoji: '⚪', label: 'Neutral', color: 'text-text-secondary bg-surface-alt' },
 };
 
-function SourceFilter({ 
-  sources, 
-  selected, 
-  onSelect 
-}: { 
-  sources: string[]; 
-  selected: string | null; 
+function SourceFilter({
+  sources,
+  selected,
+  onSelect,
+}: {
+  sources: string[];
+  selected: string | null;
   onSelect: (source: string | null) => void;
 }) {
   return (
@@ -59,8 +59,8 @@ function SourceFilter({
         onClick={() => onSelect(null)}
         className={`px-4 py-2 rounded-full text-sm font-medium transition ${
           selected === null
-            ? 'bg-black text-white'
-            : 'bg-white text-gray-700 border hover:bg-gray-50'
+            ? 'bg-background text-text-primary'
+            : 'bg-surface text-text-secondary border hover:bg-surface-hover'
         }`}
       >
         All Sources
@@ -71,8 +71,8 @@ function SourceFilter({
           onClick={() => onSelect(source)}
           className={`px-4 py-2 rounded-full text-sm font-medium transition ${
             selected === source
-              ? 'bg-black text-white'
-              : `${sourceColors[source]?.split(' ')[0] || 'bg-gray-100'} border hover:opacity-80`
+              ? 'bg-background text-text-primary'
+              : `${sourceColors[source]?.split(' ')[0] || 'bg-surface-alt'} border hover:opacity-80`
           }`}
         >
           {source}
@@ -82,55 +82,65 @@ function SourceFilter({
   );
 }
 
-function ArticleCard({ 
-  article, 
-  isExpanded, 
+function ArticleCard({
+  article,
+  isExpanded,
   onToggle,
   content,
   isLoading,
-}: { 
-  article: Article; 
+}: {
+  article: Article;
   isExpanded: boolean;
   onToggle: () => void;
   content: ArticleContent | null;
   isLoading: boolean;
 }) {
   return (
-    <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden transition-all">
+    <div className="bg-surface rounded-xl border border-surface-border shadow-sm overflow-hidden transition-all">
       {/* Header - Always visible */}
-      <div 
+      <div
         onClick={onToggle}
-        onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onToggle(); } }}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            onToggle();
+          }
+        }}
         role="button"
         tabIndex={0}
-        className="p-5 cursor-pointer hover:bg-gray-50 transition focus:outline-none focus:ring-2 focus:ring-inset focus:ring-brand-500"
+        className="p-5 cursor-pointer hover:bg-surface-hover transition focus:outline-none focus:ring-2 focus:ring-inset focus:ring-brand-500"
         aria-expanded={isExpanded}
       >
         <div className="flex items-start justify-between gap-4">
           <div className="flex-1">
             <div className="flex items-center gap-2 mb-2">
-              <span className={`text-xs px-2 py-1 rounded-full border ${sourceColors[article.source] || 'bg-gray-100 text-gray-800'}`}>
+              <span
+              <span className={`text-xs px-2 py-1 rounded-full border ${sourceColors[article.source] || 'bg-surface-alt text-text-primary'}`}>
+              >
                 {article.source}
               </span>
-              <span className="text-xs text-gray-500">{article.timeAgo}</span>
+              <span className="text-xs text-text-muted">{article.timeAgo}</span>
             </div>
-            <h3 className="text-lg font-semibold text-gray-900 leading-tight">
+            <h3 className="text-lg font-semibold text-text-primary leading-tight">
               {article.title}
             </h3>
             {article.description && !isExpanded && (
-              <p className="text-gray-600 mt-2 text-sm line-clamp-2">
-                {article.description}
-              </p>
+              <p className="text-text-secondary mt-2 text-sm line-clamp-2">{article.description}</p>
             )}
           </div>
           <button className="flex-shrink-0 mt-1">
-            <svg 
-              className={`w-5 h-5 text-gray-400 transition-transform ${isExpanded ? 'rotate-180' : ''}`}
-              fill="none" 
-              stroke="currentColor" 
+            <svg
+              className={`w-5 h-5 text-text-muted transition-transform ${isExpanded ? 'rotate-180' : ''}`}
+              fill="none"
+              stroke="currentColor"
               viewBox="0 0 24 24"
             >
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M19 9l-7 7-7-7"
+              />
             </svg>
           </button>
         </div>
@@ -138,17 +148,19 @@ function ArticleCard({
 
       {/* Expanded Content */}
       {isExpanded && (
-        <div className="border-t border-gray-100">
+        <div className="border-t border-surface-border">
           {isLoading ? (
             <div className="p-8 text-center">
-              <div className="inline-block animate-spin rounded-full h-8 w-8 border-4 border-gray-200 border-t-black mb-3"></div>
-              <p className="text-gray-500">Fetching full article content...</p>
+              <div className="inline-block animate-spin rounded-full h-8 w-8 border-4 border-surface-border border-t-background mb-3"></div>
+              <p className="text-text-muted">Fetching full article content...</p>
             </div>
           ) : content ? (
             <div className="p-5 space-y-5">
               {/* Sentiment Badge */}
               <div className="flex items-center gap-3">
-                <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-sm font-medium ${sentimentConfig[content.sentiment].color}`}>
+                <span
+                  className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-sm font-medium ${sentimentConfig[content.sentiment].color}`}
+                >
                   {sentimentConfig[content.sentiment].emoji}
                   {sentimentConfig[content.sentiment].label} Sentiment
                 </span>
@@ -166,14 +178,14 @@ function ArticleCard({
 
               {/* Key Points */}
               {content.keyPoints.length > 0 && (
-                <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
-                  <h4 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
+                <div className="bg-surface-alt rounded-lg p-4 border border-surface-border">
+                  <h4 className="font-semibold text-text-primary mb-3 flex items-center gap-2">
                     <span>📌</span> Key Takeaways
                   </h4>
                   <ul className="space-y-2">
                     {content.keyPoints.map((point, i) => (
-                      <li key={i} className="flex items-start gap-2 text-gray-700">
-                        <span className="text-green-500 mt-0.5">✓</span>
+                      <li key={i} className="flex items-start gap-2 text-text-secondary">
+                        <span className="text-gain mt-0.5">✓</span>
                         {point}
                       </li>
                     ))}
@@ -183,18 +195,23 @@ function ArticleCard({
 
               {/* Read Original */}
               <div className="pt-3 flex items-center justify-between">
-                <span className="text-xs text-gray-400">
+                <span className="text-xs text-text-muted">
                   Analyzed at {new Date(content.fetchedAt).toLocaleTimeString()}
                 </span>
                 <a
                   href={article.link}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 px-4 py-2 bg-black text-white rounded-full text-sm font-medium hover:bg-gray-800 transition"
+                  className="inline-flex items-center gap-2 px-4 py-2 bg-background text-text-primary rounded-full text-sm font-medium hover:bg-surface-hover transition"
                 >
                   Read Original Article
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+                    />
                   </svg>
                 </a>
               </div>
@@ -234,7 +251,7 @@ export function ReaderContent({ articles }: ReaderContentProps) {
 
   const handleToggle = async (article: Article) => {
     const articleId = article.link;
-    
+
     if (expandedId === articleId) {
       setExpandedId(null);
       return;
@@ -266,11 +283,7 @@ export function ReaderContent({ articles }: ReaderContentProps) {
 
   return (
     <div>
-      <SourceFilter
-        sources={sources}
-        selected={selectedSource}
-        onSelect={setSelectedSource}
-      />
+      <SourceFilter sources={sources} selected={selectedSource} onSelect={setSelectedSource} />
 
       <div className="space-y-4 max-w-4xl mx-auto">
         {filteredArticles.map((article) => (
@@ -286,9 +299,7 @@ export function ReaderContent({ articles }: ReaderContentProps) {
       </div>
 
       {filteredArticles.length === 0 && (
-        <div className="text-center py-12 text-gray-500">
-          No articles found for this source.
-        </div>
+        <div className="text-center py-12 text-gray-500">No articles found for this source.</div>
       )}
     </div>
   );

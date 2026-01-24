@@ -30,7 +30,7 @@ const sourceColors: Record<string, { bg: string; text: string; accent: string }>
   'The Defiant': { bg: 'bg-pink-600', text: 'text-pink-600', accent: 'from-pink-600/20' },
 };
 
-const defaultStyle = { bg: 'bg-gray-600', text: 'text-gray-600', accent: 'from-gray-600/20' };
+const defaultStyle = { bg: 'bg-text-muted', text: 'text-text-muted', accent: 'from-text-muted/20' };
 
 export default function HeroArticle({ article }: HeroArticleProps) {
   const articleId = generateArticleId(article.link);
@@ -40,7 +40,7 @@ export default function HeroArticle({ article }: HeroArticleProps) {
     <section className="relative">
       <Link
         href={`/article/${articleId}`}
-        className="group block relative overflow-hidden bg-gray-900 rounded-none md:rounded-3xl"
+        className="group block relative overflow-hidden bg-surface-alt rounded-none md:rounded-3xl"
       >
         {/* Background gradient overlay */}
         <div

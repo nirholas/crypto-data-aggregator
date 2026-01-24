@@ -101,8 +101,8 @@ export default function SourceSections({
         {sortedSources.map(([source, sourceArticles]) => {
           const info = sourceInfo[source] || {
             slug: source.toLowerCase().replace(/\s+/g, ''),
-            color: 'text-gray-600',
-            darkColor: 'dark:text-gray-400',
+            color: 'text-text-secondary',
+            darkColor: '',
             bgGradient: 'from-gray-600',
           };
           const displayArticles = sourceArticles.slice(0, articlesPerSource);

@@ -100,7 +100,7 @@ export function HoldingsTable({
               <th className="px-4 py-4 text-right">
                 <button
                   onClick={() => handleSort('value')}
-                  className="flex items-center gap-1 text-sm font-semibold text-text-muted hover:text-gray-700 dark:hover:text-gray-200 ml-auto"
+                  className="flex items-center gap-1 text-sm font-semibold text-text-muted hover:text-text-primary ml-auto"
                 >
                   Value
                   {sortField === 'value' &&
@@ -114,7 +114,7 @@ export function HoldingsTable({
               <th className="px-4 py-4 text-right">
                 <button
                   onClick={() => handleSort('profitLoss')}
-                  className="flex items-center gap-1 text-sm font-semibold text-text-muted hover:text-gray-700 dark:hover:text-gray-200 ml-auto"
+                  className="flex items-center gap-1 text-sm font-semibold text-text-muted hover:text-text-primary ml-auto"
                 >
                   P&L
                   {sortField === 'profitLoss' &&
@@ -128,7 +128,7 @@ export function HoldingsTable({
               <th className="px-4 py-4 text-right hidden md:table-cell">
                 <button
                   onClick={() => handleSort('change24h')}
-                  className="flex items-center gap-1 text-sm font-semibold text-text-muted hover:text-gray-700 dark:hover:text-gray-200 ml-auto"
+                  className="flex items-center gap-1 text-sm font-semibold text-text-muted hover:text-text-primary ml-auto"
                 >
                   24h
                   {sortField === 'change24h' &&
@@ -208,8 +208,8 @@ export function HoldingsTable({
                     <div
                       className={`flex items-center justify-end gap-1 font-medium ${
                         holding.profitLoss >= 0
-                          ? 'text-green-600 dark:text-green-400'
-                          : 'text-red-600 dark:text-red-400'
+                          ? 'text-gain'
+                          : 'text-loss'
                       }`}
                     >
                       {holding.profitLoss >= 0 ? (
@@ -236,8 +236,8 @@ export function HoldingsTable({
                     <span
                       className={`font-medium ${
                         holding.change24h >= 0
-                          ? 'text-green-600 dark:text-green-400'
-                          : 'text-red-600 dark:text-red-400'
+                          ? 'text-gain'
+                          : 'text-loss'
                       }`}
                     >
                       {holding.change24h >= 0 ? '+' : ''}
@@ -252,7 +252,7 @@ export function HoldingsTable({
                           style={{ width: `${Math.min(holding.allocation, 100)}%` }}
                         />
                       </div>
-                      <span className="text-sm text-gray-600 dark:text-gray-300 w-12">
+                      <span className="text-sm text-text-secondary w-12">
                         {holding.allocation.toFixed(1)}%
                       </span>
                     </div>
@@ -262,7 +262,7 @@ export function HoldingsTable({
                       {onAddTransaction && (
                         <button
                           onClick={() => onAddTransaction(holding.coinId)}
-                          className="p-2 rounded-lg hover:bg-green-100 dark:hover:bg-green-900/20 text-gray-500 hover:text-green-600 dark:hover:text-green-400 transition-colors"
+                          className="p-2 rounded-lg hover:bg-gain/20 text-text-muted hover:text-gain transition-colors"
                           title="Buy more"
                         >
                           <Plus className="w-4 h-4" />
@@ -271,7 +271,7 @@ export function HoldingsTable({
                       {onSellTransaction && (
                         <button
                           onClick={() => onSellTransaction(holding.coinId)}
-                          className="p-2 rounded-lg hover:bg-red-100 dark:hover:bg-red-900/20 text-gray-500 hover:text-red-600 dark:hover:text-red-400 transition-colors"
+                          className="p-2 rounded-lg hover:bg-loss/20 text-text-muted hover:text-loss transition-colors"
                           title="Sell"
                         >
                           <Minus className="w-4 h-4" />
@@ -281,7 +281,7 @@ export function HoldingsTable({
                         onClick={() =>
                           setExpandedRow(expandedRow === holding.coinId ? null : holding.coinId)
                         }
-                        className="p-2 rounded-lg hover:bg-surface-alt text-gray-500 transition-colors"
+                        className="p-2 rounded-lg hover:bg-surface-alt text-text-muted transition-colors"
                         title="Transaction history"
                       >
                         <History className="w-4 h-4" />
@@ -295,7 +295,7 @@ export function HoldingsTable({
                   <tr>
                     <td colSpan={9} className="px-6 py-4 bg-surface-alt/50">
                       <div className="space-y-2">
-                        <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
+                        <h4 className="text-sm font-medium text-text-secondary mb-3">
                           Transaction History
                         </h4>
                         {holding.transactions.length > 0 ? (
@@ -312,8 +312,8 @@ export function HoldingsTable({
                                     <div
                                       className={`w-8 h-8 rounded-full flex items-center justify-center ${
                                         tx.type === 'buy' || tx.type === 'transfer_in'
-                                          ? 'bg-green-100 dark:bg-green-500/20 text-green-600 dark:text-green-400'
-                                          : 'bg-red-100 dark:bg-red-500/20 text-red-600 dark:text-red-400'
+                                          ? 'bg-gain/20 text-gain'
+                                          : 'bg-loss/20 text-loss'
                                       }`}
                                     >
                                       {tx.type === 'buy' || tx.type === 'transfer_in' ? (

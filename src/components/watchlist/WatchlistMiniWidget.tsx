@@ -56,12 +56,9 @@ export function WatchlistMiniWidget({
           <h3 className="font-semibold text-text-primary">Watchlist</h3>
         </div>
         <div className="text-center py-6">
-          <Star className="w-10 h-10 text-gray-300 dark:text-gray-600 mx-auto mb-2" />
+          <Star className="w-10 h-10 text-text-muted mx-auto mb-2" />
           <p className="text-sm text-text-muted mb-3">Your watchlist is empty</p>
-          <Link
-            href="/markets"
-            className="text-sm text-blue-600 dark:text-blue-400 hover:underline"
-          >
+          <Link href="/markets" className="text-sm text-primary hover:underline">
             Browse markets →
           </Link>
         </div>
@@ -83,7 +80,7 @@ export function WatchlistMiniWidget({
           </div>
           <Link
             href="/watchlist"
-            className="text-sm text-blue-600 dark:text-blue-400 hover:underline flex items-center gap-1"
+            className="text-sm text-primary hover:underline flex items-center gap-1"
           >
             View all <ChevronRight className="w-4 h-4" />
           </Link>
@@ -99,7 +96,7 @@ export function WatchlistMiniWidget({
               </span>
               <button
                 onClick={() => removeFromWatchlist(coinId)}
-                className="text-xs text-gray-400 hover:text-red-500 transition-colors"
+                className="text-xs text-text-muted hover:text-loss transition-colors"
               >
                 Remove
               </button>
@@ -116,13 +113,13 @@ export function WatchlistMiniWidget({
         <div className="flex items-center gap-2">
           <Star className="w-5 h-5 text-yellow-500 fill-yellow-500" />
           <h3 className="font-semibold text-text-primary">Watchlist</h3>
-          <span className="text-xs bg-yellow-100 dark:bg-yellow-500/20 text-yellow-700 dark:text-yellow-400 px-2 py-0.5 rounded-full">
+          <span className="text-xs bg-yellow-500/20 text-yellow-600 dark:text-yellow-400 px-2 py-0.5 rounded-full">
             {watchlist.length}
           </span>
         </div>
         <Link
           href="/watchlist"
-          className="text-sm text-blue-600 dark:text-blue-400 hover:underline flex items-center gap-1"
+          className="text-sm text-primary hover:underline flex items-center gap-1"
         >
           View all <ChevronRight className="w-4 h-4" />
         </Link>
@@ -173,7 +170,7 @@ export function WatchlistMiniWidget({
         {hasMore && (
           <Link
             href="/watchlist"
-            className="block text-center py-2 text-sm text-blue-600 dark:text-blue-400 hover:underline"
+            className="block text-center py-2 text-sm text-primary hover:underline"
           >
             +{watchlistedCoins.length - maxItems} more coins
           </Link>

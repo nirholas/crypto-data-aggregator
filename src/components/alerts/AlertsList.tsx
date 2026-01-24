@@ -90,7 +90,7 @@ export function AlertsList({
             <Bell className="w-5 h-5 text-blue-500" />
             <h3 className="font-semibold text-text-primary">Price Alerts</h3>
             {activeAlerts.length > 0 && (
-              <span className="text-xs bg-blue-100 dark:bg-blue-500/20 text-blue-700 dark:text-blue-400 px-2 py-0.5 rounded-full">
+              <span className="text-xs bg-primary/20 text-primary px-2 py-0.5 rounded-full">
                 {activeAlerts.length} active
               </span>
             )}
@@ -103,7 +103,7 @@ export function AlertsList({
                   addToast({ type: 'success', title: 'All alerts cleared' });
                 }
               }}
-              className="text-sm text-red-600 dark:text-red-400 hover:underline"
+              className="text-sm text-loss hover:underline"
             >
               Clear all
             </button>
@@ -114,9 +114,7 @@ export function AlertsList({
       {/* Active Alerts */}
       {activeAlerts.length > 0 && (
         <div className="space-y-2 mb-4">
-          <h4 className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-            Active
-          </h4>
+          <h4 className="text-xs font-medium text-text-muted uppercase tracking-wider">Active</h4>
           {activeAlerts.map((alert) => (
             <AlertItem
               key={alert.id}
@@ -131,7 +129,7 @@ export function AlertsList({
       {triggeredAlerts.length > 0 && (
         <div className="space-y-2">
           <div className="flex items-center justify-between">
-            <h4 className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+            <h4 className="text-xs font-medium text-text-muted uppercase tracking-wider">
               Triggered
             </h4>
             <button
@@ -139,7 +137,7 @@ export function AlertsList({
                 clearTriggeredAlerts();
                 addToast({ type: 'success', title: 'Triggered alerts cleared' });
               }}
-              className="text-xs text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+              className="text-xs text-text-muted hover:text-text-primary"
             >
               Clear all
             </button>
@@ -175,9 +173,7 @@ function AlertItem({ alert, onRemove, onReactivate }: AlertItemProps) {
     >
       <div
         className={`p-2 rounded-lg ${
-          alert.triggered
-            ? 'bg-green-100 dark:bg-green-500/20 text-green-600 dark:text-green-400'
-            : getConditionColor(alert.condition)
+          alert.triggered ? 'bg-gain/20 text-gain' : getConditionColor(alert.condition)
         }`}
       >
         {alert.triggered ? <Check className="w-4 h-4" /> : <ConditionIcon className="w-4 h-4" />}
@@ -187,21 +183,19 @@ function AlertItem({ alert, onRemove, onReactivate }: AlertItemProps) {
         <div className="flex items-center gap-2">
           <Link
             href={`/coin/${alert.coinId}`}
-            className="font-medium text-gray-900 dark:text-white hover:text-blue-600 dark:hover:text-blue-400"
+            className="font-medium text-text-primary hover:text-primary"
           >
             {alert.coinSymbol.toUpperCase()}
           </Link>
           {alert.repeat && (
-            <span className="text-xs bg-purple-100 dark:bg-purple-500/20 text-purple-700 dark:text-purple-400 px-1.5 py-0.5 rounded">
+            <span className="text-xs bg-purple-500/20 text-purple-600 dark:text-purple-400 px-1.5 py-0.5 rounded">
               Repeat
             </span>
           )}
         </div>
-        <p className="text-sm text-gray-500 dark:text-gray-400 truncate">
-          {getAlertDescription(alert)}
-        </p>
+        <p className="text-sm text-text-muted truncate">{getAlertDescription(alert)}</p>
         {alert.triggered && alert.triggeredAt && (
-          <p className="text-xs text-green-600 dark:text-green-400 mt-1">
+          <p className="text-xs text-gain mt-1">
             Triggered {formatRelativeTime(alert.triggeredAt)}
           </p>
         )}
@@ -211,7 +205,7 @@ function AlertItem({ alert, onRemove, onReactivate }: AlertItemProps) {
         {alert.triggered && onReactivate && (
           <button
             onClick={onReactivate}
-            className="p-2 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-500 transition-colors"
+            className="p-2 rounded-lg hover:bg-surface-hover text-text-muted transition-colors"
             title="Reactivate alert"
           >
             <RefreshCw className="w-4 h-4" />
@@ -219,7 +213,7 @@ function AlertItem({ alert, onRemove, onReactivate }: AlertItemProps) {
         )}
         <button
           onClick={onRemove}
-          className="p-2 rounded-lg hover:bg-red-100 dark:hover:bg-red-900/20 text-gray-500 hover:text-red-600 dark:hover:text-red-400 transition-colors"
+          className="p-2 rounded-lg hover:bg-loss/20 text-text-muted hover:text-loss transition-colors"
           title="Remove alert"
         >
           <Trash2 className="w-4 h-4" />
@@ -246,12 +240,12 @@ function getConditionColor(condition: PriceAlert['condition']) {
   switch (condition) {
     case 'above':
     case 'percent_up':
-      return 'bg-green-100 dark:bg-green-500/20 text-green-600 dark:text-green-400';
+      return 'bg-gain/20 text-gain';
     case 'below':
     case 'percent_down':
-      return 'bg-red-100 dark:bg-red-500/20 text-red-600 dark:text-red-400';
+      return 'bg-loss/20 text-loss';
     default:
-      return 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400';
+      return 'bg-surface-alt text-text-muted';
   }
 }
 
