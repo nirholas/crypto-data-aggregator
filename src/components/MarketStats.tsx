@@ -215,7 +215,7 @@ export default async function MarketStats() {
                     )}
                     <img
                       src={coin.thumb}
-                      alt=""
+                      alt={`${coin.symbol.toUpperCase()} icon`}
                       className="w-4 h-4 rounded-full"
                       aria-hidden="true"
                     />

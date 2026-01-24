@@ -195,7 +195,7 @@ export function UserMenu({ user, onSignOut, className }: UserMenuProps) {
                 {user.image ? (
                   <img
                     src={user.image}
-                    alt=""
+                    alt={`${user.name || 'User'} profile picture`}
                     className="w-10 h-10 rounded-full object-cover"
                   />
                 ) : (

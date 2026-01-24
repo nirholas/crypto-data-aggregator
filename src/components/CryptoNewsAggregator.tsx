@@ -170,7 +170,7 @@ export function CryptoNewsAggregator() {
               <div className="w-24 h-16 flex-shrink-0 bg-surface-alt rounded overflow-hidden">
                 <img
                   src={item.imageUrl}
-                  alt=""
+                  alt={item.title ? `Image for ${item.title.slice(0, 50)}` : 'News article thumbnail'}
                   className="w-full h-full object-cover"
                   loading="lazy"
                 />

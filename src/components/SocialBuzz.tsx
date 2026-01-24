@@ -303,7 +303,7 @@ export function SocialBuzzWidget() {
           className="flex items-center gap-2 py-1.5 hover:bg-surface-alt rounded px-2 -mx-2 transition-colors"
         >
           <span className="text-xs font-medium text-text-secondary w-4">{i + 1}</span>
-          <img src={coin.thumb} alt="" className="w-5 h-5 rounded-full" />
+          <img src={coin.thumb} alt={`${coin.symbol.toUpperCase()} icon`} className="w-5 h-5 rounded-full" />
           <span className="text-sm font-medium text-text-primary truncate flex-1">
             {coin.symbol.toUpperCase()}
           </span>
