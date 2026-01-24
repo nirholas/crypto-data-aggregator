@@ -90,7 +90,7 @@ export default function PopularStories({ articles }: PopularStoriesProps) {
       <div className="space-y-3" role="list" aria-label="Most read articles">
         {popularArticles.map((article, index) => {
           const articleId = article.id || generateArticleId(article.link);
-          const gradient = sourceColors[article.source] || 'from-gray-500 to-gray-600';
+          const gradient = sourceColors[article.source] || 'from-surface-hover to-surface-alt';
           const views = estimateViews(index);
 
           return (

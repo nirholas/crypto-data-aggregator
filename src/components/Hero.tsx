@@ -136,56 +136,56 @@ export default function Hero() {
               <div className="absolute -top-3 -left-3 w-80 h-56 bg-black/25 backdrop-blur-sm rounded-3xl border border-black/25 rotate-[-4deg] shadow-xl" />
               
               {/* Main card - Floating terminal */}
-              <div className="relative w-80 bg-gray-900/95 backdrop-blur-md rounded-3xl border border-gray-700/50 overflow-hidden shadow-2xl transform hover:scale-105 hover:-rotate-1 transition-all duration-500">
+              <div className="relative w-80 bg-surface/95 backdrop-blur-md rounded-3xl border border-surface-border overflow-hidden shadow-2xl transform hover:scale-105 hover:-rotate-1 transition-all duration-500">
                 {/* macOS-style terminal header */}
-                <div className="flex items-center gap-2 px-5 py-4 bg-gray-800/90 border-b border-gray-700/50">
+                <div className="flex items-center gap-2 px-5 py-4 bg-surface-alt/90 border-b border-surface-border">
                   <div className="flex gap-2">
                     <div className="w-3.5 h-3.5 rounded-full bg-red-500 hover:bg-red-400 transition-colors cursor-pointer" />
                     <div className="w-3.5 h-3.5 rounded-full bg-yellow-500 hover:bg-yellow-400 transition-colors cursor-pointer" />
                     <div className="w-3.5 h-3.5 rounded-full bg-green-500 hover:bg-green-400 transition-colors cursor-pointer" />
                   </div>
-                  <span className="text-xs text-gray-400 font-mono ml-3 flex items-center gap-2">
-                    <span className="text-green-400">●</span>
+                  <span className="text-xs text-text-muted font-mono ml-3 flex items-center gap-2">
+                    <span className="text-gain">●</span>
                     api/news
                   </span>
                 </div>
                 
                 {/* Code preview with syntax highlighting */}
                 <div className="p-5 font-mono text-sm leading-loose">
-                  <div className="text-gray-500">{"{"}</div>
+                  <div className="text-text-muted">{"{"}</div>
                   <div className="ml-4">
                     <span className="text-purple-400">&quot;articles&quot;</span>
-                    <span className="text-gray-500">: [</span>
+                    <span className="text-text-muted">: [</span>
                   </div>
-                  <div className="ml-8 text-gray-500">{"{"}</div>
+                  <div className="ml-8 text-text-muted">{"{"}</div>
                   <div className="ml-12">
                     <span className="text-blue-400">&quot;title&quot;</span>
-                    <span className="text-gray-500">: </span>
-                    <span className="text-green-400">&quot;BTC hits...&quot;</span>
+                    <span className="text-text-muted">: </span>
+                    <span className="text-gain">&quot;BTC hits...&quot;</span>
                   </div>
                   <div className="ml-12">
                     <span className="text-blue-400">&quot;source&quot;</span>
-                    <span className="text-gray-500">: </span>
-                    <span className="text-green-400">&quot;CoinDesk&quot;</span>
+                    <span className="text-text-muted">: </span>
+                    <span className="text-gain">&quot;CoinDesk&quot;</span>
                   </div>
                   <div className="ml-12">
                     <span className="text-blue-400">&quot;timeAgo&quot;</span>
-                    <span className="text-gray-500">: </span>
-                    <span className="text-green-400">&quot;2m ago&quot;</span>
+                    <span className="text-text-muted">: </span>
+                    <span className="text-gain">&quot;2m ago&quot;</span>
                   </div>
-                  <div className="ml-8 text-gray-500">{"},"}</div>
-                  <div className="ml-8 text-gray-600">...</div>
-                  <div className="ml-4 text-gray-500">]</div>
-                  <div className="text-gray-500">{"}"}</div>
+                  <div className="ml-8 text-text-muted">{"},"}</div>
+                  <div className="ml-8 text-text-muted">...</div>
+                  <div className="ml-4 text-text-muted">]</div>
+                  <div className="text-text-muted">{"}"}</div>
                 </div>
                 
                 {/* Status bar with live indicator */}
-                <div className="px-5 py-3 bg-gray-800/50 border-t border-gray-700/50 flex items-center justify-between">
-                  <span className="text-sm text-green-400 flex items-center gap-2 font-medium">
-                    <span className="w-2.5 h-2.5 bg-green-400 rounded-full animate-pulse motion-reduce:animate-none" />
+                <div className="px-5 py-3 bg-surface-alt/50 border-t border-surface-border flex items-center justify-between">
+                  <span className="text-sm text-gain flex items-center gap-2 font-medium">
+                    <span className="w-2.5 h-2.5 bg-gain rounded-full animate-pulse motion-reduce:animate-none" />
                     200 OK
                   </span>
-                  <span className="text-sm text-gray-400 font-mono">~45ms</span>
+                  <span className="text-sm text-text-muted font-mono">~45ms</span>
                 </div>
               </div>
             </div>

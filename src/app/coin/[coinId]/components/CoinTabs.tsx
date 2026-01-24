@@ -112,7 +112,7 @@ export default function CoinTabs({
   return (
     <div className="relative">
       {/* Desktop tabs */}
-      <div className="hidden sm:flex items-center gap-1 p-1 bg-black/50 rounded-xl border border-gray-700/50">
+      <div className="hidden sm:flex items-center gap-1 p-1 bg-surface-alt/50 rounded-xl border border-surface-border">
         {tabs.map((tab) => {
           const isDisabled =
             (tab.id === 'markets' && !hasMarkets) || (tab.id === 'historical' && !hasHistorical);
@@ -125,16 +125,16 @@ export default function CoinTabs({
               disabled={isDisabled}
               className={`relative flex items-center gap-2 px-4 py-2.5 text-sm font-medium rounded-lg transition-colors ${
                 isDisabled
-                  ? 'text-gray-600 cursor-not-allowed'
+                  ? 'text-text-muted/50 cursor-not-allowed'
                   : isActive
-                    ? 'text-white'
-                    : 'text-gray-400 hover:text-white'
+                    ? 'text-text-primary'
+                    : 'text-text-muted hover:text-text-primary'
               }`}
             >
               {isActive && (
                 <motion.div
                   layoutId="activeTab"
-                  className="absolute inset-0 bg-black rounded-lg"
+                  className="absolute inset-0 bg-surface rounded-lg"
                   transition={{ type: 'spring', duration: 0.3 }}
                 />
               )}
@@ -142,7 +142,7 @@ export default function CoinTabs({
                 {tab.icon}
                 {tab.label}
                 {tab.id === 'markets' && marketsCount !== undefined && (
-                  <span className="px-1.5 py-0.5 text-xs bg-gray-600 rounded-md">
+                  <span className="px-1.5 py-0.5 text-xs bg-surface-hover rounded-md">
                     {marketsCount}
                   </span>
                 )}
@@ -167,16 +167,16 @@ export default function CoinTabs({
                 disabled={isDisabled}
                 className={`flex items-center gap-1.5 px-3 py-2 text-sm font-medium rounded-lg whitespace-nowrap transition-colors ${
                   isDisabled
-                    ? 'text-gray-600 cursor-not-allowed bg-black/30'
+                    ? 'text-text-muted/50 cursor-not-allowed bg-surface-alt/30'
                     : isActive
-                      ? 'text-white bg-black'
-                      : 'text-gray-400 bg-black/50 border border-gray-700/50'
+                      ? 'text-text-primary bg-surface'
+                      : 'text-text-muted bg-surface-alt/50 border border-surface-border'
                 }`}
               >
                 {tab.icon}
                 {tab.label}
                 {tab.id === 'markets' && marketsCount !== undefined && (
-                  <span className="px-1 py-0.5 text-xs bg-gray-600 rounded">{marketsCount}</span>
+                  <span className="px-1 py-0.5 text-xs bg-surface-hover rounded">{marketsCount}</span>
                 )}
               </button>
             );

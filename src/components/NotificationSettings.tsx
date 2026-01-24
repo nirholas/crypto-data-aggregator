@@ -40,7 +40,7 @@ export function NotificationSettings({ className = '' }: NotificationSettingsPro
   };
 
   return (
-    <div className={`bg-gray-800/50 rounded-xl p-4 border border-gray-700/50 ${className}`}>
+    <div className={`bg-surface-alt/50 rounded-xl p-4 border border-surface-border ${className}`}>
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-lg bg-purple-500/20 flex items-center justify-center">
@@ -49,8 +49,8 @@ export function NotificationSettings({ className = '' }: NotificationSettingsPro
             </svg>
           </div>
           <div>
-            <p className="text-white font-medium">Push Notifications</p>
-            <p className="text-gray-400 text-sm">Get alerts for breaking news</p>
+            <p className="text-text-primary font-medium">Push Notifications</p>
+            <p className="text-text-muted text-sm">Get alerts for breaking news</p>
           </div>
         </div>
 
@@ -59,8 +59,8 @@ export function NotificationSettings({ className = '' }: NotificationSettingsPro
           disabled={isLoading || pwa.isPushEnabled}
           className={`relative w-14 h-8 rounded-full transition-colors ${
             pwa.isPushEnabled 
-              ? 'bg-green-500' 
-              : 'bg-gray-600 hover:bg-gray-500'
+              ? 'bg-gain' 
+              : 'bg-surface-alt hover:bg-surface-hover'
           } ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
         >
           <span 

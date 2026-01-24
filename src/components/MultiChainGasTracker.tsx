@@ -3,6 +3,19 @@
 import React from 'react';
 import { useMultiChainGas, useEtherscanStats } from '@/hooks/data-sources';
 
+interface ChainGasPrice {
+  chain: string;
+  low: number;
+  standard: number;
+  fast: number;
+  instant: number;
+  nativeToken: string;
+  safeGas?: number;
+  standardGas?: number;
+  fastGas?: number;
+  baseFee?: number;
+}
+
 /**
  * Multi-Chain Gas Tracker Component
  *
@@ -93,7 +106,7 @@ export function MultiChainGasTracker() {
 
       {/* Multi-chain gas prices */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        {gasPrices.map((chain) => (
+        {(gasPrices as ChainGasPrice[]).map((chain) => (
           <div
             key={chain.chain}
             className="bg-surface-alt rounded-lg p-4 hover:bg-surface-alt/80 transition-colors"
@@ -124,20 +137,20 @@ export function MultiChainGasTracker() {
             <div className="space-y-1">
               <div className="flex justify-between">
                 <span className="text-text-muted text-xs">Low</span>
-                <span className={`text-sm font-medium ${getGasColor(chain.safeGas)}`}>
-                  {chain.safeGas.toFixed(1)} Gwei
+                <span className={`text-sm font-medium ${getGasColor(chain.safeGas || chain.low || 0)}`}>
+                  {(chain.safeGas ?? chain.low ?? 0).toFixed(1)} Gwei
                 </span>
               </div>
               <div className="flex justify-between">
                 <span className="text-text-muted text-xs">Standard</span>
-                <span className={`text-sm font-medium ${getGasColor(chain.standardGas)}`}>
-                  {chain.standardGas.toFixed(1)} Gwei
+                <span className={`text-sm font-medium ${getGasColor(chain.standardGas || chain.standard || 0)}`}>
+                  {(chain.standardGas ?? chain.standard ?? 0).toFixed(1)} Gwei
                 </span>
               </div>
               <div className="flex justify-between">
                 <span className="text-text-muted text-xs">Fast</span>
-                <span className={`text-sm font-medium ${getGasColor(chain.fastGas)}`}>
-                  {chain.fastGas.toFixed(1)} Gwei
+                <span className={`text-sm font-medium ${getGasColor(chain.fastGas || chain.fast || 0)}`}>
+                  {(chain.fastGas ?? chain.fast ?? 0).toFixed(1)} Gwei
                 </span>
               </div>
             </div>

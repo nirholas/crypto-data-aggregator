@@ -107,17 +107,17 @@ export default function PriceBox({
         : price;
 
   return (
-    <div className="bg-black/50 rounded-2xl border border-gray-700/50 p-6 h-full">
+    <div className="bg-surface-alt/50 rounded-2xl border border-surface-border p-6 h-full">
       {/* Currency Selector */}
       <div className="flex items-center justify-between mb-4">
-        <span className="text-xs text-gray-500 uppercase tracking-wide">{symbol} Price</span>
-        <div className="flex bg-black rounded-lg p-0.5">
+        <span className="text-xs text-text-muted uppercase tracking-wide">{symbol} Price</span>
+        <div className="flex bg-surface-alt rounded-lg p-0.5">
           {(['usd', 'btc', 'eth'] as Currency[]).map((c) => (
             <button
               key={c}
               onClick={() => setCurrency(c)}
               className={`px-2 py-1 text-xs font-medium rounded-md transition-colors ${
-                currency === c ? 'bg-black text-white' : 'text-gray-500 hover:text-gray-300'
+                currency === c ? 'bg-surface text-text-primary' : 'text-text-muted hover:text-text-secondary'
               }`}
             >
               {c.toUpperCase()}
@@ -135,10 +135,10 @@ export default function PriceBox({
             animate={{ opacity: 1 }}
             className={`text-3xl sm:text-4xl font-bold transition-colors duration-300 ${
               priceFlash === 'up'
-                ? 'text-green-400'
+                ? 'text-gain'
                 : priceFlash === 'down'
-                  ? 'text-red-400'
-                  : 'text-white'
+                  ? 'text-loss'
+                  : 'text-text-primary'
             }`}
           >
             {formatPrice(displayPrice, currency)}
@@ -149,7 +149,7 @@ export default function PriceBox({
         <div className="flex items-center gap-2 mt-1">
           <span
             className={`flex items-center gap-1 text-lg font-semibold ${
-              isPositive ? 'text-green-400' : 'text-red-400'
+              isPositive ? 'text-gain' : 'text-loss'
             }`}
           >
             <svg
@@ -166,26 +166,26 @@ export default function PriceBox({
             {isPositive ? '+' : ''}
             {change24h.toFixed(2)}%
           </span>
-          <span className="text-gray-500 text-sm">(24h)</span>
+          <span className="text-text-muted text-sm">(24h)</span>
         </div>
       </div>
 
       {/* 24h Range */}
       <div className="space-y-2">
         <div className="flex justify-between text-xs">
-          <span className="text-gray-500">24h Low</span>
-          <span className="text-gray-500">24h High</span>
+          <span className="text-text-muted">24h Low</span>
+          <span className="text-text-muted">24h High</span>
         </div>
 
-        <div className="relative h-2 bg-black rounded-full overflow-hidden">
+        <div className="relative h-2 bg-surface-alt rounded-full overflow-hidden">
           {/* Range bar */}
           <div
-            className="absolute inset-y-0 left-0 bg-gradient-to-r from-red-500 via-yellow-500 to-green-500 opacity-30"
+            className="absolute inset-y-0 left-0 bg-gradient-to-r from-loss via-warning to-gain opacity-30"
             style={{ width: '100%' }}
           />
           {/* Current position indicator */}
           <motion.div
-            className="absolute top-1/2 -translate-y-1/2 w-3 h-3 bg-white rounded-full shadow-lg border-2 border-gray-800"
+            className="absolute top-1/2 -translate-y-1/2 w-3 h-3 bg-text-primary rounded-full shadow-lg border-2 border-surface"
             initial={{ left: '50%' }}
             animate={{ left: `${rangePosition}%` }}
             transition={{ type: 'spring', stiffness: 300, damping: 30 }}
@@ -194,18 +194,18 @@ export default function PriceBox({
         </div>
 
         <div className="flex justify-between text-sm">
-          <span className="text-gray-300">{formatPrice(low24h)}</span>
-          <span className="text-gray-300">{formatPrice(high24h)}</span>
+          <span className="text-text-secondary">{formatPrice(low24h)}</span>
+          <span className="text-text-secondary">{formatPrice(high24h)}</span>
         </div>
       </div>
 
       {/* Last updated */}
       {(timeSinceUpdate || isLive) && (
-        <div className="mt-4 pt-4 border-t border-gray-700/50 flex items-center justify-between">
-          <span className="text-xs text-gray-500">{isLive ? 'Live price' : 'Last updated'}</span>
-          <span className="text-xs text-gray-400 flex items-center gap-1">
+        <div className="mt-4 pt-4 border-t border-surface-border flex items-center justify-between">
+          <span className="text-xs text-text-muted">{isLive ? 'Live price' : 'Last updated'}</span>
+          <span className="text-xs text-text-secondary flex items-center gap-1">
             <span
-              className={`w-1.5 h-1.5 rounded-full ${isLive ? 'bg-green-500 animate-pulse' : 'bg-yellow-500'}`}
+              className={`w-1.5 h-1.5 rounded-full ${isLive ? 'bg-gain animate-pulse' : 'bg-warning'}`}
             />
             {isLive ? 'Connected' : timeSinceUpdate}
           </span>

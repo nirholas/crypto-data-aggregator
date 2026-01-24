@@ -24,6 +24,8 @@ import {
 import { useTheme } from '@/components/ThemeProvider';
 import { useToast } from '@/components/Toast';
 import PageLayout from '@/components/PageLayout';
+import { NotificationSettings } from '@/components/NotificationSettings';
+import { PushNotifications } from '@/components/PushNotifications';
 
 // Preferences types
 interface UserPreferences {
@@ -417,6 +419,13 @@ export default function SettingsPage() {
                 </button>
               </div>
             </div>
+          </div>
+
+          {/* Advanced Notification Settings */}
+          <div className="bg-surface rounded-2xl border border-surface-border p-6">
+            <h2 className="text-lg font-semibold text-text-primary mb-4">Push Notifications</h2>
+            <NotificationSettings className="mb-4" />
+            <PushNotifications />
           </div>
 
           {/* Data Management */}

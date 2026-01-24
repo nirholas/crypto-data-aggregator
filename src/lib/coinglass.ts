@@ -679,7 +679,11 @@ export async function getDerivativesOverview(): Promise<{
     avgFundingRate: avgFunding,
     marketSentiment: sentiment,
     topByOI,
-    topByLiquidations: liqData.topLiquidations,
+    topByLiquidations: liqData.topLiquidations.map((item) => ({
+      symbol: item.symbol,
+      liq: item.total,
+      longPercent: item.longPercent,
+    })),
   };
 }
 

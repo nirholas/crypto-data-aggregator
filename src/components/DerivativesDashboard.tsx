@@ -5,8 +5,27 @@ import {
   useCoinglassLiquidations,
   useCoinglassLongShort,
   useCoinglassOpenInterest,
-  useFormattedNumber,
 } from '@/hooks/data-sources';
+
+interface LiquidationItem {
+  symbol: string;
+  total: number;
+  longPercent: number;
+}
+
+interface LongShortItem {
+  symbol: string;
+  longShortRatio: number;
+  longRate: number;
+  shortRate: number;
+}
+
+interface OpenInterestItem {
+  symbol: string;
+  openInterestValue?: number;
+  oiChangePercent?: number;
+  volume24h?: number;
+}
 
 /**
  * Derivatives Dashboard Component
@@ -72,7 +91,7 @@ export function DerivativesDashboard() {
           <div className="mt-4">
             <h4 className="text-sm text-text-muted mb-2">Top by Liquidations</h4>
             <div className="space-y-2">
-              {liquidations.topLiquidations.slice(0, 5).map((item) => (
+              {(liquidations.topLiquidations as LiquidationItem[]).slice(0, 5).map((item) => (
                 <div
                   key={item.symbol}
                   className="flex items-center justify-between p-2 bg-surface-alt rounded"
@@ -102,7 +121,7 @@ export function DerivativesDashboard() {
           ⚖️ Long/Short Ratios
         </h3>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-          {longShort?.slice(0, 8).map((item) => (
+          {(longShort as LongShortItem[] | null)?.slice(0, 8).map((item) => (
             <div
               key={item.symbol}
               className="bg-surface-alt rounded-lg p-3 text-center"
@@ -141,7 +160,7 @@ export function DerivativesDashboard() {
               </tr>
             </thead>
             <tbody>
-              {openInterest?.slice(0, 10).map((item) => (
+              {(openInterest as OpenInterestItem[] | null)?.slice(0, 10).map((item) => (
                 <tr
                   key={item.symbol}
                   className="border-b border-surface-border/50"

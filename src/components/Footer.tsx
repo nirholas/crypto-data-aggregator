@@ -4,6 +4,7 @@
  */
 
 import Link from 'next/link';
+import { NewsletterForm } from './NewsletterForm';
 
 export default function Footer() {
   return (
@@ -261,6 +262,17 @@ export default function Footer() {
               ))}
             </ul>
           </nav>
+        </div>
+
+        {/* Newsletter Signup */}
+        <div className="mt-12 pt-8 border-t border-surface-border">
+          <div className="max-w-md mx-auto text-center">
+            <h3 className="font-bold text-text-primary text-lg mb-2">Stay Updated</h3>
+            <p className="text-text-muted text-sm mb-4">
+              Get the latest crypto news and market insights delivered to your inbox.
+            </p>
+            <NewsletterForm />
+          </div>
         </div>
 
         {/* Bottom bar */}

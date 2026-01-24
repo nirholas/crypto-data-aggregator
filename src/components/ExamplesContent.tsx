@@ -35,9 +35,9 @@ export function ExamplesContent({ examples }: ExamplesContentProps) {
       javascript: 'bg-yellow-500',
       typescript: 'bg-blue-500',
       python: 'bg-green-500',
-      bash: 'bg-gray-500',
+      bash: 'bg-surface-hover',
     };
-    return colors[lang] || 'bg-gray-400';
+    return colors[lang] || 'bg-surface-hover';
   };
 
   return (
@@ -124,7 +124,7 @@ export function ExamplesContent({ examples }: ExamplesContentProps) {
             <div className="relative">
               <button
                 onClick={() => copyToClipboard(currentExample.code)}
-                className="absolute top-3 right-3 px-3 py-1.5 bg-gray-700 hover:bg-gray-600 text-white text-sm rounded-md transition-colors flex items-center gap-1"
+                className="absolute top-3 right-3 px-3 py-1.5 bg-surface-hover hover:bg-surface-alt text-text-primary text-sm rounded-md transition-colors flex items-center gap-1"
               >
                 {copied ? (
                   <>
@@ -152,7 +152,7 @@ export function ExamplesContent({ examples }: ExamplesContentProps) {
                   </>
                 )}
               </button>
-              <pre className="overflow-x-auto p-6 bg-gray-900 text-gray-100 text-sm leading-relaxed">
+              <pre className="overflow-x-auto p-6 bg-surface-alt text-text-primary text-sm leading-relaxed">
                 <code>{currentExample.code}</code>
               </pre>
             </div>

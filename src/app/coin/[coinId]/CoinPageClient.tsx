@@ -22,6 +22,8 @@ import {
 } from './components';
 import { PriceChart } from '@/components/coin-charts';
 import { useLivePrices } from '@/lib/price-websocket';
+import { MarketMoodSidebar } from '@/components/MarketMoodWidget';
+import { LivePriceCard } from '@/components/LivePrice';
 import type { Ticker, OHLCData, DeveloperData, CommunityData } from '@/lib/market-data';
 
 interface Article {
@@ -202,8 +204,8 @@ export default function CoinPageClient({
             <div className="space-y-6">
               {/* Interactive Chart */}
               {chartData.length > 0 && (
-                <div className="bg-black/50 rounded-2xl border border-gray-700/50 p-4 sm:p-6">
-                  <h3 className="text-lg font-semibold text-white mb-4">
+                <div className="bg-surface-alt/50 rounded-2xl border border-surface-border p-4 sm:p-6">
+                  <h3 className="text-lg font-semibold text-text-primary mb-4">
                     {coinData.symbol.toUpperCase()} Price Chart
                   </h3>
                   <PriceChart data={chartData} type="area" height={350} showGrid={true} />
@@ -260,13 +262,25 @@ export default function CoinPageClient({
                 coinName={coinData.name}
               />
 
+              {/* Market Mood & Live Price Widgets */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <MarketMoodSidebar />
+                <LivePriceCard
+                  coinId={coinData.id}
+                  name={coinData.name}
+                  symbol={coinData.symbol}
+                  image={coinData.image?.small}
+                  fallbackPrice={priceData.price}
+                />
+              </div>
+
               {/* Related News Preview */}
               {articles.length > 0 && (
                 <div>
                   <div className="flex items-center justify-between mb-4">
                     <div className="flex items-center gap-2">
                       <svg
-                        className="w-5 h-5 text-white"
+                        className="w-5 h-5 text-text-primary"
                         fill="none"
                         stroke="currentColor"
                         viewBox="0 0 24 24"
@@ -278,7 +292,7 @@ export default function CoinPageClient({
                           d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"
                         />
                       </svg>
-                      <h3 className="text-lg font-semibold text-white">
+                      <h3 className="text-lg font-semibold text-text-primary">
                         Latest {coinData.name} News
                       </h3>
                     </div>
@@ -333,12 +347,12 @@ export default function CoinPageClient({
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.95, opacity: 0 }}
               onClick={(e) => e.stopPropagation()}
-              className="bg-black rounded-2xl border border-gray-700 p-6 max-w-md w-full"
+              className="bg-surface rounded-2xl border border-surface-border p-6 max-w-md w-full"
             >
-              <h3 className="text-xl font-bold text-white mb-4">
+              <h3 className="text-xl font-bold text-text-primary mb-4">
                 Set Price Alert for {coinData.symbol.toUpperCase()}
               </h3>
-              <p className="text-gray-400 mb-4">
+              <p className="text-text-muted mb-4">
                 Get notified when {coinData.name} reaches your target price.
               </p>
 

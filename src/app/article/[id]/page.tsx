@@ -17,6 +17,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { ArticleContent } from '@/components/ArticleContent';
 import { RelatedArticles } from '@/components/RelatedArticles';
+import TrendingSidebar from '@/components/TrendingSidebar';
 import { ArticleStructuredData, BreadcrumbStructuredData } from '@/components/StructuredData';
 
 interface Props {
@@ -351,6 +352,9 @@ export default async function ArticlePage({ params }: Props) {
 
               {/* Related Articles */}
               {relatedArticles.length > 0 && <RelatedArticles articles={relatedArticles} />}
+
+              {/* Trending Sidebar */}
+              <TrendingSidebar trendingArticles={relatedArticles.slice(0, 5)} />
 
               {/* Actions */}
               <div className="bg-surface rounded-2xl border border-surface-border p-6">

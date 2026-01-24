@@ -63,7 +63,7 @@ export default function TrendingNews({
       <div className="space-y-1" role="list" aria-label="Trending news articles">
         {trendingArticles.map((article, index) => {
           const articleId = article.id || generateArticleId(article.link);
-          const sourceColor = sourceColors[article.source] || 'bg-gray-500';
+          const sourceColor = sourceColors[article.source] || 'bg-surface-hover';
 
           return (
             <Link

@@ -23,6 +23,8 @@ import CategoryTabs from './markets/components/CategoryTabs';
 import SearchAndFilters from './markets/components/SearchAndFilters';
 import CoinsTable from './markets/components/CoinsTable';
 import MarketMoodWidget from '@/components/MarketMoodWidget';
+import { BreakingNewsTicker } from '@/components/BreakingNewsTicker';
+import { SocialBuzzWidget } from '@/components/SocialBuzz';
 import type { SortField, SortOrder } from './markets/components/SortableHeader';
 
 export const metadata: Metadata = {
@@ -231,6 +233,9 @@ export default async function MarketsPage({ searchParams }: MarketsPageProps) {
 
   return (
     <div className="min-h-screen bg-background">
+      {/* Breaking News Ticker */}
+      <BreakingNewsTicker />
+      
       <div className="max-w-7xl mx-auto">
         <Header />
 
@@ -272,18 +277,25 @@ export default async function MarketsPage({ searchParams }: MarketsPageProps) {
             <SearchAndFilters coins={allCoins} />
           </Suspense>
 
-          {/* Coins Table */}
-          <Suspense fallback={<TableSkeleton />}>
-            <CoinsTable
-              coins={paginatedCoins}
-              totalCount={totalCount}
-              currentPage={currentPage}
-              itemsPerPage={perPage}
-              currentSort={sortField}
-              currentOrder={sortOrder}
-              showWatchlist={true}
-            />
-          </Suspense>
+          {/* Coins Table with Sidebar */}
+          <div className="grid lg:grid-cols-4 gap-6">
+            <div className="lg:col-span-3">
+              <Suspense fallback={<TableSkeleton />}>
+                <CoinsTable
+                  coins={paginatedCoins}
+                  totalCount={totalCount}
+                  currentPage={currentPage}
+                  itemsPerPage={perPage}
+                  currentSort={sortField}
+                  currentOrder={sortOrder}
+                  showWatchlist={true}
+                />
+              </Suspense>
+            </div>
+            <div className="lg:col-span-1 space-y-4">
+              <SocialBuzzWidget />
+            </div>
+          </div>
         </main>
 
         <Footer />

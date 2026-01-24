@@ -7,6 +7,7 @@ import { SearchModal } from './SearchModal';
 import { CommandPalette } from './CommandPalette';
 import { CurrencySelector } from './CurrencySelector';
 import { PriceAlerts } from './PriceAlerts';
+import { MarketMoodHeader } from './MarketMoodWidget';
 
 // Lazy load PriceWidget
 const PriceWidget = lazy(() => import('./PriceWidget'));
@@ -396,6 +397,11 @@ export default function Header() {
 
           {/* Actions */}
           <div className="flex items-center gap-1">
+            {/* Market Mood - Desktop only */}
+            <div className="hidden xl:block mr-2">
+              <MarketMoodHeader />
+            </div>
+
             {/* Price Widget - Desktop only */}
             <div className="hidden xl:block mr-2">
               <Suspense

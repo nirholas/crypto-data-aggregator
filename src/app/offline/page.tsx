@@ -13,7 +13,7 @@ export const metadata: Metadata = {
 
 export default function OfflinePage() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-950 to-black flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-surface via-surface to-surface-alt flex items-center justify-center p-4">
       <div className="max-w-md w-full text-center space-y-8">
         {/* Animated offline icon */}
         <div className="relative">
@@ -43,8 +43,8 @@ export default function OfflinePage() {
 
         {/* Content */}
         <div className="space-y-4">
-          <h1 className="text-4xl font-bold text-white">You&apos;re Offline</h1>
-          <p className="text-gray-400 text-lg">
+          <h1 className="text-4xl font-bold text-text-primary">You&apos;re Offline</h1>
+          <p className="text-text-muted text-lg">
             It looks like you&apos;ve lost your internet connection. 
             Don&apos;t worry, some content may still be available from cache.
           </p>
@@ -56,7 +56,7 @@ export default function OfflinePage() {
 
           <Link
             href="/"
-            className="block w-full py-4 px-6 bg-gray-800 hover:bg-gray-700 text-white font-semibold rounded-xl transition-all duration-200 border border-gray-700"
+            className="block w-full py-4 px-6 bg-surface-alt hover:bg-surface-hover text-text-primary font-semibold rounded-xl transition-all duration-200 border border-surface-border"
           >
             <span className="flex items-center justify-center gap-2">
               <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -68,14 +68,14 @@ export default function OfflinePage() {
         </div>
 
         {/* Tips */}
-        <div className="bg-gray-800/50 rounded-xl p-6 text-left border border-gray-700/50">
-          <h2 className="text-white font-semibold mb-3 flex items-center gap-2">
+        <div className="bg-surface-alt/50 rounded-xl p-6 text-left border border-surface-border/50">
+          <h2 className="text-text-primary font-semibold mb-3 flex items-center gap-2">
             <svg className="w-5 h-5 text-orange-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
             What you can do:
           </h2>
-          <ul className="text-gray-400 space-y-2 text-sm">
+          <ul className="text-text-muted space-y-2 text-sm">
             <li className="flex items-start gap-2">
               <span className="text-orange-500 mt-1">•</span>
               <span>Check your Wi-Fi or mobile data connection</span>
@@ -96,8 +96,8 @@ export default function OfflinePage() {
         </div>
 
         {/* Status indicator */}
-        <div className="flex items-center justify-center gap-2 text-gray-500 text-sm">
-          <div className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
+        <div className="flex items-center justify-center gap-2 text-text-muted text-sm">
+          <div className="w-2 h-2 rounded-full bg-loss animate-pulse" />
           <span>Currently offline</span>
         </div>
       </div>

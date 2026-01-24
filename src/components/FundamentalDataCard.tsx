@@ -74,7 +74,7 @@ export function FundamentalDataCard({ symbol }: FundamentalDataCardProps) {
       Gaming: 'bg-orange-500/20 text-orange-500',
       Infrastructure: 'bg-cyan-500/20 text-cyan-500',
     };
-    return colors[category] || 'bg-gray-500/20 text-gray-500';
+    return colors[category] || 'bg-surface-alt text-text-muted';
   };
 
   return (

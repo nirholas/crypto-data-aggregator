@@ -160,7 +160,7 @@ export async function GET(request: NextRequest) {
           coinglass.getAverageFundingRates(),
           coinglass.getLiquidationSummary(),
           coinglass.getGlobalLongShort(),
-          binance.getFuturesOpenInterest('BTCUSDT'),
+          binance.getOpenInterest('BTCUSDT'),
         ]);
 
         data = {

@@ -71,8 +71,8 @@ export default function EditorsPicks({ articles }: EditorsPicksProps) {
         {picks.map((article, index) => {
           const articleId = article.id || generateArticleId(article.link);
           const colors = sourceColors[article.source] || {
-            dot: 'bg-gray-500',
-            bg: 'bg-gray-500/10',
+            dot: 'bg-surface-hover',
+            bg: 'bg-surface-alt',
           };
 
           return (
