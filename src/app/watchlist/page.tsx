@@ -23,6 +23,7 @@ import { useWatchlist } from '@/components/watchlist/WatchlistProvider';
 import { WatchlistExport } from '@/components/watchlist/WatchlistExport';
 import { useToast } from '@/components/Toast';
 import { TokenPrice, getTopCoins } from '@/lib/market-data';
+import PageLayout from '@/components/PageLayout';
 
 type SortField = 'name' | 'price' | 'change24h' | 'change7d' | 'marketCap' | 'addedAt';
 type SortDirection = 'asc' | 'desc';
@@ -203,38 +204,36 @@ export default function WatchlistPage() {
   // Loading state
   if (!isLoaded || isLoading) {
     return (
-      <div className="min-h-screen bg-white dark:bg-black">
+      <PageLayout>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="flex items-center gap-3 mb-8">
             <Star className="w-8 h-8 text-yellow-500" />
-            <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Watchlist</h1>
+            <h1 className="text-3xl font-bold">Watchlist</h1>
           </div>
           <div className="animate-pulse space-y-4">
             {[1, 2, 3, 4, 5].map((i) => (
-              <div key={i} className="h-16 bg-gray-200 dark:bg-black rounded-lg" />
+              <div key={i} className="h-16 bg-[var(--surface)] rounded-lg" />
             ))}
           </div>
         </div>
-      </div>
+      </PageLayout>
     );
   }
 
   // Empty state
   if (watchlist.length === 0) {
     return (
-      <div className="min-h-screen bg-white dark:bg-black">
+      <PageLayout>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="flex items-center gap-3 mb-8">
             <Star className="w-8 h-8 text-yellow-500" />
-            <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Watchlist</h1>
+            <h1 className="text-3xl font-bold">Watchlist</h1>
           </div>
 
-          <div className="bg-white dark:bg-black rounded-2xl border border-gray-200 dark:border-gray-700 p-12 text-center">
-            <Star className="w-16 h-16 text-gray-300 dark:text-gray-600 mx-auto mb-4" />
-            <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
-              Your watchlist is empty
-            </h2>
-            <p className="text-gray-500 dark:text-gray-400 mb-6 max-w-md mx-auto">
+          <div className="bg-[var(--surface)] rounded-2xl border border-[var(--surface-border)] p-12 text-center">
+            <Star className="w-16 h-16 text-[var(--text-muted)] mx-auto mb-4" />
+            <h2 className="text-xl font-semibold mb-2">Your watchlist is empty</h2>
+            <p className="text-[var(--text-secondary)] mb-6 max-w-md mx-auto">
               Start building your watchlist by adding coins you want to track. Click the star icon
               on any coin to add it.
             </p>
@@ -242,14 +241,14 @@ export default function WatchlistPage() {
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
               <Link
                 href="/markets"
-                className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-medium transition-colors"
+                className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-[var(--primary)] hover:bg-[var(--primary-hover)] text-white rounded-xl font-medium transition-colors"
               >
                 Browse Markets
                 <ExternalLink className="w-4 h-4" />
               </Link>
               <button
                 onClick={() => setShowExportModal(true)}
-                className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-gray-100 dark:bg-black hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 rounded-xl font-medium transition-colors"
+                className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-[var(--surface-hover)] hover:bg-[var(--surface-elevated)] text-[var(--text-secondary)] rounded-xl font-medium transition-colors"
               >
                 <Upload className="w-4 h-4" />
                 Import Watchlist
@@ -258,7 +257,7 @@ export default function WatchlistPage() {
 
             {/* Suggested coins */}
             <div className="mt-10">
-              <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-4">
+              <h3 className="text-sm font-medium text-[var(--text-muted)] mb-4">
                 Popular coins to get started
               </h3>
               <div className="flex flex-wrap justify-center gap-2">
@@ -266,7 +265,7 @@ export default function WatchlistPage() {
                   <Link
                     key={name}
                     href={`/coin/${name.toLowerCase()}`}
-                    className="px-4 py-2 bg-gray-100 dark:bg-black hover:bg-yellow-100 dark:hover:bg-yellow-500/20 rounded-full text-sm font-medium text-gray-700 dark:text-gray-300 transition-colors"
+                    className="px-4 py-2 bg-[var(--surface-hover)] hover:bg-[var(--primary)]/20 rounded-full text-sm font-medium text-[var(--text-secondary)] transition-colors"
                   >
                     {name}
                   </Link>
@@ -284,20 +283,20 @@ export default function WatchlistPage() {
             </div>
           </div>
         )}
-      </div>
+      </PageLayout>
     );
   }
 
   return (
-    <div className="min-h-screen bg-white dark:bg-black">
+    <PageLayout>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
           <div className="flex items-center gap-3">
             <Star className="w-8 h-8 text-yellow-500 fill-yellow-500" />
             <div>
-              <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Watchlist</h1>
-              <p className="text-gray-500 dark:text-gray-400">
+              <h1 className="text-3xl font-bold">Watchlist</h1>
+              <p className="text-[var(--text-secondary)]">
                 Tracking {watchlist.length} coin{watchlist.length !== 1 ? 's' : ''}
               </p>
             </div>
@@ -306,14 +305,14 @@ export default function WatchlistPage() {
           <div className="flex items-center gap-2">
             <button
               onClick={() => fetchCoinData()}
-              className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-black text-gray-500 transition-colors"
+              className="p-2 rounded-lg hover:bg-[var(--surface-hover)] text-[var(--text-secondary)] transition-colors"
               title="Refresh"
             >
               <RefreshCw className={`w-5 h-5 ${isLoading ? 'animate-spin' : ''}`} />
             </button>
             <button
               onClick={() => setShowExportModal(true)}
-              className="flex items-center gap-2 px-4 py-2 bg-gray-100 dark:bg-black hover:bg-gray-200 dark:hover:bg-black rounded-lg text-gray-700 dark:text-gray-300 font-medium transition-colors"
+              className="flex items-center gap-2 px-4 py-2 bg-[var(--surface)] hover:bg-[var(--surface-hover)] rounded-lg text-[var(--text-secondary)] font-medium transition-colors"
             >
               <Download className="w-4 h-4" />
               <span className="hidden sm:inline">Export</span>
@@ -323,7 +322,7 @@ export default function WatchlistPage() {
 
         {/* Error message */}
         {error && (
-          <div className="mb-6 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl flex items-center gap-3 text-red-700 dark:text-red-400">
+          <div className="mb-6 p-4 bg-[var(--loss-bg)] border border-[var(--loss)] rounded-xl flex items-center gap-3 text-[var(--loss)]">
             <AlertCircle className="w-5 h-5 flex-shrink-0" />
             <p>{error}</p>
             <button
@@ -338,13 +337,13 @@ export default function WatchlistPage() {
         {/* Search and Actions Bar */}
         <div className="flex flex-col sm:flex-row gap-4 mb-6">
           <div className="relative flex-1">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-[var(--text-muted)]" />
             <input
               type="text"
               placeholder="Search watchlist..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-10 pr-4 py-2.5 bg-white dark:bg-black border border-gray-200 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 dark:text-white placeholder-gray-400"
+              className="w-full pl-10 pr-4 py-2.5 bg-[var(--surface)] border border-[var(--surface-border)] rounded-xl focus:ring-2 focus:ring-[var(--primary)] focus:border-transparent text-white placeholder-[var(--text-muted)]"
             />
             {searchQuery && (
               <button
@@ -563,13 +562,10 @@ export default function WatchlistPage() {
 
         {/* Footer Actions */}
         <div className="mt-6 flex items-center justify-between">
-          <p className="text-sm text-gray-500 dark:text-gray-400">
+          <p className="text-sm text-[var(--text-secondary)]">
             Drag rows to reorder • Data refreshes every minute
           </p>
-          <button
-            onClick={handleClearAll}
-            className="text-sm text-red-600 dark:text-red-400 hover:underline"
-          >
+          <button onClick={handleClearAll} className="text-sm text-[var(--loss)] hover:underline">
             Clear all
           </button>
         </div>
@@ -586,6 +582,6 @@ export default function WatchlistPage() {
           </div>
         )}
       </div>
-    </div>
+    </PageLayout>
   );
 }

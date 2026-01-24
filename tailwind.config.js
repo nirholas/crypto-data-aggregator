@@ -1,65 +1,116 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: ['./src/**/*.{js,ts,jsx,tsx}'],
-  // Force dark mode always - class is on html element
   darkMode: 'class',
   theme: {
     extend: {
       colors: {
-        // Brand color - white for dark background
-        brand: {
-          50: '#fafafa',
-          100: '#f5f5f5',
-          200: '#e5e5e5',
-          300: '#d4d4d4',
-          400: '#a3a3a3',
-          500: '#ffffff',
-          600: '#e5e5e5',
-          700: '#d4d4d4',
-          800: '#a3a3a3',
-          900: '#737373',
+        // ============================================
+        // CMC/CoinGecko Inspired Color Palette
+        // ============================================
+
+        // Primary Brand - CMC Blue
+        primary: {
+          50: '#EEF2FF',
+          100: '#E0E7FF',
+          200: '#C7D2FE',
+          300: '#A5B4FC',
+          400: '#818CF8',
+          500: '#3861FB', // CMC primary blue
+          600: '#3354E0',
+          700: '#2D46C4',
+          800: '#2339A8',
+          900: '#1A2C8C',
+          950: '#111D5E',
         },
-        // Override neutral to near-black tones for clean dark look
+
+        // Secondary - CoinGecko Green
+        secondary: {
+          50: '#ECFDF5',
+          100: '#D1FAE5',
+          200: '#A7F3D0',
+          300: '#6EE7B7',
+          400: '#34D399',
+          500: '#8DC647', // CoinGecko green
+          600: '#7AB33E',
+          700: '#5F9A2E',
+          800: '#4A7B24',
+          900: '#365C1A',
+          950: '#223B10',
+        },
+
+        // Background colors - CMC dark navy theme
+        background: {
+          DEFAULT: '#0D1421', // Main background - deep navy
+          secondary: '#131A2A', // Slightly lighter
+          tertiary: '#171E2E', // Card backgrounds
+        },
+
+        // Surface/Card colors
+        surface: {
+          DEFAULT: '#1E2329', // Card background
+          hover: '#252B36', // Card hover
+          elevated: '#2B3139', // Modals, dropdowns
+          border: '#2B3544', // Borders
+        },
+
+        // Text colors
+        text: {
+          primary: '#FFFFFF',
+          secondary: '#A6B0C3', // CMC gray
+          muted: '#808A9D', // Darker gray
+          disabled: '#5E6673',
+        },
+
+        // Semantic colors - Market data
+        gain: {
+          DEFAULT: '#16C784', // CMC green
+          light: '#1ED696',
+          dark: '#12A86C',
+          bg: 'rgba(22, 199, 132, 0.1)',
+        },
+        loss: {
+          DEFAULT: '#EA3943', // CMC red
+          light: '#FF4D58',
+          dark: '#D42F38',
+          bg: 'rgba(234, 57, 67, 0.1)',
+        },
+
+        // Accent colors
+        warning: {
+          DEFAULT: '#F7931A', // Bitcoin orange
+          light: '#FFB347',
+          dark: '#E07D00',
+        },
+        info: {
+          DEFAULT: '#3B82F6', // Info blue
+          light: '#60A5FA',
+          dark: '#2563EB',
+        },
+
+        // Chart colors
+        chart: {
+          blue: '#3861FB',
+          purple: '#8B5CF6',
+          teal: '#14B8A6',
+          orange: '#F59E0B',
+          pink: '#EC4899',
+          cyan: '#06B6D4',
+        },
+
+        // Override neutral for dark theme
         neutral: {
-          50: '#fafafa',
-          100: '#f5f5f5',
-          200: '#e5e5e5',
-          300: '#d4d4d4',
-          400: '#a3a3a3',
-          500: '#737373',
-          600: '#1a1a1a',
-          700: '#141414',
-          800: '#0a0a0a',
-          900: '#050505',
-          950: '#000000',
-        },
-        // Override gray to near-black
-        gray: {
-          50: '#fafafa',
-          100: '#f5f5f5',
-          200: '#e5e5e5',
-          300: '#d4d4d4',
-          400: '#a3a3a3',
-          500: '#737373',
-          600: '#1a1a1a',
-          700: '#141414',
-          800: '#0a0a0a',
-          900: '#050505',
-          950: '#000000',
-        },
-        // Override slate to near-black
-        slate: {
-          50: '#fafafa',
-          100: '#f5f5f5',
-          200: '#e5e5e5',
-          300: '#d4d4d4',
-          400: '#a3a3a3',
-          500: '#737373',
-          600: '#1a1a1a',
-          700: '#141414',
-          800: '#0a0a0a',
-          900: '#050505',
-          950: '#000000',
+          50: '#F8FAFC',
+          100: '#F1F5F9',
+          200: '#E2E8F0',
+          300: '#CBD5E1',
+          400: '#94A3B8',
+          500: '#64748B',
+          600: '#475569',
+          700: '#1E2329', // Card bg
+          800: '#171E2E', // Secondary bg
+          900: '#0D1421', // Primary bg
+          950: '#080C14', // Darkest
         },
       },
       fontFamily: {
@@ -92,15 +143,15 @@ module.exports = {
         full: '9999px',
       },
       boxShadow: {
-        // Subtle card shadows for dark theme
-        soft: '0 1px 3px rgba(255, 255, 255, 0.05), 0 0 0 1px rgba(255, 255, 255, 0.05)',
-        card: '0 0 0 1px rgba(255, 255, 255, 0.08), 0 4px 16px rgba(0, 0, 0, 0.4)',
-        'card-hover': '0 0 0 1px rgba(255, 255, 255, 0.12), 0 8px 24px rgba(0, 0, 0, 0.5)',
-        glow: '0 0 15px rgba(255, 255, 255, 0.08)',
-        'glow-lg': '0 0 30px rgba(255, 255, 255, 0.1)',
-        // Elevated card with border glow
-        elevated: '0 0 0 1px rgba(255, 255, 255, 0.1), 0 4px 20px rgba(0, 0, 0, 0.5)',
-        'elevated-hover': '0 0 0 1px rgba(255, 255, 255, 0.15), 0 8px 30px rgba(0, 0, 0, 0.6)',
+        // Card shadows for dark theme
+        soft: '0 1px 3px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.2)',
+        card: '0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -2px rgba(0, 0, 0, 0.2)',
+        'card-hover': '0 10px 15px -3px rgba(0, 0, 0, 0.4), 0 4px 6px -4px rgba(0, 0, 0, 0.3)',
+        glow: '0 0 15px rgba(56, 97, 251, 0.15)',
+        'glow-lg': '0 0 30px rgba(56, 97, 251, 0.2)',
+        'glow-green': '0 0 15px rgba(22, 199, 132, 0.15)',
+        'glow-red': '0 0 15px rgba(234, 57, 67, 0.15)',
+        elevated: '0 20px 25px -5px rgba(0, 0, 0, 0.4), 0 8px 10px -6px rgba(0, 0, 0, 0.3)',
       },
       animation: {
         'fade-in': 'fadeIn 0.3s ease-out',
@@ -108,10 +159,8 @@ module.exports = {
         'slide-in': 'slideInRight 0.3s ease-out',
         'bounce-subtle': 'bounce-subtle 2s ease-in-out infinite',
         'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-        fadeIn: 'fadeIn 0.5s ease-out forwards',
-        slideUp: 'slideUp 0.5s ease-out forwards',
-        scaleIn: 'scaleIn 0.3s ease-out forwards',
         shimmer: 'shimmer 2s infinite',
+        'spin-slow': 'spin 3s linear infinite',
       },
       keyframes: {
         fadeIn: {
@@ -125,14 +174,6 @@ module.exports = {
         slideInRight: {
           '0%': { opacity: '0', transform: 'translateX(20px)' },
           '100%': { opacity: '1', transform: 'translateX(0)' },
-        },
-        slideUp: {
-          '0%': { opacity: '0', transform: 'translateY(20px)' },
-          '100%': { opacity: '1', transform: 'translateY(0)' },
-        },
-        scaleIn: {
-          '0%': { opacity: '0', transform: 'scale(0.9)' },
-          '100%': { opacity: '1', transform: 'scale(1)' },
         },
         shimmer: {
           '100%': { transform: 'translateX(100%)' },

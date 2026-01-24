@@ -23,6 +23,7 @@ import {
 } from 'lucide-react';
 import { useTheme } from '@/components/ThemeProvider';
 import { useToast } from '@/components/Toast';
+import PageLayout from '@/components/PageLayout';
 
 // Preferences types
 interface UserPreferences {
@@ -50,10 +51,11 @@ const STORAGE_KEY = 'crypto-user-preferences';
 export default function SettingsPage() {
   const { theme, setTheme } = useTheme();
   const { addToast } = useToast();
-  
+
   const [preferences, setPreferences] = useState<UserPreferences>(DEFAULT_PREFERENCES);
   const [isLoaded, setIsLoaded] = useState(false);
-  const [notificationPermission, setNotificationPermission] = useState<NotificationPermission>('default');
+  const [notificationPermission, setNotificationPermission] =
+    useState<NotificationPermission>('default');
 
   // Load preferences
   useEffect(() => {
@@ -84,11 +86,8 @@ export default function SettingsPage() {
     }
   }, [preferences, isLoaded]);
 
-  const updatePreference = <K extends keyof UserPreferences>(
-    key: K, 
-    value: UserPreferences[K]
-  ) => {
-    setPreferences(prev => ({ ...prev, [key]: value }));
+  const updatePreference = <K extends keyof UserPreferences>(key: K, value: UserPreferences[K]) => {
+    setPreferences((prev) => ({ ...prev, [key]: value }));
     addToast({ type: 'success', title: 'Setting saved', duration: 2000 });
   };
 
@@ -106,23 +105,27 @@ export default function SettingsPage() {
   };
 
   const clearAllData = () => {
-    if (confirm('This will clear all your local data including watchlist, portfolio, alerts, and preferences. Continue?')) {
+    if (
+      confirm(
+        'This will clear all your local data including watchlist, portfolio, alerts, and preferences. Continue?'
+      )
+    ) {
       // Clear all crypto-related localStorage items
-      const keysToRemove = Object.keys(localStorage).filter(key => 
-        key.startsWith('crypto-') || key === STORAGE_KEY
+      const keysToRemove = Object.keys(localStorage).filter(
+        (key) => key.startsWith('crypto-') || key === STORAGE_KEY
       );
-      keysToRemove.forEach(key => localStorage.removeItem(key));
-      
+      keysToRemove.forEach((key) => localStorage.removeItem(key));
+
       // Reset preferences
       setPreferences(DEFAULT_PREFERENCES);
-      
+
       addToast({ type: 'success', title: 'All data cleared' });
     }
   };
 
   const exportAllData = () => {
     const data: Record<string, unknown> = {};
-    Object.keys(localStorage).forEach(key => {
+    Object.keys(localStorage).forEach((key) => {
       if (key.startsWith('crypto-') || key === STORAGE_KEY) {
         try {
           data[key] = JSON.parse(localStorage.getItem(key) || '');
@@ -153,37 +156,35 @@ export default function SettingsPage() {
 
   if (!isLoaded) {
     return (
-      <div className="min-h-screen bg-gray-50 dark:bg-slate-900">
+      <PageLayout>
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="animate-pulse space-y-6">
-            <div className="h-12 bg-gray-200 dark:bg-gray-800 rounded-lg w-48" />
-            {[1, 2, 3, 4].map(i => (
-              <div key={i} className="h-32 bg-gray-200 dark:bg-gray-800 rounded-2xl" />
+            <div className="h-12 bg-[var(--surface)] rounded-lg w-48" />
+            {[1, 2, 3, 4].map((i) => (
+              <div key={i} className="h-32 bg-[var(--surface)] rounded-2xl" />
             ))}
           </div>
         </div>
-      </div>
+      </PageLayout>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-slate-900">
+    <PageLayout>
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
         <div className="flex items-center gap-3 mb-8">
-          <Settings className="w-8 h-8 text-gray-500" />
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Settings</h1>
+          <Settings className="w-8 h-8 text-[var(--text-secondary)]" />
+          <h1 className="text-3xl font-bold">Settings</h1>
         </div>
 
         <div className="space-y-6">
           {/* Theme */}
-          <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 p-6">
-            <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
-              Appearance
-            </h2>
+          <div className="bg-[var(--surface)] rounded-2xl border border-[var(--surface-border)] p-6">
+            <h2 className="text-lg font-semibold mb-4">Appearance</h2>
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
+                <label className="block text-sm font-medium text-[var(--text-secondary)] mb-3">
                   Theme
                 </label>
                 <div className="grid grid-cols-3 gap-3">
@@ -197,16 +198,22 @@ export default function SettingsPage() {
                       onClick={() => setTheme(value as 'light' | 'dark' | 'system')}
                       className={`flex flex-col items-center gap-2 p-4 rounded-xl border-2 transition-all ${
                         theme === value
-                          ? 'border-blue-500 bg-blue-50 dark:bg-blue-500/10'
+                          ? 'border-[var(--primary)] bg-[var(--primary)]/10'
                           : 'border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600'
                       }`}
                     >
-                      <Icon className={`w-6 h-6 ${
-                        theme === value ? 'text-blue-600 dark:text-blue-400' : 'text-gray-500'
-                      }`} />
-                      <span className={`text-sm font-medium ${
-                        theme === value ? 'text-blue-600 dark:text-blue-400' : 'text-gray-700 dark:text-gray-300'
-                      }`}>
+                      <Icon
+                        className={`w-6 h-6 ${
+                          theme === value ? 'text-blue-600 dark:text-blue-400' : 'text-gray-500'
+                        }`}
+                      />
+                      <span
+                        className={`text-sm font-medium ${
+                          theme === value
+                            ? 'text-blue-600 dark:text-blue-400'
+                            : 'text-gray-700 dark:text-gray-300'
+                        }`}
+                      >
                         {label}
                       </span>
                       {theme === value && (
@@ -230,9 +237,11 @@ export default function SettingsPage() {
                     preferences.compactView ? 'bg-blue-600' : 'bg-gray-300 dark:bg-gray-600'
                   }`}
                 >
-                  <span className={`absolute top-1 w-4 h-4 rounded-full bg-white transition-transform ${
-                    preferences.compactView ? 'translate-x-7' : 'translate-x-1'
-                  }`} />
+                  <span
+                    className={`absolute top-1 w-4 h-4 rounded-full bg-white transition-transform ${
+                      preferences.compactView ? 'translate-x-7' : 'translate-x-1'
+                    }`}
+                  />
                 </button>
               </div>
             </div>
@@ -252,7 +261,9 @@ export default function SettingsPage() {
                   {currencies.map(({ value, label, symbol }) => (
                     <button
                       key={value}
-                      onClick={() => updatePreference('currency', value as UserPreferences['currency'])}
+                      onClick={() =>
+                        updatePreference('currency', value as UserPreferences['currency'])
+                      }
                       className={`flex flex-col items-center gap-1 p-3 rounded-xl border-2 transition-all ${
                         preferences.currency === value
                           ? 'border-blue-500 bg-blue-50 dark:bg-blue-500/10'
@@ -271,10 +282,15 @@ export default function SettingsPage() {
                   Price Change Period
                 </label>
                 <div className="grid grid-cols-3 gap-2">
-                  {['1h', '24h', '7d'].map(period => (
+                  {['1h', '24h', '7d'].map((period) => (
                     <button
                       key={period}
-                      onClick={() => updatePreference('priceChangePeriod', period as UserPreferences['priceChangePeriod'])}
+                      onClick={() =>
+                        updatePreference(
+                          'priceChangePeriod',
+                          period as UserPreferences['priceChangePeriod']
+                        )
+                      }
                       className={`flex items-center justify-center gap-2 p-3 rounded-xl border-2 transition-all ${
                         preferences.priceChangePeriod === period
                           ? 'border-blue-500 bg-blue-50 dark:bg-blue-500/10'
@@ -299,7 +315,12 @@ export default function SettingsPage() {
                   ].map(({ value, icon: Icon, label }) => (
                     <button
                       key={value}
-                      onClick={() => updatePreference('defaultChartType', value as UserPreferences['defaultChartType'])}
+                      onClick={() =>
+                        updatePreference(
+                          'defaultChartType',
+                          value as UserPreferences['defaultChartType']
+                        )
+                      }
                       className={`flex items-center justify-center gap-2 p-3 rounded-xl border-2 transition-all ${
                         preferences.defaultChartType === value
                           ? 'border-blue-500 bg-blue-50 dark:bg-blue-500/10'
@@ -318,10 +339,15 @@ export default function SettingsPage() {
                   Default Time Range
                 </label>
                 <div className="grid grid-cols-4 gap-2">
-                  {['24h', '7d', '30d', '90d'].map(range => (
+                  {['24h', '7d', '30d', '90d'].map((range) => (
                     <button
                       key={range}
-                      onClick={() => updatePreference('defaultTimeRange', range as UserPreferences['defaultTimeRange'])}
+                      onClick={() =>
+                        updatePreference(
+                          'defaultTimeRange',
+                          range as UserPreferences['defaultTimeRange']
+                        )
+                      }
                       className={`p-3 rounded-xl border-2 transition-all font-medium ${
                         preferences.defaultTimeRange === range
                           ? 'border-blue-500 bg-blue-50 dark:bg-blue-500/10 text-blue-600 dark:text-blue-400'
@@ -346,7 +372,9 @@ export default function SettingsPage() {
                 <div className="flex items-center gap-3">
                   <Bell className="w-5 h-5 text-gray-500" />
                   <div>
-                    <p className="font-medium text-gray-900 dark:text-white">Browser Notifications</p>
+                    <p className="font-medium text-gray-900 dark:text-white">
+                      Browser Notifications
+                    </p>
                     <p className="text-sm text-gray-500 dark:text-gray-400">
                       Get notified when price alerts trigger
                     </p>
@@ -359,9 +387,11 @@ export default function SettingsPage() {
                       preferences.notifications ? 'bg-blue-600' : 'bg-gray-300 dark:bg-gray-600'
                     }`}
                   >
-                    <span className={`absolute top-1 w-4 h-4 rounded-full bg-white transition-transform ${
-                      preferences.notifications ? 'translate-x-7' : 'translate-x-1'
-                    }`} />
+                    <span
+                      className={`absolute top-1 w-4 h-4 rounded-full bg-white transition-transform ${
+                        preferences.notifications ? 'translate-x-7' : 'translate-x-1'
+                      }`}
+                    />
                   </button>
                 ) : (
                   <button
@@ -393,9 +423,11 @@ export default function SettingsPage() {
                     preferences.soundEffects ? 'bg-blue-600' : 'bg-gray-300 dark:bg-gray-600'
                   }`}
                 >
-                  <span className={`absolute top-1 w-4 h-4 rounded-full bg-white transition-transform ${
-                    preferences.soundEffects ? 'translate-x-7' : 'translate-x-1'
-                  }`} />
+                  <span
+                    className={`absolute top-1 w-4 h-4 rounded-full bg-white transition-transform ${
+                      preferences.soundEffects ? 'translate-x-7' : 'translate-x-1'
+                    }`}
+                  />
                 </button>
               </div>
             </div>
@@ -430,9 +462,7 @@ export default function SettingsPage() {
                   <Trash2 className="w-5 h-5" />
                   <div className="text-left">
                     <p className="font-medium">Clear All Data</p>
-                    <p className="text-sm opacity-70">
-                      Remove all local data (cannot be undone)
-                    </p>
+                    <p className="text-sm opacity-70">Remove all local data (cannot be undone)</p>
                   </div>
                 </div>
               </button>
@@ -440,24 +470,20 @@ export default function SettingsPage() {
           </div>
 
           {/* About */}
-          <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 p-6">
-            <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
-              About
-            </h2>
-            <div className="flex items-start gap-3 text-gray-500 dark:text-gray-400">
+          <div className="bg-[var(--surface)] rounded-2xl border border-[var(--surface-border)] p-6">
+            <h2 className="text-lg font-semibold mb-4">About</h2>
+            <div className="flex items-start gap-3 text-[var(--text-secondary)]">
               <Info className="w-5 h-5 flex-shrink-0 mt-0.5" />
               <div className="text-sm">
                 <p className="mb-2">
                   Free Crypto News is an open-source cryptocurrency news and market data platform.
                 </p>
-                <p>
-                  All data is stored locally in your browser. No account required.
-                </p>
+                <p>All data is stored locally in your browser. No account required.</p>
               </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </PageLayout>
   );
 }

@@ -7,10 +7,13 @@ import Link from 'next/link';
 
 export default function Footer() {
   return (
-    <footer className="relative bg-black text-white mt-16 overflow-hidden" role="contentinfo">
+    <footer
+      className="relative bg-[var(--bg-secondary)] text-white mt-16 overflow-hidden"
+      role="contentinfo"
+    >
       {/* Minimal divider */}
       <div className="relative">
-        <div className="h-px bg-black" aria-hidden="true" />
+        <div className="h-px bg-[var(--surface-border)]" aria-hidden="true" />
       </div>
 
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-20">
@@ -50,7 +53,7 @@ export default function Footer() {
                 href="https://github.com/nirholas/crypto-data-aggregator"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group p-3 bg-black rounded-xl hover:bg-white hover:scale-110 active:scale-95 transition-all duration-300 focus-ring border border-neutral-800 hover:border-white"
+                className="group p-3 bg-[var(--surface)] rounded-xl hover:bg-white hover:scale-110 active:scale-95 transition-all duration-300 focus-ring border border-[var(--surface-border)] hover:border-white"
                 aria-label="View on GitHub"
               >
                 <svg

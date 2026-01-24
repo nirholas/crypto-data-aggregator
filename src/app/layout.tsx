@@ -188,7 +188,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           media="(prefers-color-scheme: light)"
         />
       </head>
-      <body className="bg-black antialiased min-h-screen text-white">
+      <body className="bg-[var(--bg-primary)] antialiased min-h-screen text-white">
         {/* Skip Link for Accessibility */}
         <a href="#main-content" className="skip-link">
           Skip to main content

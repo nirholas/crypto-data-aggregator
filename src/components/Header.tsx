@@ -157,10 +157,10 @@ function MegaMenu({ item, isOpen }: { item: (typeof navItems)[0]; isOpen: boolea
       aria-label={`${item.label} submenu`}
     >
       {/* Arrow pointer */}
-      <div className="absolute -top-2 left-1/2 -translate-x-1/2 w-4 h-4 rotate-45 bg-white dark:bg-black border-l border-t border-neutral-200 dark:border-neutral-700" />
+      <div className="absolute -top-2 left-1/2 -translate-x-1/2 w-4 h-4 rotate-45 bg-[var(--surface)] border-l border-t border-[var(--surface-border)]" />
 
       <div
-        className={`relative bg-white dark:bg-black border border-neutral-200 dark:border-neutral-700 rounded-xl shadow-2xl overflow-hidden ${
+        className={`relative bg-[var(--surface)] border border-[var(--surface-border)] rounded-xl shadow-2xl overflow-hidden ${
           hasMultipleSections ? 'min-w-[480px]' : 'min-w-[320px]'
         }`}
         style={{
@@ -181,10 +181,10 @@ function MegaMenu({ item, isOpen }: { item: (typeof navItems)[0]; isOpen: boolea
                       <li key={linkIdx}>
                         <Link
                           href={link.href}
-                          className="flex items-center gap-2.5 px-2 py-2 text-neutral-700 dark:text-neutral-200 hover:text-neutral-900 dark:hover:text-white hover:bg-neutral-50 dark:hover:bg-black/50 rounded-lg transition-all duration-150 group"
+                          className="flex items-center gap-2.5 px-2 py-2 text-[var(--text-secondary)] hover:text-white hover:bg-[var(--surface-hover)] rounded-lg transition-all duration-150 group"
                           role="menuitem"
                         >
-                          <span className="flex items-center justify-center w-8 h-8 rounded-lg bg-neutral-100 dark:bg-black group-hover:bg-neutral-200 dark:group-hover:bg-neutral-600 group-hover:scale-105 transition-all duration-150 text-base">
+                          <span className="flex items-center justify-center w-8 h-8 rounded-lg bg-[var(--bg-tertiary)] group-hover:bg-[var(--primary)] group-hover:scale-105 transition-all duration-150 text-base">
                             {link.icon}
                           </span>
                           <span className="font-medium text-sm">{link.label}</span>
@@ -198,21 +198,21 @@ function MegaMenu({ item, isOpen }: { item: (typeof navItems)[0]; isOpen: boolea
           </div>
 
           {/* Featured Card - Right side */}
-          <div className="w-48 bg-black dark:bg-white p-4 flex flex-col justify-between">
+          <div className="w-48 bg-[var(--primary)] p-4 flex flex-col justify-between">
             <div>
-              <div className="w-10 h-10 rounded-xl bg-white/20 dark:bg-black/20 backdrop-blur-sm flex items-center justify-center mb-3">
-                <span className="text-xl text-white dark:text-black">{item.icon}</span>
+              <div className="w-10 h-10 rounded-xl bg-white/20 backdrop-blur-sm flex items-center justify-center mb-3">
+                <span className="text-xl text-white">{item.icon}</span>
               </div>
-              <h4 className="font-semibold text-white dark:text-black text-sm mb-1">
+              <h4 className="font-semibold text-white text-sm mb-1">
                 {item.megaMenu.featured.title}
               </h4>
-              <p className="text-white/80 dark:text-black/80 text-xs leading-relaxed">
+              <p className="text-white/80 text-xs leading-relaxed">
                 {item.megaMenu.featured.description}
               </p>
             </div>
             <Link
               href={item.megaMenu.featured.href}
-              className="inline-flex items-center gap-1.5 text-xs font-semibold text-white dark:text-black hover:text-white/90 dark:hover:text-black/90 transition-colors mt-3 group"
+              className="inline-flex items-center gap-1.5 text-xs font-semibold text-white hover:text-white/90 transition-colors mt-3 group"
               role="menuitem"
             >
               Explore
@@ -314,7 +314,7 @@ export default function Header() {
 
       <header
         ref={headerRef}
-        className={`sticky top-0 z-40 bg-white/95 dark:bg-black/95 backdrop-blur-md border-b border-neutral-100 dark:border-neutral-800 transition-all duration-300 ${
+        className={`sticky top-0 z-40 bg-[var(--bg-secondary)]/95 backdrop-blur-md border-b border-[var(--surface-border)] transition-all duration-300 ${
           isScrolled ? 'shadow-md' : 'shadow-sm'
         }`}
         style={{
@@ -348,8 +348,8 @@ export default function Header() {
                   href={item.href}
                   className={`flex items-center gap-1.5 px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200 focus-ring ${
                     activeMenu === item.label
-                      ? 'text-neutral-900 dark:text-white bg-neutral-100 dark:bg-black'
-                      : 'text-neutral-600 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white hover:bg-neutral-100 dark:hover:bg-black'
+                      ? 'text-white bg-[var(--surface-hover)]'
+                      : 'text-[var(--text-secondary)] hover:text-white hover:bg-[var(--surface-hover)]'
                   }`}
                   role="menuitem"
                   aria-haspopup={item.megaMenu ? 'true' : undefined}
@@ -389,9 +389,7 @@ export default function Header() {
             {/* Price Widget - Desktop only */}
             <div className="hidden xl:block mr-2">
               <Suspense
-                fallback={
-                  <div className="w-48 h-6 bg-neutral-100 dark:bg-black rounded animate-pulse" />
-                }
+                fallback={<div className="w-48 h-6 bg-[var(--surface)] rounded animate-pulse" />}
               >
                 <PriceWidget variant="compact" />
               </Suspense>
@@ -400,7 +398,7 @@ export default function Header() {
             {/* Search Button */}
             <button
               onClick={() => setIsSearchOpen(true)}
-              className="flex items-center gap-2 px-3 py-2 text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white hover:bg-neutral-100 dark:hover:bg-black rounded-lg transition-all duration-200 focus-ring"
+              className="flex items-center gap-2 px-3 py-2 text-[var(--text-secondary)] hover:text-white hover:bg-[var(--surface-hover)] rounded-lg transition-all duration-200 focus-ring"
               aria-label="Search (⌘K)"
             >
               <svg
@@ -417,8 +415,8 @@ export default function Header() {
                   d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
                 />
               </svg>
-              <span className="hidden md:flex items-center gap-1 text-xs text-neutral-400 dark:text-neutral-500">
-                <kbd className="px-1.5 py-0.5 bg-neutral-100 dark:bg-black rounded text-[10px] font-medium">
+              <span className="hidden md:flex items-center gap-1 text-xs text-[var(--text-muted)]">
+                <kbd className="px-1.5 py-0.5 bg-[var(--surface)] rounded text-[10px] font-medium">
                   ⌘K
                 </kbd>
               </span>
@@ -434,7 +432,7 @@ export default function Header() {
               href="https://github.com/nirholas/crypto-data-aggregator"
               target="_blank"
               rel="noopener noreferrer"
-              className="hidden sm:flex items-center gap-2 ml-1 px-4 py-2 bg-black dark:bg-black text-white rounded-full hover:bg-black dark:hover:bg-neutral-600 hover:shadow-lg active:scale-95 transition-all duration-200 text-sm font-medium focus-ring"
+              className="hidden sm:flex items-center gap-2 ml-1 px-4 py-2 bg-[var(--primary)] text-white rounded-full hover:bg-[var(--primary-hover)] hover:shadow-lg active:scale-95 transition-all duration-200 text-sm font-medium focus-ring"
               aria-label="View on GitHub"
             >
               <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
