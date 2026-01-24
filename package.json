@@ -26,7 +26,12 @@
     "sync:all": "./scripts/sync/sync-from-fcn.sh all",
     "i18n:install": "./scripts/sync/install-i18n-deps.sh",
     "i18n:restructure": "./scripts/sync/restructure-for-i18n.sh",
-    "i18n:restructure:full": "./scripts/sync/restructure-for-i18n.sh full"
+    "i18n:restructure:full": "./scripts/sync/restructure-for-i18n.sh full",
+    "archive": "node scripts/archive-runner.js",
+    "archive:watch": "node scripts/archive-runner.js --watch",
+    "archive:daemon": "node scripts/archive-runner.js --daemon",
+    "archive:stop": "node scripts/archive-runner.js --stop",
+    "archive:status": "node scripts/archive-runner.js --status"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
@@ -48,7 +53,22 @@
     "watchlist",
     "coingecko",
     "defillama",
-    "aggregator"
+    "aggregator",
+    "price-tracker",
+    "trading",
+    "mcp",
+    "mcp-server",
+    "model-context-protocol",
+    "ai-agents",
+    "llm-tools",
+    "x402",
+    "micropayments",
+    "api",
+    "rest-api",
+    "nextjs",
+    "react",
+    "typescript",
+    "pwa"
   ],
   "author": {
     "name": "Nicholas",

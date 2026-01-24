@@ -11,6 +11,24 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Added
 
+- **Archive Runner Script** - Local scheduler for archive collection without GitHub Actions
+  - `npm run archive` - Single collection run
+  - `npm run archive:watch` - Continuous hourly collection
+  - `npm run archive:daemon` - Background daemon mode
+  - `npm run archive:status` - View archive statistics
+  - `npm run archive:stop` - Stop background daemon
+  - Configurable intervals via `--interval` flag or `ARCHIVE_INTERVAL` env var
+  - Full logging to `archive/v2/meta/runner.log`
+  - PID file management for daemon mode
+  - Graceful shutdown handling
+
+- **Archive Documentation** (`docs/ARCHIVE.md`)
+  - Complete guide to the V1 and V2 archive systems
+  - Collection script usage and configuration
+  - Intelligence services documentation
+  - Cron and systemd integration examples
+  - Troubleshooting guide
+
 - **Complete Multi-Source Data Integration** - Full API integrations with 4 new data providers
   - **CryptoCompare** (`src/lib/cryptocompare.ts`): 600+ lines
     - Historical OHLCV data (daily/hourly/minute intervals)
