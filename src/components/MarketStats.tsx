@@ -19,16 +19,16 @@ export default async function MarketStats() {
   const fearGreedValue = market.fearGreed ? Number(market.fearGreed.value) : 50;
 
   return (
-    <div className="relative overflow-hidden bg-white dark:bg-black rounded-2xl shadow-card dark:shadow-xl dark:border dark:border-neutral-800">
+    <div className="relative overflow-hidden bg-surface rounded-2xl shadow-card shadow-card">
       <div className="relative p-6">
         <div className="flex items-center justify-between mb-6">
-          <h3 className="font-bold text-lg text-neutral-900 dark:text-white flex items-center gap-2">
+          <h3 className="font-bold text-lg text-text-primary flex items-center gap-2">
             <span
-              className="w-8 h-8 rounded-lg bg-black dark:bg-white flex items-center justify-center"
+              className="w-8 h-8 rounded-lg bg-surface-alt flex items-center justify-center"
               aria-hidden="true"
             >
               <svg
-                className="w-4 h-4 text-white dark:text-black"
+                className="w-4 h-4 text-text-primary"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -45,7 +45,7 @@ export default async function MarketStats() {
           </h3>
           <Link
             href="/markets"
-            className="group text-sm font-semibold text-neutral-900 dark:text-white hover:text-neutral-600 dark:hover:text-neutral-300 transition-colors focus-ring rounded-lg px-3 py-1.5 -mr-3 hover:bg-neutral-100 dark:hover:bg-black flex items-center gap-1"
+            className="group text-sm font-semibold text-text-primary hover:text-text-secondary transition-colors focus-ring rounded-lg px-3 py-1.5 -mr-3 hover:bg-surface-alt flex items-center gap-1"
           >
             View All
             <span className="group-hover:translate-x-0.5 transition-transform" aria-hidden="true">
@@ -56,21 +56,21 @@ export default async function MarketStats() {
 
         <div className="space-y-4">
           {/* Market Cap - Premium card style */}
-          <div className="bg-neutral-50 dark:bg-black rounded-xl p-4 border border-neutral-200 dark:border-neutral-800">
+          <div className="bg-surface-alt rounded-xl p-4 border border-surface-border">
             <div className="flex items-center justify-between">
               <div>
-                <span className="text-neutral-500 dark:text-neutral-400 text-xs uppercase tracking-wider font-medium">
+                <span className="text-text-muted text-xs uppercase tracking-wider font-medium">
                   Total Market Cap
                 </span>
-                <div className="text-xl font-bold text-neutral-900 dark:text-white mt-1">
+                <div className="text-xl font-bold text-text-primary mt-1">
                   ${formatNumber(market.global.total_market_cap?.usd)}
                 </div>
               </div>
               <span
                 className={`inline-flex items-center gap-1 text-sm font-bold px-3 py-1.5 rounded-full ${
                   isPositive
-                    ? 'text-neutral-900 bg-neutral-100 dark:text-white dark:bg-black'
-                    : 'text-neutral-600 bg-neutral-100 dark:text-neutral-400 dark:bg-black'
+                    ? 'text-text-primary bg-surface-alt'
+                    : 'text-text-secondary bg-surface-alt'
                 }`}
               >
                 <svg
@@ -97,7 +97,7 @@ export default async function MarketStats() {
               {[40, 65, 45, 70, 55, 80, 60, 75, 85, 70, 90, 75].map((h, i) => (
                 <div
                   key={i}
-                  className={`flex-1 rounded-t ${isPositive ? 'bg-neutral-400 dark:bg-neutral-500' : 'bg-neutral-300 dark:bg-neutral-600'}`}
+                  className={`flex-1 rounded-t ${isPositive ? 'bg-text-muted' : 'bg-surface-border'}`}
                   style={{ height: `${h}%` }}
                 />
               ))}
@@ -106,33 +106,33 @@ export default async function MarketStats() {
 
           {/* Volume & BTC Dominance */}
           <div className="grid grid-cols-2 gap-3">
-            <div className="bg-neutral-50 dark:bg-black rounded-xl p-3.5 border border-neutral-200 dark:border-neutral-800">
-              <span className="text-neutral-500 dark:text-neutral-400 text-xs uppercase tracking-wider font-medium">
+            <div className="bg-surface-alt rounded-xl p-3.5 border border-surface-border">
+              <span className="text-text-muted text-xs uppercase tracking-wider font-medium">
                 24h Volume
               </span>
-              <div className="text-lg font-bold text-neutral-900 dark:text-white mt-1">
+              <div className="text-lg font-bold text-text-primary mt-1">
                 ${formatNumber(market.global.total_volume?.usd)}
               </div>
             </div>
-            <div className="bg-neutral-50 dark:bg-black rounded-xl p-3.5 border border-neutral-200 dark:border-neutral-800">
-              <span className="text-neutral-500 dark:text-neutral-400 text-xs uppercase tracking-wider font-medium">
+            <div className="bg-surface-alt rounded-xl p-3.5 border border-surface-border">
+              <span className="text-text-muted text-xs uppercase tracking-wider font-medium">
                 BTC Dom.
               </span>
-              <div className="text-lg font-bold text-neutral-900 dark:text-white mt-1 flex items-baseline gap-1">
+              <div className="text-lg font-bold text-text-primary mt-1 flex items-baseline gap-1">
                 {market.global.market_cap_percentage?.btc?.toFixed(1)}
-                <span className="text-sm text-neutral-500">%</span>
+                <span className="text-sm text-text-muted">%</span>
               </div>
             </div>
           </div>
 
           {/* Fear & Greed - Premium gauge style */}
           {market.fearGreed && (
-            <div className="bg-neutral-50 dark:bg-black rounded-xl p-4 border border-neutral-200 dark:border-neutral-800">
+            <div className="bg-surface-alt rounded-xl p-4 border border-surface-border">
               <div className="flex items-center justify-between mb-3">
-                <span className="text-neutral-500 dark:text-neutral-400 text-xs uppercase tracking-wider font-medium">
+                <span className="text-text-muted text-xs uppercase tracking-wider font-medium">
                   Fear & Greed Index
                 </span>
-                <span className="text-2xl font-black text-neutral-900 dark:text-white">
+                <span className="text-2xl font-black text-text-primary">
                   {market.fearGreed.value}
                 </span>
               </div>
@@ -140,7 +140,7 @@ export default async function MarketStats() {
               {/* Monochrome gradient progress bar */}
               <div className="relative">
                 <div
-                  className="h-3 rounded-full overflow-hidden bg-gradient-to-r from-neutral-300 via-neutral-400 to-neutral-500 dark:from-neutral-700 dark:via-neutral-600 dark:to-neutral-500"
+                  className="h-3 rounded-full overflow-hidden bg-gradient-to-r from-surface-border via-text-muted to-text-secondary"
                   role="progressbar"
                   aria-valuenow={fearGreedValue}
                   aria-valuemin={0}
@@ -148,19 +148,19 @@ export default async function MarketStats() {
                   aria-label={`Fear and Greed Index: ${market.fearGreed.value} - ${market.fearGreed.value_classification}`}
                 >
                   <div
-                    className="absolute h-3 bg-neutral-100 dark:bg-black right-0 top-0 transition-all duration-500"
+                    className="absolute h-3 bg-surface-alt right-0 top-0 transition-all duration-500"
                     style={{ width: `${100 - fearGreedValue}%` }}
                   />
                 </div>
                 {/* Indicator needle */}
                 <div
-                  className="absolute -top-1 w-1 h-5 bg-black dark:bg-white rounded-full shadow-lg transition-all duration-500"
+                  className="absolute -top-1 w-1 h-5 bg-surface-alt rounded-full shadow-lg transition-all duration-500"
                   style={{ left: `calc(${fearGreedValue}% - 2px)` }}
                   aria-hidden="true"
                 />
               </div>
 
-              <p className="text-sm text-neutral-700 dark:text-neutral-300 mt-3 text-center font-semibold">
+              <p className="text-sm text-text-secondary mt-3 text-center font-semibold">
                 {market.fearGreed.value_classification}
               </p>
             </div>
@@ -169,13 +169,13 @@ export default async function MarketStats() {
           {/* Trending Coins - Monochrome pills */}
           {market.trending.length > 0 && (
             <div className="pt-2">
-              <p className="text-neutral-500 dark:text-neutral-400 text-xs uppercase tracking-wider font-medium mb-3 flex items-center gap-2">
+              <p className="text-text-muted text-xs uppercase tracking-wider font-medium mb-3 flex items-center gap-2">
                 <span
-                  className="w-4 h-4 rounded bg-black dark:bg-white flex items-center justify-center"
+                  className="w-4 h-4 rounded bg-surface-alt flex items-center justify-center"
                   aria-hidden="true"
                 >
                   <svg
-                    className="w-2.5 h-2.5 text-white dark:text-black"
+                    className="w-2.5 h-2.5 text-text-primary"
                     fill="currentColor"
                     viewBox="0 0 20 20"
                   >
@@ -198,8 +198,8 @@ export default async function MarketStats() {
                     key={coin.id}
                     className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-semibold transition-all hover:scale-105 active:scale-95 cursor-default ${
                       index === 0
-                        ? 'bg-black dark:bg-white text-white dark:text-black'
-                        : 'bg-neutral-100 dark:bg-black text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-black border border-neutral-200 dark:border-neutral-700'
+                        ? 'bg-surface-alt text-text-primary'
+                        : 'bg-surface-alt text-text-secondary hover:bg-surface-alt border border-surface-border'
                     }`}
                     role="listitem"
                   >

@@ -21,12 +21,12 @@ interface HeroArticleProps {
 }
 
 const sourceColors: Record<string, { bg: string; text: string; accent: string }> = {
-  'CoinDesk': { bg: 'bg-blue-600', text: 'text-blue-600', accent: 'from-blue-600/20' },
+  CoinDesk: { bg: 'bg-blue-600', text: 'text-blue-600', accent: 'from-blue-600/20' },
   'The Block': { bg: 'bg-purple-600', text: 'text-purple-600', accent: 'from-purple-600/20' },
-  'Decrypt': { bg: 'bg-emerald-600', text: 'text-emerald-600', accent: 'from-emerald-600/20' },
-  'CoinTelegraph': { bg: 'bg-orange-500', text: 'text-orange-600', accent: 'from-orange-500/20' },
+  Decrypt: { bg: 'bg-emerald-600', text: 'text-emerald-600', accent: 'from-emerald-600/20' },
+  CoinTelegraph: { bg: 'bg-orange-500', text: 'text-orange-600', accent: 'from-orange-500/20' },
   'Bitcoin Magazine': { bg: 'bg-amber-500', text: 'text-amber-600', accent: 'from-amber-500/20' },
-  'Blockworks': { bg: 'bg-indigo-600', text: 'text-indigo-600', accent: 'from-indigo-600/20' },
+  Blockworks: { bg: 'bg-indigo-600', text: 'text-indigo-600', accent: 'from-indigo-600/20' },
   'The Defiant': { bg: 'bg-pink-600', text: 'text-pink-600', accent: 'from-pink-600/20' },
 };
 
@@ -38,20 +38,24 @@ export default function HeroArticle({ article }: HeroArticleProps) {
 
   return (
     <section className="relative">
-      <Link 
+      <Link
         href={`/article/${articleId}`}
         className="group block relative overflow-hidden bg-gray-900 rounded-none md:rounded-3xl"
       >
         {/* Background gradient overlay */}
-        <div className={`absolute inset-0 bg-gradient-to-r ${style.accent} via-transparent to-brand-500/10 opacity-60`} />
-        
+        <div
+          className={`absolute inset-0 bg-gradient-to-r ${style.accent} via-transparent to-brand-500/10 opacity-60`}
+        />
+
         {/* Animated background pattern */}
         <div className="absolute inset-0 opacity-[0.03]" aria-hidden="true">
           <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNmZmYiIGZpbGwtb3BhY2l0eT0iMC4zIj48cGF0aCBkPSJNMzYgMzRoLTJ2LTRoMnY0em0wLTZoLTJ2LTRoMnY0em0wLTZoLTJ2LTRoMnY0em0wLTZoLTJWMTJoMnY0em0wLTZoLTJWNmgydjR6Ii8+PC9nPjwvZz48L3N2Zz4=')] bg-repeat" />
         </div>
 
         {/* Glow effects */}
-        <div className={`absolute -top-40 -right-40 w-96 h-96 ${style.bg} rounded-full blur-[120px] opacity-30 group-hover:opacity-40 transition-opacity duration-500`} />
+        <div
+          className={`absolute -top-40 -right-40 w-96 h-96 ${style.bg} rounded-full blur-[120px] opacity-30 group-hover:opacity-40 transition-opacity duration-500`}
+        />
         <div className="absolute -bottom-20 -left-20 w-64 h-64 bg-brand-500 rounded-full blur-[100px] opacity-20" />
 
         {/* Content */}
@@ -64,7 +68,9 @@ export default function HeroArticle({ article }: HeroArticleProps) {
               </svg>
               Top Story
             </span>
-            <span className={`text-xs font-semibold px-3 py-1.5 rounded-full text-white ${style.bg} shadow-lg`}>
+            <span
+              className={`text-xs font-semibold px-3 py-1.5 rounded-full text-white ${style.bg} shadow-lg`}
+            >
               {article.source}
             </span>
           </div>
@@ -74,26 +80,31 @@ export default function HeroArticle({ article }: HeroArticleProps) {
             <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-tight group-hover:text-brand-400 transition-colors duration-300 mb-4 md:mb-6">
               {article.title}
             </h1>
-            
+
             {article.description && (
-              <p className="text-gray-300 text-base md:text-lg lg:text-xl line-clamp-2 md:line-clamp-3 mb-6 leading-relaxed max-w-3xl">
+              <p className="text-white/70 text-base md:text-lg lg:text-xl line-clamp-2 md:line-clamp-3 mb-6 leading-relaxed max-w-3xl">
                 {article.description}
               </p>
             )}
 
             <div className="flex items-center gap-4 md:gap-6">
-              <time className="text-gray-400 text-sm md:text-base" dateTime={article.pubDate}>
+              <time className="text-white/60 text-sm md:text-base" dateTime={article.pubDate}>
                 {article.timeAgo}
               </time>
               <span className="inline-flex items-center text-brand-400 font-semibold text-sm md:text-base group-hover:text-brand-300 transition-colors">
                 Read Full Story
-                <svg 
-                  className="w-5 h-5 ml-2 group-hover:translate-x-2 transition-transform duration-300" 
-                  fill="none" 
-                  viewBox="0 0 24 24" 
+                <svg
+                  className="w-5 h-5 ml-2 group-hover:translate-x-2 transition-transform duration-300"
+                  fill="none"
+                  viewBox="0 0 24 24"
                   stroke="currentColor"
                 >
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M17 8l4 4m0 0l-4 4m4-4H3"
+                  />
                 </svg>
               </span>
             </div>

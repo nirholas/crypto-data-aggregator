@@ -128,14 +128,14 @@ export function CorrelationMatrix() {
   };
 
   const getTextColor = (corr: number): string => {
-    return corr > 0.3 ? 'text-white' : 'text-neutral-900';
+    return corr > 0.3 ? 'text-white' : 'text-text-primary';
   };
 
   if (loading) {
     return (
       <div className="space-y-4">
-        <div className="h-10 w-48 bg-neutral-200 dark:bg-black rounded animate-pulse mx-auto" />
-        <div className="aspect-square max-w-2xl mx-auto bg-neutral-200 dark:bg-black rounded animate-pulse" />
+        <div className="h-10 w-48 bg-surface rounded animate-pulse mx-auto" />
+        <div className="aspect-square max-w-2xl mx-auto bg-surface rounded animate-pulse" />
       </div>
     );
   }
@@ -144,15 +144,13 @@ export function CorrelationMatrix() {
     <div className="space-y-6">
       {/* Timeframe Toggle */}
       <div className="flex justify-center">
-        <div className="inline-flex rounded-lg border border-neutral-300 dark:border-neutral-700 p-1">
+        <div className="inline-flex rounded-lg border border-surface-border p-1">
           {(['7', '30', '90'] as const).map((tf) => (
             <button
               key={tf}
               onClick={() => setTimeframe(tf)}
               className={`px-4 py-1.5 text-sm font-medium rounded-md transition-colors ${
-                timeframe === tf
-                  ? 'bg-black dark:bg-white text-white dark:text-neutral-900'
-                  : 'text-neutral-600 dark:text-neutral-400'
+                timeframe === tf ? 'bg-surface-alt text-text-primary' : 'text-text-secondary'
               }`}
             >
               {tf}D
@@ -163,7 +161,7 @@ export function CorrelationMatrix() {
 
       {/* Legend */}
       <div className="flex items-center justify-center gap-4 text-sm">
-        <span className="text-neutral-500">Inverse</span>
+        <span className="text-text-muted">Inverse</span>
         <div className="flex h-4">
           {Array.from({ length: 10 }).map((_, i) => (
             <div
@@ -173,7 +171,7 @@ export function CorrelationMatrix() {
             />
           ))}
         </div>
-        <span className="text-neutral-500">Correlated</span>
+        <span className="text-text-muted">Correlated</span>
       </div>
 
       {/* Matrix */}
@@ -184,10 +182,7 @@ export function CorrelationMatrix() {
               <tr>
                 <th className="p-2"></th>
                 {coinData.map((coin) => (
-                  <th
-                    key={coin.id}
-                    className="p-2 text-xs font-medium text-neutral-500 dark:text-neutral-400 uppercase"
-                  >
+                  <th key={coin.id} className="p-2 text-xs font-medium text-text-muted uppercase">
                     {coin.symbol.slice(0, 4)}
                   </th>
                 ))}
@@ -196,7 +191,7 @@ export function CorrelationMatrix() {
             <tbody>
               {coinData.map((rowCoin) => (
                 <tr key={rowCoin.id}>
-                  <td className="p-2 text-xs font-medium text-neutral-500 dark:text-neutral-400 uppercase">
+                  <td className="p-2 text-xs font-medium text-text-muted uppercase">
                     {rowCoin.symbol.slice(0, 4)}
                   </td>
                   {coinData.map((colCoin) => {
@@ -207,7 +202,7 @@ export function CorrelationMatrix() {
                     return (
                       <td
                         key={colCoin.id}
-                        className={`p-0 ${isHovered ? 'ring-2 ring-neutral-900 dark:ring-white z-10' : ''}`}
+                        className={`p-0 ${isHovered ? 'ring-2 ring-text-primary z-10' : ''}`}
                         onMouseEnter={() => setHoveredCell({ row: rowCoin.id, col: colCoin.id })}
                         onMouseLeave={() => setHoveredCell(null)}
                       >
@@ -230,19 +225,19 @@ export function CorrelationMatrix() {
 
       {/* Hover Info */}
       {hoveredCell && (
-        <div className="text-center text-sm text-neutral-600 dark:text-neutral-400">
+        <div className="text-center text-sm text-text-secondary">
           <span className="font-medium uppercase">{hoveredCell.row.slice(0, 4)}</span>
           {' / '}
           <span className="font-medium uppercase">{hoveredCell.col.slice(0, 4)}</span>
           {': '}
-          <span className="font-mono font-bold text-neutral-900 dark:text-white">
+          <span className="font-mono font-bold text-text-primary">
             {correlationMatrix.get(hoveredCell.row)?.get(hoveredCell.col)?.toFixed(4)}
           </span>
         </div>
       )}
 
       {/* Explanation */}
-      <p className="text-xs text-neutral-500 dark:text-neutral-400 text-center max-w-lg mx-auto">
+      <p className="text-xs text-text-muted text-center max-w-lg mx-auto">
         Correlation measures how closely two assets move together. 1.0 = perfect correlation (move
         together), 0 = no correlation, -1.0 = inverse correlation (move opposite).
       </p>

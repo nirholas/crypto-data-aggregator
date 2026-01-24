@@ -82,7 +82,7 @@ export function GasTracker() {
       <div className="space-y-4">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {Array.from({ length: 4 }).map((_, i) => (
-            <div key={i} className="h-32 bg-neutral-200 dark:bg-black rounded-xl animate-pulse" />
+            <div key={i} className="h-32 bg-surface-alt rounded-xl animate-pulse" />
           ))}
         </div>
       </div>
@@ -104,32 +104,32 @@ export function GasTracker() {
               key={priority}
               className={`p-5 rounded-xl border transition-colors ${
                 priority === 'instant'
-                  ? 'bg-black dark:bg-white border-neutral-900 dark:border-white'
-                  : 'bg-white dark:bg-black border-neutral-200 dark:border-neutral-700'
+                  ? 'bg-surface-alt border-primary'
+                  : 'bg-surface border-surface-border'
               }`}
             >
               <div className="flex items-center gap-2 mb-3">
                 <Icon
-                  className={`w-5 h-5 ${priority === 'instant' ? 'text-white dark:text-neutral-900' : 'text-neutral-600 dark:text-neutral-400'}`}
+                  className={`w-5 h-5 ${priority === 'instant' ? 'text-text-primary' : 'text-text-secondary'}`}
                 />
                 <span
-                  className={`text-sm font-medium ${priority === 'instant' ? 'text-white dark:text-neutral-900' : 'text-neutral-600 dark:text-neutral-400'}`}
+                  className={`text-sm font-medium ${priority === 'instant' ? 'text-text-primary' : 'text-text-secondary'}`}
                 >
                   {info.label}
                 </span>
               </div>
               <div
-                className={`text-3xl font-bold font-mono ${priority === 'instant' ? 'text-white dark:text-neutral-900' : 'text-neutral-900 dark:text-white'}`}
+                className={`text-3xl font-bold font-mono ${priority === 'instant' ? 'text-text-primary' : 'text-text-primary'}`}
               >
                 {gwei}
               </div>
               <div
-                className={`text-sm ${priority === 'instant' ? 'text-neutral-300 dark:text-neutral-600' : 'text-neutral-500 dark:text-neutral-400'}`}
+                className={`text-sm ${priority === 'instant' ? 'text-text-muted' : 'text-text-muted'}`}
               >
                 gwei
               </div>
               <div
-                className={`mt-2 text-xs ${priority === 'instant' ? 'text-neutral-400 dark:text-neutral-500' : 'text-neutral-400 dark:text-neutral-500'}`}
+                className={`mt-2 text-xs ${priority === 'instant' ? 'text-text-muted' : 'text-text-muted'}`}
               >
                 {info.time} · ~${cost}
               </div>
@@ -139,10 +139,8 @@ export function GasTracker() {
       </div>
 
       {/* Transaction Type Selector */}
-      <div className="bg-white dark:bg-black border border-neutral-200 dark:border-neutral-700 rounded-xl p-6">
-        <h3 className="text-sm font-medium text-neutral-900 dark:text-white mb-4">
-          Estimate costs for:
-        </h3>
+      <div className="bg-surface border border-surface-border rounded-xl p-6">
+        <h3 className="text-sm font-medium text-text-primary mb-4">Estimate costs for:</h3>
         <div className="flex flex-wrap gap-2">
           {[
             { id: 'transfer', label: 'ETH Transfer', gas: '21,000' },
@@ -155,8 +153,8 @@ export function GasTracker() {
               onClick={() => setSelectedTx(tx.id as typeof selectedTx)}
               className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
                 selectedTx === tx.id
-                  ? 'bg-black dark:bg-white text-white dark:text-neutral-900'
-                  : 'bg-neutral-100 dark:bg-black text-neutral-600 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-600'
+                  ? 'bg-surface-alt text-text-primary'
+                  : 'bg-surface-alt text-text-secondary hover:bg-surface-border'
               }`}
             >
               {tx.label}
@@ -172,12 +170,10 @@ export function GasTracker() {
             const cost = estimateTxCost(gwei, TX_GAS_LIMITS[selectedTx], ethPrice);
             return (
               <div key={priority} className="text-center">
-                <div className="text-xs text-neutral-500 dark:text-neutral-400 uppercase">
+                <div className="text-xs text-text-muted uppercase">
                   {PRIORITY_LABELS[priority].label}
                 </div>
-                <div className="text-lg font-bold text-neutral-900 dark:text-white font-mono">
-                  ${cost}
-                </div>
+                <div className="text-lg font-bold text-text-primary font-mono">${cost}</div>
               </div>
             );
           })}
@@ -185,7 +181,7 @@ export function GasTracker() {
       </div>
 
       {/* Base Fee Info */}
-      <div className="flex items-center justify-between text-sm text-neutral-500 dark:text-neutral-400 px-2">
+      <div className="flex items-center justify-between text-sm text-text-muted px-2">
         <span>Base Fee: {gasData.baseFee} gwei</span>
         <span>Block #{gasData.lastBlock.toLocaleString()}</span>
         <span>ETH: ${ethPrice.toLocaleString()}</span>

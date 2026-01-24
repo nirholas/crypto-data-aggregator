@@ -16,7 +16,7 @@ export function NewsletterForm({ variant = 'card' }: NewsletterFormProps) {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!email) {
       setStatus('error');
       setMessage('Please enter your email');
@@ -50,7 +50,7 @@ export function NewsletterForm({ variant = 'card' }: NewsletterFormProps) {
 
   if (variant === 'banner') {
     if (!showBanner) return null;
-    
+
     return (
       <div className="relative bg-gradient-to-r from-amber-500 to-orange-500 text-white py-3 px-4">
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-center gap-3">
@@ -72,7 +72,13 @@ export function NewsletterForm({ variant = 'card' }: NewsletterFormProps) {
               disabled={status === 'loading' || status === 'success'}
               className="px-4 py-1.5 bg-white text-amber-600 rounded font-medium text-sm hover:bg-amber-50 disabled:opacity-50"
             >
-              {status === 'loading' ? <Loader2 className="w-4 h-4 animate-spin" /> : status === 'success' ? '✓' : 'Subscribe'}
+              {status === 'loading' ? (
+                <Loader2 className="w-4 h-4 animate-spin" />
+              ) : status === 'success' ? (
+                '✓'
+              ) : (
+                'Subscribe'
+              )}
             </button>
           </form>
           <button
@@ -94,7 +100,7 @@ export function NewsletterForm({ variant = 'card' }: NewsletterFormProps) {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           placeholder="your@email.com"
-          className="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-sm"
+          className="flex-1 px-3 py-2 border border-surface-border rounded-lg bg-surface text-sm"
           disabled={status === 'loading' || status === 'success'}
         />
         <button
@@ -118,7 +124,7 @@ export function NewsletterForm({ variant = 'card' }: NewsletterFormProps) {
         </div>
         <div>
           <h3 className="font-semibold text-lg">Crypto News Digest</h3>
-          <p className="text-sm text-gray-600 dark:text-gray-400">Stay updated with the latest news</p>
+          <p className="text-sm text-text-muted">Stay updated with the latest news</p>
         </div>
       </div>
 
@@ -133,15 +139,18 @@ export function NewsletterForm({ variant = 'card' }: NewsletterFormProps) {
             <input
               type="email"
               value={email}
-              onChange={(e) => { setEmail(e.target.value); setStatus('idle'); }}
+              onChange={(e) => {
+                setEmail(e.target.value);
+                setStatus('idle');
+              }}
               placeholder="Enter your email address"
-              className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 focus:ring-2 focus:ring-amber-500 focus:border-transparent"
+              className="w-full px-4 py-2 border border-surface-border rounded-lg bg-surface focus:ring-2 focus:ring-amber-500 focus:border-transparent"
               disabled={status === 'loading'}
             />
           </div>
 
           <div className="flex items-center gap-4 text-sm">
-            <span className="text-gray-600 dark:text-gray-400">Frequency:</span>
+            <span className="text-text-secondary">Frequency:</span>
             {['daily', 'weekly'].map((freq) => (
               <label key={freq} className="flex items-center gap-1 cursor-pointer">
                 <input
@@ -173,7 +182,7 @@ export function NewsletterForm({ variant = 'card' }: NewsletterFormProps) {
             Subscribe for Free
           </button>
 
-          <p className="text-xs text-gray-500 text-center">
+          <p className="text-xs text-text-muted text-center">
             No spam, unsubscribe anytime. We respect your privacy.
           </p>
         </form>

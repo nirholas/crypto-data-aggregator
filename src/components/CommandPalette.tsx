@@ -332,14 +332,14 @@ export function CommandPalette({ isOpen, onClose }: CommandPaletteProps) {
   return (
     <div className="fixed inset-0 z-[60] flex items-start justify-center pt-[15vh]">
       {/* Backdrop */}
-      <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" onClick={onClose} />
+      <div className="absolute inset-0 bg-background/70 backdrop-blur-sm" onClick={onClose} />
 
       {/* Palette */}
-      <div className="relative w-full max-w-xl mx-4 bg-white dark:bg-black rounded-2xl shadow-2xl overflow-hidden border border-gray-200 dark:border-slate-700 animate-fade-in-up">
+      <div className="relative w-full max-w-xl mx-4 bg-surface rounded-2xl shadow-2xl overflow-hidden border border-surface-border animate-fade-in-up">
         {/* Search Input */}
-        <div className="flex items-center gap-3 px-4 py-4 border-b border-gray-100 dark:border-slate-800">
+        <div className="flex items-center gap-3 px-4 py-4 border-b border-surface-border">
           <svg
-            className="w-5 h-5 text-gray-400"
+            className="w-5 h-5 text-text-muted"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -358,11 +358,11 @@ export function CommandPalette({ isOpen, onClose }: CommandPaletteProps) {
             onChange={(e) => setQuery(e.target.value)}
             onKeyDown={handleKeyDown}
             placeholder="Type a command or search..."
-            className="flex-1 bg-transparent border-0 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-0 text-base"
+            className="flex-1 bg-transparent border-0 text-text-primary placeholder-text-muted focus:outline-none focus:ring-0 text-base"
             autoComplete="off"
             spellCheck={false}
           />
-          <kbd className="hidden sm:inline-flex px-2 py-1 text-xs font-medium text-gray-400 bg-gray-100 dark:bg-black rounded border border-gray-200 dark:border-slate-700">
+          <kbd className="hidden sm:inline-flex px-2 py-1 text-xs font-medium text-text-muted bg-surface rounded border border-surface-border">
             ESC
           </kbd>
         </div>
@@ -370,7 +370,7 @@ export function CommandPalette({ isOpen, onClose }: CommandPaletteProps) {
         {/* Command List */}
         <div ref={listRef} className="max-h-[50vh] overflow-y-auto py-2">
           {flatCommands.length === 0 ? (
-            <div className="px-4 py-8 text-center text-gray-500 dark:text-slate-400">
+            <div className="px-4 py-8 text-center text-text-muted">
               <div className="flex justify-center mb-2">
                 <Search className="w-10 h-10" />
               </div>
@@ -382,7 +382,7 @@ export function CommandPalette({ isOpen, onClose }: CommandPaletteProps) {
               const CategoryIcon = categoryConfig.icon;
               return (
                 <div key={category} className="mb-2">
-                  <div className="px-4 py-2 text-xs font-semibold text-gray-400 dark:text-slate-500 uppercase tracking-wider flex items-center gap-2">
+                  <div className="px-4 py-2 text-xs font-semibold text-text-muted uppercase tracking-wider flex items-center gap-2">
                     <CategoryIcon className="w-3.5 h-3.5" />
                     {categoryConfig.label}
                   </div>
@@ -399,8 +399,8 @@ export function CommandPalette({ isOpen, onClose }: CommandPaletteProps) {
                         onMouseEnter={() => setSelectedIndex(currentIndex)}
                         className={`w-full flex items-center gap-3 px-4 py-3 text-left transition-colors ${
                           isSelected
-                            ? 'bg-brand-50 dark:bg-brand-900/30 text-brand-900 dark:text-brand-100'
-                            : 'text-gray-700 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-black'
+                            ? 'bg-primary/10 text-primary'
+                            : 'text-text-secondary hover:bg-surface-hover'
                         }`}
                       >
                         <span className="w-8 flex justify-center" aria-hidden="true">
@@ -409,19 +409,19 @@ export function CommandPalette({ isOpen, onClose }: CommandPaletteProps) {
                         <div className="flex-1 min-w-0">
                           <div className="font-medium truncate">{cmd.label}</div>
                           {cmd.description && (
-                            <div className="text-xs text-gray-500 dark:text-slate-400 truncate">
+                            <div className="text-xs text-text-muted truncate">
                               {cmd.description}
                             </div>
                           )}
                         </div>
                         {cmd.shortcut && (
-                          <kbd className="px-2 py-0.5 text-xs font-medium text-gray-400 dark:text-slate-500 bg-gray-100 dark:bg-black rounded">
+                          <kbd className="px-2 py-0.5 text-xs font-medium text-text-muted bg-surface rounded">
                             {cmd.shortcut}
                           </kbd>
                         )}
                         {isSelected && (
                           <svg
-                            className="w-4 h-4 text-brand-600 dark:text-brand-400"
+                            className="w-4 h-4 text-primary"
                             fill="none"
                             stroke="currentColor"
                             viewBox="0 0 24 24"
@@ -444,25 +444,23 @@ export function CommandPalette({ isOpen, onClose }: CommandPaletteProps) {
         </div>
 
         {/* Footer */}
-        <div className="px-4 py-3 border-t border-gray-100 dark:border-slate-800 bg-gray-50 dark:bg-black/50">
-          <div className="flex items-center justify-between text-xs text-gray-500 dark:text-slate-400">
+        <div className="px-4 py-3 border-t border-surface-border bg-surface">
+          <div className="flex items-center justify-between text-xs text-text-muted">
             <div className="flex items-center gap-3">
               <span className="flex items-center gap-1">
-                <kbd className="px-1.5 py-0.5 bg-white dark:bg-black rounded border border-gray-200 dark:border-slate-600">
+                <kbd className="px-1.5 py-0.5 bg-background rounded border border-surface-border">
                   ↑↓
                 </kbd>
                 navigate
               </span>
               <span className="flex items-center gap-1">
-                <kbd className="px-1.5 py-0.5 bg-white dark:bg-black rounded border border-gray-200 dark:border-slate-600">
+                <kbd className="px-1.5 py-0.5 bg-background rounded border border-surface-border">
                   ↵
                 </kbd>
                 select
               </span>
             </div>
-            <span className="text-gray-400 dark:text-slate-500">
-              {flatCommands.length} commands
-            </span>
+            <span className="text-text-muted">{flatCommands.length} commands</span>
           </div>
         </div>
       </div>

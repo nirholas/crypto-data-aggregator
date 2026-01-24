@@ -65,13 +65,13 @@ export function BackToTop({
       onClick={scrollToTop}
       className={`
         fixed z-40 p-3 rounded-full shadow-lg
-        bg-white dark:bg-black 
-        border border-gray-200 dark:border-slate-700
-        text-gray-600 dark:text-slate-300
-        hover:bg-gray-50 dark:hover:bg-black
-        hover:text-brand-600 dark:hover:text-brand-400
+        bg-surface 
+        border border-surface-border
+        text-text-secondary
+        hover:bg-surface-hover
+        hover:text-primary
         hover:shadow-xl hover:scale-110
-        focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2
+        focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2
         transition-all duration-300
         ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0 pointer-events-none'}
       `}
@@ -102,7 +102,7 @@ export function BackToTop({
           strokeLinecap="round"
           strokeDasharray={`${2 * Math.PI * 10}`}
           strokeDashoffset={`${2 * Math.PI * 10 * (1 - scrollProgress / 100)}`}
-          className="text-brand-500 transition-all duration-150"
+          className="text-primary transition-all duration-150"
         />
         {/* Arrow icon */}
         <g transform="rotate(90 12 12)">

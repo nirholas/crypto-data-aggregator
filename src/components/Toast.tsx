@@ -1,6 +1,13 @@
 'use client';
 
-import React, { createContext, useContext, useState, useCallback, useEffect, ReactNode } from 'react';
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useCallback,
+  useEffect,
+  ReactNode,
+} from 'react';
 
 // Toast types
 export type ToastType = 'success' | 'error' | 'warning' | 'info';
@@ -37,16 +44,13 @@ export function useToast() {
 // Convenience hooks
 export function useToastActions() {
   const { addToast } = useToast();
-  
+
   return {
-    success: (title: string, message?: string) => 
-      addToast({ type: 'success', title, message }),
-    error: (title: string, message?: string) => 
+    success: (title: string, message?: string) => addToast({ type: 'success', title, message }),
+    error: (title: string, message?: string) =>
       addToast({ type: 'error', title, message, duration: 6000 }),
-    warning: (title: string, message?: string) => 
-      addToast({ type: 'warning', title, message }),
-    info: (title: string, message?: string) => 
-      addToast({ type: 'info', title, message }),
+    warning: (title: string, message?: string) => addToast({ type: 'warning', title, message }),
+    info: (title: string, message?: string) => addToast({ type: 'info', title, message }),
   };
 }
 
@@ -57,11 +61,17 @@ interface ToastProviderProps {
   /** Default duration in ms */
   defaultDuration?: number;
   /** Position of toast container */
-  position?: 'top-right' | 'top-left' | 'bottom-right' | 'bottom-left' | 'top-center' | 'bottom-center';
+  position?:
+    | 'top-right'
+    | 'top-left'
+    | 'bottom-right'
+    | 'bottom-left'
+    | 'top-center'
+    | 'bottom-center';
 }
 
-export function ToastProvider({ 
-  children, 
+export function ToastProvider({
+  children,
   maxToasts = 5,
   defaultDuration = 4000,
   position = 'bottom-right',
@@ -72,25 +82,28 @@ export function ToastProvider({
     setToasts((prev) => prev.filter((t) => t.id !== id));
   }, []);
 
-  const addToast = useCallback((toast: Omit<Toast, 'id'>) => {
-    const id = `toast-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
-    const newToast: Toast = {
-      ...toast,
-      id,
-      duration: toast.duration ?? defaultDuration,
-    };
+  const addToast = useCallback(
+    (toast: Omit<Toast, 'id'>) => {
+      const id = `toast-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+      const newToast: Toast = {
+        ...toast,
+        id,
+        duration: toast.duration ?? defaultDuration,
+      };
 
-    setToasts((prev) => {
-      const updated = [...prev, newToast];
-      // Remove oldest if exceeding max
-      if (updated.length > maxToasts) {
-        return updated.slice(-maxToasts);
-      }
-      return updated;
-    });
+      setToasts((prev) => {
+        const updated = [...prev, newToast];
+        // Remove oldest if exceeding max
+        if (updated.length > maxToasts) {
+          return updated.slice(-maxToasts);
+        }
+        return updated;
+      });
 
-    return id;
-  }, [defaultDuration, maxToasts]);
+      return id;
+    },
+    [defaultDuration, maxToasts]
+  );
 
   const clearAll = useCallback(() => {
     setToasts([]);
@@ -109,20 +122,16 @@ export function ToastProvider({
   return (
     <ToastContext.Provider value={{ toasts, addToast, removeToast, clearAll }}>
       {children}
-      
+
       {/* Toast Container */}
-      <div 
+      <div
         className={`fixed z-50 flex flex-col gap-2 pointer-events-none ${positionClasses[position]}`}
         role="region"
         aria-label="Notifications"
         aria-live="polite"
       >
         {toasts.map((toast) => (
-          <ToastItem 
-            key={toast.id} 
-            toast={toast} 
-            onDismiss={() => removeToast(toast.id)} 
-          />
+          <ToastItem key={toast.id} toast={toast} onDismiss={() => removeToast(toast.id)} />
         ))}
       </div>
     </ToastContext.Provider>
@@ -143,12 +152,22 @@ const icons: Record<ToastType, React.ReactNode> = {
   ),
   warning: (
     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth={2}
+        d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+      />
     </svg>
   ),
   info: (
     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth={2}
+        d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+      />
     </svg>
   ),
 };
@@ -156,24 +175,24 @@ const icons: Record<ToastType, React.ReactNode> = {
 // Monochrome toast styles
 const typeStyles: Record<ToastType, { bg: string; icon: string; border: string }> = {
   success: {
-    bg: 'bg-white dark:bg-black',
-    icon: 'text-neutral-900 dark:text-white',
-    border: 'border-neutral-200 dark:border-neutral-800',
+    bg: 'bg-surface',
+    icon: 'text-text-primary',
+    border: 'border-surface-border',
   },
   error: {
-    bg: 'bg-white dark:bg-black',
-    icon: 'text-neutral-500 dark:text-neutral-400',
-    border: 'border-neutral-200 dark:border-neutral-800',
+    bg: 'bg-surface',
+    icon: 'text-text-muted',
+    border: 'border-surface-border',
   },
   warning: {
-    bg: 'bg-white dark:bg-black',
-    icon: 'text-neutral-700 dark:text-neutral-300',
-    border: 'border-neutral-200 dark:border-neutral-800',
+    bg: 'bg-surface',
+    icon: 'text-text-secondary',
+    border: 'border-surface-border',
   },
   info: {
-    bg: 'bg-white dark:bg-black',
-    icon: 'text-neutral-600 dark:text-neutral-400',
-    border: 'border-neutral-200 dark:border-neutral-800',
+    bg: 'bg-surface',
+    icon: 'text-text-secondary',
+    border: 'border-surface-border',
   },
 };
 
@@ -196,7 +215,7 @@ function ToastItem({ toast, onDismiss }: ToastItemProps) {
       const elapsed = Date.now() - startTime;
       const remaining = Math.max(0, 100 - (elapsed / toast.duration!) * 100);
       setProgress(remaining);
-      
+
       if (remaining <= 0) {
         clearInterval(interval);
         handleDismiss();
@@ -225,50 +244,47 @@ function ToastItem({ toast, onDismiss }: ToastItemProps) {
       <div className="p-4">
         <div className="flex items-start gap-3">
           {/* Icon */}
-          <div className={`flex-shrink-0 ${style.icon}`}>
-            {icons[toast.type]}
-          </div>
-          
+          <div className={`flex-shrink-0 ${style.icon}`}>{icons[toast.type]}</div>
+
           {/* Content */}
           <div className="flex-1 min-w-0">
-            <p className="text-sm font-semibold text-gray-900 dark:text-white">
-              {toast.title}
-            </p>
-            {toast.message && (
-              <p className="mt-1 text-sm text-gray-600 dark:text-gray-300">
-                {toast.message}
-              </p>
-            )}
+            <p className="text-sm font-semibold text-text-primary">{toast.title}</p>
+            {toast.message && <p className="mt-1 text-sm text-text-secondary">{toast.message}</p>}
             {toast.action && (
               <button
                 onClick={() => {
                   toast.action!.onClick();
                   handleDismiss();
                 }}
-                className="mt-2 text-sm font-medium text-brand-600 dark:text-brand-400 hover:text-brand-700 dark:hover:text-brand-300 transition-colors"
+                className="mt-2 text-sm font-medium text-primary hover:text-primary/80 transition-colors"
               >
                 {toast.action.label}
               </button>
             )}
           </div>
-          
+
           {/* Dismiss button */}
           <button
             onClick={handleDismiss}
-            className="flex-shrink-0 p-1 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 rounded-lg hover:bg-black/5 dark:hover:bg-white/10 transition-colors"
+            className="flex-shrink-0 p-1 text-text-muted hover:text-text-secondary rounded-lg hover:bg-surface-hover transition-colors"
             aria-label="Dismiss"
           >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M6 18L18 6M6 6l12 12"
+              />
             </svg>
           </button>
         </div>
       </div>
-      
+
       {/* Progress bar */}
       {toast.duration && (
-        <div className="h-1 bg-black/5 dark:bg-white/10">
-          <div 
+        <div className="h-1 bg-surface-hover">
+          <div
             className={`h-full transition-all duration-100 ${style.icon.replace('text-', 'bg-')}`}
             style={{ width: `${progress}%` }}
           />

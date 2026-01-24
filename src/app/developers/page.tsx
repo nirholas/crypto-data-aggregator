@@ -101,26 +101,26 @@ export default function DevelopersPage() {
   };
 
   return (
-    <div className="min-h-screen bg-black text-white">
+    <div className="min-h-screen bg-background text-text-primary">
       <div className="max-w-2xl mx-auto px-4 py-16">
         {/* Header */}
         <div className="text-center mb-12">
-          <div className="w-16 h-16 bg-white/10 rounded-2xl flex items-center justify-center mx-auto mb-6">
+          <div className="w-16 h-16 bg-surface rounded-2xl flex items-center justify-center mx-auto mb-6">
             <Key className="w-8 h-8" />
           </div>
           <h1 className="text-3xl font-bold mb-4">Developer API</h1>
-          <p className="text-neutral-400">
+          <p className="text-text-muted">
             Get your free API key to access cryptocurrency market data
           </p>
         </div>
 
         {/* Registration Form */}
-        <div className="bg-neutral-900 rounded-2xl border border-neutral-800 p-8 mb-8">
+        <div className="bg-surface rounded-2xl border border-surface-border p-8 mb-8">
           <h2 className="text-xl font-semibold mb-6">Get Your API Key</h2>
 
           <form onSubmit={handleRegister} className="space-y-4">
             <div>
-              <label htmlFor="email" className="block text-sm text-neutral-400 mb-2">
+              <label htmlFor="email" className="block text-sm text-text-muted mb-2">
                 Email Address
               </label>
               <input
@@ -130,12 +130,12 @@ export default function DevelopersPage() {
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="developer@example.com"
                 required
-                className="w-full px-4 py-3 bg-black border border-neutral-700 rounded-lg focus:border-white focus:outline-none transition-colors"
+                className="w-full px-4 py-3 bg-background border border-surface-border rounded-lg focus:border-primary focus:outline-none transition-colors"
               />
             </div>
 
             <div>
-              <label htmlFor="name" className="block text-sm text-neutral-400 mb-2">
+              <label htmlFor="name" className="block text-sm text-text-muted mb-2">
                 Key Name (optional)
               </label>
               <input
@@ -144,7 +144,7 @@ export default function DevelopersPage() {
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 placeholder="My App"
-                className="w-full px-4 py-3 bg-black border border-neutral-700 rounded-lg focus:border-white focus:outline-none transition-colors"
+                className="w-full px-4 py-3 bg-background border border-surface-border rounded-lg focus:border-primary focus:outline-none transition-colors"
               />
             </div>
 
@@ -158,7 +158,7 @@ export default function DevelopersPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-3 bg-white text-black font-medium rounded-lg hover:bg-neutral-200 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              className="w-full py-3 bg-primary text-white font-medium rounded-lg hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
               {loading ? 'Creating...' : 'Create Free API Key'}
             </button>
@@ -166,7 +166,7 @@ export default function DevelopersPage() {
 
           <button
             onClick={loadExistingKeys}
-            className="w-full mt-4 py-2 text-neutral-400 text-sm hover:text-white transition-colors"
+            className="w-full mt-4 py-2 text-text-muted text-sm hover:text-text-primary transition-colors"
           >
             Already have a key? View your existing keys
           </button>
@@ -174,23 +174,23 @@ export default function DevelopersPage() {
 
         {/* New Key Display */}
         {newKey && (
-          <div className="bg-green-900/20 border border-green-500/50 rounded-2xl p-6 mb-8">
-            <div className="flex items-center gap-2 text-green-400 mb-4">
+          <div className="bg-gain/20 border border-gain/50 rounded-2xl p-6 mb-8">
+            <div className="flex items-center gap-2 text-gain mb-4">
               <Check className="w-5 h-5" />
               <span className="font-medium">API Key Created Successfully</span>
             </div>
 
-            <p className="text-sm text-neutral-400 mb-4">
+            <p className="text-sm text-text-muted mb-4">
               Save this key now. It will only be shown once!
             </p>
 
             <div className="flex items-center gap-2">
-              <code className="flex-1 bg-black px-4 py-3 rounded-lg font-mono text-sm break-all">
+              <code className="flex-1 bg-background px-4 py-3 rounded-lg font-mono text-sm break-all">
                 {newKey}
               </code>
               <button
                 onClick={copyToClipboard}
-                className="p-3 bg-neutral-800 rounded-lg hover:bg-neutral-700 transition-colors"
+                className="p-3 bg-surface rounded-lg hover:bg-surface-hover transition-colors"
               >
                 {copied ? (
                   <Check className="w-5 h-5 text-green-400" />
@@ -204,7 +204,7 @@ export default function DevelopersPage() {
 
         {/* Existing Keys */}
         {showKeys && existingKeys.length > 0 && (
-          <div className="bg-neutral-900 rounded-2xl border border-neutral-800 p-6 mb-8">
+          <div className="bg-surface rounded-2xl border border-surface-border p-6 mb-8">
             <h3 className="text-lg font-medium mb-4">Your API Keys</h3>
 
             <div className="space-y-3">
@@ -213,21 +213,23 @@ export default function DevelopersPage() {
                   key={key.id}
                   className={`flex items-center justify-between p-4 rounded-lg border ${
                     key.active
-                      ? 'bg-black border-neutral-700'
-                      : 'bg-neutral-800/50 border-neutral-800 opacity-50'
+                      ? 'bg-background border-surface-border'
+                      : 'bg-surface-hover border-surface-border opacity-50'
                   }`}
                 >
                   <div>
                     <div className="flex items-center gap-2">
                       <code className="text-sm font-mono">{key.keyPrefix}...</code>
-                      <span className="text-xs px-2 py-0.5 bg-neutral-700 rounded">{key.tier}</span>
+                      <span className="text-xs px-2 py-0.5 bg-surface-hover rounded">
+                        {key.tier}
+                      </span>
                       {!key.active && (
-                        <span className="text-xs px-2 py-0.5 bg-red-900/50 text-red-400 rounded">
+                        <span className="text-xs px-2 py-0.5 bg-loss/20 text-loss rounded">
                           Revoked
                         </span>
                       )}
                     </div>
-                    <div className="text-xs text-neutral-500 mt-1">
+                    <div className="text-xs text-text-muted mt-1">
                       {key.name} • Created {new Date(key.createdAt).toLocaleDateString()}
                     </div>
                   </div>
@@ -235,7 +237,7 @@ export default function DevelopersPage() {
                   {key.active && (
                     <button
                       onClick={() => handleRevoke(key.id)}
-                      className="p-2 text-neutral-400 hover:text-red-400 transition-colors"
+                      className="p-2 text-text-muted hover:text-loss transition-colors"
                       title="Revoke key"
                     >
                       <Trash2 className="w-4 h-4" />
@@ -248,40 +250,40 @@ export default function DevelopersPage() {
         )}
 
         {/* Usage Example */}
-        <div className="bg-neutral-900 rounded-2xl border border-neutral-800 p-6">
+        <div className="bg-surface rounded-2xl border border-surface-border p-6">
           <h3 className="text-lg font-medium mb-4">Usage</h3>
 
           <div className="space-y-4 text-sm">
             <div>
-              <p className="text-neutral-400 mb-2">Using header (recommended):</p>
-              <code className="block bg-black p-3 rounded-lg font-mono text-xs overflow-x-auto">
+              <p className="text-text-muted mb-2">Using header (recommended):</p>
+              <code className="block bg-background p-3 rounded-lg font-mono text-xs overflow-x-auto">
                 curl -H &quot;X-API-Key: YOUR_API_KEY&quot; \<br />
                 &nbsp;&nbsp;https://crypto-data.vercel.app/api/v1/coins
               </code>
             </div>
 
             <div>
-              <p className="text-neutral-400 mb-2">Using query parameter:</p>
-              <code className="block bg-black p-3 rounded-lg font-mono text-xs overflow-x-auto">
+              <p className="text-text-muted mb-2">Using query parameter:</p>
+              <code className="block bg-background p-3 rounded-lg font-mono text-xs overflow-x-auto">
                 curl &quot;https://crypto-data.vercel.app/api/v1/coins?api_key=YOUR_API_KEY&quot;
               </code>
             </div>
           </div>
 
-          <div className="mt-6 pt-6 border-t border-neutral-800">
+          <div className="mt-6 pt-6 border-t border-surface-border">
             <h4 className="font-medium mb-3">Rate Limits</h4>
             <div className="grid grid-cols-3 gap-4 text-center text-sm">
-              <div className="p-3 bg-black rounded-lg">
+              <div className="p-3 bg-background rounded-lg">
                 <div className="text-2xl font-bold">100</div>
-                <div className="text-neutral-400">Free / day</div>
+                <div className="text-text-muted">Free / day</div>
               </div>
-              <div className="p-3 bg-black rounded-lg">
+              <div className="p-3 bg-background rounded-lg">
                 <div className="text-2xl font-bold">10K</div>
-                <div className="text-neutral-400">Pro / day</div>
+                <div className="text-text-muted">Pro / day</div>
               </div>
-              <div className="p-3 bg-black rounded-lg">
+              <div className="p-3 bg-background rounded-lg">
                 <div className="text-2xl font-bold">∞</div>
-                <div className="text-neutral-400">Enterprise</div>
+                <div className="text-text-muted">Enterprise</div>
               </div>
             </div>
           </div>
@@ -289,7 +291,7 @@ export default function DevelopersPage() {
           <div className="mt-6 text-center">
             <a
               href="/docs/api"
-              className="text-neutral-400 hover:text-white transition-colors text-sm"
+              className="text-text-muted hover:text-text-primary transition-colors text-sm"
             >
               View full API documentation →
             </a>

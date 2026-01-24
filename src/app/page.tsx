@@ -229,7 +229,7 @@ export default async function MarketsPage({ searchParams }: MarketsPageProps) {
   const paginatedCoins = filteredCoins.slice(startIndex, startIndex + perPage);
 
   return (
-    <div className="min-h-screen bg-white dark:bg-black">
+    <div className="min-h-screen bg-background">
       <div className="max-w-7xl mx-auto">
         <Header />
 
@@ -239,11 +239,11 @@ export default async function MarketsPage({ searchParams }: MarketsPageProps) {
         <main className="px-4 py-6">
           {/* Page Header */}
           <div className="mb-6">
-            <h1 className="text-3xl font-bold text-black dark:text-white mb-2 flex items-center gap-3">
-              <BarChart3 className="w-8 h-8 text-brand-500" />
+            <h1 className="text-3xl font-bold text-text-primary mb-2 flex items-center gap-3">
+              <BarChart3 className="w-8 h-8 text-primary" />
               Cryptocurrency Markets
             </h1>
-            <p className="text-neutral-600 dark:text-neutral-400">
+            <p className="text-text-secondary">
               Live prices, charts, and market data for {totalCount.toLocaleString()}{' '}
               cryptocurrencies
             </p>
@@ -288,19 +288,19 @@ export default async function MarketsPage({ searchParams }: MarketsPageProps) {
 function TrendingSectionSkeleton() {
   return (
     <div className="grid md:grid-cols-2 gap-4 mb-6">
-      <div className="bg-white dark:bg-black rounded-xl border border-gray-200 dark:border-gray-700 p-4">
-        <div className="h-6 w-32 bg-gray-200 dark:bg-black rounded mb-3 animate-pulse" />
+      <div className="bg-surface rounded-xl border border-surface-border p-4">
+        <div className="h-6 w-32 bg-surface-hover rounded mb-3 animate-pulse" />
         <div className="flex gap-2">
           {[1, 2, 3, 4, 5].map((i) => (
-            <div key={i} className="h-10 w-24 bg-gray-100 dark:bg-black rounded-lg animate-pulse" />
+            <div key={i} className="h-10 w-24 bg-surface rounded-lg animate-pulse" />
           ))}
         </div>
       </div>
-      <div className="bg-white dark:bg-black rounded-xl border border-gray-200 dark:border-gray-700 p-4">
-        <div className="h-6 w-32 bg-gray-200 dark:bg-black rounded mb-3 animate-pulse" />
+      <div className="bg-surface rounded-xl border border-surface-border p-4">
+        <div className="h-6 w-32 bg-surface-hover rounded mb-3 animate-pulse" />
         <div className="space-y-2">
           {[1, 2, 3, 4, 5].map((i) => (
-            <div key={i} className="h-8 bg-gray-100 dark:bg-black rounded animate-pulse" />
+            <div key={i} className="h-8 bg-surface rounded animate-pulse" />
           ))}
         </div>
       </div>
@@ -312,10 +312,7 @@ function CategoryTabsSkeleton() {
   return (
     <div className="flex gap-2 mb-4 overflow-hidden">
       {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
-        <div
-          key={i}
-          className="h-10 w-24 bg-gray-100 dark:bg-black rounded-full animate-pulse flex-shrink-0"
-        />
+        <div key={i} className="h-10 w-24 bg-surface rounded-full animate-pulse flex-shrink-0" />
       ))}
     </div>
   );
@@ -324,30 +321,30 @@ function CategoryTabsSkeleton() {
 function SearchFiltersSkeleton() {
   return (
     <div className="flex flex-wrap gap-3 mb-4">
-      <div className="h-10 w-64 bg-gray-100 dark:bg-black rounded-xl animate-pulse" />
-      <div className="h-10 w-32 bg-gray-100 dark:bg-black rounded-lg animate-pulse" />
-      <div className="h-10 w-32 bg-gray-100 dark:bg-black rounded-lg animate-pulse" />
-      <div className="h-10 w-32 bg-gray-100 dark:bg-black rounded-lg animate-pulse" />
+      <div className="h-10 w-64 bg-surface rounded-xl animate-pulse" />
+      <div className="h-10 w-32 bg-surface rounded-lg animate-pulse" />
+      <div className="h-10 w-32 bg-surface rounded-lg animate-pulse" />
+      <div className="h-10 w-32 bg-surface rounded-lg animate-pulse" />
     </div>
   );
 }
 
 function TableSkeleton() {
   return (
-    <div className="bg-white dark:bg-black rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden">
-      <div className="p-4 border-b border-gray-200 dark:border-gray-700">
-        <div className="h-6 w-48 bg-gray-200 dark:bg-black rounded animate-pulse" />
+    <div className="bg-surface rounded-xl border border-surface-border overflow-hidden">
+      <div className="p-4 border-b border-surface-border">
+        <div className="h-6 w-48 bg-surface-hover rounded animate-pulse" />
       </div>
-      <div className="divide-y divide-gray-100 dark:divide-gray-800">
+      <div className="divide-y divide-surface-border">
         {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((i) => (
           <div key={i} className="flex items-center gap-4 p-4">
-            <div className="h-4 w-8 bg-gray-200 dark:bg-black rounded animate-pulse" />
-            <div className="h-8 w-8 bg-gray-200 dark:bg-black rounded-full animate-pulse" />
-            <div className="h-4 w-32 bg-gray-200 dark:bg-black rounded animate-pulse" />
-            <div className="h-4 w-20 bg-gray-200 dark:bg-black rounded animate-pulse ml-auto" />
-            <div className="h-4 w-16 bg-gray-200 dark:bg-black rounded animate-pulse hidden sm:block" />
-            <div className="h-4 w-16 bg-gray-200 dark:bg-black rounded animate-pulse hidden md:block" />
-            <div className="h-4 w-24 bg-gray-200 dark:bg-black rounded animate-pulse hidden lg:block" />
+            <div className="h-4 w-8 bg-surface-hover rounded animate-pulse" />
+            <div className="h-8 w-8 bg-surface-hover rounded-full animate-pulse" />
+            <div className="h-4 w-32 bg-surface-hover rounded animate-pulse" />
+            <div className="h-4 w-20 bg-surface-hover rounded animate-pulse ml-auto" />
+            <div className="h-4 w-16 bg-surface-hover rounded animate-pulse hidden sm:block" />
+            <div className="h-4 w-16 bg-surface-hover rounded animate-pulse hidden md:block" />
+            <div className="h-4 w-24 bg-surface-hover rounded animate-pulse hidden lg:block" />
           </div>
         ))}
       </div>

@@ -85,12 +85,12 @@ export default function PriceWidget({ variant = 'compact', className = '' }: Pri
     return (
       <div className={`flex items-center gap-4 ${className}`}>
         <div className="animate-pulse flex items-center gap-2">
-          <div className="w-6 h-6 bg-gray-200 dark:bg-black rounded-full" />
-          <div className="w-20 h-4 bg-gray-200 dark:bg-black rounded" />
+          <div className="w-6 h-6 bg-surface-alt rounded-full" />
+          <div className="w-20 h-4 bg-surface-alt rounded" />
         </div>
         <div className="animate-pulse flex items-center gap-2">
-          <div className="w-6 h-6 bg-gray-200 dark:bg-black rounded-full" />
-          <div className="w-20 h-4 bg-gray-200 dark:bg-black rounded" />
+          <div className="w-6 h-6 bg-surface-alt rounded-full" />
+          <div className="w-20 h-4 bg-surface-alt rounded" />
         </div>
       </div>
     );
@@ -108,21 +108,17 @@ export default function PriceWidget({ variant = 'compact', className = '' }: Pri
       <div className={`flex items-center gap-3 text-sm ${className}`}>
         <div className="flex items-center gap-1.5">
           <span className="text-amber-500 font-bold">₿</span>
-          <span className="font-medium text-gray-900 dark:text-white">
-            {formatPrice(prices.bitcoin.usd)}
-          </span>
+          <span className="font-medium text-text-primary">{formatPrice(prices.bitcoin.usd)}</span>
           <span
             className={`text-xs font-medium ${btcChange >= 0 ? 'text-green-500' : 'text-red-500'}`}
           >
             {formatChange(btcChange)}
           </span>
         </div>
-        <div className="w-px h-4 bg-gray-200 dark:bg-black" />
+        <div className="w-px h-4 bg-surface-border" />
         <div className="flex items-center gap-1.5">
           <span className="text-blue-500 font-bold">Ξ</span>
-          <span className="font-medium text-gray-900 dark:text-white">
-            {formatPrice(prices.ethereum.usd)}
-          </span>
+          <span className="font-medium text-text-primary">{formatPrice(prices.ethereum.usd)}</span>
           <span
             className={`text-xs font-medium ${ethChange >= 0 ? 'text-green-500' : 'text-red-500'}`}
           >
@@ -136,14 +132,14 @@ export default function PriceWidget({ variant = 'compact', className = '' }: Pri
   // Full variant
   return (
     <div className={`flex items-center gap-4 ${className}`}>
-      <div className="flex items-center gap-2 px-3 py-1.5 bg-amber-50 dark:bg-amber-900/20 rounded-lg">
+      <div className="flex items-center gap-2 px-3 py-1.5 bg-amber-500/10 rounded-lg">
         <div className="w-6 h-6 bg-amber-500 rounded-full flex items-center justify-center">
           <span className="text-white font-bold text-xs">₿</span>
         </div>
         <div className="flex flex-col">
-          <span className="text-xs text-gray-500 dark:text-gray-400">Bitcoin</span>
+          <span className="text-xs text-text-muted">Bitcoin</span>
           <div className="flex items-center gap-1">
-            <span className="font-semibold text-gray-900 dark:text-white">
+            <span className="font-semibold text-text-primary">
               {formatPrice(prices.bitcoin.usd)}
             </span>
             <span
@@ -155,14 +151,14 @@ export default function PriceWidget({ variant = 'compact', className = '' }: Pri
         </div>
       </div>
 
-      <div className="flex items-center gap-2 px-3 py-1.5 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+      <div className="flex items-center gap-2 px-3 py-1.5 bg-blue-500/10 rounded-lg">
         <div className="w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center">
           <span className="text-white font-bold text-xs">Ξ</span>
         </div>
         <div className="flex flex-col">
-          <span className="text-xs text-gray-500 dark:text-gray-400">Ethereum</span>
+          <span className="text-xs text-text-muted">Ethereum</span>
           <div className="flex items-center gap-1">
-            <span className="font-semibold text-gray-900 dark:text-white">
+            <span className="font-semibold text-text-primary">
               {formatPrice(prices.ethereum.usd)}
             </span>
             <span

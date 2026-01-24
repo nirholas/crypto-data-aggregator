@@ -199,42 +199,36 @@ export default function SettingsPage() {
                       className={`flex flex-col items-center gap-2 p-4 rounded-xl border-2 transition-all ${
                         theme === value
                           ? 'border-[var(--primary)] bg-[var(--primary)]/10'
-                          : 'border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600'
+                          : 'border-surface-border hover:border-surface-border'
                       }`}
                     >
                       <Icon
                         className={`w-6 h-6 ${
-                          theme === value ? 'text-blue-600 dark:text-blue-400' : 'text-gray-500'
+                          theme === value ? 'text-primary' : 'text-text-muted'
                         }`}
                       />
                       <span
                         className={`text-sm font-medium ${
-                          theme === value
-                            ? 'text-blue-600 dark:text-blue-400'
-                            : 'text-gray-700 dark:text-gray-300'
+                          theme === value ? 'text-primary' : 'text-text-secondary'
                         }`}
                       >
                         {label}
                       </span>
-                      {theme === value && (
-                        <Check className="w-4 h-4 text-blue-600 dark:text-blue-400" />
-                      )}
+                      {theme === value && <Check className="w-4 h-4 text-primary" />}
                     </button>
                   ))}
                 </div>
               </div>
 
-              <div className="flex items-center justify-between py-3 border-t border-gray-200 dark:border-gray-700">
+              <div className="flex items-center justify-between py-3 border-t border-surface-border">
                 <div>
-                  <p className="font-medium text-gray-900 dark:text-white">Compact View</p>
-                  <p className="text-sm text-gray-500 dark:text-gray-400">
-                    Show more items with less spacing
-                  </p>
+                  <p className="font-medium text-text-primary">Compact View</p>
+                  <p className="text-sm text-text-muted">Show more items with less spacing</p>
                 </div>
                 <button
                   onClick={() => updatePreference('compactView', !preferences.compactView)}
                   className={`relative w-12 h-6 rounded-full transition-colors ${
-                    preferences.compactView ? 'bg-blue-600' : 'bg-gray-300 dark:bg-gray-600'
+                    preferences.compactView ? 'bg-primary' : 'bg-surface-hover'
                   }`}
                 >
                   <span
@@ -248,13 +242,11 @@ export default function SettingsPage() {
           </div>
 
           {/* Currency & Display */}
-          <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 p-6">
-            <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
-              Display Preferences
-            </h2>
+          <div className="bg-surface rounded-2xl border border-surface-border p-6">
+            <h2 className="text-lg font-semibold text-text-primary mb-4">Display Preferences</h2>
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                <label className="block text-sm font-medium text-text-secondary mb-2">
                   Default Currency
                 </label>
                 <div className="grid grid-cols-5 gap-2">
@@ -266,19 +258,19 @@ export default function SettingsPage() {
                       }
                       className={`flex flex-col items-center gap-1 p-3 rounded-xl border-2 transition-all ${
                         preferences.currency === value
-                          ? 'border-blue-500 bg-blue-50 dark:bg-blue-500/10'
-                          : 'border-gray-200 dark:border-gray-700 hover:border-gray-300'
+                          ? 'border-primary bg-primary/10'
+                          : 'border-surface-border hover:border-surface-border'
                       }`}
                     >
                       <span className="text-lg">{symbol}</span>
-                      <span className="text-xs text-gray-500">{value}</span>
+                      <span className="text-xs text-text-muted">{value}</span>
                     </button>
                   ))}
                 </div>
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                <label className="block text-sm font-medium text-text-secondary mb-2">
                   Price Change Period
                 </label>
                 <div className="grid grid-cols-3 gap-2">
@@ -293,8 +285,8 @@ export default function SettingsPage() {
                       }
                       className={`flex items-center justify-center gap-2 p-3 rounded-xl border-2 transition-all ${
                         preferences.priceChangePeriod === period
-                          ? 'border-blue-500 bg-blue-50 dark:bg-blue-500/10'
-                          : 'border-gray-200 dark:border-gray-700 hover:border-gray-300'
+                          ? 'border-primary bg-primary/10'
+                          : 'border-surface-border hover:border-surface-border'
                       }`}
                     >
                       <Clock className="w-4 h-4" />
@@ -305,7 +297,7 @@ export default function SettingsPage() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                <label className="block text-sm font-medium text-text-secondary mb-2">
                   Default Chart Type
                 </label>
                 <div className="grid grid-cols-2 gap-2">
@@ -323,8 +315,8 @@ export default function SettingsPage() {
                       }
                       className={`flex items-center justify-center gap-2 p-3 rounded-xl border-2 transition-all ${
                         preferences.defaultChartType === value
-                          ? 'border-blue-500 bg-blue-50 dark:bg-blue-500/10'
-                          : 'border-gray-200 dark:border-gray-700 hover:border-gray-300'
+                          ? 'border-primary bg-primary/10'
+                          : 'border-surface-border hover:border-surface-border'
                       }`}
                     >
                       <Icon className="w-5 h-5" />
@@ -335,7 +327,7 @@ export default function SettingsPage() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                <label className="block text-sm font-medium text-text-secondary mb-2">
                   Default Time Range
                 </label>
                 <div className="grid grid-cols-4 gap-2">
@@ -350,8 +342,8 @@ export default function SettingsPage() {
                       }
                       className={`p-3 rounded-xl border-2 transition-all font-medium ${
                         preferences.defaultTimeRange === range
-                          ? 'border-blue-500 bg-blue-50 dark:bg-blue-500/10 text-blue-600 dark:text-blue-400'
-                          : 'border-gray-200 dark:border-gray-700 hover:border-gray-300 text-gray-700 dark:text-gray-300'
+                          ? 'border-primary bg-primary/10 text-primary'
+                          : 'border-surface-border hover:border-surface-border text-text-secondary'
                       }`}
                     >
                       {range}
@@ -363,19 +355,15 @@ export default function SettingsPage() {
           </div>
 
           {/* Notifications */}
-          <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 p-6">
-            <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
-              Notifications
-            </h2>
+          <div className="bg-surface rounded-2xl border border-surface-border p-6">
+            <h2 className="text-lg font-semibold text-text-primary mb-4">Notifications</h2>
             <div className="space-y-4">
               <div className="flex items-center justify-between py-3">
                 <div className="flex items-center gap-3">
-                  <Bell className="w-5 h-5 text-gray-500" />
+                  <Bell className="w-5 h-5 text-text-muted" />
                   <div>
-                    <p className="font-medium text-gray-900 dark:text-white">
-                      Browser Notifications
-                    </p>
-                    <p className="text-sm text-gray-500 dark:text-gray-400">
+                    <p className="font-medium text-text-primary">Browser Notifications</p>
+                    <p className="text-sm text-text-muted">
                       Get notified when price alerts trigger
                     </p>
                   </div>
@@ -384,7 +372,7 @@ export default function SettingsPage() {
                   <button
                     onClick={() => updatePreference('notifications', !preferences.notifications)}
                     className={`relative w-12 h-6 rounded-full transition-colors ${
-                      preferences.notifications ? 'bg-blue-600' : 'bg-gray-300 dark:bg-gray-600'
+                      preferences.notifications ? 'bg-primary' : 'bg-surface-hover'
                     }`}
                   >
                     <span
@@ -396,31 +384,29 @@ export default function SettingsPage() {
                 ) : (
                   <button
                     onClick={requestNotificationPermission}
-                    className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-medium"
+                    className="px-4 py-2 bg-primary hover:bg-primary/90 text-white rounded-lg text-sm font-medium"
                   >
                     Enable
                   </button>
                 )}
               </div>
 
-              <div className="flex items-center justify-between py-3 border-t border-gray-200 dark:border-gray-700">
+              <div className="flex items-center justify-between py-3 border-t border-surface-border">
                 <div className="flex items-center gap-3">
                   {preferences.soundEffects ? (
-                    <Volume2 className="w-5 h-5 text-gray-500" />
+                    <Volume2 className="w-5 h-5 text-text-muted" />
                   ) : (
-                    <VolumeX className="w-5 h-5 text-gray-500" />
+                    <VolumeX className="w-5 h-5 text-text-muted" />
                   )}
                   <div>
-                    <p className="font-medium text-gray-900 dark:text-white">Sound Effects</p>
-                    <p className="text-sm text-gray-500 dark:text-gray-400">
-                      Play sounds for notifications
-                    </p>
+                    <p className="font-medium text-text-primary">Sound Effects</p>
+                    <p className="text-sm text-text-muted">Play sounds for notifications</p>
                   </div>
                 </div>
                 <button
                   onClick={() => updatePreference('soundEffects', !preferences.soundEffects)}
                   className={`relative w-12 h-6 rounded-full transition-colors ${
-                    preferences.soundEffects ? 'bg-blue-600' : 'bg-gray-300 dark:bg-gray-600'
+                    preferences.soundEffects ? 'bg-primary' : 'bg-surface-hover'
                   }`}
                 >
                   <span
@@ -434,20 +420,18 @@ export default function SettingsPage() {
           </div>
 
           {/* Data Management */}
-          <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 p-6">
-            <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
-              Data Management
-            </h2>
+          <div className="bg-surface rounded-2xl border border-surface-border p-6">
+            <h2 className="text-lg font-semibold text-text-primary mb-4">Data Management</h2>
             <div className="space-y-3">
               <button
                 onClick={exportAllData}
-                className="w-full flex items-center justify-between p-4 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                className="w-full flex items-center justify-between p-4 rounded-xl hover:bg-surface-hover transition-colors"
               >
                 <div className="flex items-center gap-3">
-                  <Download className="w-5 h-5 text-gray-500" />
+                  <Download className="w-5 h-5 text-text-muted" />
                   <div className="text-left">
-                    <p className="font-medium text-gray-900 dark:text-white">Export All Data</p>
-                    <p className="text-sm text-gray-500 dark:text-gray-400">
+                    <p className="font-medium text-text-primary">Export All Data</p>
+                    <p className="text-sm text-text-muted">
                       Download watchlist, portfolio, alerts, and settings
                     </p>
                   </div>
@@ -456,7 +440,7 @@ export default function SettingsPage() {
 
               <button
                 onClick={clearAllData}
-                className="w-full flex items-center justify-between p-4 rounded-xl hover:bg-red-50 dark:hover:bg-red-900/10 transition-colors text-red-600 dark:text-red-400"
+                className="w-full flex items-center justify-between p-4 rounded-xl hover:bg-loss/10 transition-colors text-loss"
               >
                 <div className="flex items-center gap-3">
                   <Trash2 className="w-5 h-5" />

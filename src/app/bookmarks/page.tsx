@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 
 export default function BookmarksPage() {
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-surface">
       <div className="max-w-7xl mx-auto">
         <Header />
         <main className="px-4 py-8">

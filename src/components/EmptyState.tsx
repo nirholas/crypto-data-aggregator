@@ -92,8 +92,8 @@ export function EmptyState({
     primary?: boolean;
   }) => {
     const baseClasses = primary
-      ? 'px-4 py-2 bg-black dark:bg-white text-white dark:text-black font-medium rounded-lg transition-colors hover:bg-black dark:hover:bg-neutral-200'
-      : 'px-4 py-2 bg-neutral-100 dark:bg-black hover:bg-neutral-200 dark:hover:bg-black text-neutral-700 dark:text-neutral-300 font-medium rounded-lg transition-colors';
+      ? 'px-4 py-2 bg-primary text-white font-medium rounded-lg transition-colors hover:bg-primary-hover'
+      : 'px-4 py-2 bg-surface hover:bg-surface-hover text-text-secondary font-medium rounded-lg transition-colors';
 
     if (act.href) {
       return (
@@ -127,15 +127,13 @@ export function EmptyState({
 
       {/* Title */}
       <h3
-        className={`font-semibold text-neutral-900 dark:text-white ${compact ? 'text-lg mb-1' : 'text-xl mb-2'}`}
+        className={`font-semibold text-text-primary ${compact ? 'text-lg mb-1' : 'text-xl mb-2'}`}
       >
         {displayTitle}
       </h3>
 
       {/* Description */}
-      <p
-        className={`text-gray-500 dark:text-slate-400 max-w-sm ${compact ? 'text-sm mb-4' : 'text-base mb-6'}`}
-      >
+      <p className={`text-text-muted max-w-sm ${compact ? 'text-sm mb-4' : 'text-base mb-6'}`}>
         {displayDescription}
       </p>
 

@@ -1,14 +1,14 @@
 /**
  * @fileoverview Article Reactions Component
- * 
+ *
  * Allows users to react to articles with emoji reactions.
  * Reactions are stored in localStorage for persistence.
- * 
+ *
  * @module components/ArticleReactions
- * 
+ *
  * @example
  * <ArticleReactions articleId="abc123" />
- * 
+ *
  * @features
  * - 5 reaction types: 👍 👎 🔥 😮 🤔
  * - LocalStorage persistence
@@ -76,7 +76,7 @@ export default function ArticleReactions({ articleId, className = '' }: ArticleR
     try {
       const stored = localStorage.getItem(STORAGE_KEY);
       const data: StoredReactions = stored ? JSON.parse(stored) : {};
-      
+
       if (!data[articleId]) {
         data[articleId] = { userReaction: null, counts: {} };
       }
@@ -126,20 +126,25 @@ export default function ArticleReactions({ articleId, className = '' }: ArticleR
               className={`
                 relative flex items-center gap-1 px-2.5 py-1.5 rounded-full text-sm
                 transition-all duration-200 
-                ${isSelected 
-                  ? 'bg-brand-100 dark:bg-brand-900/40 ring-2 ring-brand-500' 
-                  : 'bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700'
+                ${
+                  isSelected
+                    ? 'bg-primary/10 ring-2 ring-primary'
+                    : 'bg-surface hover:bg-surface-hover'
                 }
                 ${isCurrentlyAnimating ? 'scale-125' : 'scale-100'}
               `}
               aria-label={`${label} (${count})`}
               title={label}
             >
-              <span className={`transition-transform ${isCurrentlyAnimating ? 'animate-bounce' : ''}`}>
+              <span
+                className={`transition-transform ${isCurrentlyAnimating ? 'animate-bounce' : ''}`}
+              >
                 {emoji}
               </span>
               {count > 0 && (
-                <span className={`text-xs font-medium ${isSelected ? 'text-brand-700 dark:text-brand-300' : 'text-gray-600 dark:text-gray-400'}`}>
+                <span
+                  className={`text-xs font-medium ${isSelected ? 'text-primary' : 'text-text-secondary'}`}
+                >
                   {count}
                 </span>
               )}
@@ -147,9 +152,9 @@ export default function ArticleReactions({ articleId, className = '' }: ArticleR
           );
         })}
       </div>
-      
+
       {totalReactions > 0 && (
-        <p className="text-xs text-gray-500 dark:text-gray-400">
+        <p className="text-xs text-text-muted">
           {totalReactions} {totalReactions === 1 ? 'reaction' : 'reactions'}
         </p>
       )}

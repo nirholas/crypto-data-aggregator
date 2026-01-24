@@ -15,7 +15,7 @@ export function Skeleton({ className = '' }: SkeletonProps) {
 
 export function ArticleCardSkeleton() {
   return (
-    <div className="bg-white rounded-2xl shadow-card p-4 animate-fadeIn">
+    <div className="bg-surface rounded-2xl shadow-card p-4 animate-fadeIn">
       <div className="flex gap-4">
         <Skeleton className="w-24 h-24 rounded-xl flex-shrink-0" />
         <div className="flex-1 space-y-3">
@@ -34,7 +34,7 @@ export function ArticleCardSkeleton() {
 
 export function FeaturedArticleSkeleton() {
   return (
-    <div className="bg-white rounded-2xl shadow-card overflow-hidden animate-fadeIn">
+    <div className="bg-surface rounded-2xl shadow-card overflow-hidden animate-fadeIn">
       <Skeleton className="w-full h-64" />
       <div className="p-6 space-y-4">
         <div className="flex items-center gap-2">
@@ -51,7 +51,7 @@ export function FeaturedArticleSkeleton() {
 
 export function MarketStatsSkeleton() {
   return (
-    <div className="bg-white rounded-2xl shadow-card p-6 animate-fadeIn">
+    <div className="bg-surface rounded-2xl shadow-card p-6 animate-fadeIn">
       <div className="flex items-center justify-between mb-5">
         <Skeleton className="h-6 w-40 rounded" />
         <Skeleton className="h-5 w-20 rounded" />
@@ -87,20 +87,20 @@ export function PostsGridSkeleton({ count = 6 }: { count?: number }) {
 
 export function PriceTickerSkeleton() {
   return (
-    <div className="bg-black py-2.5 animate-fadeIn">
+    <div className="bg-background py-2.5 animate-fadeIn">
       <div className="max-w-7xl mx-auto px-4">
         <div className="flex items-center justify-between gap-6">
           <div className="flex items-center gap-6">
             {[...Array(3)].map((_, i) => (
               <div key={i} className="flex items-center gap-2">
-                <Skeleton className="w-4 h-4 rounded-full bg-black" />
-                <Skeleton className="h-4 w-10 rounded bg-black" />
-                <Skeleton className="h-4 w-16 rounded bg-black" />
-                <Skeleton className="h-4 w-12 rounded bg-black" />
+                <Skeleton className="w-4 h-4 rounded-full bg-surface" />
+                <Skeleton className="h-4 w-10 rounded bg-surface" />
+                <Skeleton className="h-4 w-16 rounded bg-surface" />
+                <Skeleton className="h-4 w-12 rounded bg-surface" />
               </div>
             ))}
           </div>
-          <Skeleton className="h-4 w-32 rounded bg-black" />
+          <Skeleton className="h-4 w-32 rounded bg-surface" />
         </div>
       </div>
     </div>

@@ -63,11 +63,11 @@ interface SentimentDashboardProps {
 
 // Fear & Greed labels
 const getFearGreedLabel = (value: number): { label: string; color: string } => {
-  if (value <= 20) return { label: 'Extreme Fear', color: 'text-red-500' };
-  if (value <= 40) return { label: 'Fear', color: 'text-orange-500' };
-  if (value <= 60) return { label: 'Neutral', color: 'text-yellow-500' };
-  if (value <= 80) return { label: 'Greed', color: 'text-green-400' };
-  return { label: 'Extreme Greed', color: 'text-green-500' };
+  if (value <= 20) return { label: 'Extreme Fear', color: 'text-loss' };
+  if (value <= 40) return { label: 'Fear', color: 'text-loss' };
+  if (value <= 60) return { label: 'Neutral', color: 'text-text-secondary' };
+  if (value <= 80) return { label: 'Greed', color: 'text-gain' };
+  return { label: 'Extreme Greed', color: 'text-gain' };
 };
 
 // Sentiment gauge component
@@ -95,7 +95,7 @@ function SentimentGauge({ value, size = 'md' }: { value: number; size?: 'sm' | '
           fill="none"
           stroke="currentColor"
           strokeWidth={strokeWidth}
-          className="text-gray-700"
+          className="text-surface-border"
         />
         {/* Gradient defs */}
         <defs>
@@ -134,11 +134,11 @@ function SentimentGauge({ value, size = 'md' }: { value: number; size?: 'sm' | '
       </svg>
       {/* Value display */}
       <div className="absolute bottom-0 left-1/2 -translate-x-1/2 text-center">
-        <span className={`text-2xl font-bold ${value >= 0 ? 'text-green-500' : 'text-red-500'}`}>
+        <span className={`text-2xl font-bold ${value >= 0 ? 'text-gain' : 'text-loss'}`}>
           {value > 0 ? '+' : ''}
           {value}
         </span>
-        <p className="text-xs text-gray-500 mt-1">
+        <p className="text-xs text-text-secondary mt-1">
           {value >= 50
             ? 'Very Bullish'
             : value >= 20
@@ -159,12 +159,12 @@ function FearGreedIndex({ value }: { value: number }) {
   const { label, color } = getFearGreedLabel(value);
 
   return (
-    <div className="bg-black/50 rounded-xl p-4 border border-gray-700/50">
+    <div className="bg-surface rounded-xl p-4 border border-surface-border">
       <div className="flex items-center justify-between mb-3">
-        <h3 className="text-sm font-medium text-gray-400">Fear & Greed Index</h3>
-        <Activity className="w-4 h-4 text-gray-500" />
+        <h3 className="text-sm font-medium text-text-muted">Fear & Greed Index</h3>
+        <Activity className="w-4 h-4 text-text-secondary" />
       </div>
-      <div className="relative h-4 bg-black rounded-full overflow-hidden mb-2">
+      <div className="relative h-4 bg-surface-alt rounded-full overflow-hidden mb-2">
         <div className="absolute inset-0 bg-gradient-to-r from-red-500 via-yellow-500 to-green-500" />
         <div
           className="absolute top-0 h-full w-1 bg-white shadow-lg transition-all duration-500"
@@ -172,11 +172,11 @@ function FearGreedIndex({ value }: { value: number }) {
         />
       </div>
       <div className="flex items-center justify-between">
-        <span className="text-xs text-gray-500">Fear</span>
+        <span className="text-xs text-text-secondary">Fear</span>
         <span className={`text-lg font-bold ${color}`}>
           {value} - {label}
         </span>
-        <span className="text-xs text-gray-500">Greed</span>
+        <span className="text-xs text-text-secondary">Greed</span>
       </div>
     </div>
   );
@@ -191,18 +191,18 @@ function SocialMetrics({ data }: { data: SentimentData }) {
   ];
 
   return (
-    <div className="bg-black/50 rounded-xl p-4 border border-gray-700/50">
-      <h3 className="text-sm font-medium text-gray-400 mb-4">Social Activity</h3>
+    <div className="bg-surface rounded-xl p-4 border border-surface-border">
+      <h3 className="text-sm font-medium text-text-muted mb-4">Social Activity</h3>
       <div className="space-y-3">
         {metrics.map((metric) => (
           <div key={metric.label} className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <metric.icon className="w-4 h-4 text-gray-500" />
-              <span className="text-sm text-gray-300">{metric.label}</span>
+              <metric.icon className="w-4 h-4 text-text-secondary" />
+              <span className="text-sm text-text-secondary">{metric.label}</span>
             </div>
             <div className="flex items-center gap-2">
               <span className="text-sm font-medium">{metric.value.toLocaleString()}</span>
-              <span className={`text-xs ${metric.change >= 0 ? 'text-green-500' : 'text-red-500'}`}>
+              <span className={`text-xs ${metric.change >= 0 ? 'text-gain' : 'text-loss'}`}>
                 {metric.change >= 0 ? '+' : ''}
                 {metric.change}%
               </span>
@@ -220,33 +220,33 @@ function CoinSentimentList({ coins }: { coins: CoinSentiment[] }) {
   const displayCoins = expanded ? coins : coins.slice(0, 5);
 
   return (
-    <div className="bg-black/50 rounded-xl p-4 border border-gray-700/50">
+    <div className="bg-surface rounded-xl p-4 border border-surface-border">
       <div className="flex items-center justify-between mb-4">
-        <h3 className="text-sm font-medium text-gray-400">Coin Sentiment</h3>
-        <BarChart2 className="w-4 h-4 text-gray-500" />
+        <h3 className="text-sm font-medium text-text-muted">Coin Sentiment</h3>
+        <BarChart2 className="w-4 h-4 text-text-secondary" />
       </div>
       <div className="space-y-2">
         {displayCoins.map((coin) => (
           <div
             key={coin.symbol}
-            className="flex items-center justify-between p-2 rounded-lg hover:bg-black/30 transition-colors"
+            className="flex items-center justify-between p-2 rounded-lg hover:bg-surface-alt transition-colors"
           >
             <div className="flex items-center gap-2">
               <span className="text-sm font-medium">{coin.symbol}</span>
               {coin.trending && <Zap className="w-3 h-3 text-amber-500" />}
             </div>
             <div className="flex items-center gap-3">
-              <div className="w-24 h-2 bg-black rounded-full overflow-hidden">
+              <div className="w-24 h-2 bg-surface-alt rounded-full overflow-hidden">
                 <div
                   className={`h-full transition-all duration-300 ${
-                    coin.sentiment >= 0 ? 'bg-green-500' : 'bg-red-500'
+                    coin.sentiment >= 0 ? 'bg-gain' : 'bg-loss'
                   }`}
                   style={{ width: `${Math.abs(coin.sentiment) / 2 + 50}%` }}
                 />
               </div>
               <span
                 className={`text-sm font-medium w-12 text-right ${
-                  coin.sentiment >= 0 ? 'text-green-500' : 'text-red-500'
+                  coin.sentiment >= 0 ? 'text-gain' : 'text-loss'
                 }`}
               >
                 {coin.sentiment >= 0 ? '+' : ''}
@@ -259,7 +259,7 @@ function CoinSentimentList({ coins }: { coins: CoinSentiment[] }) {
       {coins.length > 5 && (
         <button
           onClick={() => setExpanded(!expanded)}
-          className="w-full mt-3 pt-3 border-t border-gray-700 text-sm text-gray-400 hover:text-white flex items-center justify-center gap-1"
+          className="w-full mt-3 pt-3 border-t border-surface-border text-sm text-text-muted hover:text-text-primary flex items-center justify-center gap-1"
         >
           {expanded ? (
             <>
@@ -289,43 +289,43 @@ function SentimentDistribution({
   const total = bullish + bearish + neutral;
 
   return (
-    <div className="bg-black/50 rounded-xl p-4 border border-gray-700/50">
-      <h3 className="text-sm font-medium text-gray-400 mb-4">Sentiment Distribution</h3>
+    <div className="bg-surface rounded-xl p-4 border border-surface-border">
+      <h3 className="text-sm font-medium text-text-muted mb-4">Sentiment Distribution</h3>
       <div className="flex h-4 rounded-full overflow-hidden mb-4">
         <div
-          className="bg-green-500 transition-all duration-500"
+          className="bg-gain transition-all duration-500"
           style={{ width: `${(bullish / total) * 100}%` }}
         />
         <div
-          className="bg-gray-500 transition-all duration-500"
+          className="bg-text-muted transition-all duration-500"
           style={{ width: `${(neutral / total) * 100}%` }}
         />
         <div
-          className="bg-red-500 transition-all duration-500"
+          className="bg-loss transition-all duration-500"
           style={{ width: `${(bearish / total) * 100}%` }}
         />
       </div>
       <div className="grid grid-cols-3 gap-4 text-center">
         <div>
           <div className="flex items-center justify-center gap-1 mb-1">
-            <TrendingUp className="w-4 h-4 text-green-500" />
-            <span className="text-sm text-gray-400">Bullish</span>
+            <TrendingUp className="w-4 h-4 text-gain" />
+            <span className="text-sm text-text-muted">Bullish</span>
           </div>
-          <span className="text-lg font-bold text-green-500">{bullish}%</span>
+          <span className="text-lg font-bold text-gain">{bullish}%</span>
         </div>
         <div>
           <div className="flex items-center justify-center gap-1 mb-1">
-            <Minus className="w-4 h-4 text-gray-500" />
-            <span className="text-sm text-gray-400">Neutral</span>
+            <Minus className="w-4 h-4 text-text-muted" />
+            <span className="text-sm text-text-muted">Neutral</span>
           </div>
-          <span className="text-lg font-bold text-gray-400">{neutral}%</span>
+          <span className="text-lg font-bold text-text-muted">{neutral}%</span>
         </div>
         <div>
           <div className="flex items-center justify-center gap-1 mb-1">
-            <TrendingDown className="w-4 h-4 text-red-500" />
-            <span className="text-sm text-gray-400">Bearish</span>
+            <TrendingDown className="w-4 h-4 text-loss" />
+            <span className="text-sm text-text-muted">Bearish</span>
           </div>
-          <span className="text-lg font-bold text-red-500">{bearish}%</span>
+          <span className="text-lg font-bold text-loss">{bearish}%</span>
         </div>
       </div>
     </div>
@@ -485,7 +485,7 @@ export function SentimentDashboard({
       <div className={`${className} animate-pulse`}>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {[...Array(6)].map((_, i) => (
-            <div key={i} className="h-48 bg-black/50 rounded-xl" />
+            <div key={i} className="h-48 bg-surface rounded-xl" />
           ))}
         </div>
       </div>
@@ -498,7 +498,7 @@ export function SentimentDashboard({
       <div className="flex items-center justify-between mb-6">
         <div>
           <h2 className="text-xl font-bold">{coin ? `${coin} Sentiment` : 'Market Sentiment'}</h2>
-          <div className="flex items-center gap-2 mt-1 text-sm text-gray-500">
+          <div className="flex items-center gap-2 mt-1 text-sm text-text-secondary">
             <Clock className="w-3 h-3" />
             <span>Updated {lastUpdate.toLocaleTimeString()}</span>
           </div>
@@ -506,7 +506,7 @@ export function SentimentDashboard({
         <button
           onClick={handleRefresh}
           disabled={isRefreshing}
-          className="p-2 rounded-lg bg-black hover:bg-black transition-colors disabled:opacity-50"
+          className="p-2 rounded-lg bg-surface hover:bg-surface-alt transition-colors disabled:opacity-50"
         >
           <RefreshCw className={`w-5 h-5 ${isRefreshing ? 'animate-spin' : ''}`} />
         </button>
@@ -515,11 +515,11 @@ export function SentimentDashboard({
       {/* Main Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {/* Overall Sentiment Gauge */}
-        <div className="bg-black/50 rounded-xl p-6 border border-gray-700/50 flex flex-col items-center justify-center">
-          <h3 className="text-sm font-medium text-gray-400 mb-4">Overall Sentiment</h3>
+        <div className="bg-surface rounded-xl p-6 border border-surface-border flex flex-col items-center justify-center">
+          <h3 className="text-sm font-medium text-text-muted mb-4">Overall Sentiment</h3>
           <SentimentGauge value={sentimentData.overall} size="md" />
           <div className="mt-4 flex items-center gap-2">
-            <span className="text-xs text-gray-500">24h Trend:</span>
+            <span className="text-xs text-text-secondary">24h Trend:</span>
             <MiniSparkline
               data={historyData}
               color={sentimentData.overall >= 0 ? '#22c55e' : '#ef4444'}

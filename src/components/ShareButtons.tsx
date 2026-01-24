@@ -60,7 +60,7 @@ export default function ShareButtons({ title, url }: ShareButtonsProps) {
           href={link.url}
           target="_blank"
           rel="noopener noreferrer"
-          className={`w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 text-gray-600 text-sm transition-colors ${link.color}`}
+          className={`w-8 h-8 flex items-center justify-center rounded-full bg-surface text-text-secondary text-sm transition-colors ${link.color}`}
           title={`Share on ${link.name}`}
         >
           {link.icon}
@@ -68,7 +68,7 @@ export default function ShareButtons({ title, url }: ShareButtonsProps) {
       ))}
       <button
         onClick={handleCopyLink}
-        className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 text-gray-600 text-sm transition-colors hover:bg-gray-700 hover:text-white"
+        className="w-8 h-8 flex items-center justify-center rounded-full bg-surface text-text-secondary text-sm transition-colors hover:bg-surface-hover hover:text-text-primary"
         title="Copy link"
       >
         🔗

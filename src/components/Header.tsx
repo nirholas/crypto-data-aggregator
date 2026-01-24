@@ -173,7 +173,7 @@ function MegaMenu({ item, isOpen }: { item: (typeof navItems)[0]; isOpen: boolea
             <div className={hasMultipleSections ? 'grid grid-cols-2 gap-4' : ''}>
               {item.megaMenu.sections.map((section, idx) => (
                 <div key={idx}>
-                  <h3 className="text-[11px] font-semibold text-neutral-400 dark:text-neutral-500 uppercase tracking-wider mb-2 px-2">
+                  <h3 className="text-[11px] font-semibold text-text-muted uppercase tracking-wider mb-2 px-2">
                     {section.title}
                   </h3>
                   <ul className="space-y-0.5">
@@ -200,8 +200,8 @@ function MegaMenu({ item, isOpen }: { item: (typeof navItems)[0]; isOpen: boolea
           {/* Featured Card - Right side */}
           <div className="w-48 bg-[var(--primary)] p-4 flex flex-col justify-between">
             <div>
-              <div className="w-10 h-10 rounded-xl bg-white/20 backdrop-blur-sm flex items-center justify-center mb-3">
-                <span className="text-xl text-white">{item.icon}</span>
+              <div className="w-10 h-10 rounded-xl bg-surface/20 backdrop-blur-sm flex items-center justify-center mb-3">
+                <span className="text-xl text-text-primary">{item.icon}</span>
               </div>
               <h4 className="font-semibold text-white text-sm mb-1">
                 {item.megaMenu.featured.title}
@@ -307,7 +307,7 @@ export default function Header() {
       {/* Skip to main content link */}
       <a
         href="#main-content"
-        className="skip-link focus:outline-none focus-visible:ring-2 focus-visible:ring-black dark:focus-visible:ring-white"
+        className="skip-link focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
       >
         Skip to main content
       </a>

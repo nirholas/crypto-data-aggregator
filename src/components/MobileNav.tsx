@@ -123,7 +123,7 @@ export function MobileNav() {
       <button
         ref={openButtonRef}
         onClick={() => setIsOpen(!isOpen)}
-        className="relative p-2.5 text-gray-600 dark:text-slate-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-black rounded-xl transition-colors focus-ring"
+        className="relative p-2.5 text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--surface-hover)] rounded-xl transition-colors focus-ring"
         aria-label={isOpen ? 'Close menu' : 'Open menu'}
         aria-expanded={isOpen}
         aria-controls="mobile-menu"
@@ -167,7 +167,7 @@ export function MobileNav() {
       <div
         ref={menuRef}
         id="mobile-menu"
-        className={`fixed top-0 right-0 h-full w-full sm:w-96 sm:max-w-[85vw] bg-white dark:bg-black shadow-2xl z-50 transform transition-transform duration-300 ease-out overflow-hidden flex flex-col ${
+        className={`fixed top-0 right-0 h-full w-full sm:w-96 sm:max-w-[85vw] bg-[var(--bg-secondary)] shadow-2xl z-50 transform transition-transform duration-300 ease-out overflow-hidden flex flex-col ${
           isOpen ? 'translate-x-0' : 'translate-x-full'
         }`}
         role="dialog"
@@ -175,7 +175,7 @@ export function MobileNav() {
         aria-label="Mobile navigation"
       >
         {/* Menu Header */}
-        <div className="sticky top-0 bg-white dark:bg-black border-b border-gray-100 dark:border-slate-800 px-5 py-4 flex items-center justify-between z-10">
+        <div className="sticky top-0 bg-[var(--bg-secondary)] border-b border-[var(--surface-border)] px-5 py-4 flex items-center justify-between z-10">
           <div className="flex items-center gap-2.5">
             <Newspaper className="w-5 h-5 text-brand-600 dark:text-amber-400" aria-hidden="true" />
             <span className="font-bold text-lg bg-gradient-to-r from-brand-600 to-brand-500 dark:from-amber-400 dark:to-amber-500 bg-clip-text text-transparent">
@@ -185,7 +185,7 @@ export function MobileNav() {
           <button
             ref={closeButtonRef}
             onClick={closeMenu}
-            className="p-2 text-gray-500 dark:text-slate-400 hover:text-gray-700 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-black rounded-lg transition-colors focus-ring"
+            className="p-2 text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-[var(--surface-hover)] rounded-lg transition-colors focus-ring"
             aria-label="Close menu"
           >
             <svg
@@ -217,7 +217,7 @@ export function MobileNav() {
                     key={item.href}
                     href={item.href}
                     onClick={closeMenu}
-                    className="flex items-center gap-3 px-4 py-3.5 text-gray-700 dark:text-slate-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-black rounded-xl transition-colors focus-ring"
+                    className="flex items-center gap-3 px-4 py-3.5 text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--surface-hover)] rounded-xl transition-colors focus-ring"
                   >
                     <span className="w-7 flex justify-center" aria-hidden="true">
                       <IconComponent className="w-5 h-5" />
@@ -232,7 +232,7 @@ export function MobileNav() {
             <div>
               <button
                 onClick={() => toggleSection('categories')}
-                className="w-full flex items-center justify-between px-4 py-2 text-xs font-semibold text-gray-400 dark:text-slate-500 uppercase tracking-wider hover:text-gray-600 dark:hover:text-slate-400 transition-colors focus-ring rounded-lg"
+                className="w-full flex items-center justify-between px-4 py-2 text-xs font-semibold text-[var(--text-muted)] uppercase tracking-wider hover:text-[var(--text-secondary)] transition-colors focus-ring rounded-lg"
                 aria-expanded={expandedSection === 'categories'}
               >
                 <span>Categories</span>
@@ -263,7 +263,7 @@ export function MobileNav() {
                     key={cat.slug}
                     href={`/category/${cat.slug}`}
                     onClick={closeMenu}
-                    className="flex items-center gap-2.5 px-3 py-3 text-gray-700 dark:text-slate-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-black rounded-xl transition-colors focus-ring text-sm"
+                    className="flex items-center gap-2.5 px-3 py-3 text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--surface-hover)] rounded-xl transition-colors focus-ring text-sm"
                   >
                     <span className="text-base" aria-hidden="true">
                       {cat.icon}
@@ -278,7 +278,7 @@ export function MobileNav() {
             <div>
               <button
                 onClick={() => toggleSection('resources')}
-                className="w-full flex items-center justify-between px-4 py-2 text-xs font-semibold text-gray-400 dark:text-slate-500 uppercase tracking-wider hover:text-gray-600 dark:hover:text-slate-400 transition-colors focus-ring rounded-lg"
+                className="w-full flex items-center justify-between px-4 py-2 text-xs font-semibold text-[var(--text-muted)] uppercase tracking-wider hover:text-[var(--text-secondary)] transition-colors focus-ring rounded-lg"
                 aria-expanded={expandedSection === 'resources'}
               >
                 <span>Resources</span>
@@ -331,7 +331,7 @@ export function MobileNav() {
                   </span>
                   <span className="font-medium">GitHub</span>
                   <svg
-                    className="w-4 h-4 ml-auto text-gray-400 dark:text-slate-500"
+                    className="w-4 h-4 ml-auto text-[var(--text-muted)]"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -351,7 +351,7 @@ export function MobileNav() {
         </nav>
 
         {/* Footer CTA */}
-        <div className="sticky bottom-0 bg-white dark:bg-black border-t border-gray-100 dark:border-slate-800 p-4">
+        <div className="sticky bottom-0 bg-[var(--bg-secondary)] border-t border-[var(--surface-border)] p-4">
           <div className="bg-gradient-to-br from-brand-50 to-brand-100 dark:from-brand-900/30 dark:to-brand-800/30 rounded-2xl p-4 border border-brand-200/50 dark:border-brand-700/50">
             <h3 className="font-semibold text-brand-900 dark:text-brand-100 mb-1">
               Free Crypto API

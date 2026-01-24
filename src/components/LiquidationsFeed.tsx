@@ -91,7 +91,7 @@ export function LiquidationsFeed() {
     return (
       <div className="space-y-4">
         {Array.from({ length: 5 }).map((_, i) => (
-          <div key={i} className="h-16 bg-neutral-200 dark:bg-black rounded-lg animate-pulse" />
+          <div key={i} className="h-16 bg-surface-alt rounded-lg animate-pulse" />
         ))}
       </div>
     );
@@ -101,43 +101,39 @@ export function LiquidationsFeed() {
     <div className="space-y-6">
       {/* Stats Summary */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <div className="p-4 bg-white dark:bg-black border border-neutral-200 dark:border-neutral-700 rounded-xl">
-          <div className="text-sm text-neutral-500 dark:text-neutral-400">Longs Liquidated</div>
-          <div className="text-xl font-bold text-neutral-900 dark:text-white font-mono">
+        <div className="p-4 bg-surface border border-surface-border rounded-xl">
+          <div className="text-sm text-text-muted">Longs Liquidated</div>
+          <div className="text-xl font-bold text-text-primary font-mono">
             {formatAmount(stats.totalLongs)}
           </div>
         </div>
-        <div className="p-4 bg-white dark:bg-black border border-neutral-200 dark:border-neutral-700 rounded-xl">
-          <div className="text-sm text-neutral-500 dark:text-neutral-400">Shorts Liquidated</div>
-          <div className="text-xl font-bold text-neutral-900 dark:text-white font-mono">
+        <div className="p-4 bg-surface border border-surface-border rounded-xl">
+          <div className="text-sm text-text-muted">Shorts Liquidated</div>
+          <div className="text-xl font-bold text-text-primary font-mono">
             {formatAmount(stats.totalShorts)}
           </div>
         </div>
-        <div className="p-4 bg-white dark:bg-black border border-neutral-200 dark:border-neutral-700 rounded-xl">
-          <div className="text-sm text-neutral-500 dark:text-neutral-400">Largest Liquidation</div>
-          <div className="text-xl font-bold text-neutral-900 dark:text-white font-mono">
+        <div className="p-4 bg-surface border border-surface-border rounded-xl">
+          <div className="text-sm text-text-muted">Largest Liquidation</div>
+          <div className="text-xl font-bold text-text-primary font-mono">
             {formatAmount(stats.largestLiq)}
           </div>
         </div>
-        <div className="p-4 bg-white dark:bg-black border border-neutral-200 dark:border-neutral-700 rounded-xl">
-          <div className="text-sm text-neutral-500 dark:text-neutral-400">Total Events</div>
-          <div className="text-xl font-bold text-neutral-900 dark:text-white font-mono">
-            {stats.count}
-          </div>
+        <div className="p-4 bg-surface border border-surface-border rounded-xl">
+          <div className="text-sm text-text-muted">Total Events</div>
+          <div className="text-xl font-bold text-text-primary font-mono">{stats.count}</div>
         </div>
       </div>
 
       {/* Filters */}
       <div className="flex flex-wrap items-center gap-4">
-        <div className="inline-flex rounded-lg border border-neutral-300 dark:border-neutral-700 p-1">
+        <div className="inline-flex rounded-lg border border-surface-border p-1">
           {(['all', 'long', 'short'] as const).map((f) => (
             <button
               key={f}
               onClick={() => setFilter(f)}
               className={`px-4 py-1.5 text-sm font-medium rounded-md transition-colors capitalize ${
-                filter === f
-                  ? 'bg-black dark:bg-white text-white dark:text-neutral-900'
-                  : 'text-neutral-600 dark:text-neutral-400'
+                filter === f ? 'bg-surface-alt text-text-primary' : 'text-text-secondary'
               }`}
             >
               {f === 'all' ? 'All' : `${f}s`}
@@ -148,7 +144,7 @@ export function LiquidationsFeed() {
         <select
           value={minAmount}
           onChange={(e) => setMinAmount(Number(e.target.value))}
-          className="px-3 py-2 text-sm border border-neutral-300 dark:border-neutral-700 rounded-lg bg-white dark:bg-black"
+          className="px-3 py-2 text-sm border border-surface-border rounded-lg bg-surface"
         >
           <option value={0}>All sizes</option>
           <option value={10000}>$10K+</option>
@@ -165,54 +161,52 @@ export function LiquidationsFeed() {
             key={liq.id}
             className={`flex items-center gap-4 p-4 rounded-lg border transition-colors ${
               liq.side === 'long'
-                ? 'bg-neutral-50 dark:bg-black/50 border-neutral-200 dark:border-neutral-700'
-                : 'bg-neutral-100 dark:bg-black border-neutral-300 dark:border-neutral-600'
+                ? 'bg-surface border-surface-border'
+                : 'bg-surface-alt border-surface-border'
             }`}
           >
             <div
               className={`p-2 rounded-lg ${
-                liq.side === 'long'
-                  ? 'bg-neutral-200 dark:bg-black'
-                  : 'bg-neutral-300 dark:bg-neutral-600'
+                liq.side === 'long' ? 'bg-surface-alt' : 'bg-surface-border'
               }`}
             >
               {liq.side === 'long' ? (
-                <ArrowTrendingDownIcon className="w-5 h-5 text-neutral-600 dark:text-neutral-300" />
+                <ArrowTrendingDownIcon className="w-5 h-5 text-text-secondary" />
               ) : (
-                <CurrencyDollarIcon className="w-5 h-5 text-neutral-700 dark:text-neutral-200" />
+                <CurrencyDollarIcon className="w-5 h-5 text-text-secondary" />
               )}
             </div>
 
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2">
-                <span className="font-bold text-neutral-900 dark:text-white">{liq.symbol}</span>
+                <span className="font-bold text-text-primary">{liq.symbol}</span>
                 <span
                   className={`text-xs font-medium px-2 py-0.5 rounded uppercase ${
                     liq.side === 'long'
-                      ? 'bg-neutral-200 dark:bg-black text-neutral-600 dark:text-neutral-300'
-                      : 'bg-black dark:bg-neutral-200 text-white dark:text-neutral-900'
+                      ? 'bg-surface-alt text-text-secondary'
+                      : 'bg-surface-alt text-text-primary'
                   }`}
                 >
                   {liq.side}
                 </span>
               </div>
-              <div className="text-sm text-neutral-500 dark:text-neutral-400">
+              <div className="text-sm text-text-muted">
                 {liq.exchange} · $
                 {liq.price.toLocaleString(undefined, { maximumFractionDigits: 2 })}
               </div>
             </div>
 
             <div className="text-right">
-              <div className="text-lg font-bold font-mono text-neutral-900 dark:text-white">
+              <div className="text-lg font-bold font-mono text-text-primary">
                 {formatAmount(liq.amount)}
               </div>
-              <div className="text-xs text-neutral-400">{formatTime(liq.timestamp)}</div>
+              <div className="text-xs text-text-muted">{formatTime(liq.timestamp)}</div>
             </div>
           </div>
         ))}
       </div>
 
-      <p className="text-xs text-neutral-500 dark:text-neutral-400 text-center">
+      <p className="text-xs text-text-muted text-center">
         Simulated liquidation data for demonstration. Real data requires exchange APIs.
       </p>
     </div>

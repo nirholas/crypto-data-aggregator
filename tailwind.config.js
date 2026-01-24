@@ -5,117 +5,87 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        // ============================================
-        // CMC/CoinGecko Inspired Color Palette
-        // ============================================
+        // ═══════════════════════════════════════════════════════════════
+        // CRYPTO DATA AGGREGATOR - DESIGN TOKENS
+        // All colors reference CSS variables from globals.css
+        // This ensures a single source of truth for theming
+        // ═══════════════════════════════════════════════════════════════
 
-        // Primary Brand - CMC Blue
-        primary: {
-          50: '#EEF2FF',
-          100: '#E0E7FF',
-          200: '#C7D2FE',
-          300: '#A5B4FC',
-          400: '#818CF8',
-          500: '#3861FB', // CMC primary blue
-          600: '#3354E0',
-          700: '#2D46C4',
-          800: '#2339A8',
-          900: '#1A2C8C',
-          950: '#111D5E',
-        },
-
-        // Secondary - CoinGecko Green
-        secondary: {
-          50: '#ECFDF5',
-          100: '#D1FAE5',
-          200: '#A7F3D0',
-          300: '#6EE7B7',
-          400: '#34D399',
-          500: '#8DC647', // CoinGecko green
-          600: '#7AB33E',
-          700: '#5F9A2E',
-          800: '#4A7B24',
-          900: '#365C1A',
-          950: '#223B10',
-        },
-
-        // Background colors - CMC dark navy theme
+        // Background hierarchy
         background: {
-          DEFAULT: '#0D1421', // Main background - deep navy
-          secondary: '#131A2A', // Slightly lighter
-          tertiary: '#171E2E', // Card backgrounds
+          DEFAULT: 'var(--bg-primary)',
+          primary: 'var(--bg-primary)',
+          secondary: 'var(--bg-secondary)',
+          tertiary: 'var(--bg-tertiary)',
         },
 
-        // Surface/Card colors
+        // Surface hierarchy (cards, modals, dropdowns)
         surface: {
-          DEFAULT: '#1E2329', // Card background
-          hover: '#252B36', // Card hover
-          elevated: '#2B3139', // Modals, dropdowns
-          border: '#2B3544', // Borders
+          DEFAULT: 'var(--surface)',
+          hover: 'var(--surface-hover)',
+          elevated: 'var(--surface-elevated)',
+          border: 'var(--surface-border)',
         },
 
-        // Text colors
+        // Text hierarchy
         text: {
-          primary: '#FFFFFF',
-          secondary: '#A6B0C3', // CMC gray
-          muted: '#808A9D', // Darker gray
-          disabled: '#5E6673',
+          primary: 'var(--text-primary)',
+          secondary: 'var(--text-secondary)',
+          muted: 'var(--text-muted)',
+          disabled: 'var(--text-disabled)',
         },
 
-        // Semantic colors - Market data
+        // Brand colors
+        primary: {
+          DEFAULT: 'var(--primary)',
+          hover: 'var(--primary-hover)',
+        },
+        secondary: {
+          DEFAULT: 'var(--secondary)',
+        },
+
+        // Semantic colors
         gain: {
-          DEFAULT: '#16C784', // CMC green
-          light: '#1ED696',
-          dark: '#12A86C',
-          bg: 'rgba(22, 199, 132, 0.1)',
+          DEFAULT: 'var(--gain)',
+          bg: 'var(--gain-bg)',
         },
         loss: {
-          DEFAULT: '#EA3943', // CMC red
-          light: '#FF4D58',
-          dark: '#D42F38',
-          bg: 'rgba(234, 57, 67, 0.1)',
+          DEFAULT: 'var(--loss)',
+          bg: 'var(--loss-bg)',
         },
-
-        // Accent colors
         warning: {
-          DEFAULT: '#F7931A', // Bitcoin orange
-          light: '#FFB347',
-          dark: '#E07D00',
+          DEFAULT: 'var(--warning)',
         },
         info: {
-          DEFAULT: '#3B82F6', // Info blue
-          light: '#60A5FA',
-          dark: '#2563EB',
+          DEFAULT: 'var(--info)',
         },
 
-        // Chart colors
+        // Chart colors (for data viz)
         chart: {
-          blue: '#3861FB',
+          blue: 'var(--primary)',
+          green: 'var(--gain)',
+          red: 'var(--loss)',
+          orange: 'var(--warning)',
           purple: '#8B5CF6',
           teal: '#14B8A6',
-          orange: '#F59E0B',
           pink: '#EC4899',
           cyan: '#06B6D4',
         },
+      },
 
-        // Override neutral for dark theme
-        neutral: {
-          50: '#F8FAFC',
-          100: '#F1F5F9',
-          200: '#E2E8F0',
-          300: '#CBD5E1',
-          400: '#94A3B8',
-          500: '#64748B',
-          600: '#475569',
-          700: '#1E2329', // Card bg
-          800: '#171E2E', // Secondary bg
-          900: '#0D1421', // Primary bg
-          950: '#080C14', // Darkest
+      // Border colors
+      borderColor: {
+        DEFAULT: 'var(--surface-border)',
+        surface: {
+          DEFAULT: 'var(--surface-border)',
+          hover: 'var(--surface-hover)',
         },
       },
+
       fontFamily: {
         sans: ['Inter', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
       },
+
       fontSize: {
         display: ['3.5rem', { lineHeight: '1.1', letterSpacing: '-0.02em' }],
         headline: ['2.25rem', { lineHeight: '1.2', letterSpacing: '-0.02em' }],
@@ -124,12 +94,14 @@ module.exports = {
         caption: ['0.875rem', { lineHeight: '1.5' }],
         tiny: ['0.75rem', { lineHeight: '1.4' }],
       },
+
       spacing: {
         18: '4.5rem',
         88: '22rem',
         100: '25rem',
         120: '30rem',
       },
+
       borderRadius: {
         none: '0',
         sm: '0.125rem',
@@ -142,6 +114,7 @@ module.exports = {
         '4xl': '2rem',
         full: '9999px',
       },
+
       boxShadow: {
         // Card shadows for dark theme
         soft: '0 1px 3px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.2)',
@@ -153,6 +126,7 @@ module.exports = {
         'glow-red': '0 0 15px rgba(234, 57, 67, 0.15)',
         elevated: '0 20px 25px -5px rgba(0, 0, 0, 0.4), 0 8px 10px -6px rgba(0, 0, 0, 0.3)',
       },
+
       animation: {
         'fade-in': 'fadeIn 0.3s ease-out',
         'fade-in-up': 'fadeInUp 0.4s ease-out',
@@ -162,6 +136,7 @@ module.exports = {
         shimmer: 'shimmer 2s infinite',
         'spin-slow': 'spin 3s linear infinite',
       },
+
       keyframes: {
         fadeIn: {
           '0%': { opacity: '0' },
@@ -183,9 +158,11 @@ module.exports = {
           '50%': { transform: 'translateY(-4px)' },
         },
       },
+
       transitionDuration: {
         400: '400ms',
       },
+
       backdropBlur: {
         xs: '2px',
       },

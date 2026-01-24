@@ -34,7 +34,7 @@ export function SourceComparison() {
     setLoading(true);
     try {
       // Simulate fetching data for each source
-      const sourceData: SourceData[] = SOURCES.map(source => ({
+      const sourceData: SourceData[] = SOURCES.map((source) => ({
         ...source,
         articles24h: Math.floor(Math.random() * 30) + 5,
         articlesWeek: Math.floor(Math.random() * 150) + 30,
@@ -86,8 +86,8 @@ export function SourceComparison() {
   if (loading) {
     return (
       <div className="space-y-4 animate-pulse">
-        <div className="h-8 bg-gray-200 dark:bg-gray-700 rounded w-48" />
-        <div className="h-64 bg-gray-200 dark:bg-gray-700 rounded-xl" />
+        <div className="h-8 bg-surface rounded w-48" />
+        <div className="h-64 bg-surface rounded-xl" />
       </div>
     );
   }
@@ -101,7 +101,7 @@ export function SourceComparison() {
         </h2>
         <button
           onClick={fetchSourceData}
-          className="p-2 text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg"
+          className="p-2 text-text-muted hover:text-text-secondary hover:bg-surface-hover rounded-lg"
           title="Refresh data"
         >
           <RefreshCw className="w-4 h-4" />
@@ -109,14 +109,14 @@ export function SourceComparison() {
       </div>
 
       {/* Table */}
-      <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden">
+      <div className="bg-surface rounded-xl border border-surface-border overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead>
-              <tr className="border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50">
-                <th className="text-left px-4 py-3 text-sm font-medium text-gray-500">Source</th>
-                <th 
-                  className="text-right px-4 py-3 text-sm font-medium text-gray-500 cursor-pointer hover:text-gray-700"
+              <tr className="border-b border-surface-border bg-surface-hover">
+                <th className="text-left px-4 py-3 text-sm font-medium text-text-muted">Source</th>
+                <th
+                  className="text-right px-4 py-3 text-sm font-medium text-text-muted cursor-pointer hover:text-text-secondary"
                   onClick={() => handleSort('articles24h')}
                 >
                   <span className="flex items-center justify-end gap-1">
@@ -124,8 +124,8 @@ export function SourceComparison() {
                     {sortBy === 'articles24h' && (sortOrder === 'desc' ? '↓' : '↑')}
                   </span>
                 </th>
-                <th 
-                  className="text-right px-4 py-3 text-sm font-medium text-gray-500 cursor-pointer hover:text-gray-700"
+                <th
+                  className="text-right px-4 py-3 text-sm font-medium text-text-muted cursor-pointer hover:text-text-secondary"
                   onClick={() => handleSort('articlesWeek')}
                 >
                   <span className="flex items-center justify-end gap-1">
@@ -133,8 +133,8 @@ export function SourceComparison() {
                     {sortBy === 'articlesWeek' && (sortOrder === 'desc' ? '↓' : '↑')}
                   </span>
                 </th>
-                <th 
-                  className="text-right px-4 py-3 text-sm font-medium text-gray-500 cursor-pointer hover:text-gray-700"
+                <th
+                  className="text-right px-4 py-3 text-sm font-medium text-text-muted cursor-pointer hover:text-text-secondary"
                   onClick={() => handleSort('sentiment')}
                 >
                   <span className="flex items-center justify-end gap-1">
@@ -142,15 +142,17 @@ export function SourceComparison() {
                     {sortBy === 'sentiment' && (sortOrder === 'desc' ? '↓' : '↑')}
                   </span>
                 </th>
-                <th className="text-left px-4 py-3 text-sm font-medium text-gray-500">Top Categories</th>
-                <th className="text-right px-4 py-3 text-sm font-medium text-gray-500"></th>
+                <th className="text-left px-4 py-3 text-sm font-medium text-text-muted">
+                  Top Categories
+                </th>
+                <th className="text-right px-4 py-3 text-sm font-medium text-text-muted"></th>
               </tr>
             </thead>
             <tbody>
               {sortedSources.map((source, index) => (
-                <tr 
+                <tr
                   key={source.slug}
-                  className={`border-b border-gray-100 dark:border-gray-700/50 hover:bg-gray-50 dark:hover:bg-gray-700/30 ${
+                  className={`border-b border-surface-border hover:bg-surface-hover ${
                     index === 0 ? 'bg-amber-50 dark:bg-amber-900/10' : ''
                   }`}
                 >
@@ -164,26 +166,25 @@ export function SourceComparison() {
                       <span className="font-medium">{source.name}</span>
                     </div>
                   </td>
-                  <td className="px-4 py-3 text-right font-mono">
-                    {source.articles24h}
-                  </td>
-                  <td className="px-4 py-3 text-right font-mono">
-                    {source.articlesWeek}
-                  </td>
+                  <td className="px-4 py-3 text-right font-mono">{source.articles24h}</td>
+                  <td className="px-4 py-3 text-right font-mono">{source.articlesWeek}</td>
                   <td className="px-4 py-3 text-right">
-                    <span className={`flex items-center justify-end gap-1 ${getSentimentColor(source.sentiment)}`}>
+                    <span
+                      className={`flex items-center justify-end gap-1 ${getSentimentColor(source.sentiment)}`}
+                    >
                       {getSentimentIcon(source.sentiment)}
                       <span className="font-mono">
-                        {source.sentiment > 0 ? '+' : ''}{source.sentiment}
+                        {source.sentiment > 0 ? '+' : ''}
+                        {source.sentiment}
                       </span>
                     </span>
                   </td>
                   <td className="px-4 py-3">
                     <div className="flex flex-wrap gap-1">
                       {source.topCategories.map((category) => (
-                        <span 
+                        <span
                           key={category}
-                          className="text-xs px-2 py-0.5 bg-gray-100 dark:bg-gray-700 rounded-full"
+                          className="text-xs px-2 py-0.5 bg-surface rounded-full"
                         >
                           {category}
                         </span>
@@ -193,7 +194,7 @@ export function SourceComparison() {
                   <td className="px-4 py-3 text-right">
                     <a
                       href={`/source/${source.slug}`}
-                      className="p-1.5 text-gray-400 hover:text-amber-500 inline-block"
+                      className="p-1.5 text-text-muted hover:text-amber-500 inline-block"
                       title={`View ${source.name} articles`}
                     >
                       <ExternalLink className="w-4 h-4" />
@@ -207,24 +208,22 @@ export function SourceComparison() {
       </div>
 
       {/* Visual Comparison */}
-      <div className="bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700">
-        <h3 className="text-sm font-medium text-gray-500 mb-4">24h Article Volume</h3>
+      <div className="bg-surface rounded-xl p-6 border border-surface-border">
+        <h3 className="text-sm font-medium text-text-muted mb-4">24h Article Volume</h3>
         <div className="space-y-3">
           {sortedSources.map((source) => {
-            const maxArticles = Math.max(...sources.map(s => s.articles24h));
+            const maxArticles = Math.max(...sources.map((s) => s.articles24h));
             const percentage = (source.articles24h / maxArticles) * 100;
-            
+
             return (
               <div key={source.slug} className="flex items-center gap-3">
                 <span className="w-32 text-sm truncate">{source.name}</span>
-                <div className="flex-1 h-6 bg-gray-100 dark:bg-gray-700 rounded-full overflow-hidden">
+                <div className="flex-1 h-6 bg-surface-hover rounded-full overflow-hidden">
                   <div
                     className="h-full bg-amber-500 rounded-full transition-all flex items-center justify-end pr-2"
                     style={{ width: `${percentage}%` }}
                   >
-                    <span className="text-xs font-medium text-white">
-                      {source.articles24h}
-                    </span>
+                    <span className="text-xs font-medium text-white">{source.articles24h}</span>
                   </div>
                 </div>
               </div>

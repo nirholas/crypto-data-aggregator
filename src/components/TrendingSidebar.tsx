@@ -31,25 +31,25 @@ export default function TrendingSidebar({ trendingArticles }: TrendingSidebarPro
   return (
     <aside className="space-y-8 lg:sticky lg:top-4">
       {/* Trending Stories */}
-      <div className="bg-white dark:bg-black rounded-2xl border border-gray-100 dark:border-slate-700 overflow-hidden shadow-sm dark:shadow-lg">
-        <div className="px-5 py-4 border-b border-gray-100 dark:border-slate-700 bg-gray-50/50 dark:bg-black/50">
+      <div className="bg-surface rounded-2xl border border-surface-border overflow-hidden shadow-sm">
+        <div className="px-5 py-4 border-b border-surface-border bg-surface/50">
           <div className="flex items-center gap-2">
             <span className="flex h-2 w-2">
               <span className="animate-ping absolute inline-flex h-2 w-2 rounded-full bg-red-400 opacity-75"></span>
               <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
             </span>
-            <h3 className="font-bold text-gray-900 dark:text-white">Trending Now</h3>
+            <h3 className="font-bold text-text-primary">Trending Now</h3>
           </div>
         </div>
-        <div className="divide-y divide-gray-50 dark:divide-slate-700">
+        <div className="divide-y divide-surface-border">
           {topTrending.map((article, index) => (
             <NewsCard key={article.link} article={article} variant="compact" priority={index + 1} />
           ))}
         </div>
-        <div className="px-5 py-3 border-t border-gray-100 dark:border-slate-700">
+        <div className="px-5 py-3 border-t border-surface-border">
           <Link
             href="/trending"
-            className="text-sm font-semibold text-brand-600 dark:text-amber-400 hover:text-brand-700 dark:hover:text-amber-300 transition-colors flex items-center justify-center gap-1"
+            className="text-sm font-semibold text-primary hover:text-primary/80 transition-colors flex items-center justify-center gap-1"
           >
             View All Trending
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -63,9 +63,9 @@ export default function TrendingSidebar({ trendingArticles }: TrendingSidebarPro
       <MarketStats />
 
       {/* Categories */}
-      <div className="bg-white dark:bg-black rounded-2xl border border-gray-100 dark:border-slate-700 overflow-hidden shadow-sm dark:shadow-lg">
-        <div className="px-5 py-4 border-b border-gray-100 dark:border-slate-700 bg-gray-50/50 dark:bg-black/50">
-          <h3 className="font-bold text-gray-900 dark:text-white flex items-center gap-2">
+      <div className="bg-surface rounded-2xl border border-surface-border overflow-hidden shadow-sm">
+        <div className="px-5 py-4 border-b border-surface-border bg-surface/50">
+          <h3 className="font-bold text-text-primary flex items-center gap-2">
             <Folder className="w-4 h-4" />
             Categories
           </h3>
@@ -78,7 +78,7 @@ export default function TrendingSidebar({ trendingArticles }: TrendingSidebarPro
                 <Link
                   key={cat.slug}
                   href={`/category/${cat.slug}`}
-                  className={`inline-flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium bg-gray-50 dark:bg-black hover:bg-gray-100 dark:hover:bg-slate-600 text-gray-700 dark:text-slate-300 hover:text-gray-900 dark:hover:text-white transition-colors ${cat.color}`}
+                  className={`inline-flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium bg-surface hover:bg-surface-hover text-text-secondary hover:text-text-primary transition-colors ${cat.color}`}
                 >
                   <CategoryIcon className="w-4 h-4" />
                   {cat.name}
@@ -88,7 +88,7 @@ export default function TrendingSidebar({ trendingArticles }: TrendingSidebarPro
           </div>
           <Link
             href="/topics"
-            className="mt-3 text-sm font-semibold text-brand-600 dark:text-amber-400 hover:text-brand-700 dark:hover:text-amber-300 transition-colors flex items-center justify-center gap-1"
+            className="mt-3 text-sm font-semibold text-primary hover:text-primary/80 transition-colors flex items-center justify-center gap-1"
           >
             All Topics →
           </Link>
@@ -96,8 +96,8 @@ export default function TrendingSidebar({ trendingArticles }: TrendingSidebarPro
       </div>
 
       {/* API Promo */}
-      <div className="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 rounded-2xl p-6 text-white shadow-xl overflow-hidden relative">
-        <div className="absolute -top-10 -right-10 w-32 h-32 bg-brand-500/30 rounded-full blur-3xl" />
+      <div className="bg-gradient-to-br from-background via-surface-hover to-background rounded-2xl p-6 text-text-primary shadow-xl overflow-hidden relative">
+        <div className="absolute -top-10 -right-10 w-32 h-32 bg-primary/30 rounded-full blur-3xl" />
         <div className="absolute -bottom-10 -left-10 w-24 h-24 bg-purple-500/20 rounded-full blur-2xl" />
 
         <div className="relative">
@@ -105,13 +105,13 @@ export default function TrendingSidebar({ trendingArticles }: TrendingSidebarPro
             <Rocket className="w-6 h-6" />
             <h3 className="font-bold text-lg">Free API</h3>
           </div>
-          <p className="text-gray-300 text-sm mb-4">
+          <p className="text-white/70 text-sm mb-4">
             No API keys required. No rate limits. Build your own crypto news app.
           </p>
           <div className="flex flex-col gap-2">
             <Link
               href="/about"
-              className="inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-white text-black rounded-lg text-sm font-semibold hover:bg-gray-100 transition-colors"
+              className="inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-surface text-text-primary rounded-lg text-sm font-semibold hover:bg-surface-hover transition-colors"
             >
               Learn More
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

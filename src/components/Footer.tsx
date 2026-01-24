@@ -8,7 +8,7 @@ import Link from 'next/link';
 export default function Footer() {
   return (
     <footer
-      className="relative bg-[var(--bg-secondary)] text-white mt-16 overflow-hidden"
+      className="relative bg-[var(--bg-secondary)] text-text-primary mt-16 overflow-hidden"
       role="contentinfo"
     >
       {/* Minimal divider */}
@@ -25,7 +25,7 @@ export default function Footer() {
               className="inline-flex items-center gap-3 text-2xl font-black mb-6 focus-ring rounded group"
             >
               <svg
-                className="w-7 h-7 text-white"
+                className="w-7 h-7 text-text-primary"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -38,11 +38,11 @@ export default function Footer() {
                   d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"
                 />
               </svg>
-              <span className="text-white group-hover:text-neutral-300 transition-all duration-300">
+              <span className="text-text-primary group-hover:text-text-secondary transition-all duration-300">
                 Crypto Data
               </span>
             </Link>
-            <p className="text-neutral-400 text-base mb-8 leading-relaxed max-w-sm">
+            <p className="text-text-muted text-base mb-8 leading-relaxed max-w-sm">
               Real-time cryptocurrency market data aggregator. DeFi analytics, portfolio tracking,
               and comprehensive market insights.
             </p>
@@ -53,11 +53,11 @@ export default function Footer() {
                 href="https://github.com/nirholas/crypto-data-aggregator"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group p-3 bg-[var(--surface)] rounded-xl hover:bg-white hover:scale-110 active:scale-95 transition-all duration-300 focus-ring border border-[var(--surface-border)] hover:border-white"
+                className="group p-3 bg-[var(--surface)] rounded-xl hover:bg-primary hover:scale-110 active:scale-95 transition-all duration-300 focus-ring border border-[var(--surface-border)] hover:border-primary"
                 aria-label="View on GitHub"
               >
                 <svg
-                  className="w-5 h-5 text-neutral-400 group-hover:text-black transition-colors"
+                  className="w-5 h-5 text-text-muted group-hover:text-background transition-colors"
                   fill="currentColor"
                   viewBox="0 0 24 24"
                   aria-hidden="true"
@@ -74,15 +74,15 @@ export default function Footer() {
 
           {/* Markets */}
           <nav aria-label="Markets">
-            <h3 className="font-bold text-white text-lg mb-6 flex items-center gap-2">
-              <span className="w-8 h-0.5 bg-white" aria-hidden="true" />
+            <h3 className="font-bold text-text-primary text-lg mb-6 flex items-center gap-2">
+              <span className="w-8 h-0.5 bg-primary" aria-hidden="true" />
               Markets
             </h3>
             <ul className="space-y-3">
               <li>
                 <Link
                   href="/"
-                  className="group text-neutral-400 hover:text-white transition-colors inline-flex items-center gap-3 focus-ring rounded px-1 -mx-1"
+                  className="group text-text-muted hover:text-text-primary transition-colors inline-flex items-center gap-3 focus-ring rounded px-1 -mx-1"
                 >
                   <svg
                     className="w-4 h-4"
@@ -104,7 +104,7 @@ export default function Footer() {
               <li>
                 <Link
                   href="/movers"
-                  className="group text-neutral-400 hover:text-white transition-colors inline-flex items-center gap-3 focus-ring rounded px-1 -mx-1"
+                  className="group text-text-muted hover:text-text-primary transition-colors inline-flex items-center gap-3 focus-ring rounded px-1 -mx-1"
                 >
                   <svg
                     className="w-4 h-4"
@@ -126,7 +126,7 @@ export default function Footer() {
               <li>
                 <Link
                   href="/trending"
-                  className="group text-neutral-400 hover:text-white transition-colors inline-flex items-center gap-3 focus-ring rounded px-1 -mx-1"
+                  className="group text-text-muted hover:text-text-primary transition-colors inline-flex items-center gap-3 focus-ring rounded px-1 -mx-1"
                 >
                   <svg
                     className="w-4 h-4"
@@ -146,7 +146,7 @@ export default function Footer() {
               <li>
                 <Link
                   href="/defi"
-                  className="group text-neutral-400 hover:text-white transition-colors inline-flex items-center gap-3 focus-ring rounded px-1 -mx-1"
+                  className="group text-text-muted hover:text-text-primary transition-colors inline-flex items-center gap-3 focus-ring rounded px-1 -mx-1"
                 >
                   <svg
                     className="w-4 h-4"
@@ -168,7 +168,7 @@ export default function Footer() {
               <li>
                 <Link
                   href="/sentiment"
-                  className="group text-neutral-400 hover:text-white transition-colors inline-flex items-center gap-3 focus-ring rounded px-1 -mx-1"
+                  className="group text-text-muted hover:text-text-primary transition-colors inline-flex items-center gap-3 focus-ring rounded px-1 -mx-1"
                 >
                   <svg
                     className="w-4 h-4"
@@ -192,8 +192,8 @@ export default function Footer() {
 
           {/* Resources */}
           <nav aria-label="Resources">
-            <h3 className="font-bold text-white text-lg mb-6 flex items-center gap-2">
-              <span className="w-8 h-0.5 bg-white" aria-hidden="true" />
+            <h3 className="font-bold text-text-primary text-lg mb-6 flex items-center gap-2">
+              <span className="w-8 h-0.5 bg-primary" aria-hidden="true" />
               Tools
             </h3>
             <ul className="space-y-3">
@@ -207,7 +207,7 @@ export default function Footer() {
                 <li key={item.href}>
                   <Link
                     href={item.href}
-                    className="group text-neutral-400 hover:text-white transition-colors inline-flex items-center gap-3 focus-ring rounded px-1 -mx-1"
+                    className="group text-text-muted hover:text-text-primary transition-colors inline-flex items-center gap-3 focus-ring rounded px-1 -mx-1"
                   >
                     <svg
                       className="w-4 h-4"
@@ -232,8 +232,8 @@ export default function Footer() {
 
           {/* API Endpoints */}
           <nav aria-label="API Endpoints">
-            <h3 className="font-bold text-white text-lg mb-6 flex items-center gap-2">
-              <span className="w-8 h-0.5 bg-white" aria-hidden="true" />
+            <h3 className="font-bold text-text-primary text-lg mb-6 flex items-center gap-2">
+              <span className="w-8 h-0.5 bg-primary" aria-hidden="true" />
               API
             </h3>
             <ul className="space-y-3">
@@ -247,9 +247,9 @@ export default function Footer() {
                 <li key={endpoint}>
                   <a
                     href={endpoint}
-                    className="group text-neutral-400 hover:text-white transition-colors font-mono text-sm focus-ring rounded inline-flex items-center gap-2"
+                    className="group text-text-muted hover:text-text-primary transition-colors font-mono text-sm focus-ring rounded inline-flex items-center gap-2"
                   >
-                    <span className="text-neutral-600 group-hover:text-white transition-colors">
+                    <span className="text-text-disabled group-hover:text-text-primary transition-colors">
                       →
                     </span>
                     {endpoint}
@@ -261,9 +261,9 @@ export default function Footer() {
         </div>
 
         {/* Bottom bar */}
-        <div className="border-t border-neutral-800 mt-12 pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
-          <p className="text-neutral-500 text-sm flex items-center gap-2">
-            <span className="inline-flex items-center gap-1.5 bg-white text-black px-3 py-1 rounded-full text-xs font-semibold">
+        <div className="border-t border-surface-border mt-12 pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
+          <p className="text-text-muted text-sm flex items-center gap-2">
+            <span className="inline-flex items-center gap-1.5 bg-primary text-text-primary px-3 py-1 rounded-full text-xs font-semibold">
               MIT Licensed
             </span>
             <span>•</span>
@@ -273,7 +273,7 @@ export default function Footer() {
                 href="https://github.com/nirholas"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-neutral-400 hover:text-white transition-colors focus-ring rounded font-medium"
+                className="text-text-muted hover:text-text-primary transition-colors focus-ring rounded font-medium"
               >
                 nich
               </a>

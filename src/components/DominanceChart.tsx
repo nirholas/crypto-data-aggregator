@@ -122,20 +122,18 @@ export function DominanceChart({ coins }: { coins: Coin[] }) {
   }, [dominanceData]);
 
   if (!coins.length) {
-    return <div className="h-64 bg-neutral-200 dark:bg-black rounded-xl animate-pulse" />;
+    return <div className="h-64 bg-surface-alt rounded-xl animate-pulse" />;
   }
 
   return (
     <div className="space-y-6">
       {/* Mode Toggle */}
       <div className="flex justify-center">
-        <div className="inline-flex rounded-lg border border-neutral-300 dark:border-neutral-700 p-1">
+        <div className="inline-flex rounded-lg border border-surface-border p-1">
           <button
             onClick={() => setDisplayMode('donut')}
             className={`px-4 py-1.5 text-sm font-medium rounded-md transition-colors ${
-              displayMode === 'donut'
-                ? 'bg-black dark:bg-white text-white dark:text-neutral-900'
-                : 'text-neutral-600 dark:text-neutral-400'
+              displayMode === 'donut' ? 'bg-surface-alt text-text-primary' : 'text-text-secondary'
             }`}
           >
             Donut
@@ -143,9 +141,7 @@ export function DominanceChart({ coins }: { coins: Coin[] }) {
           <button
             onClick={() => setDisplayMode('bar')}
             className={`px-4 py-1.5 text-sm font-medium rounded-md transition-colors ${
-              displayMode === 'bar'
-                ? 'bg-black dark:bg-white text-white dark:text-neutral-900'
-                : 'text-neutral-600 dark:text-neutral-400'
+              displayMode === 'bar' ? 'bg-surface-alt text-text-primary' : 'text-text-secondary'
             }`}
           >
             Bar
@@ -174,21 +170,17 @@ export function DominanceChart({ coins }: { coins: Coin[] }) {
             <div className="absolute inset-0 flex flex-col items-center justify-center">
               {hoveredSegment ? (
                 <>
-                  <span className="text-2xl font-bold text-neutral-900 dark:text-white">
+                  <span className="text-2xl font-bold text-text-primary">
                     {dominanceData.find((d) => d.symbol === hoveredSegment)?.dominance.toFixed(1)}%
                   </span>
-                  <span className="text-sm text-neutral-500 dark:text-neutral-400">
-                    {hoveredSegment}
-                  </span>
+                  <span className="text-sm text-text-muted">{hoveredSegment}</span>
                 </>
               ) : (
                 <>
-                  <span className="text-2xl font-bold text-neutral-900 dark:text-white">
+                  <span className="text-2xl font-bold text-text-primary">
                     {dominanceData[0]?.dominance.toFixed(1)}%
                   </span>
-                  <span className="text-sm text-neutral-500 dark:text-neutral-400">
-                    BTC Dominance
-                  </span>
+                  <span className="text-sm text-text-muted">BTC Dominance</span>
                 </>
               )}
             </div>
@@ -203,14 +195,10 @@ export function DominanceChart({ coins }: { coins: Coin[] }) {
                 onMouseLeave={() => setHoveredSegment(null)}
               >
                 <div className="flex items-center justify-between mb-1">
-                  <span className="text-sm font-medium text-neutral-900 dark:text-white">
-                    {item.symbol}
-                  </span>
-                  <span className="text-sm text-neutral-500 dark:text-neutral-400">
-                    {item.dominance.toFixed(2)}%
-                  </span>
+                  <span className="text-sm font-medium text-text-primary">{item.symbol}</span>
+                  <span className="text-sm text-text-muted">{item.dominance.toFixed(2)}%</span>
                 </div>
-                <div className="h-4 bg-neutral-200 dark:bg-black rounded-full overflow-hidden">
+                <div className="h-4 bg-surface-alt rounded-full overflow-hidden">
                   <div
                     className="h-full rounded-full transition-all"
                     style={{
@@ -231,18 +219,14 @@ export function DominanceChart({ coins }: { coins: Coin[] }) {
             <div
               key={item.symbol}
               className={`flex items-center gap-2 px-3 py-2 rounded-lg transition-colors cursor-pointer ${
-                hoveredSegment === item.symbol ? 'bg-neutral-100 dark:bg-black' : ''
+                hoveredSegment === item.symbol ? 'bg-surface' : ''
               }`}
               onMouseEnter={() => setHoveredSegment(item.symbol)}
               onMouseLeave={() => setHoveredSegment(null)}
             >
               <div className="w-3 h-3 rounded-full" style={{ backgroundColor: item.color }} />
-              <span className="text-sm font-medium text-neutral-900 dark:text-white">
-                {item.symbol}
-              </span>
-              <span className="text-sm text-neutral-500 dark:text-neutral-400">
-                {item.dominance.toFixed(1)}%
-              </span>
+              <span className="text-sm font-medium text-text-primary">{item.symbol}</span>
+              <span className="text-sm text-text-muted">{item.dominance.toFixed(1)}%</span>
             </div>
           ))}
         </div>

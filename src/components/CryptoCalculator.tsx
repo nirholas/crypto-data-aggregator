@@ -156,7 +156,7 @@ export function CryptoCalculator({ coins = [] }: CalculatorProps) {
     return (
       <div className="space-y-4">
         {Array.from({ length: 3 }).map((_, i) => (
-          <div key={i} className="h-20 bg-neutral-200 dark:bg-black rounded-lg animate-pulse" />
+          <div key={i} className="h-20 bg-surface rounded-lg animate-pulse" />
         ))}
       </div>
     );
@@ -165,8 +165,8 @@ export function CryptoCalculator({ coins = [] }: CalculatorProps) {
   return (
     <div className="space-y-8">
       {/* Converter */}
-      <div className="bg-white dark:bg-black border border-neutral-200 dark:border-neutral-700 rounded-xl p-6">
-        <h3 className="text-lg font-semibold text-neutral-900 dark:text-white mb-4 flex items-center gap-2">
+      <div className="bg-surface border border-surface-border rounded-xl p-6">
+        <h3 className="text-lg font-semibold text-text-primary mb-4 flex items-center gap-2">
           <ArrowsRightLeftIcon className="w-5 h-5" />
           Crypto Converter
         </h3>
@@ -174,21 +174,19 @@ export function CryptoCalculator({ coins = [] }: CalculatorProps) {
         <div className="flex flex-col md:flex-row items-center gap-4">
           {/* From */}
           <div className="flex-1 w-full">
-            <label className="block text-sm text-neutral-500 dark:text-neutral-400 mb-1">
-              From
-            </label>
+            <label className="block text-sm text-text-muted mb-1">From</label>
             <div className="flex gap-2">
               <input
                 type="number"
                 value={fromAmount}
                 onChange={(e) => setFromAmount(e.target.value)}
-                className="flex-1 px-4 py-3 border border-neutral-300 dark:border-neutral-600 rounded-lg bg-white dark:bg-black text-neutral-900 dark:text-white text-lg font-mono"
+                className="flex-1 px-4 py-3 border border-surface-border rounded-lg bg-surface text-text-primary text-lg font-mono"
                 placeholder="0.00"
               />
               <select
                 value={fromCoin}
                 onChange={(e) => setFromCoin(e.target.value)}
-                className="px-4 py-3 border border-neutral-300 dark:border-neutral-600 rounded-lg bg-white dark:bg-black text-neutral-900 dark:text-white font-medium"
+                className="px-4 py-3 border border-surface-border rounded-lg bg-surface text-text-primary font-medium"
               >
                 {coinList.map((coin) => (
                   <option key={coin.id} value={coin.id}>
@@ -202,27 +200,27 @@ export function CryptoCalculator({ coins = [] }: CalculatorProps) {
           {/* Swap Button */}
           <button
             onClick={swapCoins}
-            className="p-3 rounded-full border border-neutral-300 dark:border-neutral-600 hover:bg-neutral-100 dark:hover:bg-black transition-colors"
+            className="p-3 rounded-full border border-surface-border hover:bg-surface-hover transition-colors"
             aria-label="Swap currencies"
           >
-            <ArrowsRightLeftIcon className="w-5 h-5 text-neutral-600 dark:text-neutral-400" />
+            <ArrowsRightLeftIcon className="w-5 h-5 text-text-secondary" />
           </button>
 
           {/* To */}
           <div className="flex-1 w-full">
-            <label className="block text-sm text-neutral-500 dark:text-neutral-400 mb-1">To</label>
+            <label className="block text-sm text-text-muted mb-1">To</label>
             <div className="flex gap-2">
               <input
                 type="text"
                 value={toAmount}
                 readOnly
-                className="flex-1 px-4 py-3 border border-neutral-300 dark:border-neutral-600 rounded-lg bg-neutral-50 dark:bg-black text-neutral-900 dark:text-white text-lg font-mono"
+                className="flex-1 px-4 py-3 border border-surface-border rounded-lg bg-surface-hover text-text-primary text-lg font-mono"
                 placeholder="0.00"
               />
               <select
                 value={toCoin}
                 onChange={(e) => setToCoin(e.target.value)}
-                className="px-4 py-3 border border-neutral-300 dark:border-neutral-600 rounded-lg bg-white dark:bg-black text-neutral-900 dark:text-white font-medium"
+                className="px-4 py-3 border border-surface-border rounded-lg bg-surface text-text-primary font-medium"
               >
                 {coinList.map((coin) => (
                   <option key={coin.id} value={coin.id}>
@@ -234,7 +232,7 @@ export function CryptoCalculator({ coins = [] }: CalculatorProps) {
           </div>
         </div>
 
-        <p className="text-sm text-neutral-500 dark:text-neutral-400 mt-4 text-center">
+        <p className="text-sm text-text-muted mt-4 text-center">
           1 {coinList.find((c) => c.id === fromCoin)?.symbol.toUpperCase()} ={' '}
           {((prices[fromCoin] || 0) / (prices[toCoin] || 1)).toFixed(6)}{' '}
           {coinList.find((c) => c.id === toCoin)?.symbol.toUpperCase()}
@@ -242,46 +240,40 @@ export function CryptoCalculator({ coins = [] }: CalculatorProps) {
       </div>
 
       {/* Profit Calculator */}
-      <div className="bg-white dark:bg-black border border-neutral-200 dark:border-neutral-700 rounded-xl p-6">
-        <h3 className="text-lg font-semibold text-neutral-900 dark:text-white mb-4 flex items-center gap-2">
+      <div className="bg-surface border border-surface-border rounded-xl p-6">
+        <h3 className="text-lg font-semibold text-text-primary mb-4 flex items-center gap-2">
           <CalculatorIcon className="w-5 h-5" />
           Profit Calculator
         </h3>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
           <div>
-            <label className="block text-sm text-neutral-500 dark:text-neutral-400 mb-1">
-              Buy Price ($)
-            </label>
+            <label className="block text-sm text-text-muted mb-1">Buy Price ($)</label>
             <input
               type="number"
               value={buyPrice}
               onChange={(e) => setBuyPrice(e.target.value)}
-              className="w-full px-4 py-3 border border-neutral-300 dark:border-neutral-600 rounded-lg bg-white dark:bg-black text-neutral-900 dark:text-white font-mono"
+              className="w-full px-4 py-3 border border-surface-border rounded-lg bg-surface text-text-primary font-mono"
               placeholder="40000"
             />
           </div>
           <div>
-            <label className="block text-sm text-neutral-500 dark:text-neutral-400 mb-1">
-              Sell Price ($)
-            </label>
+            <label className="block text-sm text-text-muted mb-1">Sell Price ($)</label>
             <input
               type="number"
               value={sellPrice}
               onChange={(e) => setSellPrice(e.target.value)}
-              className="w-full px-4 py-3 border border-neutral-300 dark:border-neutral-600 rounded-lg bg-white dark:bg-black text-neutral-900 dark:text-white font-mono"
+              className="w-full px-4 py-3 border border-surface-border rounded-lg bg-surface text-text-primary font-mono"
               placeholder="50000"
             />
           </div>
           <div>
-            <label className="block text-sm text-neutral-500 dark:text-neutral-400 mb-1">
-              Investment ($)
-            </label>
+            <label className="block text-sm text-text-muted mb-1">Investment ($)</label>
             <input
               type="number"
               value={investment}
               onChange={(e) => setInvestment(e.target.value)}
-              className="w-full px-4 py-3 border border-neutral-300 dark:border-neutral-600 rounded-lg bg-white dark:bg-black text-neutral-900 dark:text-white font-mono"
+              className="w-full px-4 py-3 border border-surface-border rounded-lg bg-surface text-text-primary font-mono"
               placeholder="1000"
             />
           </div>
@@ -289,31 +281,31 @@ export function CryptoCalculator({ coins = [] }: CalculatorProps) {
 
         {/* Results */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <div className="p-4 bg-neutral-50 dark:bg-black rounded-lg text-center">
-            <div className="text-sm text-neutral-500 dark:text-neutral-400">Coins Bought</div>
-            <div className="text-xl font-bold text-neutral-900 dark:text-white font-mono">
+          <div className="p-4 bg-surface-hover rounded-lg text-center">
+            <div className="text-sm text-text-muted">Coins Bought</div>
+            <div className="text-xl font-bold text-text-primary font-mono">
               {coinsBought.toFixed(6)}
             </div>
           </div>
-          <div className="p-4 bg-neutral-50 dark:bg-black rounded-lg text-center">
-            <div className="text-sm text-neutral-500 dark:text-neutral-400">Final Value</div>
-            <div className="text-xl font-bold text-neutral-900 dark:text-white font-mono">
+          <div className="p-4 bg-surface-hover rounded-lg text-center">
+            <div className="text-sm text-text-muted">Final Value</div>
+            <div className="text-xl font-bold text-text-primary font-mono">
               ${finalValue.toLocaleString(undefined, { maximumFractionDigits: 2 })}
             </div>
           </div>
-          <div className="p-4 bg-neutral-50 dark:bg-black rounded-lg text-center">
-            <div className="text-sm text-neutral-500 dark:text-neutral-400">Profit/Loss</div>
+          <div className="p-4 bg-surface-hover rounded-lg text-center">
+            <div className="text-sm text-text-muted">Profit/Loss</div>
             <div
-              className={`text-xl font-bold font-mono ${profit >= 0 ? 'text-neutral-900 dark:text-white' : 'text-neutral-500'}`}
+              className={`text-xl font-bold font-mono ${profit >= 0 ? 'text-gain' : 'text-loss'}`}
             >
               {profit >= 0 ? '+' : ''}$
               {profit.toLocaleString(undefined, { maximumFractionDigits: 2 })}
             </div>
           </div>
-          <div className="p-4 bg-neutral-50 dark:bg-black rounded-lg text-center">
-            <div className="text-sm text-neutral-500 dark:text-neutral-400">Return %</div>
+          <div className="p-4 bg-surface-hover rounded-lg text-center">
+            <div className="text-sm text-text-muted">Return %</div>
             <div
-              className={`text-xl font-bold font-mono ${percent >= 0 ? 'text-neutral-900 dark:text-white' : 'text-neutral-500'}`}
+              className={`text-xl font-bold font-mono ${percent >= 0 ? 'text-gain' : 'text-loss'}`}
             >
               {percent >= 0 ? '+' : ''}
               {percent.toFixed(2)}%

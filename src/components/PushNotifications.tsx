@@ -29,10 +29,12 @@ export function PushNotifications() {
     if (saved) {
       try {
         const parsed = JSON.parse(saved);
-        setNotifications(parsed.map((n: PushNotification) => ({
-          ...n,
-          timestamp: new Date(n.timestamp),
-        })));
+        setNotifications(
+          parsed.map((n: PushNotification) => ({
+            ...n,
+            timestamp: new Date(n.timestamp),
+          }))
+        );
       } catch {
         // Ignore parse errors
       }
@@ -92,7 +94,7 @@ export function PushNotifications() {
       timestamp: new Date(),
     };
 
-    setNotifications(prev => {
+    setNotifications((prev) => {
       const updated = [newNotification, ...prev].slice(0, 50); // Keep last 50
       localStorage.setItem('notification-history', JSON.stringify(updated));
       return updated;
@@ -113,11 +115,11 @@ export function PushNotifications() {
       try {
         const response = await fetch('/api/news?category=breaking&limit=1');
         const data = await response.json();
-        
+
         if (data.articles && data.articles.length > 0) {
           const article = data.articles[0];
           const lastNotified = localStorage.getItem('last-notified-article');
-          
+
           if (article.url !== lastNotified) {
             // New breaking article
             // Uncomment to enable auto-notifications:
@@ -146,14 +148,10 @@ export function PushNotifications() {
     <div className="relative">
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="relative p-2 text-gray-600 dark:text-gray-400 hover:text-amber-600 dark:hover:text-amber-400 transition-colors"
+        className="relative p-2 text-text-secondary hover:text-amber-600 transition-colors"
         aria-label="Notifications"
       >
-        {permission === 'granted' ? (
-          <Bell className="w-5 h-5" />
-        ) : (
-          <BellOff className="w-5 h-5" />
-        )}
+        {permission === 'granted' ? <Bell className="w-5 h-5" /> : <BellOff className="w-5 h-5" />}
         {notifications.length > 0 && permission === 'granted' && (
           <span className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 text-white text-xs rounded-full flex items-center justify-center">
             {notifications.length > 9 ? '9+' : notifications.length}
@@ -164,13 +162,13 @@ export function PushNotifications() {
       {isOpen && (
         <>
           <div className="fixed inset-0 z-40" onClick={() => setIsOpen(false)} />
-          <div className="absolute right-0 top-full mt-2 w-80 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 z-50 overflow-hidden animate-fadeIn">
-            <div className="p-4 border-b border-gray-200 dark:border-gray-700">
+          <div className="absolute right-0 top-full mt-2 w-80 bg-surface rounded-lg shadow-lg border border-surface-border z-50 overflow-hidden animate-fadeIn">
+            <div className="p-4 border-b border-surface-border">
               <div className="flex items-center justify-between">
                 <h3 className="font-semibold">Notifications</h3>
                 <button
                   onClick={() => setIsOpen(false)}
-                  className="p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded"
+                  className="p-1 hover:bg-surface-hover rounded"
                 >
                   <X className="w-4 h-4" />
                 </button>
@@ -179,8 +177,8 @@ export function PushNotifications() {
 
             {permission !== 'granted' ? (
               <div className="p-4 text-center">
-                <BellOff className="w-12 h-12 mx-auto mb-3 text-gray-400" />
-                <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">
+                <BellOff className="w-12 h-12 mx-auto mb-3 text-text-muted" />
+                <p className="text-sm text-text-secondary mb-3">
                   Get notified about breaking crypto news
                 </p>
                 <button
@@ -190,13 +188,13 @@ export function PushNotifications() {
                   Enable Notifications
                 </button>
                 {permission === 'denied' && (
-                  <p className="mt-2 text-xs text-red-500">
+                  <p className="mt-2 text-xs text-loss">
                     Notifications are blocked. Please enable them in your browser settings.
                   </p>
                 )}
               </div>
             ) : notifications.length === 0 ? (
-              <div className="p-8 text-center text-gray-500">
+              <div className="p-8 text-center text-text-muted">
                 <Bell className="w-12 h-12 mx-auto mb-3 opacity-30" />
                 <p>No notifications yet</p>
               </div>
@@ -206,17 +204,15 @@ export function PushNotifications() {
                   {notifications.map((notification) => (
                     <div
                       key={notification.id}
-                      className="p-3 border-b border-gray-100 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700/50"
+                      className="p-3 border-b border-surface-border hover:bg-surface-hover"
                     >
                       <div className="flex justify-between items-start gap-2">
                         <div className="flex-1 min-w-0">
-                          <p className="font-medium text-sm truncate">
-                            {notification.title}
-                          </p>
-                          <p className="text-xs text-gray-600 dark:text-gray-400 line-clamp-2">
+                          <p className="font-medium text-sm truncate">{notification.title}</p>
+                          <p className="text-xs text-text-secondary line-clamp-2">
                             {notification.body}
                           </p>
-                          <p className="text-xs text-gray-400 mt-1">
+                          <p className="text-xs text-text-muted mt-1">
                             {notification.timestamp.toLocaleTimeString()}
                           </p>
                         </div>
@@ -225,7 +221,7 @@ export function PushNotifications() {
                             href={notification.url}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="p-1 text-gray-400 hover:text-amber-500"
+                            className="p-1 text-text-muted hover:text-amber-500"
                           >
                             <ExternalLink className="w-4 h-4" />
                           </a>
@@ -234,10 +230,10 @@ export function PushNotifications() {
                     </div>
                   ))}
                 </div>
-                <div className="p-2 border-t border-gray-200 dark:border-gray-700">
+                <div className="p-2 border-t border-surface-border">
                   <button
                     onClick={clearNotifications}
-                    className="w-full text-center text-sm text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 py-1"
+                    className="w-full text-center text-sm text-text-muted hover:text-text-secondary py-1"
                   >
                     Clear all
                   </button>

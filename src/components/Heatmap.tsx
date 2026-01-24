@@ -120,15 +120,15 @@ export function Heatmap({ coins }: HeatmapProps) {
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div className="flex items-center gap-4">
           {/* Timeframe Toggle */}
-          <div className="inline-flex rounded-lg border border-neutral-300 dark:border-neutral-700 p-1">
+          <div className="inline-flex rounded-lg border border-surface-border p-1">
             {(['24h', '7d'] as TimeFrame[]).map((tf) => (
               <button
                 key={tf}
                 onClick={() => setTimeframe(tf)}
                 className={`px-4 py-1.5 text-sm font-medium rounded-md transition-colors ${
                   timeframe === tf
-                    ? 'bg-black dark:bg-white text-white dark:text-neutral-900'
-                    : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white'
+                    ? 'bg-background text-text-primary'
+                    : 'text-text-secondary hover:text-text-primary'
                 }`}
               >
                 {tf}
@@ -137,13 +137,13 @@ export function Heatmap({ coins }: HeatmapProps) {
           </div>
 
           {/* Sort Toggle */}
-          <div className="inline-flex rounded-lg border border-neutral-300 dark:border-neutral-700 p-1">
+          <div className="inline-flex rounded-lg border border-surface-border p-1">
             <button
               onClick={() => setSortBy('market_cap')}
               className={`px-4 py-1.5 text-sm font-medium rounded-md transition-colors ${
                 sortBy === 'market_cap'
-                  ? 'bg-black dark:bg-white text-white dark:text-neutral-900'
-                  : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white'
+                  ? 'bg-background text-text-primary'
+                  : 'text-text-secondary hover:text-text-primary'
               }`}
             >
               By Market Cap
@@ -152,8 +152,8 @@ export function Heatmap({ coins }: HeatmapProps) {
               onClick={() => setSortBy('change')}
               className={`px-4 py-1.5 text-sm font-medium rounded-md transition-colors ${
                 sortBy === 'change'
-                  ? 'bg-black dark:bg-white text-white dark:text-neutral-900'
-                  : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white'
+                  ? 'bg-background text-text-primary'
+                  : 'text-text-secondary hover:text-text-primary'
               }`}
             >
               By Change
@@ -164,7 +164,7 @@ export function Heatmap({ coins }: HeatmapProps) {
           <select
             value={showTop}
             onChange={(e) => setShowTop(Number(e.target.value))}
-            className="px-3 py-2 text-sm border border-neutral-300 dark:border-neutral-700 rounded-lg bg-white dark:bg-black text-neutral-900 dark:text-white"
+            className="px-3 py-2 text-sm border border-surface-border rounded-lg bg-surface text-text-primary"
           >
             <option value={25}>Top 25</option>
             <option value={50}>Top 50</option>
@@ -176,20 +176,18 @@ export function Heatmap({ coins }: HeatmapProps) {
         {/* Stats Summary */}
         <div className="flex items-center gap-6 text-sm">
           <div className="flex items-center gap-2">
-            <ArrowUpIcon className="w-4 h-4 text-neutral-600 dark:text-neutral-400" />
-            <span className="text-neutral-900 dark:text-white font-medium">{stats.positive}</span>
-            <span className="text-neutral-500">up</span>
+            <ArrowUpIcon className="w-4 h-4 text-text-secondary" />
+            <span className="text-text-primary font-medium">{stats.positive}</span>
+            <span className="text-text-muted">up</span>
           </div>
           <div className="flex items-center gap-2">
-            <ArrowDownIcon className="w-4 h-4 text-neutral-600 dark:text-neutral-400" />
-            <span className="text-neutral-900 dark:text-white font-medium">{stats.negative}</span>
-            <span className="text-neutral-500">down</span>
+            <ArrowDownIcon className="w-4 h-4 text-text-secondary" />
+            <span className="text-text-primary font-medium">{stats.negative}</span>
+            <span className="text-text-muted">down</span>
           </div>
-          <div className="text-neutral-500">
+          <div className="text-text-muted">
             Avg:{' '}
-            <span
-              className={`font-medium ${stats.avgChange >= 0 ? 'text-neutral-900 dark:text-white' : 'text-neutral-600 dark:text-neutral-400'}`}
-            >
+            <span className={`font-medium ${stats.avgChange >= 0 ? 'text-gain' : 'text-loss'}`}>
               {formatPercent(stats.avgChange)}
             </span>
           </div>
@@ -197,7 +195,7 @@ export function Heatmap({ coins }: HeatmapProps) {
       </div>
 
       {/* Legend */}
-      <div className="flex items-center justify-center gap-2 text-xs text-neutral-500">
+      <div className="flex items-center justify-center gap-2 text-xs text-text-muted">
         <span>-20%</span>
         <div className="flex h-3">
           {Array.from({ length: 20 }).map((_, i) => (
@@ -257,37 +255,37 @@ export function Heatmap({ coins }: HeatmapProps) {
       </div>
 
       {/* Market Mood Summary */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 pt-4 border-t border-neutral-200 dark:border-neutral-700">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 pt-4 border-t border-surface-border">
         <div className="text-center">
-          <div className="text-sm text-neutral-500 dark:text-neutral-400">Biggest Gainer</div>
-          <div className="text-lg font-bold text-neutral-900 dark:text-white">
+          <div className="text-sm text-text-muted">Biggest Gainer</div>
+          <div className="text-lg font-bold text-text-primary">
             {processedCoins
               .find((c) => getChangeValue(c, timeframe) === stats.maxGain)
               ?.symbol.toUpperCase()}
           </div>
-          <div className="text-sm font-mono">{formatPercent(stats.maxGain)}</div>
+          <div className="text-sm font-mono text-gain">{formatPercent(stats.maxGain)}</div>
         </div>
         <div className="text-center">
-          <div className="text-sm text-neutral-500 dark:text-neutral-400">Biggest Loser</div>
-          <div className="text-lg font-bold text-neutral-900 dark:text-white">
+          <div className="text-sm text-text-muted">Biggest Loser</div>
+          <div className="text-lg font-bold text-text-primary">
             {processedCoins
               .find((c) => getChangeValue(c, timeframe) === stats.maxLoss)
               ?.symbol.toUpperCase()}
           </div>
-          <div className="text-sm font-mono">{formatPercent(stats.maxLoss)}</div>
+          <div className="text-sm font-mono text-loss">{formatPercent(stats.maxLoss)}</div>
         </div>
         <div className="text-center">
-          <div className="text-sm text-neutral-500 dark:text-neutral-400">Up / Down Ratio</div>
-          <div className="text-lg font-bold text-neutral-900 dark:text-white">
+          <div className="text-sm text-text-muted">Up / Down Ratio</div>
+          <div className="text-lg font-bold text-text-primary">
             {stats.negative > 0 ? (stats.positive / stats.negative).toFixed(2) : stats.positive}
           </div>
-          <div className="text-sm text-neutral-500">
+          <div className="text-sm text-text-muted">
             {stats.positive} / {stats.negative}
           </div>
         </div>
         <div className="text-center">
-          <div className="text-sm text-neutral-500 dark:text-neutral-400">Market Sentiment</div>
-          <div className="text-lg font-bold text-neutral-900 dark:text-white">
+          <div className="text-sm text-text-muted">Market Sentiment</div>
+          <div className="text-lg font-bold text-text-primary">
             {stats.avgChange > 2 ? 'Bullish' : stats.avgChange < -2 ? 'Bearish' : 'Neutral'}
           </div>
           <div className="text-sm font-mono">{formatPercent(stats.avgChange)} avg</div>

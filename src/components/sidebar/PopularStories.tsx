@@ -25,12 +25,12 @@ interface PopularStoriesProps {
 type TimeFilter = '24h' | '7d';
 
 const sourceColors: Record<string, string> = {
-  'CoinDesk': 'from-blue-500 to-blue-600',
+  CoinDesk: 'from-blue-500 to-blue-600',
   'The Block': 'from-purple-500 to-purple-600',
-  'Decrypt': 'from-emerald-500 to-emerald-600',
-  'CoinTelegraph': 'from-orange-500 to-orange-600',
+  Decrypt: 'from-emerald-500 to-emerald-600',
+  CoinTelegraph: 'from-orange-500 to-orange-600',
   'Bitcoin Magazine': 'from-amber-500 to-amber-600',
-  'Blockworks': 'from-indigo-500 to-indigo-600',
+  Blockworks: 'from-indigo-500 to-indigo-600',
   'The Defiant': 'from-pink-500 to-pink-600',
 };
 
@@ -49,22 +49,24 @@ export default function PopularStories({ articles }: PopularStoriesProps) {
   const popularArticles = articles.slice(0, 5);
 
   return (
-    <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-card dark:shadow-none dark:border dark:border-gray-800 p-6">
+    <div className="bg-surface rounded-2xl shadow-card dark:shadow-none dark:border border-surface-border p-6">
       {/* Header with Filter */}
       <div className="flex items-center justify-between mb-5">
-        <h3 className="font-bold text-lg text-gray-900 dark:text-white flex items-center gap-2">
-          <span className="text-xl" aria-hidden="true">📈</span>
+        <h3 className="font-bold text-lg text-text-primary flex items-center gap-2">
+          <span className="text-xl" aria-hidden="true">
+            📈
+          </span>
           Most Read
         </h3>
-        
+
         {/* Time Filter Toggle */}
-        <div className="flex items-center bg-gray-100 dark:bg-gray-800 rounded-lg p-0.5">
+        <div className="flex items-center bg-surface-hover rounded-lg p-0.5">
           <button
             onClick={() => setTimeFilter('24h')}
             className={`px-2.5 py-1 text-xs font-medium rounded-md transition-all ${
               timeFilter === '24h'
-                ? 'bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow-sm'
-                : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
+                ? 'bg-surface text-text-primary shadow-sm'
+                : 'text-text-secondary hover:text-text-primary'
             }`}
             aria-pressed={timeFilter === '24h'}
           >
@@ -74,8 +76,8 @@ export default function PopularStories({ articles }: PopularStoriesProps) {
             onClick={() => setTimeFilter('7d')}
             className={`px-2.5 py-1 text-xs font-medium rounded-md transition-all ${
               timeFilter === '7d'
-                ? 'bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow-sm'
-                : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
+                ? 'bg-surface text-text-primary shadow-sm'
+                : 'text-text-secondary hover:text-text-primary'
             }`}
             aria-pressed={timeFilter === '7d'}
           >
@@ -90,7 +92,7 @@ export default function PopularStories({ articles }: PopularStoriesProps) {
           const articleId = article.id || generateArticleId(article.link);
           const gradient = sourceColors[article.source] || 'from-gray-500 to-gray-600';
           const views = estimateViews(index);
-          
+
           return (
             <Link
               key={articleId}
@@ -99,7 +101,7 @@ export default function PopularStories({ articles }: PopularStoriesProps) {
               role="listitem"
             >
               {/* Gradient Thumbnail Placeholder */}
-              <div 
+              <div
                 className={`flex-shrink-0 w-16 h-16 rounded-xl bg-gradient-to-br ${gradient} relative overflow-hidden`}
                 aria-hidden="true"
               >
@@ -113,7 +115,11 @@ export default function PopularStories({ articles }: PopularStoriesProps) {
                   <span className="text-[10px] font-medium text-white flex items-center gap-0.5">
                     <svg className="w-2.5 h-2.5" fill="currentColor" viewBox="0 0 20 20">
                       <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
-                      <path fillRule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clipRule="evenodd" />
+                      <path
+                        fillRule="evenodd"
+                        d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z"
+                        clipRule="evenodd"
+                      />
                     </svg>
                     {views}
                   </span>
@@ -122,13 +128,11 @@ export default function PopularStories({ articles }: PopularStoriesProps) {
 
               {/* Content */}
               <div className="flex-1 min-w-0 py-0.5">
-                <h4 className="text-sm font-medium text-gray-900 dark:text-white line-clamp-2 group-hover:text-brand-600 dark:group-hover:text-brand-400 transition-colors leading-snug">
+                <h4 className="text-sm font-medium text-text-primary line-clamp-2 group-hover:text-primary transition-colors leading-snug">
                   {article.title}
                 </h4>
                 <div className="flex items-center gap-2 mt-1.5">
-                  <span className="text-xs text-gray-500 dark:text-gray-400">
-                    {article.source}
-                  </span>
+                  <span className="text-xs text-text-muted">{article.source}</span>
                 </div>
               </div>
             </Link>

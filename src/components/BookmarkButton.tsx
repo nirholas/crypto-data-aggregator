@@ -19,7 +19,7 @@ export default function BookmarkButton({ article, size = 'md' }: BookmarkButtonP
   const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     e.stopPropagation();
-    
+
     if (bookmarked) {
       removeBookmark(article.link);
     } else {
@@ -27,17 +27,15 @@ export default function BookmarkButton({ article, size = 'md' }: BookmarkButtonP
     }
   };
 
-  const sizeClasses = size === 'sm' 
-    ? 'w-7 h-7 text-sm' 
-    : 'w-9 h-9 text-lg';
+  const sizeClasses = size === 'sm' ? 'w-7 h-7 text-sm' : 'w-9 h-9 text-lg';
 
   return (
     <button
       onClick={handleClick}
       className={`${sizeClasses} flex items-center justify-center rounded-full transition-all ${
-        bookmarked 
-          ? 'bg-yellow-100 text-yellow-600 hover:bg-yellow-200' 
-          : 'bg-gray-100 text-gray-400 hover:bg-gray-200 hover:text-gray-600'
+        bookmarked
+          ? 'bg-warning/20 text-warning hover:bg-warning/30'
+          : 'bg-surface text-text-muted hover:bg-surface-hover hover:text-text-secondary'
       }`}
       title={bookmarked ? 'Remove bookmark' : 'Save for later'}
       aria-label={bookmarked ? 'Remove bookmark' : 'Save for later'}

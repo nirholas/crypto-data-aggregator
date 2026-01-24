@@ -6,22 +6,17 @@
 import React from 'react';
 
 function Skeleton({ className = '' }: { className?: string }) {
-  return (
-    <div 
-      className={`animate-pulse bg-gray-200 dark:bg-gray-700 ${className}`}
-      aria-hidden="true"
-    />
-  );
+  return <div className={`animate-pulse bg-surface-hover ${className}`} aria-hidden="true" />;
 }
 
 export function ArticleCardLargeSkeleton() {
   return (
-    <div className="h-[400px] flex bg-white dark:bg-gray-900 rounded-2xl shadow-card dark:shadow-none dark:border dark:border-gray-800 overflow-hidden">
+    <div className="h-[400px] flex bg-surface rounded-2xl shadow-card border border-surface-border overflow-hidden">
       {/* Image placeholder */}
       <div className="w-[40%] flex-shrink-0">
         <Skeleton className="h-full w-full" />
       </div>
-      
+
       {/* Content */}
       <div className="flex-1 p-6 flex flex-col justify-between">
         <div className="space-y-4">
@@ -34,8 +29,8 @@ export function ArticleCardLargeSkeleton() {
             <Skeleton className="h-4 w-2/3 rounded" />
           </div>
         </div>
-        
-        <div className="flex items-center gap-3 pt-4 border-t border-gray-100 dark:border-gray-800">
+
+        <div className="flex items-center gap-3 pt-4 border-t border-surface-border">
           <Skeleton className="h-6 w-20 rounded-full" />
           <Skeleton className="h-4 w-16 rounded" />
           <Skeleton className="h-4 w-20 rounded" />
@@ -47,17 +42,17 @@ export function ArticleCardLargeSkeleton() {
 
 export function ArticleCardMediumSkeleton() {
   return (
-    <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-card dark:shadow-none dark:border dark:border-gray-800 overflow-hidden">
+    <div className="bg-surface rounded-2xl shadow-card border border-surface-border overflow-hidden">
       {/* Image placeholder */}
       <Skeleton className="h-[200px] w-full" />
-      
+
       {/* Content */}
       <div className="p-5 space-y-3">
         <Skeleton className="h-5 w-full rounded" />
         <Skeleton className="h-5 w-full rounded" />
         <Skeleton className="h-5 w-2/3 rounded" />
-        
-        <div className="flex items-center gap-2 pt-3 border-t border-gray-100 dark:border-gray-800">
+
+        <div className="flex items-center gap-2 pt-3 border-t border-surface-border">
           <Skeleton className="h-5 w-16 rounded-full" />
           <Skeleton className="h-4 w-20 rounded" />
         </div>
@@ -68,13 +63,13 @@ export function ArticleCardMediumSkeleton() {
 
 export function ArticleCardSmallSkeleton({ showRank = false }: { showRank?: boolean }) {
   return (
-    <div className="flex items-start gap-3 p-4 rounded-xl bg-white dark:bg-gray-900">
+    <div className="flex items-start gap-3 p-4 rounded-xl bg-surface">
       {showRank ? (
         <Skeleton className="flex-shrink-0 w-7 h-7 rounded-lg" />
       ) : (
         <Skeleton className="flex-shrink-0 w-1.5 h-12 rounded-full" />
       )}
-      
+
       <div className="flex-1 space-y-2">
         <Skeleton className="h-4 w-full rounded" />
         <Skeleton className="h-4 w-3/4 rounded" />
@@ -89,10 +84,10 @@ export function ArticleCardSmallSkeleton({ showRank = false }: { showRank?: bool
 
 export function ArticleCardListSkeleton() {
   return (
-    <div className="flex gap-4 p-4 rounded-xl bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800">
+    <div className="flex gap-4 p-4 rounded-xl bg-surface border border-surface-border">
       {/* Image */}
       <Skeleton className="flex-shrink-0 w-24 h-24 sm:w-28 sm:h-28 rounded-lg" />
-      
+
       {/* Content */}
       <div className="flex-1 flex flex-col justify-center space-y-2">
         <Skeleton className="h-5 w-full rounded" />
@@ -108,11 +103,11 @@ export function ArticleCardListSkeleton() {
 }
 
 // Grid skeleton for Posts component
-export function ArticleGridSkeleton({ 
-  count = 6, 
-  variant = 'medium' 
-}: { 
-  count?: number; 
+export function ArticleGridSkeleton({
+  count = 6,
+  variant = 'medium',
+}: {
+  count?: number;
   variant?: 'large' | 'medium' | 'small' | 'list';
 }) {
   const gridClasses = {
@@ -130,11 +125,7 @@ export function ArticleGridSkeleton({
   }[variant];
 
   return (
-    <div 
-      className={gridClasses[variant]}
-      role="status"
-      aria-label="Loading articles..."
-    >
+    <div className={gridClasses[variant]} role="status" aria-label="Loading articles...">
       {[...Array(count)].map((_, i) => (
         <SkeletonComponent key={i} />
       ))}

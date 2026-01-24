@@ -40,7 +40,7 @@ export function LivePrice({
     }
   }, [currentPrice, previousPrice]);
 
-  const flashClass = flash === 'up' ? 'bg-green-500/20' : flash === 'down' ? 'bg-red-500/20' : '';
+  const flashClass = flash === 'up' ? 'bg-gain/20' : flash === 'down' ? 'bg-loss/20' : '';
 
   return (
     <span
@@ -50,7 +50,7 @@ export function LivePrice({
       {formatLivePrice(currentPrice)}
       {isConnected && (
         <span
-          className="inline-block w-2 h-2 ml-1 bg-green-500 rounded-full animate-pulse"
+          className="inline-block w-2 h-2 ml-1 bg-gain rounded-full animate-pulse"
           title="Live"
         />
       )}
@@ -73,8 +73,8 @@ export function LivePriceTicker({ coins }: LivePriceTickerProps) {
   return (
     <div className="flex items-center gap-4 text-sm">
       {isConnected && (
-        <span className="flex items-center gap-1 text-green-500">
-          <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
+        <span className="flex items-center gap-1 text-gain">
+          <span className="w-2 h-2 bg-gain rounded-full animate-pulse" />
           Live
         </span>
       )}
@@ -82,9 +82,7 @@ export function LivePriceTicker({ coins }: LivePriceTickerProps) {
         const price = prices[coin.id]?.price ?? coin.initialPrice;
         return (
           <div key={coin.id} className="flex items-center gap-1">
-            <span className="font-medium text-gray-600 dark:text-gray-400">
-              {coin.symbol.toUpperCase()}:
-            </span>
+            <span className="font-medium text-text-muted">{coin.symbol.toUpperCase()}:</span>
             <span className="font-mono">{formatLivePrice(price)}</span>
           </div>
         );
@@ -123,21 +121,21 @@ export function LivePriceCard({
   const displayChange = isConnected && priceChange !== 0 ? priceChange : initialChange24h;
 
   return (
-    <div className="flex items-center justify-between p-4 bg-white dark:bg-black rounded-lg border border-gray-200 dark:border-gray-700">
+    <div className="flex items-center justify-between p-4 bg-surface rounded-lg border border-surface-border">
       <div className="flex items-center gap-3">
         {image && <img src={image} alt={name} className="w-8 h-8 rounded-full" />}
         <div>
           <div className="font-medium">{name}</div>
-          <div className="text-sm text-gray-500">{symbol.toUpperCase()}</div>
+          <div className="text-sm text-text-muted">{symbol.toUpperCase()}</div>
         </div>
       </div>
 
       <div className="text-right">
         <div className="font-mono font-medium flex items-center gap-1">
           {formatLivePrice(currentPrice)}
-          {isConnected && <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />}
+          {isConnected && <span className="w-2 h-2 bg-gain rounded-full animate-pulse" />}
         </div>
-        <div className={`text-sm ${displayChange >= 0 ? 'text-green-500' : 'text-red-500'}`}>
+        <div className={`text-sm ${displayChange >= 0 ? 'text-gain' : 'text-loss'}`}>
           {displayChange >= 0 ? '+' : ''}
           {displayChange.toFixed(2)}%
         </div>

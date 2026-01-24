@@ -47,7 +47,7 @@ export default async function PriceTicker({ className = '' }: PriceTickerProps) 
 
   return (
     <div
-      className={`bg-black text-white py-2.5 overflow-hidden ${className}`}
+      className={`bg-background text-text-primary py-2.5 overflow-hidden ${className}`}
       role="region"
       aria-label="Cryptocurrency prices"
     >
@@ -66,11 +66,11 @@ export default async function PriceTicker({ className = '' }: PriceTickerProps) 
                   <span className={coin.color} aria-hidden="true">
                     {coin.icon}
                   </span>
-                  <span className="text-gray-400 font-medium">{coin.symbol}</span>
+                  <span className="text-text-muted font-medium">{coin.symbol}</span>
                   <span className="font-semibold">{formatPrice(coin.price)}</span>
                   <span
                     className={`inline-flex items-center gap-0.5 text-xs font-medium ${
-                      isPositive ? 'text-green-400' : 'text-red-400'
+                      isPositive ? 'text-gain' : 'text-loss'
                     }`}
                   >
                     {/* Arrow indicator */}
@@ -100,14 +100,14 @@ export default async function PriceTicker({ className = '' }: PriceTickerProps) 
           {/* Fear & Greed Index */}
           {fearGreed && (
             <div
-              className="flex items-center gap-2 whitespace-nowrap border-l border-gray-700 pl-6"
+              className="flex items-center gap-2 whitespace-nowrap border-l border-surface-border pl-6"
               aria-label={`Fear and Greed Index: ${fearGreed.value}, ${fearGreed.value_classification}`}
             >
-              <span className="text-gray-400 text-xs uppercase tracking-wide">Fear & Greed</span>
+              <span className="text-text-muted text-xs uppercase tracking-wide">Fear & Greed</span>
               <span className={`font-bold ${getFearGreedColor(Number(fearGreed.value))}`}>
                 {fearGreed.value}
               </span>
-              <span className="text-gray-500 text-xs hidden sm:inline">
+              <span className="text-text-muted text-xs hidden sm:inline">
                 ({fearGreed.value_classification})
               </span>
             </div>

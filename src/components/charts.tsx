@@ -23,28 +23,20 @@ import {
   Pie,
   Cell,
 } from 'recharts';
+import { chartColors, colors } from '@/lib/colors';
 
-// Color palette for charts
+// Color palette for charts - using design tokens
 const COLORS = {
-  primary: '#f59e0b',
-  secondary: '#3b82f6',
-  success: '#10b981',
-  danger: '#ef4444',
-  warning: '#f59e0b',
-  info: '#06b6d4',
-  gray: '#6b7280',
+  primary: colors.primary, // #3861FB
+  secondary: colors.secondary, // #8DC647
+  success: chartColors.gain, // #16C784
+  danger: chartColors.loss, // #EA3943
+  warning: colors.warning, // #F7931A
+  info: colors.info, // #3B82F6
+  gray: colors.textMuted, // #808A9D
 };
 
-const PIE_COLORS = [
-  '#f59e0b',
-  '#3b82f6',
-  '#10b981',
-  '#ef4444',
-  '#8b5cf6',
-  '#ec4899',
-  '#06b6d4',
-  '#f97316',
-];
+const PIE_COLORS = chartColors.palette;
 
 interface ChartProps {
   data: Record<string, unknown>[];
@@ -57,8 +49,8 @@ function CustomTooltip({ active, payload, label }: any) {
   if (!active || !payload) return null;
 
   return (
-    <div className="bg-black border border-gray-700 rounded-lg p-3 shadow-xl">
-      <p className="text-gray-400 text-sm mb-1">{label}</p>
+    <div className="bg-surface border border-surface-border rounded-lg p-3 shadow-xl">
+      <p className="text-text-muted text-sm mb-1">{label}</p>
       {payload.map((entry: any, index: number) => (
         <p key={index} className="text-sm" style={{ color: entry.color }}>
           {entry.name}:{' '}
@@ -88,16 +80,18 @@ export function PriceLineChart({
     <div className={className}>
       <ResponsiveContainer width="100%" height={height}>
         <LineChart data={data} margin={{ top: 5, right: 5, left: 5, bottom: 5 }}>
-          {showGrid && <CartesianGrid strokeDasharray="3 3" stroke="#374151" opacity={0.3} />}
+          {showGrid && (
+            <CartesianGrid strokeDasharray="3 3" stroke={chartColors.grid} opacity={0.3} />
+          )}
           <XAxis
             dataKey="time"
-            tick={{ fill: '#9ca3af', fontSize: 12 }}
-            axisLine={{ stroke: '#374151' }}
+            tick={{ fill: chartColors.axis, fontSize: 12 }}
+            axisLine={{ stroke: chartColors.grid }}
             tickLine={false}
           />
           <YAxis
-            tick={{ fill: '#9ca3af', fontSize: 12 }}
-            axisLine={{ stroke: '#374151' }}
+            tick={{ fill: chartColors.axis, fontSize: 12 }}
+            axisLine={{ stroke: chartColors.grid }}
             tickLine={false}
             tickFormatter={(value) => `$${value.toLocaleString()}`}
           />
@@ -142,16 +136,16 @@ export function PriceAreaChart({
               <stop offset="95%" stopColor={color} stopOpacity={0} />
             </linearGradient>
           </defs>
-          <CartesianGrid strokeDasharray="3 3" stroke="#374151" opacity={0.3} />
+          <CartesianGrid strokeDasharray="3 3" stroke={chartColors.grid} opacity={0.3} />
           <XAxis
             dataKey="time"
-            tick={{ fill: '#9ca3af', fontSize: 12 }}
-            axisLine={{ stroke: '#374151' }}
+            tick={{ fill: chartColors.axis, fontSize: 12 }}
+            axisLine={{ stroke: chartColors.grid }}
             tickLine={false}
           />
           <YAxis
-            tick={{ fill: '#9ca3af', fontSize: 12 }}
-            axisLine={{ stroke: '#374151' }}
+            tick={{ fill: chartColors.axis, fontSize: 12 }}
+            axisLine={{ stroke: chartColors.grid }}
             tickLine={false}
             tickFormatter={(value) => `$${value.toLocaleString()}`}
           />
@@ -184,16 +178,16 @@ export function VolumeChart({
     <div className={className}>
       <ResponsiveContainer width="100%" height={height}>
         <BarChart data={data} margin={{ top: 5, right: 5, left: 5, bottom: 5 }}>
-          <CartesianGrid strokeDasharray="3 3" stroke="#374151" opacity={0.3} />
+          <CartesianGrid strokeDasharray="3 3" stroke={chartColors.grid} opacity={0.3} />
           <XAxis
             dataKey="time"
-            tick={{ fill: '#9ca3af', fontSize: 12 }}
-            axisLine={{ stroke: '#374151' }}
+            tick={{ fill: chartColors.axis, fontSize: 12 }}
+            axisLine={{ stroke: chartColors.grid }}
             tickLine={false}
           />
           <YAxis
-            tick={{ fill: '#9ca3af', fontSize: 12 }}
-            axisLine={{ stroke: '#374151' }}
+            tick={{ fill: chartColors.axis, fontSize: 12 }}
+            axisLine={{ stroke: chartColors.grid }}
             tickLine={false}
             tickFormatter={(value) => {
               if (value >= 1e9) return `$${(value / 1e9).toFixed(1)}B`;
@@ -219,16 +213,16 @@ export function ComparisonChart({ data, height = 300, className, lines }: Compar
     <div className={className}>
       <ResponsiveContainer width="100%" height={height}>
         <LineChart data={data} margin={{ top: 5, right: 5, left: 5, bottom: 5 }}>
-          <CartesianGrid strokeDasharray="3 3" stroke="#374151" opacity={0.3} />
+          <CartesianGrid strokeDasharray="3 3" stroke={chartColors.grid} opacity={0.3} />
           <XAxis
             dataKey="time"
-            tick={{ fill: '#9ca3af', fontSize: 12 }}
-            axisLine={{ stroke: '#374151' }}
+            tick={{ fill: chartColors.axis, fontSize: 12 }}
+            axisLine={{ stroke: chartColors.grid }}
             tickLine={false}
           />
           <YAxis
-            tick={{ fill: '#9ca3af', fontSize: 12 }}
-            axisLine={{ stroke: '#374151' }}
+            tick={{ fill: chartColors.axis, fontSize: 12 }}
+            axisLine={{ stroke: chartColors.grid }}
             tickLine={false}
           />
           <Tooltip content={<CustomTooltip />} />
@@ -362,7 +356,7 @@ export function ActivityHeatmap({ data, height = 200, className }: HeatmapProps)
         <BarChart data={hourlyData} margin={{ top: 5, right: 5, left: 5, bottom: 5 }}>
           <XAxis
             dataKey="hour"
-            tick={{ fill: '#9ca3af', fontSize: 10 }}
+            tick={{ fill: chartColors.axis, fontSize: 10 }}
             axisLine={false}
             tickLine={false}
           />
