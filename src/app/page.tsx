@@ -22,6 +22,7 @@ import TrendingSection from './markets/components/TrendingSection';
 import CategoryTabs from './markets/components/CategoryTabs';
 import SearchAndFilters from './markets/components/SearchAndFilters';
 import CoinsTable from './markets/components/CoinsTable';
+import MarketMoodWidget from '@/components/MarketMoodWidget';
 import type { SortField, SortOrder } from './markets/components/SortableHeader';
 
 export const metadata: Metadata = {
@@ -249,10 +250,17 @@ export default async function MarketsPage({ searchParams }: MarketsPageProps) {
             </p>
           </div>
 
-          {/* Trending Section */}
-          <Suspense fallback={<TrendingSectionSkeleton />}>
-            <TrendingSection trending={trending} coins={allCoins} />
-          </Suspense>
+          {/* Trending Section with Market Mood */}
+          <div className="grid lg:grid-cols-4 gap-4 mb-6">
+            <div className="lg:col-span-3">
+              <Suspense fallback={<TrendingSectionSkeleton />}>
+                <TrendingSection trending={trending} coins={allCoins} />
+              </Suspense>
+            </div>
+            <div className="lg:col-span-1">
+              <MarketMoodWidget variant="compact" showHistory />
+            </div>
+          </div>
 
           {/* Category Tabs */}
           <Suspense fallback={<CategoryTabsSkeleton />}>

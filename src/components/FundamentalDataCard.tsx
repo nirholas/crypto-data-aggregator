@@ -49,7 +49,7 @@ export function FundamentalDataCard({ symbol }: FundamentalDataCardProps) {
     );
   }
 
-  if (!data?.asset) {
+  if (!asset) {
     return (
       <div className="bg-surface rounded-lg p-6 border border-surface-border">
         <p className="text-text-muted">No data available for {symbol}</p>
@@ -57,7 +57,6 @@ export function FundamentalDataCard({ symbol }: FundamentalDataCardProps) {
     );
   }
 
-  const { asset, metrics, markets } = data;
   const marketData = metrics?.market_data;
   const marketcap = metrics?.marketcap;
   const mining = metrics?.mining_stats;
@@ -343,7 +342,7 @@ export function FundamentalDataCard({ symbol }: FundamentalDataCardProps) {
                 </tr>
               </thead>
               <tbody>
-                {markets.slice(0, 5).map((market, idx) => (
+                {markets.slice(0, 5).map((market: { exchange_name: string; pair: string; volume_last_24_hours: number; volume_percentage: number }, idx: number) => (
                   <tr key={idx} className="border-b border-surface-border/50 last:border-0">
                     <td className="py-2 text-text-primary">{market.exchange_name}</td>
                     <td className="py-2 text-text-muted">{market.pair}</td>
@@ -374,7 +373,7 @@ export function FundamentalDataCard({ symbol }: FundamentalDataCardProps) {
       {/* Links */}
       {profile?.general?.overview && (
         <div className="px-6 pb-6 flex flex-wrap gap-2">
-          {profile.general.overview.official_links?.map((link, idx) => (
+          {profile.general.overview.official_links?.map((link: { name: string; link: string }, idx: number) => (
             <a
               key={idx}
               href={link.link}
