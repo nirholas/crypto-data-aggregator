@@ -308,8 +308,8 @@ function ComparePageContent() {
                         />
                       </div>
                     </div>
-                    <div className="max-h-60 overflow-y-auto p-2">
-                      {filteredCoins.slice(0, 10).map((coin) => (
+                    <div className="p-2">
+                      {filteredCoins.slice(0, 6).map((coin) => (
                         <button
                           key={coin.id}
                           onClick={() => addCoin(coin.id)}
@@ -330,6 +330,9 @@ function ComparePageContent() {
                           </div>
                         </button>
                       ))}
+                      {filteredCoins.length > 6 && (
+                        <p className="text-center py-2 text-text-muted text-xs">Type to search {filteredCoins.length - 6} more coins...</p>
+                      )}
                       {filteredCoins.length === 0 && (
                         <p className="text-center py-4 text-text-muted text-sm">No coins found</p>
                       )}
@@ -447,7 +450,7 @@ function ComparePageContent() {
 
         {/* Comparison Table */}
         <div className="bg-surface rounded-2xl border border-surface-border overflow-hidden">
-          <div className="overflow-x-auto">
+          <div className="overflow-x-auto scrollbar-hide">
             <table className="w-full">
               <thead>
                 <tr className="border-b border-surface-border">

@@ -214,7 +214,7 @@ export function PriceAlerts() {
             </div>
 
             {/* Content */}
-            <div className="p-4 space-y-4 overflow-y-auto max-h-[60vh]">
+            <div className="p-4 space-y-4 overflow-y-auto scrollbar-hide max-h-[60vh]">
               {/* Add Alert Form */}
               <div className="p-4 bg-surface-alt rounded-lg space-y-3">
                 <h3 className="font-medium text-sm text-text-secondary">Create Alert</h3>

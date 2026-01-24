@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { CryptoCalculator } from '@/components/CryptoCalculator';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import ShareButtons from '@/components/ShareButtons';
 
 export const metadata: Metadata = {
   title: 'Crypto Calculator | Convert & Calculate Profits',
@@ -30,10 +31,19 @@ export default function CalculatorPage() {
       <Header />
       <main id="main-content" className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-text-primary mb-2">Crypto Calculator</h1>
-          <p className="text-text-secondary">
-            Convert between cryptocurrencies and calculate your potential profits or losses.
-          </p>
+          <div className="flex items-center justify-between flex-wrap gap-4">
+            <div>
+              <h1 className="text-3xl font-bold text-text-primary mb-2">Crypto Calculator</h1>
+              <p className="text-text-secondary">
+                Convert between cryptocurrencies and calculate your potential profits or losses.
+              </p>
+            </div>
+            <ShareButtons
+              url="/calculator"
+              title="Check out this crypto calculator! 📱💰"
+              variant="compact"
+            />
+          </div>
         </div>
 
         <CryptoCalculator />

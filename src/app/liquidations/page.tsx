@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { LiquidationsFeed } from '@/components/LiquidationsFeed';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import ShareButtons from '@/components/ShareButtons';
 
 export const metadata: Metadata = {
   title: 'Liquidations | Live Futures Liquidation Feed',
@@ -30,11 +31,20 @@ export default function LiquidationsPage() {
       <Header />
       <main id="main-content" className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-text-primary mb-2">Liquidations Feed</h1>
-          <p className="text-text-secondary">
-            Live futures liquidations across major exchanges. See who&apos;s getting rekt in
-            real-time.
-          </p>
+          <div className="flex items-center justify-between flex-wrap gap-4">
+            <div>
+              <h1 className="text-3xl font-bold text-text-primary mb-2">Liquidations Feed</h1>
+              <p className="text-text-secondary">
+                Live futures liquidations across major exchanges. See who&apos;s getting rekt in
+                real-time.
+              </p>
+            </div>
+            <ShareButtons
+              url="/liquidations"
+              title="Live crypto liquidations feed - see who's getting rekt! 💥📉"
+              variant="compact"
+            />
+          </div>
         </div>
 
         <LiquidationsFeed />

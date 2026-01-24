@@ -368,7 +368,7 @@ export function CommandPalette({ isOpen, onClose }: CommandPaletteProps) {
         </div>
 
         {/* Command List */}
-        <div ref={listRef} className="max-h-[50vh] overflow-y-auto py-2">
+        <div ref={listRef} className="max-h-[50vh] overflow-y-auto scrollbar-hide py-2">
           {flatCommands.length === 0 ? (
             <div className="px-4 py-8 text-center text-text-muted">
               <div className="flex justify-center mb-2">

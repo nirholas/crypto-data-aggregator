@@ -152,9 +152,9 @@ export default function CoinTabs({
         })}
       </div>
 
-      {/* Mobile tabs - horizontal scroll */}
-      <div className="sm:hidden overflow-x-auto scrollbar-hide">
-        <div className="flex items-center gap-2 p-1 min-w-max">
+      {/* Mobile tabs - wrapping layout */}
+      <div className="sm:hidden">
+        <div className="flex flex-wrap items-center gap-2 p-1">
           {tabs.map((tab) => {
             const isDisabled =
               (tab.id === 'markets' && !hasMarkets) || (tab.id === 'historical' && !hasHistorical);
@@ -165,7 +165,7 @@ export default function CoinTabs({
                 key={tab.id}
                 onClick={() => !isDisabled && handleTabClick(tab.id)}
                 disabled={isDisabled}
-                className={`flex items-center gap-1.5 px-3 py-2 text-sm font-medium rounded-lg whitespace-nowrap transition-colors ${
+                className={`flex items-center gap-1.5 px-3 py-2 text-sm font-medium rounded-lg transition-colors ${
                   isDisabled
                     ? 'text-text-muted/50 cursor-not-allowed bg-surface-alt/30'
                     : isActive

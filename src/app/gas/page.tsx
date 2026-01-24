@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { GasTracker } from '@/components/GasTracker';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import ShareButtons from '@/components/ShareButtons';
 
 export const metadata: Metadata = {
   title: 'Gas Tracker | Ethereum Gas Prices',
@@ -30,10 +31,19 @@ export default function GasPage() {
       <Header />
       <main id="main-content" className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-text-primary mb-2">Gas Tracker</h1>
-          <p className="text-text-secondary">
-            Live Ethereum gas prices. Estimate transaction costs before you send.
-          </p>
+          <div className="flex items-center justify-between flex-wrap gap-4">
+            <div>
+              <h1 className="text-3xl font-bold text-text-primary mb-2">Gas Tracker</h1>
+              <p className="text-text-secondary">
+                Live Ethereum gas prices. Estimate transaction costs before you send.
+              </p>
+            </div>
+            <ShareButtons
+              url="/gas"
+              title="Track Ethereum gas prices in real-time! ⛽💸"
+              variant="compact"
+            />
+          </div>
         </div>
 
         <GasTracker />

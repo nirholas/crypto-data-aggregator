@@ -417,13 +417,13 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
         )}
 
         {/* Search Content */}
-        <div ref={listRef} className="max-h-[55vh] overflow-y-auto">
+        <div ref={listRef} className="max-h-[55vh] overflow-y-auto scrollbar-hide">
           {/* Live Search Results */}
           {showResults && (
             <div className="p-2">
               {searchResults.length > 0 ? (
                 <div className="space-y-1">
-                  {searchResults.map((result, index) => {
+                  {searchResults.slice(0, 8).map((result, index) => {
                     const CategoryIcon = result.categoryIcon;
                     return (
                       <button

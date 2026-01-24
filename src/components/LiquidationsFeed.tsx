@@ -294,8 +294,8 @@ export function LiquidationsFeed() {
       </div>
 
       {/* Liquidations List */}
-      <div className="space-y-2 max-h-[600px] overflow-y-auto">
-        {filteredLiquidations.map((liq) => (
+      <div className="space-y-2">
+        {filteredLiquidations.slice(0, 15).map((liq) => (
           <div
             key={liq.id}
             className={`flex items-center gap-4 p-4 rounded-lg border transition-colors ${

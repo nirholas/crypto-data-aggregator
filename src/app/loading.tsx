@@ -33,11 +33,11 @@ export default function HomeLoading() {
 
       <div className="max-w-7xl mx-auto px-4 py-8">
         {/* Category pills skeleton */}
-        <div className="flex gap-3 overflow-x-auto pb-4 mb-8">
+        <div className="flex flex-wrap gap-3 pb-4 mb-8">
           {[...Array(8)].map((_, i) => (
             <div
               key={i}
-              className="h-10 w-28 bg-surface-alt rounded-full animate-pulse flex-shrink-0"
+              className="h-10 w-28 bg-surface-alt rounded-full animate-pulse"
             />
           ))}
         </div>

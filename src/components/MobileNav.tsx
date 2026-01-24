@@ -48,7 +48,7 @@ const resourceLinks = [
   { href: '/docs/swagger', label: 'Swagger UI', icon: Code },
   { href: '/examples', label: 'Code Examples', icon: Code },
   { href: '/pricing', label: 'API Pricing', icon: Info },
-  { href: '/api/feed/rss', label: 'RSS Feed', icon: Info },
+  { href: '/api/rss', label: 'RSS Feed', icon: Info },
   { href: '/install', label: 'Install App', icon: Folder },
   { href: '/about', label: 'About', icon: Info },
 ];
@@ -224,7 +224,7 @@ export function MobileNav() {
         </div>
 
         {/* Scrollable Content */}
-        <nav className="flex-1 overflow-y-auto overscroll-contain" aria-label="Mobile navigation">
+        <nav className="flex-1 overflow-y-auto overscroll-contain scrollbar-hide" aria-label="Mobile navigation">
           <div className="px-4 py-6 space-y-6">
             {/* Main Navigation */}
             <div className="space-y-1">

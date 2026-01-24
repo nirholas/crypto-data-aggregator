@@ -15,6 +15,12 @@ export interface CardProps extends HTMLAttributes<HTMLDivElement> {
   padding?: 'none' | 'sm' | 'md' | 'lg';
   hover?: boolean;
   glow?: 'none' | 'primary' | 'gain' | 'loss';
+  /** Adds lift effect on hover (translateY + shadow) */
+  lift?: boolean;
+  /** Adds glowing border effect on hover */
+  glowHover?: 'none' | 'primary' | 'gain' | 'loss';
+  /** Adds shine sweep effect on hover */
+  shine?: boolean;
 }
 
 const variantClasses = {
@@ -62,6 +68,13 @@ const glowClasses = {
   loss: 'glow-loss',
 };
 
+const glowHoverClasses = {
+  none: '',
+  primary: 'card-glow',
+  gain: 'card-glow-gain',
+  loss: 'card-glow-loss',
+};
+
 const Card = forwardRef<HTMLDivElement, CardProps>(
   (
     {
@@ -69,6 +82,9 @@ const Card = forwardRef<HTMLDivElement, CardProps>(
       padding = 'md',
       hover = false,
       glow = 'none',
+      lift = false,
+      glowHover = 'none',
+      shine = false,
       className = '',
       children,
       ...props
@@ -83,6 +99,9 @@ const Card = forwardRef<HTMLDivElement, CardProps>(
           ${paddingClasses[padding]}
           ${hover ? hoverClasses : ''}
           ${glowClasses[glow]}
+          ${lift ? 'card-lift' : ''}
+          ${glowHoverClasses[glowHover]}
+          ${shine ? 'card-shine' : ''}
           ${className}
         `}
         {...props}

@@ -36,9 +36,9 @@ export default function CoinRow({ coin, showWatchlist = false }: CoinRowProps) {
   };
 
   return (
-    <tr className="border-b border-surface-border hover:bg-surface-hover transition-colors group">
+    <tr className="border-b border-surface-border hover:bg-surface-hover/50 transition-all duration-200 group cursor-pointer">
       {/* Rank */}
-      <td className="p-4 text-text-muted text-sm">{coin.market_cap_rank}</td>
+      <td className="p-4 text-text-muted text-sm font-medium">{coin.market_cap_rank}</td>
 
       {/* Coin */}
       <td className="p-4">
@@ -127,10 +127,13 @@ export default function CoinRow({ coin, showWatchlist = false }: CoinRowProps) {
       {/* 7d Chart */}
       <td className="p-4 hidden lg:table-cell">
         {coin.sparkline_in_7d?.price ? (
-          <SparklineCell
-            data={coin.sparkline_in_7d.price}
-            change={coin.price_change_percentage_7d_in_currency || 0}
-          />
+          <div className="group-hover:scale-105 transition-transform duration-200">
+            <SparklineCell
+              data={coin.sparkline_in_7d.price}
+              change={coin.price_change_percentage_7d_in_currency || 0}
+              showEndDot={false}
+            />
+          </div>
         ) : (
           <div className="w-[100px] h-[32px] bg-surface-hover rounded" />
         )}

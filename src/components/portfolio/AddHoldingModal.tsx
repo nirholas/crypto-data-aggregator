@@ -164,8 +164,8 @@ export function AddHoldingModal({ isOpen, onClose, prefilledCoin }: AddHoldingMo
             </div>
 
             {/* Coin list */}
-            <div className="space-y-2 max-h-80 overflow-y-auto">
-              {filteredCoins.map((coin) => (
+            <div className="space-y-2">
+              {filteredCoins.slice(0, 8).map((coin) => (
                 <button
                   key={coin.id}
                   onClick={() => handleSelectCoin(coin)}
@@ -180,6 +180,9 @@ export function AddHoldingModal({ isOpen, onClose, prefilledCoin }: AddHoldingMo
                   </div>
                 </button>
               ))}
+              {filteredCoins.length > 8 && (
+                <p className="text-center py-2 text-text-muted text-sm">Type to search {filteredCoins.length - 8} more coins...</p>
+              )}
               {filteredCoins.length === 0 && (
                 <p className="text-center py-8 text-text-muted">No coins found</p>
               )}

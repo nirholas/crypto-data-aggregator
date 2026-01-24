@@ -201,8 +201,8 @@ export function PushNotifications() {
               </div>
             ) : (
               <>
-                <div className="max-h-80 overflow-y-auto">
-                  {notifications.map((notification) => (
+                <div>
+                  {notifications.slice(0, 5).map((notification) => (
                     <div
                       key={notification.id}
                       className="p-3 border-b border-surface-border hover:bg-surface-hover"

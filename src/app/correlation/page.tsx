@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { CorrelationMatrix } from '@/components/CorrelationMatrix';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import ShareButtons from '@/components/ShareButtons';
 
 export const metadata: Metadata = {
   title: 'Correlation Matrix | Crypto Asset Correlations',
@@ -30,11 +31,20 @@ export default function CorrelationPage() {
       <Header />
       <main id="main-content" className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-text-primary mb-2">Correlation Matrix</h1>
-          <p className="text-text-secondary">
-            Analyze how cryptocurrencies move in relation to each other. Useful for portfolio
-            diversification.
-          </p>
+          <div className="flex items-center justify-between flex-wrap gap-4">
+            <div>
+              <h1 className="text-3xl font-bold text-text-primary mb-2">Correlation Matrix</h1>
+              <p className="text-text-secondary">
+                Analyze how cryptocurrencies move in relation to each other. Useful for portfolio
+                diversification.
+              </p>
+            </div>
+            <ShareButtons
+              url="/correlation"
+              title="Analyze crypto correlations with this matrix! 📊🔗"
+              variant="compact"
+            />
+          </div>
         </div>
 
         <CorrelationMatrix />

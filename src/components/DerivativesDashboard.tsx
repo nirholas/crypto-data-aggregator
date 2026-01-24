@@ -149,7 +149,7 @@ export function DerivativesDashboard() {
         <h3 className="text-lg font-semibold text-text-primary mb-3">
           📈 Open Interest
         </h3>
-        <div className="overflow-x-auto">
+        <div className="overflow-x-auto scrollbar-hide">
           <table className="w-full">
             <thead>
               <tr className="text-left text-text-muted text-sm border-b border-surface-border">

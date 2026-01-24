@@ -331,7 +331,7 @@ export function FundamentalDataCard({ symbol }: FundamentalDataCardProps) {
       {markets && markets.length > 0 && (
         <div className="p-6 border-b border-surface-border">
           <h3 className="text-sm font-medium text-text-muted mb-4">🏛️ Top Markets</h3>
-          <div className="overflow-x-auto">
+          <div className="overflow-x-auto scrollbar-hide">
             <table className="w-full text-sm">
               <thead>
                 <tr className="text-left text-text-muted border-b border-surface-border">

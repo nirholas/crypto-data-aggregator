@@ -522,7 +522,7 @@ export default function AdminDashboard() {
             {keyStats.topKeys.length > 0 && (
               <div className="bg-background-secondary rounded-xl p-6 border border-surface">
                 <h3 className="text-lg font-semibold mb-4">Top 10 API Keys by Usage</h3>
-                <div className="overflow-x-auto">
+                <div className="overflow-x-auto scrollbar-hide">
                   <table className="w-full">
                     <thead>
                       <tr className="text-left text-text-secondary border-b border-surface">
@@ -628,7 +628,7 @@ export default function AdminDashboard() {
             {keysList && (
               <>
                 <div className="bg-background-secondary rounded-xl border border-surface overflow-hidden">
-                  <div className="overflow-x-auto">
+                  <div className="overflow-x-auto scrollbar-hide">
                     <table className="w-full">
                       <thead>
                         <tr className="text-left text-text-secondary bg-surface/50">
@@ -881,7 +881,7 @@ export default function AdminDashboard() {
             {data.stats.errorsByEndpoint.length > 0 && (
               <div className="bg-background-secondary rounded-xl p-6 border border-surface">
                 <h2 className="text-lg font-semibold mb-4">Errors by Endpoint</h2>
-                <div className="overflow-x-auto">
+                <div className="overflow-x-auto scrollbar-hide">
                   <table className="w-full">
                     <thead>
                       <tr className="text-left text-text-secondary border-b border-surface">

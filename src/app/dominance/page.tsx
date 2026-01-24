@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { DominanceChart } from '@/components/DominanceChart';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import ShareButtons from '@/components/ShareButtons';
 
 export const metadata: Metadata = {
   title: 'Market Dominance | Crypto Market Share',
@@ -45,9 +46,21 @@ export default async function DominancePage() {
       <Header />
       <main id="main-content" className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-text-primary mb-2">Market Dominance</h1>
-          <p className="text-text-secondary">
-            Visualize market share across the crypto ecosystem. See how BTC and ETH compare to
+          <div className="flex items-center justify-between flex-wrap gap-4">
+            <div>
+              <h1 className="text-3xl font-bold text-text-primary mb-2">Market Dominance</h1>
+              <p className="text-text-secondary">
+                Visualize market share across the crypto ecosystem. See how BTC and ETH compare to
+                altcoins.
+              </p>
+            </div>
+            <ShareButtons
+              url="/dominance"
+              title="Check out crypto market dominance! 🥇🥈🥉"
+              variant="compact"
+            />
+          </div>
+        </div>
             altcoins.
           </p>
         </div>

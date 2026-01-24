@@ -97,7 +97,7 @@ export default function HalvingPage() {
         {/* Block Reward Timeline */}
         <div className="bg-surface rounded-2xl border border-surface-border p-6 mb-12">
           <h3 className="text-xl font-bold text-text-primary mb-6">Block Reward Timeline</h3>
-          <div className="overflow-x-auto">
+          <div className="overflow-x-auto scrollbar-hide">
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b border-surface-border">

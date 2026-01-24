@@ -66,7 +66,7 @@ export default async function LosersPage() {
 
           {/* Losers Table */}
           <div className="bg-surface rounded-xl border border-surface-border overflow-hidden">
-            <div className="overflow-x-auto">
+            <div className="overflow-x-auto scrollbar-hide">
               <table className="w-full">
                 <thead>
                   <tr className="bg-surface-alt border-b border-surface-border">

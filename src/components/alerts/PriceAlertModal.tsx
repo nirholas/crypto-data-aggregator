@@ -309,7 +309,7 @@ export function PriceAlertModal({
               <h3 className="text-sm font-medium text-text-secondary mb-3">
                 Active Alerts for {coinSymbol.toUpperCase()}
               </h3>
-              <div className="space-y-2 max-h-40 overflow-y-auto">
+              <div className="space-y-2">
                 {existingAlerts.map((alert) => (
                   <div
                     key={alert.id}

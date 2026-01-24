@@ -424,7 +424,7 @@ export function Screener({ coins }: { coins: Coin[] }) {
       </div>
 
       {/* Table */}
-      <div className="overflow-x-auto border border-surface-border rounded-lg">
+      <div className="overflow-x-auto scrollbar-hide border border-surface-border rounded-lg">
         <table className="min-w-full divide-y divide-surface-border">
           <thead className="bg-surface-alt">
             <tr>

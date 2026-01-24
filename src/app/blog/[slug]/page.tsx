@@ -25,6 +25,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     };
   }
 
+  // Build custom OG image URL
+  const ogImageParams = new URLSearchParams({
+    type: 'article',
+    title: post.title.slice(0, 90),
+    source: 'CryptoNews Blog',
+    category: post.tags?.[0] || 'Blog',
+  });
+
   return {
     title: `${post.title} | CryptoNews Blog`,
     description: post.excerpt,
@@ -35,13 +43,18 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       publishedTime: post.date,
       authors: [post.author.name],
       tags: post.tags,
-      images: post.coverImage ? [post.coverImage] : [],
+      images: [{
+        url: post.coverImage || `/api/og?${ogImageParams.toString()}`,
+        width: 1200,
+        height: 630,
+        alt: post.title,
+      }],
     },
     twitter: {
       card: 'summary_large_image',
       title: post.title,
       description: post.excerpt,
-      images: post.coverImage ? [post.coverImage] : [],
+      images: [post.coverImage || `/api/og?${ogImageParams.toString()}`],
     },
   };
 }

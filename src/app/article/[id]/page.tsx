@@ -43,6 +43,16 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   // Generate canonical URL with SEO-friendly slug
   const canonicalPath = buildArticleUrl(article.id, article.title);
+  
+  // Build OG image URL with article-specific params
+  const sentiment = article.sentiment?.toLowerCase().replace(' ', '_') || '';
+  const ogImageParams = new URLSearchParams({
+    type: 'article',
+    title: article.title.slice(0, 90),
+    source: article.source,
+    sentiment: sentiment,
+    category: article.tags?.[0] || '',
+  });
 
   return {
     title: article.title,
@@ -60,11 +70,18 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       section: article.tags?.[0] || 'Crypto News',
       tags: [...article.tickers, ...article.tags],
       url: buildCanonicalUrl(canonicalPath),
+      images: [{
+        url: `/api/og?${ogImageParams.toString()}`,
+        width: 1200,
+        height: 630,
+        alt: article.title,
+      }],
     },
     twitter: {
       card: 'summary_large_image',
       title: article.title,
       description: article.description || `Read the full article from ${article.source}`,
+      images: [`/api/og?${ogImageParams.toString()}`],
     },
   };
 }

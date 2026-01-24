@@ -49,6 +49,10 @@ export type { AvatarProps, AvatarGroupProps } from './Avatar';
 export { default as Skeleton, TextSkeleton, AvatarSkeleton, CardSkeleton, TableRowSkeleton, CoinRowSkeleton, ChartSkeleton } from './Skeleton';
 export type { SkeletonProps } from './Skeleton';
 
+// Sparkline Component
+export { default as Sparkline, SparklineWithLoader, InlineSparkline } from './Sparkline';
+export type { SparklineProps } from './Sparkline';
+
 // Micro-Animation Components
 export {
   AnimatedCounter,

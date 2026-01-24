@@ -8,7 +8,14 @@
  */
 'use client';
 
-import { forwardRef, ButtonHTMLAttributes, ReactNode } from 'react';
+import { forwardRef, ButtonHTMLAttributes, ReactNode, useState, useCallback } from 'react';
+
+interface RippleItem {
+  x: number;
+  y: number;
+  id: number;
+  size: number;
+}
 
 export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: 'primary' | 'secondary' | 'ghost' | 'outline' | 'danger' | 'success' | 'glass';
@@ -18,6 +25,10 @@ export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   rightIcon?: ReactNode;
   glow?: boolean;
   shine?: boolean;
+  /** Adds pulse animation for CTAs */
+  pulse?: boolean;
+  /** Adds material-style ripple effect on click */
+  ripple?: boolean;
 }
 
 const variantClasses = {
@@ -74,13 +85,36 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       rightIcon,
       glow = false,
       shine = false,
+      pulse = false,
+      ripple = false,
       className = '',
       disabled,
       children,
+      onClick,
       ...props
     },
     ref
   ) => {
+    const [ripples, setRipples] = useState<RippleItem[]>([]);
+
+    const handleClick = useCallback((e: React.MouseEvent<HTMLButtonElement>) => {
+      if (ripple && !disabled && !isLoading) {
+        const rect = e.currentTarget.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        const size = Math.max(rect.width, rect.height) * 2;
+        const id = Date.now();
+
+        setRipples(prev => [...prev, { x, y, id, size }]);
+
+        setTimeout(() => {
+          setRipples(prev => prev.filter(r => r.id !== id));
+        }, 600);
+      }
+
+      onClick?.(e);
+    }, [ripple, disabled, isLoading, onClick]);
+
     const baseClasses = `
       inline-flex items-center justify-center font-medium
       transition-all duration-200 ease-out
@@ -90,17 +124,22 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
 
     const glowClasses = glow ? 'btn-glow' : '';
     const shineClasses = shine ? 'btn-shine' : '';
+    const pulseClasses = pulse && !disabled ? 'btn-pulse' : '';
+    const rippleClasses = ripple ? 'relative overflow-hidden' : '';
 
     return (
       <button
         ref={ref}
         disabled={disabled || isLoading}
+        onClick={handleClick}
         className={`
           ${baseClasses}
           ${variantClasses[variant]}
           ${sizeClasses[size]}
           ${glowClasses}
           ${shineClasses}
+          ${pulseClasses}
+          ${rippleClasses}
           ${className}
         `}
         {...props}
@@ -131,6 +170,22 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         )}
         <span>{children}</span>
         {!isLoading && rightIcon}
+        
+        {/* Ripple effects */}
+        {ripple && ripples.map(r => (
+          <span
+            key={r.id}
+            className="absolute pointer-events-none rounded-full ripple-circle"
+            style={{
+              left: r.x,
+              top: r.y,
+              width: r.size,
+              height: r.size,
+              transform: 'translate(-50%, -50%)',
+              backgroundColor: 'rgba(255, 255, 255, 0.35)',
+            }}
+          />
+        ))}
       </button>
     );
   }

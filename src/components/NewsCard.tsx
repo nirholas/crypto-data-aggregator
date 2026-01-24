@@ -55,6 +55,10 @@ interface NewsCardProps {
   variant?: 'default' | 'compact' | 'horizontal';
   showDescription?: boolean;
   priority?: number;
+  /** Stagger index for animation delay (0-based) */
+  staggerIndex?: number;
+  /** Whether to animate on mount */
+  animate?: boolean;
 }
 
 const sourceColors: Record<string, { bg: string; light: string; text: string; border: string }> = {
@@ -114,15 +118,28 @@ export default function NewsCard({
   variant = 'default',
   showDescription = true,
   priority,
+  staggerIndex,
+  animate = false,
 }: NewsCardProps) {
   const articleId = generateArticleId(article.link);
   const style = sourceColors[article.source] || defaultStyle;
 
   const readingTime = estimateReadingTime(article.title, article.description);
 
+  // Animation styles for staggered entrance
+  const animationStyle = animate && staggerIndex !== undefined
+    ? {
+        '--stagger-index': staggerIndex,
+        animationDelay: `${staggerIndex * 50}ms`,
+        animationFillMode: 'both' as const,
+      }
+    : {};
+
+  const animationClass = animate ? 'animate-slide-up-fade' : '';
+
   if (variant === 'compact') {
     return (
-      <article className="group" data-article>
+      <article className={`group ${animationClass}`} style={animationStyle} data-article>
         <Link
           href={`/article/${articleId}`}
           className="flex items-start gap-4 p-4 rounded-xl hover:bg-surface-hover transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
@@ -152,10 +169,10 @@ export default function NewsCard({
 
   if (variant === 'horizontal') {
     return (
-      <article className="group" data-article>
+      <article className={`group ${animationClass}`} style={animationStyle} data-article>
         <Link
           href={`/article/${articleId}`}
-          className="flex gap-5 p-4 bg-surface rounded-xl border border-surface-border hover:border-primary/30 hover:shadow-lg transition-all focus:outline-none focus:ring-2 focus:ring-primary"
+          className="flex gap-5 p-4 bg-surface rounded-xl border border-surface-border hover:border-primary/30 hover:shadow-lg transition-all focus:outline-none focus:ring-2 focus:ring-primary card-lift"
         >
           {/* Left accent */}
           <div className={`w-1 self-stretch ${style.bg} rounded-full flex-shrink-0`} />
@@ -194,10 +211,10 @@ export default function NewsCard({
 
   // Default card style
   return (
-    <article className="group h-full" data-article>
+    <article className={`group h-full ${animationClass}`} style={animationStyle} data-article>
       <Link
         href={`/article/${articleId}`}
-        className="block h-full bg-surface rounded-2xl border border-surface-border overflow-hidden hover:shadow-xl hover:border-primary/30 hover:-translate-y-1 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+        className="block h-full bg-surface rounded-2xl border border-surface-border overflow-hidden hover:shadow-xl hover:border-primary/30 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 card-lift card-shine"
       >
         <div className="p-5 h-full flex flex-col">
           {/* Header */}

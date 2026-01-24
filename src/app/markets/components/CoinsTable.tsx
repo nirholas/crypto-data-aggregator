@@ -52,7 +52,7 @@ export default function CoinsTable({
 
   return (
     <div className="bg-surface rounded-xl border border-surface-border overflow-hidden">
-      <div className="overflow-x-auto">
+      <div className="overflow-x-auto scrollbar-hide">
         <table className="w-full">
           <thead>
             <tr className="border-b border-surface-border bg-surface-alt sticky top-0 z-10">

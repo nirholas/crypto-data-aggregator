@@ -8,56 +8,380 @@
  */
 'use client';
 
-import { ReactNode, useState, useEffect } from 'react';
+import { ReactNode, useState, useEffect, useRef, useCallback } from 'react';
 
-// Animated Counter - for displaying changing numbers
-export interface AnimatedCounterProps {
+// ===========================================
+// AnimatedNumber - Counts up/down with easing
+// ===========================================
+export interface AnimatedNumberProps {
   value: number;
   duration?: number;
   decimals?: number;
   prefix?: string;
   suffix?: string;
   className?: string;
+  easing?: 'linear' | 'easeOut' | 'easeInOut' | 'spring';
 }
 
-export function AnimatedCounter({
+export function AnimatedNumber({
   value,
-  duration = 1000,
+  duration = 800,
   decimals = 0,
   prefix = '',
   suffix = '',
   className = '',
-}: AnimatedCounterProps) {
-  const [displayValue, setDisplayValue] = useState(0);
+  easing = 'easeOut',
+}: AnimatedNumberProps) {
+  const [displayValue, setDisplayValue] = useState(value);
+  const previousValue = useRef(value);
+  const animationRef = useRef<number | null>(null);
+
+  const getEasing = useCallback((t: number): number => {
+    switch (easing) {
+      case 'linear':
+        return t;
+      case 'easeOut':
+        return 1 - Math.pow(1 - t, 3);
+      case 'easeInOut':
+        return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+      case 'spring':
+        return 1 - Math.pow(Math.cos(t * Math.PI * 0.5), 3);
+      default:
+        return t;
+    }
+  }, [easing]);
 
   useEffect(() => {
+    // Cancel any existing animation
+    if (animationRef.current) {
+      cancelAnimationFrame(animationRef.current);
+    }
+
     const startTime = Date.now();
-    const startValue = displayValue;
+    const startValue = previousValue.current;
     const difference = value - startValue;
+
+    // Skip animation for very small changes
+    if (Math.abs(difference) < 0.0001) {
+      setDisplayValue(value);
+      previousValue.current = value;
+      return;
+    }
 
     const updateValue = () => {
       const elapsed = Date.now() - startTime;
       const progress = Math.min(elapsed / duration, 1);
-      
-      // Easing function (ease-out cubic)
-      const eased = 1 - Math.pow(1 - progress, 3);
+      const eased = getEasing(progress);
       
       setDisplayValue(startValue + difference * eased);
 
       if (progress < 1) {
-        requestAnimationFrame(updateValue);
+        animationRef.current = requestAnimationFrame(updateValue);
       } else {
         setDisplayValue(value);
+        previousValue.current = value;
       }
     };
 
-    requestAnimationFrame(updateValue);
-  }, [value, duration]);
+    animationRef.current = requestAnimationFrame(updateValue);
+
+    return () => {
+      if (animationRef.current) {
+        cancelAnimationFrame(animationRef.current);
+      }
+    };
+  }, [value, duration, getEasing]);
 
   return (
-    <span className={`number-mono counter-animate ${className}`}>
+    <span className={`number-mono ${className}`}>
       {prefix}{displayValue.toFixed(decimals)}{suffix}
     </span>
+  );
+}
+
+// ===========================================
+// FadeIn - Wrapper with configurable delay and direction
+// ===========================================
+export interface FadeInProps {
+  children: ReactNode;
+  direction?: 'up' | 'down' | 'left' | 'right' | 'none';
+  delay?: number;
+  duration?: number;
+  className?: string;
+  once?: boolean; // Only animate once when entering viewport
+}
+
+export function FadeIn({
+  children,
+  direction = 'up',
+  delay = 0,
+  duration = 400,
+  className = '',
+  once = true,
+}: FadeInProps) {
+  const [isVisible, setIsVisible] = useState(false);
+  const elementRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+          if (once && elementRef.current) {
+            observer.unobserve(elementRef.current);
+          }
+        } else if (!once) {
+          setIsVisible(false);
+        }
+      },
+      { threshold: 0.1 }
+    );
+
+    if (elementRef.current) {
+      observer.observe(elementRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, [once]);
+
+  const directionClasses = {
+    up: 'animate-fade-in-up',
+    down: 'animate-fade-in-down',
+    left: 'animate-fade-in-left',
+    right: 'animate-fade-in-right',
+    none: 'animate-fade-in',
+  };
+
+  return (
+    <div
+      ref={elementRef}
+      className={`${isVisible ? directionClasses[direction] : 'opacity-0'} ${className}`}
+      style={{
+        animationDelay: `${delay}ms`,
+        animationDuration: `${duration}ms`,
+        animationFillMode: 'both',
+      }}
+    >
+      {children}
+    </div>
+  );
+}
+
+// ===========================================
+// RippleButton - Click ripple effect wrapper
+// ===========================================
+export interface RippleButtonProps {
+  children: ReactNode;
+  color?: string;
+  className?: string;
+  disabled?: boolean;
+  onClick?: (e: React.MouseEvent<HTMLDivElement>) => void;
+}
+
+interface RippleItem {
+  x: number;
+  y: number;
+  id: number;
+  size: number;
+}
+
+export function RippleButton({
+  children,
+  color = 'rgba(255, 255, 255, 0.35)',
+  className = '',
+  disabled = false,
+  onClick,
+}: RippleButtonProps) {
+  const [ripples, setRipples] = useState<RippleItem[]>([]);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  const handleClick = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
+    if (disabled) return;
+    
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    const size = Math.max(rect.width, rect.height) * 2;
+    const id = Date.now();
+
+    setRipples(prev => [...prev, { x, y, id, size }]);
+
+    // Remove ripple after animation
+    setTimeout(() => {
+      setRipples(prev => prev.filter(ripple => ripple.id !== id));
+    }, 600);
+
+    onClick?.(e);
+  }, [disabled, onClick]);
+
+  return (
+    <div 
+      ref={containerRef}
+      className={`relative overflow-hidden ${className}`}
+      onClick={handleClick}
+    >
+      {children}
+      {ripples.map(ripple => (
+        <span
+          key={ripple.id}
+          className="absolute pointer-events-none rounded-full"
+          style={{
+            left: ripple.x,
+            top: ripple.y,
+            width: ripple.size,
+            height: ripple.size,
+            transform: 'translate(-50%, -50%) scale(0)',
+            backgroundColor: color,
+            animation: 'ripple-effect 0.6s ease-out forwards',
+          }}
+        />
+      ))}
+    </div>
+  );
+}
+
+// ===========================================
+// PriceFlashWrapper - Flashes on value change
+// ===========================================
+export interface PriceFlashWrapperProps {
+  children: ReactNode;
+  value: number;
+  className?: string;
+  flashDuration?: number;
+}
+
+export function PriceFlashWrapper({
+  children,
+  value,
+  className = '',
+  flashDuration = 500,
+}: PriceFlashWrapperProps) {
+  const [flashClass, setFlashClass] = useState<string>('');
+  const previousValue = useRef<number>(value);
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  useEffect(() => {
+    if (previousValue.current !== value) {
+      // Clear any existing timeout
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+
+      // Determine direction
+      const direction = value > previousValue.current ? 'up' : 'down';
+      setFlashClass(direction === 'up' ? 'price-flash-up' : 'price-flash-down');
+      previousValue.current = value;
+
+      // Remove flash class after duration
+      timeoutRef.current = setTimeout(() => {
+        setFlashClass('');
+      }, flashDuration);
+    }
+
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+    };
+  }, [value, flashDuration]);
+
+  return (
+    <span className={`${flashClass} ${className}`}>
+      {children}
+    </span>
+  );
+}
+
+// ===========================================
+// ValueUpdate - Bounces on value change
+// ===========================================
+export interface ValueUpdateProps {
+  children: ReactNode;
+  value: number | string;
+  className?: string;
+}
+
+export function ValueUpdate({
+  children,
+  value,
+  className = '',
+}: ValueUpdateProps) {
+  const [bounce, setBounce] = useState(false);
+  const previousValue = useRef(value);
+
+  useEffect(() => {
+    if (previousValue.current !== value) {
+      setBounce(true);
+      previousValue.current = value;
+
+      const timeout = setTimeout(() => setBounce(false), 300);
+      return () => clearTimeout(timeout);
+    }
+  }, [value]);
+
+  return (
+    <span className={`inline-block ${bounce ? 'value-update' : ''} ${className}`}>
+      {children}
+    </span>
+  );
+}
+
+// ===========================================
+// StaggerContainer - Staggers children animations
+// ===========================================
+export interface StaggerContainerProps {
+  children: ReactNode;
+  staggerDelay?: number;
+  className?: string;
+  as?: 'div' | 'ul' | 'ol';
+}
+
+export function StaggerContainer({
+  children,
+  staggerDelay = 50,
+  className = '',
+  as: Component = 'div',
+}: StaggerContainerProps) {
+  return (
+    <Component 
+      className={`stagger-fade-custom ${className}`}
+      style={{ '--stagger-delay': `${staggerDelay}ms` } as React.CSSProperties}
+    >
+      {children}
+    </Component>
+  );
+}
+
+// ===========================================
+// SkeletonWave - Enhanced skeleton loader
+// ===========================================
+export interface SkeletonWaveProps {
+  width?: string | number;
+  height?: string | number;
+  className?: string;
+  rounded?: 'none' | 'sm' | 'md' | 'lg' | 'full';
+}
+
+export function SkeletonWave({
+  width = '100%',
+  height = '1rem',
+  className = '',
+  rounded = 'md',
+}: SkeletonWaveProps) {
+  const roundedClasses = {
+    none: '',
+    sm: 'rounded-sm',
+    md: 'rounded',
+    lg: 'rounded-lg',
+    full: 'rounded-full',
+  };
+
+  return (
+    <div
+      className={`skeleton-wave ${roundedClasses[rounded]} ${className}`}
+      style={{ width, height }}
+      aria-hidden="true"
+    />
   );
 }
 

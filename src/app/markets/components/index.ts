@@ -12,5 +12,8 @@ export { default as CoinRow } from './CoinRow';
 export { default as SortableHeader } from './SortableHeader';
 export { default as SparklineCell } from './SparklineCell';
 export { default as TablePagination } from './TablePagination';
+export { default as StatItem } from './StatItem';
+export { default as MiniDonut } from './MiniDonut';
+export { default as TrendIndicator } from './TrendIndicator';
 
 export type { SortField, SortOrder } from './SortableHeader';

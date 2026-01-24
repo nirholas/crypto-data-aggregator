@@ -144,9 +144,11 @@ export function ArticleContent({ article }: ArticleContentProps) {
               <h3 className="font-semibold text-text-primary mb-3 flex items-center gap-2">
                 <span>📄</span> Article Excerpt
               </h3>
-              <div className="text-text-muted text-sm leading-relaxed bg-surface p-4 rounded-xl max-h-64 overflow-y-auto">
-                {content.content.slice(0, 1500)}
-                {content.content.length > 1500 && '...'}
+              <div className="text-text-muted text-sm leading-relaxed bg-surface p-4 rounded-xl">
+                {content.content.slice(0, 800)}
+                {content.content.length > 800 && (
+                  <span className="text-text-secondary">... <a href={article.link} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">Read more</a></span>
+                )}
               </div>
             </div>
           )}

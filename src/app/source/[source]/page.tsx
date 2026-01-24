@@ -170,12 +170,12 @@ export default async function SourcePage({ params }: PageProps) {
           </div>
 
           {/* Source Navigation */}
-          <div className="flex overflow-x-auto gap-2 pb-4 mb-6 scrollbar-hide">
+          <div className="flex flex-wrap gap-2 pb-4 mb-6">
             {allSources.map(([key, src]) => (
               <Link
                 key={key}
                 href={`/source/${key}`}
-                className={`whitespace-nowrap px-4 py-2 rounded-full text-sm font-medium transition ${
+                className={`px-4 py-2 rounded-full text-sm font-medium transition ${
                   key === source
                     ? 'bg-primary text-white'
                     : 'bg-surface border border-surface-border hover:bg-surface-hover'

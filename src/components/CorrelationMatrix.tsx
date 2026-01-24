@@ -171,7 +171,7 @@ export function CorrelationMatrix() {
       </div>
 
       {/* Matrix */}
-      <div className="overflow-x-auto">
+      <div className="overflow-x-auto scrollbar-hide">
         <div className="inline-block min-w-full">
           <table className="border-collapse">
             <thead>

@@ -228,7 +228,7 @@ export default async function ExchangeDetailPage({ params }: ExchangePageProps) 
                 Top Trading Pairs ({topTickers.length})
               </h2>
             </div>
-            <div className="overflow-x-auto">
+            <div className="overflow-x-auto scrollbar-hide">
               <table className="w-full">
                 <thead>
                   <tr className="bg-surface-alt border-b border-surface-border">
