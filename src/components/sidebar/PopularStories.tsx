@@ -34,14 +34,9 @@ const sourceColors: Record<string, string> = {
   'The Defiant': 'from-pink-500 to-pink-600',
 };
 
-// Simulate view counts based on article position and randomness
-function estimateViews(index: number): string {
-  const baseViews = [12400, 8700, 6200, 4100, 2800];
-  const views = baseViews[index] || Math.floor(Math.random() * 2000) + 500;
-  if (views >= 10000) {
-    return `${(views / 1000).toFixed(1)}K`;
-  }
-  return views.toLocaleString();
+// Display rank indicator based on position
+function getRankDisplay(index: number): string {
+  return `#${index + 1}`;
 }
 
 export default function PopularStories({ articles }: PopularStoriesProps) {
@@ -91,7 +86,7 @@ export default function PopularStories({ articles }: PopularStoriesProps) {
         {popularArticles.map((article, index) => {
           const articleId = article.id || generateArticleId(article.link);
           const gradient = sourceColors[article.source] || 'from-surface-hover to-surface-alt';
-          const views = estimateViews(index);
+          const rank = getRankDisplay(index);
 
           return (
             <Link
@@ -110,18 +105,10 @@ export default function PopularStories({ articles }: PopularStoriesProps) {
                   <div className="absolute top-1 right-1 w-6 h-6 border border-white/30 rounded-full" />
                   <div className="absolute bottom-2 left-1 w-3 h-3 bg-white/20 rounded-full" />
                 </div>
-                {/* View count overlay */}
+                {/* Rank indicator overlay */}
                 <div className="absolute bottom-1 left-1 bg-black/60 backdrop-blur-sm rounded px-1.5 py-0.5">
-                  <span className="text-[10px] font-medium text-white flex items-center gap-0.5">
-                    <svg className="w-2.5 h-2.5" fill="currentColor" viewBox="0 0 20 20">
-                      <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
-                      <path
-                        fillRule="evenodd"
-                        d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z"
-                        clipRule="evenodd"
-                      />
-                    </svg>
-                    {views}
+                  <span className="text-[10px] font-bold text-white">
+                    {rank}
                   </span>
                 </div>
               </div>

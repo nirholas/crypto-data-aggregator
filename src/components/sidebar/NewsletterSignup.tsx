@@ -34,19 +34,32 @@ export default function NewsletterSignup() {
 
     setStatus('loading');
 
-    // Simulate API call - replace with actual newsletter service
+    // Use Buttondown API for newsletter subscription
     try {
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      // In production, you would call your newsletter API here:
-      // await fetch('/api/newsletter/subscribe', {
-      //   method: 'POST',
-      //   body: JSON.stringify({ email }),
-      // });
+      const response = await fetch('https://api.buttondown.email/v1/subscribers', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email,
+          tags: ['crypto-news-aggregator'],
+        }),
+      });
 
-      setStatus('success');
-      setEmail('');
-    } catch {
+      if (response.ok || response.status === 201) {
+        setStatus('success');
+        setEmail('');
+      } else if (response.status === 409) {
+        // Already subscribed
+        setStatus('success');
+        setEmail('');
+      } else {
+        const data = await response.json().catch(() => ({}));
+        throw new Error(data.detail || 'Subscription failed');
+      }
+    } catch (error) {
+      console.error('Newsletter subscription error:', error);
       setStatus('error');
       setErrorMessage('Something went wrong. Please try again.');
     }
@@ -160,8 +173,8 @@ export default function NewsletterSignup() {
                 disabled={status === 'loading' || !email}
                 className={`
                   w-full px-4 py-3 rounded-xl font-semibold
-                  bg-black text-white
-                  hover:bg-gray-900 hover:shadow-lg
+                  bg-primary text-white
+                  hover:bg-primary-hover hover:shadow-lg
                   focus-ring
                   disabled:opacity-50 disabled:cursor-not-allowed
                   transition-all duration-200

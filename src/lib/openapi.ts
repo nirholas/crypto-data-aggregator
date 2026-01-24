@@ -45,7 +45,7 @@ interface OpenAPIParameter {
 interface OpenAPIResponse {
   description: string;
   content?: {
-    'application/json': {
+    [key: string]: {
       schema: Record<string, unknown>;
       example?: unknown;
     };
@@ -58,6 +58,15 @@ interface OpenAPIOperation {
   description?: string;
   tags?: string[];
   parameters?: OpenAPIParameter[];
+  requestBody?: {
+    required?: boolean;
+    content: {
+      'application/json': {
+        schema: Record<string, unknown>;
+        example?: unknown;
+      };
+    };
+  };
   responses: Record<string, OpenAPIResponse>;
   security?: Array<Record<string, string[]>>;
   'x-price'?: string;
@@ -718,6 +727,179 @@ All responses follow a consistent format:
           },
         },
       },
+      '/api/v2/batch': {
+        post: {
+          operationId: 'batch',
+          summary: 'Batch requests',
+          description: 'Execute multiple API operations in a single request. Maximum 10 operations per batch.',
+          tags: ['Utilities'],
+          'x-price': 'Sum of individual requests',
+          requestBody: {
+            required: true,
+            content: {
+              'application/json': {
+                schema: {
+                  type: 'object',
+                  properties: {
+                    requests: {
+                      type: 'array',
+                      maxItems: 10,
+                      items: {
+                        type: 'object',
+                        properties: {
+                          id: { type: 'string', description: 'Optional request ID for correlation' },
+                          endpoint: { type: 'string', enum: ['coins', 'coin', 'global', 'defi', 'gas', 'ticker', 'search', 'trending', 'volatility', 'historical'] },
+                          params: { type: 'object', additionalProperties: true },
+                        },
+                        required: ['endpoint'],
+                      },
+                    },
+                  },
+                  required: ['requests'],
+                },
+              },
+            },
+          },
+          responses: {
+            '200': {
+              description: 'Batch results',
+              content: {
+                'application/json': {
+                  schema: { $ref: '#/components/schemas/BatchResponse' },
+                },
+              },
+            },
+          },
+          security: [{ apiKey: [] }, { x402: [] }],
+        },
+      },
+      '/api/v2/graphql': {
+        post: {
+          operationId: 'graphql',
+          summary: 'GraphQL endpoint',
+          description: 'Execute GraphQL queries for flexible data fetching. Supports introspection.',
+          tags: ['Utilities'],
+          'x-price': 'Based on resolved fields',
+          requestBody: {
+            required: true,
+            content: {
+              'application/json': {
+                schema: {
+                  type: 'object',
+                  properties: {
+                    query: { type: 'string', description: 'GraphQL query string' },
+                    variables: { type: 'object', additionalProperties: true },
+                  },
+                  required: ['query'],
+                },
+              },
+            },
+          },
+          responses: {
+            '200': {
+              description: 'GraphQL response',
+              content: {
+                'application/json': {
+                  schema: {
+                    type: 'object',
+                    properties: {
+                      data: { type: 'object', nullable: true },
+                      errors: { type: 'array', items: { type: 'object' } },
+                    },
+                  },
+                },
+              },
+            },
+          },
+          security: [{ apiKey: [] }, { x402: [] }],
+        },
+        get: {
+          operationId: 'graphqlPlayground',
+          summary: 'GraphQL Playground',
+          description: 'Interactive GraphQL IDE for exploring the API.',
+          tags: ['Utilities'],
+          'x-price': 'Free',
+          responses: {
+            '200': {
+              description: 'GraphQL Playground HTML',
+              content: { 'text/html': { schema: { type: 'string' } } },
+            },
+          },
+        },
+      },
+      '/api/v2/webhooks': {
+        get: {
+          operationId: 'listWebhooks',
+          summary: 'List webhooks',
+          description: 'List all webhook subscriptions for your API key.',
+          tags: ['Webhooks'],
+          responses: {
+            '200': {
+              description: 'List of webhooks',
+              content: {
+                'application/json': {
+                  schema: {
+                    type: 'object',
+                    properties: {
+                      success: { type: 'boolean' },
+                      data: {
+                        type: 'object',
+                        properties: {
+                          webhooks: { type: 'array', items: { $ref: '#/components/schemas/Webhook' } },
+                          count: { type: 'integer' },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+          security: [{ apiKey: [] }],
+        },
+        post: {
+          operationId: 'createWebhook',
+          summary: 'Create webhook',
+          description: 'Subscribe to events with a webhook URL.',
+          tags: ['Webhooks'],
+          requestBody: {
+            required: true,
+            content: {
+              'application/json': {
+                schema: {
+                  type: 'object',
+                  properties: {
+                    url: { type: 'string', format: 'uri' },
+                    events: { type: 'array', items: { type: 'string' } },
+                    secret: { type: 'string', minLength: 16 },
+                  },
+                  required: ['url', 'events'],
+                },
+              },
+            },
+          },
+          responses: {
+            '201': {
+              description: 'Webhook created',
+              content: { 'application/json': { schema: { $ref: '#/components/schemas/Webhook' } } },
+            },
+          },
+          security: [{ apiKey: [] }],
+        },
+        delete: {
+          operationId: 'deleteWebhook',
+          summary: 'Delete webhook',
+          description: 'Remove a webhook subscription.',
+          tags: ['Webhooks'],
+          parameters: [
+            { name: 'id', in: 'query', required: true, schema: { type: 'string' } },
+          ],
+          responses: {
+            '200': { description: 'Webhook deleted' },
+          },
+          security: [{ apiKey: [] }],
+        },
+      },
     },
     components: {
       securitySchemes: {
@@ -981,6 +1163,51 @@ All responses follow a consistent format:
                 },
               },
             },
+          },
+        },
+        BatchResponse: {
+          type: 'object',
+          properties: {
+            success: { type: 'boolean' },
+            data: {
+              type: 'object',
+              properties: {
+                results: {
+                  type: 'array',
+                  items: {
+                    type: 'object',
+                    properties: {
+                      id: { type: 'string' },
+                      endpoint: { type: 'string' },
+                      success: { type: 'boolean' },
+                      data: { type: 'object' },
+                      error: { type: 'string' },
+                    },
+                  },
+                },
+                summary: {
+                  type: 'object',
+                  properties: {
+                    total: { type: 'integer' },
+                    successful: { type: 'integer' },
+                    failed: { type: 'integer' },
+                  },
+                },
+              },
+            },
+          },
+        },
+        Webhook: {
+          type: 'object',
+          properties: {
+            id: { type: 'string' },
+            url: { type: 'string', format: 'uri' },
+            events: { type: 'array', items: { type: 'string' } },
+            active: { type: 'boolean' },
+            createdAt: { type: 'string', format: 'date-time' },
+            lastTriggeredAt: { type: 'string', format: 'date-time', nullable: true },
+            totalDeliveries: { type: 'integer' },
+            successRate: { type: 'number' },
           },
         },
       },

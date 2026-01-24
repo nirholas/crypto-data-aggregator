@@ -4,7 +4,7 @@
 
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   CoinHeader,
@@ -24,6 +24,8 @@ import { PriceChart } from '@/components/coin-charts';
 import { useLivePrices } from '@/lib/price-websocket';
 import { MarketMoodSidebar } from '@/components/MarketMoodWidget';
 import { LivePriceCard } from '@/components/LivePrice';
+import { PriceAlertModal } from '@/components/alerts';
+import { useWatchlist } from '@/components/watchlist/WatchlistProvider';
 import type { Ticker, OHLCData, DeveloperData, CommunityData } from '@/lib/market-data';
 
 interface Article {
@@ -123,8 +125,11 @@ export default function CoinPageClient({
   initialTab = 'overview',
 }: CoinPageClientProps) {
   const [activeTab, setActiveTab] = useState<CoinTab>(initialTab);
-  const [isWatchlisted, setIsWatchlisted] = useState(false);
   const [showAlertModal, setShowAlertModal] = useState(false);
+  
+  // Real watchlist integration
+  const { addToWatchlist, removeFromWatchlist, isWatchlisted } = useWatchlist();
+  const isInWatchlist = isWatchlisted(coinData.id);
 
   // Live price updates via WebSocket
   const { prices: livePrices, isConnected: isPriceLive } = useLivePrices([coinData.id]);
@@ -141,13 +146,15 @@ export default function CoinPageClient({
   }));
 
   const handleWatchlistToggle = useCallback(() => {
-    setIsWatchlisted((prev) => !prev);
-    // TODO: Integrate with watchlist feature
-  }, []);
+    if (isInWatchlist) {
+      removeFromWatchlist(coinData.id);
+    } else {
+      addToWatchlist(coinData.id);
+    }
+  }, [isInWatchlist, coinData.id, addToWatchlist, removeFromWatchlist]);
 
   const handleAlertClick = useCallback(() => {
     setShowAlertModal(true);
-    // TODO: Integrate with price alerts feature
   }, []);
 
   return (
@@ -160,7 +167,7 @@ export default function CoinPageClient({
             coin={coinData}
             onWatchlistToggle={handleWatchlistToggle}
             onAlertClick={handleAlertClick}
-            isWatchlisted={isWatchlisted}
+            isWatchlisted={isInWatchlist}
           />
         </div>
 
@@ -270,7 +277,8 @@ export default function CoinPageClient({
                   name={coinData.name}
                   symbol={coinData.symbol}
                   image={coinData.image?.small}
-                  fallbackPrice={priceData.price}
+                  initialPrice={priceData.price}
+                  initialChange24h={priceData.change24h}
                 />
               </div>
 
@@ -332,76 +340,15 @@ export default function CoinPageClient({
         </motion.div>
       </AnimatePresence>
 
-      {/* Price Alert Modal (placeholder) */}
-      <AnimatePresence>
-        {showAlertModal && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60"
-            onClick={() => setShowAlertModal(false)}
-          >
-            <motion.div
-              initial={{ scale: 0.95, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.95, opacity: 0 }}
-              onClick={(e) => e.stopPropagation()}
-              className="bg-surface rounded-2xl border border-surface-border p-6 max-w-md w-full"
-            >
-              <h3 className="text-xl font-bold text-text-primary mb-4">
-                Set Price Alert for {coinData.symbol.toUpperCase()}
-              </h3>
-              <p className="text-text-muted mb-4">
-                Get notified when {coinData.name} reaches your target price.
-              </p>
-
-              <div className="space-y-4">
-                <div>
-                  <label className="block text-sm text-neutral-400 mb-1">
-                    Alert when price goes
-                  </label>
-                  <div className="flex gap-2">
-                    <button className="flex-1 px-4 py-2 bg-white/20 text-white rounded-lg border border-white/30 font-medium">
-                      Above
-                    </button>
-                    <button className="flex-1 px-4 py-2 bg-black text-neutral-300 rounded-lg border border-neutral-600 font-medium">
-                      Below
-                    </button>
-                  </div>
-                </div>
-
-                <div>
-                  <label className="block text-sm text-neutral-400 mb-1">Target Price (USD)</label>
-                  <input
-                    type="number"
-                    placeholder={priceData.price.toString()}
-                    className="w-full px-4 py-3 bg-black border border-neutral-700 rounded-lg text-white focus:outline-none focus:border-white"
-                  />
-                </div>
-              </div>
-
-              <div className="flex gap-3 mt-6">
-                <button
-                  onClick={() => setShowAlertModal(false)}
-                  className="flex-1 px-4 py-2 bg-black text-white rounded-lg font-medium hover:bg-neutral-600 transition-colors"
-                >
-                  Cancel
-                </button>
-                <button
-                  onClick={() => {
-                    // TODO: Implement alert creation
-                    setShowAlertModal(false);
-                  }}
-                  className="flex-1 px-4 py-2 bg-white text-neutral-900 rounded-lg font-medium hover:bg-neutral-100 transition-colors"
-                >
-                  Create Alert
-                </button>
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {/* Price Alert Modal */}
+      <PriceAlertModal
+        isOpen={showAlertModal}
+        onClose={() => setShowAlertModal(false)}
+        coinId={coinData.id}
+        coinName={coinData.name}
+        coinSymbol={coinData.symbol}
+        currentPrice={livePrice}
+      />
     </main>
   );
 }

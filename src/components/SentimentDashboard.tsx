@@ -364,104 +364,124 @@ export function SentimentDashboard({
   const [isLoading, setIsLoading] = useState(true);
   const [lastUpdate, setLastUpdate] = useState<Date>(new Date());
   const [isRefreshing, setIsRefreshing] = useState(false);
+  const [sentimentData, setSentimentData] = useState<SentimentData | null>(null);
+  const [coinSentiments, setCoinSentiments] = useState<CoinSentiment[]>([]);
+  const [historyData, setHistoryData] = useState<number[]>([]);
 
-  // Mock sentiment data (in production, fetch from API)
-  const sentimentData: SentimentData = useMemo(
-    () => ({
-      overall: 42,
-      bullish: 55,
-      bearish: 25,
-      neutral: 20,
-      fearGreedIndex: 65,
-      socialVolume: 125000,
-      newsVolume: 342,
-      twitterMentions: 89000,
-      redditActivity: 15600,
-      timestamp: new Date().toISOString(),
-    }),
-    []
-  );
-
-  const coinSentiments: CoinSentiment[] = useMemo(
-    () => [
-      {
-        symbol: 'BTC',
-        name: 'Bitcoin',
-        sentiment: 58,
-        change24h: 5.2,
-        socialVolume: 45000,
-        trending: true,
-      },
-      {
-        symbol: 'ETH',
-        name: 'Ethereum',
-        sentiment: 42,
-        change24h: 3.1,
-        socialVolume: 32000,
-        trending: true,
-      },
-      {
-        symbol: 'SOL',
-        name: 'Solana',
-        sentiment: 35,
-        change24h: -2.4,
-        socialVolume: 18000,
-        trending: false,
-      },
-      {
-        symbol: 'XRP',
-        name: 'Ripple',
-        sentiment: -15,
-        change24h: -8.2,
-        socialVolume: 12000,
-        trending: false,
-      },
-      {
-        symbol: 'DOGE',
-        name: 'Dogecoin',
-        sentiment: 28,
-        change24h: 12.5,
-        socialVolume: 25000,
-        trending: true,
-      },
-      {
-        symbol: 'ADA',
-        name: 'Cardano',
-        sentiment: 18,
-        change24h: 1.2,
-        socialVolume: 8000,
-        trending: false,
-      },
-      {
-        symbol: 'AVAX',
-        name: 'Avalanche',
-        sentiment: 22,
-        change24h: 4.8,
-        socialVolume: 6500,
-        trending: false,
-      },
-      {
-        symbol: 'LINK',
-        name: 'Chainlink',
-        sentiment: 45,
-        change24h: 7.3,
-        socialVolume: 9200,
-        trending: true,
-      },
-    ],
-    []
-  );
-
-  const historyData = useMemo(() => [45, 42, 48, 35, 52, 58, 42, 55, 48, 62, 58, 42], []);
-
+  // Fetch real sentiment data
   useEffect(() => {
-    // Simulate loading
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-    }, 1000);
-
-    return () => clearTimeout(timer);
-  }, []);
+    async function fetchSentimentData() {
+      setIsLoading(true);
+      
+      try {
+        // Fetch Fear & Greed Index from alternative.me
+        const fgRes = await fetch('https://api.alternative.me/fng/?limit=12');
+        let fearGreedIndex = 50;
+        let historyDataArr: number[] = [];
+        
+        if (fgRes.ok) {
+          const fgData = await fgRes.json();
+          if (fgData.data && fgData.data.length > 0) {
+            fearGreedIndex = parseInt(fgData.data[0].value, 10);
+            historyDataArr = fgData.data.map((d: { value: string }) => parseInt(d.value, 10)).reverse();
+          }
+        }
+        
+        // Fetch trending coins from CoinGecko
+        const trendingRes = await fetch('https://api.coingecko.com/api/v3/search/trending');
+        const trendingCoins: string[] = [];
+        
+        if (trendingRes.ok) {
+          const trendingData = await trendingRes.json();
+          trendingCoins.push(...trendingData.coins.slice(0, 5).map((c: { item: { id: string } }) => c.item.id));
+        }
+        
+        // Fetch market data for sentiment calculation
+        const coinsToFetch = ['bitcoin', 'ethereum', 'solana', 'ripple', 'dogecoin', 'cardano', 'avalanche-2', 'chainlink'];
+        const coinSentimentData: CoinSentiment[] = [];
+        
+        for (const coinId of coinsToFetch) {
+          try {
+            const res = await fetch(
+              `https://api.coingecko.com/api/v3/coins/${coinId}?localization=false&tickers=false&market_data=true&community_data=true&developer_data=false`
+            );
+            
+            if (res.ok) {
+              const data = await res.json();
+              const priceChange24h = data.market_data?.price_change_percentage_24h || 0;
+              const community = data.community_data || {};
+              
+              // Calculate sentiment from price momentum and community activity
+              const sentiment = Math.round(
+                (priceChange24h * 3) + // Weight price change
+                (community.twitter_followers ? Math.log10(community.twitter_followers) * 2 : 0) // Social presence
+              );
+              
+              const socialVolume = (community.twitter_followers || 0) + 
+                                  (community.reddit_subscribers || 0) + 
+                                  (community.telegram_channel_user_count || 0);
+              
+              coinSentimentData.push({
+                symbol: data.symbol?.toUpperCase() || coinId.toUpperCase(),
+                name: data.name || coinId,
+                sentiment: Math.max(-100, Math.min(100, sentiment)),
+                change24h: priceChange24h,
+                socialVolume: Math.round(socialVolume / 100), // Scale down
+                trending: trendingCoins.includes(coinId),
+              });
+            }
+          } catch (e) {
+            console.error(`Failed to fetch ${coinId}:`, e);
+          }
+        }
+        
+        // Calculate overall market sentiment from coin data
+        const avgSentiment = coinSentimentData.length > 0 
+          ? coinSentimentData.reduce((sum, c) => sum + c.sentiment, 0) / coinSentimentData.length 
+          : 0;
+        
+        const bullishCoins = coinSentimentData.filter(c => c.change24h > 0).length;
+        const bearishCoins = coinSentimentData.filter(c => c.change24h < 0).length;
+        const totalCoins = coinSentimentData.length || 1;
+        
+        setSentimentData({
+          overall: Math.round(avgSentiment),
+          bullish: Math.round((bullishCoins / totalCoins) * 100),
+          bearish: Math.round((bearishCoins / totalCoins) * 100),
+          neutral: Math.round(((totalCoins - bullishCoins - bearishCoins) / totalCoins) * 100),
+          fearGreedIndex,
+          socialVolume: coinSentimentData.reduce((sum, c) => sum + c.socialVolume, 0),
+          newsVolume: 0, // Would need news API
+          twitterMentions: coinSentimentData.reduce((sum, c) => sum + c.socialVolume, 0),
+          redditActivity: 0,
+          timestamp: new Date().toISOString(),
+        });
+        
+        setCoinSentiments(coinSentimentData.sort((a, b) => b.sentiment - a.sentiment));
+        setHistoryData(historyDataArr.length > 0 ? historyDataArr : [50]);
+        setLastUpdate(new Date());
+      } catch (error) {
+        console.error('Failed to fetch sentiment data:', error);
+        // Set fallback data
+        setSentimentData({
+          overall: 50,
+          bullish: 50,
+          bearish: 25,
+          neutral: 25,
+          fearGreedIndex: 50,
+          socialVolume: 0,
+          newsVolume: 0,
+          twitterMentions: 0,
+          redditActivity: 0,
+          timestamp: new Date().toISOString(),
+        });
+      } finally {
+        setIsLoading(false);
+      }
+    }
+    
+    fetchSentimentData();
+  }, [coin]);
 
   useEffect(() => {
     // Auto-refresh
@@ -474,13 +494,27 @@ export function SentimentDashboard({
 
   const handleRefresh = async () => {
     setIsRefreshing(true);
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 500));
+    // Refetch data
+    try {
+      const fgRes = await fetch('https://api.alternative.me/fng/?limit=1');
+      if (fgRes.ok) {
+        const fgData = await fgRes.json();
+        if (fgData.data && fgData.data.length > 0) {
+          setSentimentData(prev => prev ? {
+            ...prev,
+            fearGreedIndex: parseInt(fgData.data[0].value, 10),
+            timestamp: new Date().toISOString(),
+          } : prev);
+        }
+      }
+    } catch (e) {
+      console.error('Refresh failed:', e);
+    }
     setLastUpdate(new Date());
     setIsRefreshing(false);
   };
 
-  if (isLoading) {
+  if (isLoading || !sentimentData) {
     return (
       <div className={`${className} animate-pulse`}>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">

@@ -42,5 +42,28 @@ export { default as Avatar, AvatarGroup } from './Avatar';
 export type { AvatarProps, AvatarGroupProps } from './Avatar';
 
 // Skeleton Component
-export { default as Skeleton } from './Skeleton';
+export { default as Skeleton, TextSkeleton, AvatarSkeleton, CardSkeleton, TableRowSkeleton, CoinRowSkeleton, ChartSkeleton } from './Skeleton';
 export type { SkeletonProps } from './Skeleton';
+
+// Micro-Animation Components
+export {
+  AnimatedCounter,
+  Typewriter,
+  FadeStagger,
+  Ripple,
+  Float,
+  Shake,
+  PulseGlow,
+  PriceFlash,
+  Confetti,
+} from './MicroAnimations';
+export type {
+  AnimatedCounterProps,
+  TypewriterProps,
+  FadeStaggerProps,
+  RippleProps,
+  FloatProps,
+  ShakeProps,
+  PulseGlowProps,
+  PriceFlashProps,
+} from './MicroAnimations';

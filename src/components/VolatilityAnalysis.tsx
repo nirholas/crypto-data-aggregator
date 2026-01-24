@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { TrendingUp, TrendingDown, Activity, AlertTriangle, Info } from 'lucide-react';
 import { chartColors, colors } from '@/lib/colors';
 
@@ -21,97 +21,76 @@ interface VolatilityAnalysisProps {
   isLoading?: boolean;
 }
 
-// Mock data for demonstration
-const mockCoins: CoinVolatility[] = [
-  {
-    id: 'bitcoin',
-    name: 'Bitcoin',
-    symbol: 'BTC',
-    volatility30d: 42.5,
-    volatility7d: 38.2,
-    maxDrawdown: -18.3,
-    sharpeRatio: 1.24,
-    beta: 1.0,
-    riskLevel: 'medium',
-  },
-  {
-    id: 'ethereum',
-    name: 'Ethereum',
-    symbol: 'ETH',
-    volatility30d: 58.7,
-    volatility7d: 52.1,
-    maxDrawdown: -24.6,
-    sharpeRatio: 0.98,
-    beta: 1.32,
-    riskLevel: 'high',
-  },
-  {
-    id: 'solana',
-    name: 'Solana',
-    symbol: 'SOL',
-    volatility30d: 78.3,
-    volatility7d: 71.4,
-    maxDrawdown: -35.2,
-    sharpeRatio: 0.76,
-    beta: 1.68,
-    riskLevel: 'extreme',
-  },
-  {
-    id: 'cardano',
-    name: 'Cardano',
-    symbol: 'ADA',
-    volatility30d: 65.1,
-    volatility7d: 58.9,
-    maxDrawdown: -28.4,
-    sharpeRatio: 0.54,
-    beta: 1.45,
-    riskLevel: 'high',
-  },
-  {
-    id: 'ripple',
-    name: 'XRP',
-    symbol: 'XRP',
-    volatility30d: 55.2,
-    volatility7d: 48.6,
-    maxDrawdown: -22.1,
-    sharpeRatio: 0.82,
-    beta: 1.21,
-    riskLevel: 'medium',
-  },
-  {
-    id: 'dogecoin',
-    name: 'Dogecoin',
-    symbol: 'DOGE',
-    volatility30d: 89.4,
-    volatility7d: 82.3,
-    maxDrawdown: -42.7,
-    sharpeRatio: 0.31,
-    beta: 1.95,
-    riskLevel: 'extreme',
-  },
-  {
-    id: 'polkadot',
-    name: 'Polkadot',
-    symbol: 'DOT',
-    volatility30d: 62.8,
-    volatility7d: 55.4,
-    maxDrawdown: -26.8,
-    sharpeRatio: 0.68,
-    beta: 1.38,
-    riskLevel: 'high',
-  },
-  {
-    id: 'avalanche',
-    name: 'Avalanche',
-    symbol: 'AVAX',
-    volatility30d: 71.5,
-    volatility7d: 64.2,
-    maxDrawdown: -31.5,
-    sharpeRatio: 0.72,
-    beta: 1.52,
-    riskLevel: 'high',
-  },
-];
+// Default coins to fetch data for
+const DEFAULT_COINS = ['bitcoin', 'ethereum', 'solana', 'cardano', 'ripple', 'dogecoin', 'polkadot', 'avalanche-2'];
+
+/**
+ * Calculate volatility from price history
+ */
+function calculateVolatility(prices: number[]): number {
+  if (prices.length < 2) return 0;
+  
+  const returns: number[] = [];
+  for (let i = 1; i < prices.length; i++) {
+    if (prices[i - 1] > 0) {
+      returns.push((prices[i] - prices[i - 1]) / prices[i - 1]);
+    }
+  }
+  
+  if (returns.length === 0) return 0;
+  
+  const mean = returns.reduce((a, b) => a + b, 0) / returns.length;
+  const variance = returns.reduce((sum, r) => sum + Math.pow(r - mean, 2), 0) / returns.length;
+  const stdDev = Math.sqrt(variance);
+  
+  // Annualize (assuming daily data)
+  return stdDev * Math.sqrt(365) * 100;
+}
+
+/**
+ * Calculate maximum drawdown from prices
+ */
+function calculateMaxDrawdown(prices: number[]): number {
+  if (prices.length < 2) return 0;
+  
+  let maxPrice = prices[0];
+  let maxDrawdown = 0;
+  
+  for (const price of prices) {
+    if (price > maxPrice) maxPrice = price;
+    const drawdown = ((price - maxPrice) / maxPrice) * 100;
+    if (drawdown < maxDrawdown) maxDrawdown = drawdown;
+  }
+  
+  return maxDrawdown;
+}
+
+/**
+ * Calculate Sharpe ratio (simplified using BTC as benchmark)
+ */
+function calculateSharpe(returns: number[], riskFreeRate: number = 0.04): number {
+  if (returns.length < 2) return 0;
+  
+  const mean = returns.reduce((a, b) => a + b, 0) / returns.length;
+  const variance = returns.reduce((sum, r) => sum + Math.pow(r - mean, 2), 0) / returns.length;
+  const stdDev = Math.sqrt(variance);
+  
+  if (stdDev === 0) return 0;
+  
+  // Annualized return minus risk-free rate, divided by annualized stdDev
+  const annualizedReturn = mean * 365;
+  return (annualizedReturn - riskFreeRate) / (stdDev * Math.sqrt(365));
+}
+
+/**
+ * Determine risk level from volatility
+ */
+function getRiskLevel(volatility: number): 'low' | 'medium' | 'high' | 'extreme' {
+  if (volatility < 40) return 'low';
+  if (volatility < 60) return 'medium';
+  if (volatility < 80) return 'high';
+  return 'extreme';
+}
 
 const riskColors = {
   low: chartColors.gain,
@@ -201,13 +180,129 @@ function RiskBadge({ level }: { level: CoinVolatility['riskLevel'] }) {
 }
 
 export default function VolatilityAnalysis({
-  coins = mockCoins,
-  isLoading = false,
+  coins: propCoins,
+  isLoading: propIsLoading = false,
 }: VolatilityAnalysisProps) {
+  const [coins, setCoins] = useState<CoinVolatility[]>(propCoins || []);
+  const [isLoading, setIsLoading] = useState(!propCoins);
   const [sortBy, setSortBy] = useState<'volatility30d' | 'maxDrawdown' | 'sharpeRatio' | 'beta'>(
     'volatility30d'
   );
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
+
+  // Fetch real volatility data from CoinGecko
+  useEffect(() => {
+    if (propCoins) {
+      setCoins(propCoins);
+      setIsLoading(false);
+      return;
+    }
+
+    async function fetchVolatilityData() {
+      setIsLoading(true);
+      const results: CoinVolatility[] = [];
+      
+      // Fetch BTC first for beta calculation
+      let btcReturns: number[] = [];
+      try {
+        const btcRes = await fetch(
+          'https://api.coingecko.com/api/v3/coins/bitcoin/market_chart?vs_currency=usd&days=30'
+        );
+        if (btcRes.ok) {
+          const btcData = await btcRes.json();
+          const btcPrices = btcData.prices?.map((p: [number, number]) => p[1]) || [];
+          for (let i = 1; i < btcPrices.length; i++) {
+            if (btcPrices[i - 1] > 0) {
+              btcReturns.push((btcPrices[i] - btcPrices[i - 1]) / btcPrices[i - 1]);
+            }
+          }
+        }
+      } catch (e) {
+        console.error('Failed to fetch BTC data for beta:', e);
+      }
+
+      for (const coinId of DEFAULT_COINS) {
+        try {
+          // Fetch 30 days of price data
+          const res = await fetch(
+            `https://api.coingecko.com/api/v3/coins/${coinId}/market_chart?vs_currency=usd&days=30`
+          );
+          
+          if (!res.ok) continue;
+          
+          const data = await res.json();
+          const prices30d = data.prices?.map((p: [number, number]) => p[1]) || [];
+          const prices7d = prices30d.slice(-7);
+          
+          // Calculate metrics
+          const volatility30d = calculateVolatility(prices30d);
+          const volatility7d = calculateVolatility(prices7d);
+          const maxDrawdown = calculateMaxDrawdown(prices30d);
+          
+          // Calculate returns for Sharpe and Beta
+          const returns: number[] = [];
+          for (let i = 1; i < prices30d.length; i++) {
+            if (prices30d[i - 1] > 0) {
+              returns.push((prices30d[i] - prices30d[i - 1]) / prices30d[i - 1]);
+            }
+          }
+          
+          const sharpeRatio = calculateSharpe(returns);
+          
+          // Calculate Beta (covariance with BTC / variance of BTC)
+          let beta = 1.0;
+          if (btcReturns.length > 0 && returns.length > 0 && coinId !== 'bitcoin') {
+            const minLen = Math.min(btcReturns.length, returns.length);
+            const coinRet = returns.slice(-minLen);
+            const btcRet = btcReturns.slice(-minLen);
+            
+            const coinMean = coinRet.reduce((a, b) => a + b, 0) / minLen;
+            const btcMean = btcRet.reduce((a, b) => a + b, 0) / minLen;
+            
+            let covariance = 0;
+            let btcVariance = 0;
+            for (let i = 0; i < minLen; i++) {
+              covariance += (coinRet[i] - coinMean) * (btcRet[i] - btcMean);
+              btcVariance += Math.pow(btcRet[i] - btcMean, 2);
+            }
+            
+            if (btcVariance > 0) {
+              beta = covariance / btcVariance;
+            }
+          }
+          
+          // Get coin info
+          const infoRes = await fetch(`https://api.coingecko.com/api/v3/coins/${coinId}?localization=false&tickers=false&market_data=false&community_data=false&developer_data=false`);
+          let name = coinId;
+          let symbol = coinId.toUpperCase();
+          if (infoRes.ok) {
+            const info = await infoRes.json();
+            name = info.name || coinId;
+            symbol = info.symbol?.toUpperCase() || coinId.toUpperCase();
+          }
+          
+          results.push({
+            id: coinId,
+            name,
+            symbol,
+            volatility30d: Math.round(volatility30d * 10) / 10,
+            volatility7d: Math.round(volatility7d * 10) / 10,
+            maxDrawdown: Math.round(maxDrawdown * 10) / 10,
+            sharpeRatio: Math.round(sharpeRatio * 100) / 100,
+            beta: Math.round(beta * 100) / 100,
+            riskLevel: getRiskLevel(volatility30d),
+          });
+        } catch (e) {
+          console.error(`Failed to fetch data for ${coinId}:`, e);
+        }
+      }
+      
+      setCoins(results);
+      setIsLoading(false);
+    }
+    
+    fetchVolatilityData();
+  }, [propCoins]);
 
   const sortedCoins = useMemo(() => {
     return [...coins].sort((a, b) => {

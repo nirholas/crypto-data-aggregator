@@ -33,18 +33,75 @@ export function SourceComparison() {
   const fetchSourceData = useCallback(async () => {
     setLoading(true);
     try {
-      // Simulate fetching data for each source
-      const sourceData: SourceData[] = SOURCES.map((source) => ({
-        ...source,
-        articles24h: Math.floor(Math.random() * 30) + 5,
-        articlesWeek: Math.floor(Math.random() * 150) + 30,
-        sentiment: Math.floor(Math.random() * 60) - 10,
-        topCategories: ['Bitcoin', 'DeFi', 'Ethereum', 'NFTs', 'Regulation']
-          .sort(() => Math.random() - 0.5)
-          .slice(0, 3),
-        lastUpdated: new Date(),
-      }));
+      // Fetch real article counts from our API for each source
+      const sourceDataPromises = SOURCES.map(async (source) => {
+        try {
+          // Fetch articles from our API filtered by source
+          const [todayRes, weekRes] = await Promise.all([
+            fetch(`/api/news?source=${source.slug}&limit=100`),
+            fetch(`/api/news?source=${source.slug}&limit=200`),
+          ]);
 
+          const todayData = todayRes.ok ? await todayRes.json() : { articles: [] };
+          const weekData = weekRes.ok ? await weekRes.json() : { articles: [] };
+
+          // Count articles from last 24h and last week
+          const now = Date.now();
+          const dayAgo = now - 24 * 60 * 60 * 1000;
+          const weekAgo = now - 7 * 24 * 60 * 60 * 1000;
+
+          const articles24h = (todayData.articles || []).filter(
+            (a: { pubDate: string }) => new Date(a.pubDate).getTime() > dayAgo
+          ).length;
+
+          const articlesWeek = (weekData.articles || []).filter(
+            (a: { pubDate: string }) => new Date(a.pubDate).getTime() > weekAgo
+          ).length;
+
+          // Extract top categories from articles
+          const categories: Record<string, number> = {};
+          for (const article of weekData.articles || []) {
+            const cat = article.category || 'General';
+            categories[cat] = (categories[cat] || 0) + 1;
+          }
+          const topCategories = Object.entries(categories)
+            .sort((a, b) => b[1] - a[1])
+            .slice(0, 3)
+            .map(([cat]) => cat);
+
+          // Calculate sentiment from recent articles (if sentiment data available)
+          let sentiment = 0;
+          const articlesWithSentiment = (todayData.articles || []).filter(
+            (a: { sentiment?: number }) => typeof a.sentiment === 'number'
+          );
+          if (articlesWithSentiment.length > 0) {
+            sentiment = articlesWithSentiment.reduce(
+              (sum: number, a: { sentiment: number }) => sum + a.sentiment, 0
+            ) / articlesWithSentiment.length;
+          }
+
+          return {
+            ...source,
+            articles24h,
+            articlesWeek,
+            sentiment: Math.round(sentiment),
+            topCategories: topCategories.length > 0 ? topCategories : ['General'],
+            lastUpdated: new Date(),
+          };
+        } catch {
+          // Return default data if fetch fails
+          return {
+            ...source,
+            articles24h: 0,
+            articlesWeek: 0,
+            sentiment: 0,
+            topCategories: ['General'],
+            lastUpdated: new Date(),
+          };
+        }
+      });
+
+      const sourceData = await Promise.all(sourceDataPromises);
       setSources(sourceData);
     } catch (error) {
       console.error('Failed to fetch source data:', error);

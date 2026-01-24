@@ -109,7 +109,7 @@ function getRankStyle(rank: number): string {
   if (rank === 1)
     return 'bg-gradient-to-br from-amber-400 to-amber-600 text-black shadow-lg shadow-amber-500/30';
   if (rank === 2)
-    return 'bg-gradient-to-br from-gray-300 to-gray-500 text-black shadow-lg shadow-gray-400/30';
+    return 'bg-gradient-to-br from-slate-300 to-slate-500 text-black shadow-lg shadow-slate-400/30';
   if (rank === 3)
     return 'bg-gradient-to-br from-amber-600 to-amber-800 text-white shadow-lg shadow-amber-700/30';
   return 'bg-surface-hover text-text-secondary';

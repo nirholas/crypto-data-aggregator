@@ -44,7 +44,7 @@ export function GasTracker() {
   useEffect(() => {
     async function fetchGas() {
       try {
-        // Fetch ETH price
+        // Fetch ETH price from CoinGecko
         const priceRes = await fetch(
           'https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd'
         );
@@ -53,18 +53,57 @@ export function GasTracker() {
           setEthPrice(priceData.ethereum?.usd || 0);
         }
 
-        // Simulate gas data (in production, use etherscan or similar API)
-        // For demo, generate realistic-looking gas prices
-        const baseFee = 15 + Math.random() * 30;
-        setGasData({
-          low: Math.floor(baseFee * 0.8),
-          average: Math.floor(baseFee * 1.1),
-          high: Math.floor(baseFee * 1.5),
-          instant: Math.floor(baseFee * 2),
-          baseFee: Math.floor(baseFee),
-          lastBlock: 19000000 + Math.floor(Math.random() * 100000),
-          timestamp: Date.now(),
-        });
+        // Fetch real gas data from Etherscan API (free tier)
+        // Note: For production, add ETHERSCAN_API_KEY to .env
+        const etherscanApiKey = process.env.NEXT_PUBLIC_ETHERSCAN_API_KEY || '';
+        const gasUrl = etherscanApiKey 
+          ? `https://api.etherscan.io/api?module=gastracker&action=gasoracle&apikey=${etherscanApiKey}`
+          : 'https://api.etherscan.io/api?module=gastracker&action=gasoracle';
+        
+        const gasRes = await fetch(gasUrl);
+        
+        if (gasRes.ok) {
+          const gasResult = await gasRes.json();
+          
+          if (gasResult.status === '1' && gasResult.result) {
+            const result = gasResult.result;
+            
+            // Etherscan returns SafeGasPrice, ProposeGasPrice, FastGasPrice
+            const safeGas = parseInt(result.SafeGasPrice) || 20;
+            const proposeGas = parseInt(result.ProposeGasPrice) || 25;
+            const fastGas = parseInt(result.FastGasPrice) || 35;
+            const baseFee = parseInt(result.suggestBaseFee) || safeGas;
+            const lastBlock = parseInt(result.LastBlock) || 0;
+            
+            setGasData({
+              low: safeGas,
+              average: proposeGas,
+              high: fastGas,
+              instant: Math.ceil(fastGas * 1.3), // Instant is ~30% higher than fast
+              baseFee: Math.floor(baseFee),
+              lastBlock: lastBlock,
+              timestamp: Date.now(),
+            });
+          } else {
+            // Fallback: Use blocknative or other free API
+            const blocknativeRes = await fetch('https://api.blocknative.com/gasprices/blockprices');
+            if (blocknativeRes.ok) {
+              const bnData = await blocknativeRes.json();
+              if (bnData.blockPrices && bnData.blockPrices[0]) {
+                const prices = bnData.blockPrices[0].estimatedPrices;
+                setGasData({
+                  low: Math.floor(prices.find((p: {confidence: number}) => p.confidence === 70)?.price || 20),
+                  average: Math.floor(prices.find((p: {confidence: number}) => p.confidence === 90)?.price || 25),
+                  high: Math.floor(prices.find((p: {confidence: number}) => p.confidence === 95)?.price || 35),
+                  instant: Math.floor(prices.find((p: {confidence: number}) => p.confidence === 99)?.price || 45),
+                  baseFee: Math.floor(bnData.blockPrices[0].baseFeePerGas || 20),
+                  lastBlock: bnData.blockPrices[0].blockNumber || 0,
+                  timestamp: Date.now(),
+                });
+              }
+            }
+          }
+        }
       } catch (e) {
         console.error('Failed to fetch gas:', e);
       } finally {

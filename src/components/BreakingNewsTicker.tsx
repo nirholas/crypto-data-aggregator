@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 
 interface BreakingNewsItem {
   id: string;
@@ -11,7 +11,7 @@ interface BreakingNewsItem {
 }
 
 interface BreakingNewsTickerProps {
-  items: BreakingNewsItem[];
+  items?: BreakingNewsItem[];
   /** Auto-rotate interval in ms (default: 5000) */
   rotateInterval?: number;
   /** Pause rotation on hover */
@@ -19,14 +19,52 @@ interface BreakingNewsTickerProps {
 }
 
 export function BreakingNewsTicker({ 
-  items, 
+  items: providedItems, 
   rotateInterval = 5000,
   pauseOnHover = true 
 }: BreakingNewsTickerProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
   const [isAnimating, setIsAnimating] = useState(false);
+  const [fetchedItems, setFetchedItems] = useState<BreakingNewsItem[]>([]);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
+  
+  // Fetch breaking news if items not provided
+  useEffect(() => {
+    if (providedItems && providedItems.length > 0) return;
+    
+    const fetchBreakingNews = async () => {
+      try {
+        const response = await fetch('/api/news?limit=5');
+        if (!response.ok) return;
+        
+        const data = await response.json();
+        const breakingItems = (data.articles || []).slice(0, 5).map((article: {
+          title: string;
+          link: string;
+          source: string;
+          timeAgo?: string;
+        }, index: number) => ({
+          id: `breaking-${index}`,
+          title: article.title,
+          link: article.link,
+          source: article.source,
+          timeAgo: article.timeAgo || 'Just now',
+        }));
+        
+        setFetchedItems(breakingItems);
+      } catch (error) {
+        console.error('Failed to fetch breaking news:', error);
+      }
+    };
+    
+    fetchBreakingNews();
+    // Refresh breaking news every 5 minutes
+    const refreshInterval = setInterval(fetchBreakingNews, 5 * 60 * 1000);
+    return () => clearInterval(refreshInterval);
+  }, [providedItems]);
+  
+  const items = providedItems && providedItems.length > 0 ? providedItems : fetchedItems;
 
   // Auto-rotate through items
   useEffect(() => {

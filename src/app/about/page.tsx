@@ -37,7 +37,7 @@ export default function AboutPage() {
           {/* Hero */}
           <div className="text-center mb-16">
             <h1 className="text-5xl font-bold mb-4">About Free Crypto News</h1>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            <p className="text-xl text-text-muted max-w-3xl mx-auto">
               The only 100% free crypto news aggregator API. No API keys required.
               No rate limits. Just pure, real-time crypto news from 7 major sources.
             </p>
@@ -48,10 +48,10 @@ export default function AboutPage() {
             <h2 className="text-2xl font-bold text-center mb-8">Why Free Crypto News?</h2>
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
               {features.map((feature) => (
-                <div key={feature.title} className="p-6 rounded-xl border border-gray-200 hover:shadow-lg transition">
+                <div key={feature.title} className="p-6 rounded-xl border border-surface-border hover:shadow-lg transition">
                   <div className="text-4xl mb-3">{feature.icon}</div>
                   <h3 className="font-bold text-lg mb-2">{feature.title}</h3>
-                  <p className="text-gray-600">{feature.description}</p>
+                  <p className="text-text-muted">{feature.description}</p>
                 </div>
               ))}
             </div>
@@ -67,53 +67,53 @@ export default function AboutPage() {
                   href={source.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="p-5 rounded-xl border border-gray-200 hover:border-gray-300 hover:shadow-md transition group"
+                  className="p-5 rounded-xl border border-surface-border hover:border-surface-hover hover:shadow-md transition group"
                 >
-                  <h3 className="font-bold text-lg mb-1 group-hover:text-blue-600">{source.name}</h3>
-                  <p className="text-gray-600 text-sm">{source.description}</p>
+                  <h3 className="font-bold text-lg mb-1 group-hover:text-primary">{source.name}</h3>
+                  <p className="text-text-muted text-sm">{source.description}</p>
                 </a>
               ))}
             </div>
           </div>
 
           {/* API Section */}
-          <div className="mb-16 bg-gray-900 rounded-2xl p-8 text-white">
+          <div className="mb-16 bg-surface-alt rounded-2xl p-8 text-text-primary">
             <div className="max-w-3xl mx-auto">
               <h2 className="text-2xl font-bold mb-4">🚀 Quick Start</h2>
-              <p className="text-gray-300 mb-6">
+              <p className="text-text-secondary mb-6">
                 Start fetching crypto news in seconds. No signup required.
               </p>
 
               <div className="space-y-4">
                 <div>
-                  <p className="text-gray-400 text-sm mb-2">Get latest news:</p>
-                  <code className="block bg-gray-800 p-3 rounded-lg text-green-400 text-sm overflow-x-auto">
+                  <p className="text-text-muted text-sm mb-2">Get latest news:</p>
+                  <code className="block bg-surface p-3 rounded-lg text-gain text-sm overflow-x-auto">
                     curl https://free-crypto-news.vercel.app/api/news?limit=10
                   </code>
                 </div>
 
                 <div>
-                  <p className="text-gray-400 text-sm mb-2">Search news:</p>
-                  <code className="block bg-gray-800 p-3 rounded-lg text-green-400 text-sm overflow-x-auto">
+                  <p className="text-text-muted text-sm mb-2">Search news:</p>
+                  <code className="block bg-surface p-3 rounded-lg text-gain text-sm overflow-x-auto">
                     curl https://free-crypto-news.vercel.app/api/search?q=bitcoin
                   </code>
                 </div>
 
                 <div>
-                  <p className="text-gray-400 text-sm mb-2">Get Bitcoin news:</p>
-                  <code className="block bg-gray-800 p-3 rounded-lg text-green-400 text-sm overflow-x-auto">
+                  <p className="text-text-muted text-sm mb-2">Get Bitcoin news:</p>
+                  <code className="block bg-surface p-3 rounded-lg text-gain text-sm overflow-x-auto">
                     curl https://free-crypto-news.vercel.app/api/bitcoin?limit=5
                   </code>
                 </div>
               </div>
 
               <div className="mt-6 flex gap-4">
-                <Link href="/examples" className="px-6 py-3 bg-white text-black rounded-full font-medium hover:bg-gray-100 transition">
+                <Link href="/examples" className="px-6 py-3 bg-surface text-text-primary rounded-full font-medium hover:bg-surface-hover transition">
                   View All Examples →
                 </Link>
                 <a
                   href="https://github.com/nirholas/free-crypto-news"
-                  className="px-6 py-3 border border-gray-600 rounded-full font-medium hover:border-white transition"
+                  className="px-6 py-3 border border-surface-border rounded-full font-medium hover:border-text-primary transition"
                 >
                   GitHub Docs
                 </a>
@@ -126,7 +126,7 @@ export default function AboutPage() {
             <h2 className="text-2xl font-bold text-center mb-8">API Endpoints</h2>
             <div className="max-w-3xl mx-auto overflow-x-auto">
               <table className="w-full text-left">
-                <thead className="bg-gray-100">
+                <thead className="bg-surface-alt">
                   <tr>
                     <th className="px-4 py-3 font-semibold">Endpoint</th>
                     <th className="px-4 py-3 font-semibold">Description</th>
@@ -149,11 +149,11 @@ export default function AboutPage() {
           {/* CTA */}
           <div className="text-center">
             <h2 className="text-2xl font-bold mb-4">Ready to Get Started?</h2>
-            <p className="text-gray-600 mb-6">Deploy your own instance or use our free public API</p>
+            <p className="text-text-muted mb-6">Deploy your own instance or use our free public API</p>
             <div className="flex justify-center gap-4 flex-wrap">
               <a
                 href="https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fnirholas%2Ffree-crypto-news"
-                className="px-6 py-3 bg-black text-white rounded-full font-medium hover:bg-gray-800 transition"
+                className="px-6 py-3 bg-primary text-white rounded-full font-medium hover:bg-primary-hover transition"
               >
                 ▲ Deploy on Vercel
               </a>

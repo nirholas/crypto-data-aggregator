@@ -165,7 +165,7 @@ export default async function ArticlePage({ params }: Props) {
                   {/* Meta row */}
                   <div className="flex flex-wrap items-center gap-3 mb-4">
                     <span
-                      className={`text-sm px-3 py-1 rounded-full border ${sourceColors[article.source] || 'bg-gray-100 text-gray-800'}`}
+                      className={`text-sm px-3 py-1 rounded-full border ${sourceColors[article.source] || 'bg-surface-alt text-text-secondary'}`}
                     >
                       {article.source}
                     </span>

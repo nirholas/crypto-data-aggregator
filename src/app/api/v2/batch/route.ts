@@ -9,9 +9,11 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
-import { checkAuth, unauthorizedResponse } from '@/lib/auth';
+import { hybridAuthMiddleware } from '@/lib/x402';
 import { logger, createRequestContext, completeRequest } from '@/lib/monitoring';
 import { trackRequest } from '@/lib/redis';
+
+const ENDPOINT = '/api/v2/batch';
 
 // =============================================================================
 // SCHEMAS
@@ -91,15 +93,16 @@ async function fetchEndpoint(
 
 export async function POST(request: NextRequest) {
   const startTime = performance.now();
-  const ctx = createRequestContext(request, '/api/v2/batch');
+  const ctx = createRequestContext(ENDPOINT, 'POST');
   
   // Skip auth for internal batch calls
   const isInternal = request.headers.get('X-Internal-Batch') === 'true';
   
   if (!isInternal) {
-    const authResult = await checkAuth(request);
-    if (!authResult.authenticated) {
-      return unauthorizedResponse(authResult.error || 'Unauthorized');
+    const authResponse = await hybridAuthMiddleware(request, ENDPOINT);
+    if (authResponse) {
+      completeRequest(ctx, 401);
+      return authResponse;
     }
   }
   
@@ -130,16 +133,17 @@ export async function POST(request: NextRequest) {
         const id = req.id || `${index}`;
         
         // Map endpoint to path
-        let path = req.endpoint;
-        if (req.endpoint === 'coin' && req.params?.id) {
-          path = `coin/${req.params.id}`;
-          delete req.params.id;
-        } else if (req.endpoint === 'historical' && req.params?.id) {
-          path = `historical/${req.params.id}`;
-          delete req.params.id;
+        let path: string = req.endpoint;
+        const params = { ...req.params };
+        if (req.endpoint === 'coin' && params?.id) {
+          path = `coin/${params.id}`;
+          delete params.id;
+        } else if (req.endpoint === 'historical' && params?.id) {
+          path = `historical/${params.id}`;
+          delete params.id;
         }
         
-        const result = await fetchEndpoint(path, req.params, baseUrl);
+        const result = await fetchEndpoint(path, params, baseUrl);
         
         return {
           id,
@@ -180,8 +184,9 @@ export async function POST(request: NextRequest) {
       },
     });
   } catch (error) {
-    logger.error('Batch request failed', { error, requestId: ctx.requestId });
-    completeRequest(ctx, 500);
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+    logger.error(`Batch request failed: ${errorMessage}`);
+    completeRequest(ctx, 500, error instanceof Error ? error : undefined);
     
     return NextResponse.json(
       {

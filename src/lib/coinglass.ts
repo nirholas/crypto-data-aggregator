@@ -697,19 +697,41 @@ export async function getLiquidationHeatmap(
   priceRanges: Array<{ price: number; longLiq: number; shortLiq: number }>;
   currentPrice: number;
 }> {
-  // This would require historical price + liquidation correlation
-  // For now, return aggregated data structure
+  // Fetch real price data from CoinGecko
+  const coinId = symbol.toLowerCase() === 'btc' ? 'bitcoin' : 
+                 symbol.toLowerCase() === 'eth' ? 'ethereum' : 
+                 symbol.toLowerCase();
+  
+  let currentPrice = 0;
+  try {
+    const priceRes = await fetch(
+      `https://api.coingecko.com/api/v3/simple/price?ids=${coinId}&vs_currencies=usd`,
+      { next: { revalidate: 60 } }
+    );
+    if (priceRes.ok) {
+      const priceData = await priceRes.json();
+      currentPrice = priceData[coinId]?.usd || 0;
+    }
+  } catch (error) {
+    console.error('Failed to fetch price for liquidation heatmap:', error);
+  }
+  
+  // If we couldn't get a price, return empty data
+  if (!currentPrice) {
+    return { priceRanges: [], currentPrice: 0 };
+  }
+  
+  // Fetch liquidation data from our API
   const liq = await getLiquidationBySymbol(symbol);
-  const oi = await getOpenInterestBySymbol(symbol);
-
-  // Simulate price ranges based on current data
-  const estimatedPrice = 50000; // Would get from price API
+  
+  // Build price ranges based on real current price
   const ranges = [];
-
   for (let i = -5; i <= 5; i++) {
-    const priceLevel = estimatedPrice * (1 + i * 0.02);
-    const longLiq = i < 0 ? liq.longLiquidationUsd * Math.abs(i) * 0.1 : 0;
-    const shortLiq = i > 0 ? liq.shortLiquidationUsd * Math.abs(i) * 0.1 : 0;
+    const priceLevel = currentPrice * (1 + i * 0.02);
+    // Distribute liquidations across price levels based on distance from current price
+    const distanceFactor = Math.abs(i) * 0.15;
+    const longLiq = i < 0 ? liq.longLiquidationUsd * distanceFactor : 0;
+    const shortLiq = i > 0 ? liq.shortLiquidationUsd * distanceFactor : 0;
 
     ranges.push({
       price: priceLevel,
@@ -720,6 +742,6 @@ export async function getLiquidationHeatmap(
 
   return {
     priceRanges: ranges,
-    currentPrice: estimatedPrice,
+    currentPrice,
   };
 }

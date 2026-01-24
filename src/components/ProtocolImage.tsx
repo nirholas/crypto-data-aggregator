@@ -37,11 +37,11 @@ export default function ProtocolImage({ src, alt, className = '' }: ProtocolImag
   if (!src || showFallback) {
     return (
       <div 
-        className={`${className} bg-gradient-to-br from-gray-200 to-gray-300 flex items-center justify-center`}
+        className={`${className} bg-gradient-to-br from-surface-alt to-surface-hover flex items-center justify-center`}
         role="img"
         aria-label={alt}
       >
-        <span className="text-gray-500 text-xs font-bold">
+        <span className="text-text-muted text-xs font-bold">
           {alt?.charAt(0)?.toUpperCase() || '?'}
         </span>
       </div>

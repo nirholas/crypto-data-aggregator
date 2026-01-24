@@ -10,6 +10,7 @@ import Image from 'next/image';
 import type { TokenPrice } from '@/lib/market-data';
 import { formatPrice, formatNumber, formatPercent } from '@/lib/market-data';
 import SparklineCell from './SparklineCell';
+import { useWatchlist } from '@/components/watchlist/WatchlistProvider';
 
 interface CoinRowProps {
   coin: TokenPrice;
@@ -17,9 +18,22 @@ interface CoinRowProps {
 }
 
 export default function CoinRow({ coin, showWatchlist = false }: CoinRowProps) {
+  const { addToWatchlist, removeFromWatchlist, isWatchlisted } = useWatchlist();
+  const isInWatchlist = isWatchlisted(coin.id);
+  
   const supplyPercentage = coin.max_supply
     ? (coin.circulating_supply / coin.max_supply) * 100
     : null;
+
+  const handleWatchlistToggle = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (isInWatchlist) {
+      removeFromWatchlist(coin.id);
+    } else {
+      addToWatchlist(coin.id);
+    }
+  };
 
   return (
     <tr className="border-b border-surface-border hover:bg-surface-hover transition-colors group">
@@ -126,13 +140,20 @@ export default function CoinRow({ coin, showWatchlist = false }: CoinRowProps) {
       {showWatchlist && (
         <td className="p-4 text-center">
           <button
-            onClick={(e) => {
-              e.preventDefault();
-              // TODO: Implement watchlist functionality
-            }}
-            className="text-text-muted hover:text-warning transition-colors"
+            onClick={handleWatchlistToggle}
+            className={`transition-colors ${
+              isInWatchlist 
+                ? 'text-warning hover:text-warning/80' 
+                : 'text-text-muted hover:text-warning'
+            }`}
+            aria-label={isInWatchlist ? 'Remove from watchlist' : 'Add to watchlist'}
           >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg 
+              className="w-5 h-5" 
+              fill={isInWatchlist ? 'currentColor' : 'none'} 
+              stroke="currentColor" 
+              viewBox="0 0 24 24"
+            >
               <path
                 strokeLinecap="round"
                 strokeLinejoin="round"

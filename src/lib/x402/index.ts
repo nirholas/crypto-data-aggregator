@@ -26,6 +26,10 @@ export {
   PAYMENT_ADDRESS,
   USDC_ADDRESS,
   USDC_ADDRESSES,
+  NATIVE_TOKENS,
+  SUPPORTED_PAYMENT_NETWORKS,
+  getNetworkInfo,
+  getSupportedNetworks,
   type NetworkId,
 } from './config';
 
@@ -53,7 +57,16 @@ export {
 } from './routes';
 
 // Server
-export { x402Server, facilitatorClient, isServerConfigured, getServerStatus } from './server';
+export {
+  x402Server,
+  facilitatorClient,
+  isServerConfigured,
+  getServerStatus,
+  getMultiNetworkPaymentRequirements,
+  isPaymentNetworkSupported,
+  getRecommendedNetwork,
+  SUPPORTED_EVM_NETWORKS,
+} from './server';
 
 // Rate Limiting
 export {
@@ -75,3 +88,37 @@ export {
   middlewareConfig,
   PROTECTED_ROUTES,
 } from './middleware';
+
+// Payments & Receipts
+export {
+  createReceipt,
+  updateReceipt,
+  getReceipt,
+  getPaymentHistory,
+  getPaymentStats,
+  verifyReceipt,
+  exportReceipts,
+  type PaymentReceipt,
+  type PaymentHistory,
+  type PaymentStats,
+} from './payments';
+
+// Access Passes
+export {
+  PASS_CONFIG,
+  createPass,
+  getActivePass,
+  hasActivePass,
+  getPass,
+  getWalletPasses,
+  getPassStatus,
+  getPassOptions,
+  getPassRateLimit,
+  recordPassRequest,
+  getPassPaymentRequirements,
+  validatePassPayment,
+  type PassDuration,
+  type AccessPass,
+  type PassConfig,
+  type PassPurchaseResult,
+} from './passes';

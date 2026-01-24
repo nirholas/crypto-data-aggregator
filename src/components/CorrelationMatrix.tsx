@@ -60,29 +60,37 @@ export function CorrelationMatrix() {
     async function fetchHistoricalData() {
       setLoading(true);
       try {
-        const promises = TOP_COINS.map(async (coinId) => {
-          const res = await fetch(
-            `https://api.coingecko.com/api/v3/coins/${coinId}/market_chart?vs_currency=usd&days=${timeframe}`
-          );
-          if (res.ok) {
-            const data = await res.json();
-            return {
-              id: coinId,
-              symbol: coinId.slice(0, 3).toUpperCase(),
-              prices: data.prices.map((p: number[]) => p[1]),
-            };
-          }
-          return null;
-        });
-
-        // Fetch with delay to avoid rate limiting
+        // Fetch all coins in sequence with rate limiting
         const results: CoinHistory[] = [];
-        for (const promise of promises) {
-          const result = await promise;
-          if (result) results.push(result);
-          await new Promise((r) => setTimeout(r, 200));
+        
+        for (const coinId of TOP_COINS) {
+          try {
+            const res = await fetch(
+              `https://api.coingecko.com/api/v3/coins/${coinId}/market_chart?vs_currency=usd&days=${timeframe}`,
+              { next: { revalidate: 300 } } // Cache for 5 minutes
+            );
+            
+            if (res.ok) {
+              const data = await res.json();
+              if (data.prices && data.prices.length > 0) {
+                results.push({
+                  id: coinId,
+                  symbol: coinId.toUpperCase(),
+                  prices: data.prices.map((p: number[]) => p[1]),
+                });
+              }
+            }
+            
+            // Rate limit: wait 200ms between requests
+            await new Promise((r) => setTimeout(r, 200));
+          } catch (err) {
+            console.warn(`Failed to fetch data for ${coinId}:`, err);
+          }
         }
-        setCoinData(results);
+        
+        if (results.length > 0) {
+          setCoinData(results);
+        }
       } catch (e) {
         console.error('Failed to fetch historical data:', e);
       } finally {
@@ -90,19 +98,7 @@ export function CorrelationMatrix() {
       }
     }
 
-    // Use cached mock data for demo to avoid rate limits
-    const mockData: CoinHistory[] = TOP_COINS.map((id, i) => ({
-      id,
-      symbol: id.toUpperCase().slice(0, 4),
-      prices: Array.from({ length: 100 }, (_, j) => {
-        // Generate correlated random prices
-        const base = 100 + Math.sin(j / 10) * 20 + i * 5;
-        const noise = Math.random() * 10 * (1 - i * 0.05);
-        return base + noise;
-      }),
-    }));
-    setCoinData(mockData);
-    setLoading(false);
+    fetchHistoricalData();
   }, [timeframe]);
 
   const correlationMatrix = useMemo(() => {

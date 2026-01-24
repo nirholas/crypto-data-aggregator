@@ -171,7 +171,7 @@ export function SearchPageContent() {
         <p className="text-text-secondary text-sm mb-3">
           You can also search programmatically using our free API:
         </p>
-        <code className="block bg-gray-800 text-green-400 p-3 rounded text-sm overflow-x-auto">
+        <code className="block bg-surface-alt text-gain p-3 rounded text-sm overflow-x-auto">
           GET /api/search?q=bitcoin&limit=10
         </code>
       </div>

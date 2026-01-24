@@ -10,6 +10,7 @@ import NewsCard from '@/components/NewsCard';
 import { NewsletterSignup } from '@/components/sidebar';
 import { Folder, Rocket, Code } from 'lucide-react';
 import { CATEGORY_ICONS, getCategoryIcon } from '@/lib/category-icons';
+import type { EnrichedArticle } from '@/lib/archive-v2';
 
 interface Article {
   title: string;
@@ -21,11 +22,40 @@ interface Article {
 }
 
 interface TrendingSidebarProps {
-  trendingArticles: Article[];
+  trendingArticles: EnrichedArticle[] | Article[];
+}
+
+// Helper to convert EnrichedArticle to Article format
+function toArticle(item: EnrichedArticle | Article): Article {
+  if ('pub_date' in item) {
+    // It's an EnrichedArticle
+    const date = new Date(item.pub_date || item.first_seen);
+    const now = new Date();
+    const diffMs = now.getTime() - date.getTime();
+    const diffMins = Math.floor(diffMs / 60000);
+    const diffHours = Math.floor(diffMins / 60);
+    const diffDays = Math.floor(diffHours / 24);
+    
+    let timeAgo = 'just now';
+    if (diffDays > 0) timeAgo = `${diffDays}d ago`;
+    else if (diffHours > 0) timeAgo = `${diffHours}h ago`;
+    else if (diffMins > 0) timeAgo = `${diffMins}m ago`;
+    
+    return {
+      title: item.title,
+      link: item.link,
+      description: item.description,
+      pubDate: item.pub_date || item.first_seen,
+      source: item.source,
+      timeAgo,
+    };
+  }
+  return item as Article;
 }
 
 export default function TrendingSidebar({ trendingArticles }: TrendingSidebarProps) {
-  const topTrending = trendingArticles.slice(0, 5);
+  const articles = trendingArticles.map(toArticle);
+  const topTrending = articles.slice(0, 5);
   const featuredCategories = categories.slice(0, 6);
 
   return (

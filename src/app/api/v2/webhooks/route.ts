@@ -8,14 +8,17 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
-import { checkAuth, unauthorizedResponse } from '@/lib/auth';
+import { hybridAuthMiddleware } from '@/lib/x402';
 import { logger, createRequestContext, completeRequest } from '@/lib/monitoring';
 import { 
-  createWebhookSubscription, 
-  getUserWebhooks, 
-  deleteWebhookSubscription,
+  registerWebhook, 
+  getWebhooksByKeyId, 
+  deleteWebhook,
   WEBHOOK_EVENTS,
+  WebhookSubscription,
 } from '@/lib/webhooks';
+
+const ENDPOINT = '/api/v2/webhooks';
 
 // =============================================================================
 // SCHEMAS
@@ -35,42 +38,47 @@ const createWebhookSchema = z.object({
 // =============================================================================
 
 export async function GET(request: NextRequest) {
-  const ctx = createRequestContext(request, '/api/v2/webhooks');
+  const ctx = createRequestContext(ENDPOINT);
   
-  const authResult = await checkAuth(request);
-  if (!authResult.authenticated) {
-    return unauthorizedResponse(authResult.error || 'Unauthorized');
+  // Extract API key from headers for webhook lookup
+  const apiKey = request.headers.get('X-API-Key');
+  if (!apiKey) {
+    const authResponse = await hybridAuthMiddleware(request, ENDPOINT);
+    if (authResponse) {
+      completeRequest(ctx, 401);
+      return authResponse;
+    }
   }
   
   try {
-    const webhooks = await getUserWebhooks(authResult.apiKey!);
+    const webhooks = await getWebhooksByKeyId(apiKey || 'unknown');
     
     completeRequest(ctx, 200);
     
     return NextResponse.json({
       success: true,
       data: {
-        webhooks: webhooks.map(wh => ({
+        webhooks: webhooks.map((wh: WebhookSubscription) => ({
           id: wh.id,
           url: wh.url,
           events: wh.events,
           active: wh.active,
           createdAt: wh.createdAt,
-          lastTriggeredAt: wh.lastTriggeredAt,
-          totalDeliveries: wh.totalDeliveries,
-          successRate: wh.successfulDeliveries / Math.max(wh.totalDeliveries, 1),
+          lastDeliveryAt: wh.lastDeliveryAt,
+          deliveryCount: wh.deliveryCount || 0,
         })),
         count: webhooks.length,
       },
       meta: {
-        endpoint: '/api/v2/webhooks',
+        endpoint: ENDPOINT,
         requestId: ctx.requestId,
         timestamp: new Date().toISOString(),
       },
     });
   } catch (error) {
-    logger.error('Failed to list webhooks', { error, requestId: ctx.requestId });
-    completeRequest(ctx, 500);
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+    logger.error(`Failed to list webhooks: ${errorMessage}`);
+    completeRequest(ctx, 500, error instanceof Error ? error : undefined);
     
     return NextResponse.json(
       { success: false, error: 'Failed to retrieve webhooks' },
@@ -84,11 +92,15 @@ export async function GET(request: NextRequest) {
 // =============================================================================
 
 export async function POST(request: NextRequest) {
-  const ctx = createRequestContext(request, '/api/v2/webhooks');
+  const ctx = createRequestContext(ENDPOINT, 'POST');
   
-  const authResult = await checkAuth(request);
-  if (!authResult.authenticated) {
-    return unauthorizedResponse(authResult.error || 'Unauthorized');
+  const apiKey = request.headers.get('X-API-Key');
+  if (!apiKey) {
+    const authResponse = await hybridAuthMiddleware(request, ENDPOINT);
+    if (authResponse) {
+      completeRequest(ctx, 401);
+      return authResponse;
+    }
   }
   
   try {
@@ -109,10 +121,17 @@ export async function POST(request: NextRequest) {
       );
     }
     
-    const webhook = await createWebhookSubscription({
-      apiKeyId: authResult.apiKey!,
-      ...parsed.data,
-    });
+    const webhook = await registerWebhook(
+      apiKey || 'unknown',
+      parsed.data.url,
+      parsed.data.events as import('@/lib/webhooks').WebhookEvent[],
+      {
+        secret: parsed.data.secret,
+        headers: parsed.data.headers,
+        active: parsed.data.active,
+        metadata: parsed.data.metadata,
+      }
+    );
     
     completeRequest(ctx, 201);
     
@@ -128,14 +147,15 @@ export async function POST(request: NextRequest) {
         },
       },
       meta: {
-        endpoint: '/api/v2/webhooks',
+        endpoint: ENDPOINT,
         requestId: ctx.requestId,
         timestamp: new Date().toISOString(),
       },
     }, { status: 201 });
   } catch (error) {
-    logger.error('Failed to create webhook', { error, requestId: ctx.requestId });
-    completeRequest(ctx, 500);
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+    logger.error(`Failed to create webhook: ${errorMessage}`);
+    completeRequest(ctx, 500, error instanceof Error ? error : undefined);
     
     return NextResponse.json(
       { success: false, error: 'Failed to create webhook' },
@@ -149,11 +169,15 @@ export async function POST(request: NextRequest) {
 // =============================================================================
 
 export async function DELETE(request: NextRequest) {
-  const ctx = createRequestContext(request, '/api/v2/webhooks');
+  const ctx = createRequestContext(ENDPOINT, 'DELETE');
   
-  const authResult = await checkAuth(request);
-  if (!authResult.authenticated) {
-    return unauthorizedResponse(authResult.error || 'Unauthorized');
+  const apiKey = request.headers.get('X-API-Key');
+  if (!apiKey) {
+    const authResponse = await hybridAuthMiddleware(request, ENDPOINT);
+    if (authResponse) {
+      completeRequest(ctx, 401);
+      return authResponse;
+    }
   }
   
   try {
@@ -167,7 +191,7 @@ export async function DELETE(request: NextRequest) {
       );
     }
     
-    const deleted = await deleteWebhookSubscription(webhookId, authResult.apiKey!);
+    const deleted = await deleteWebhook(webhookId, apiKey || 'unknown');
     
     if (!deleted) {
       return NextResponse.json(
@@ -182,14 +206,15 @@ export async function DELETE(request: NextRequest) {
       success: true,
       data: { deleted: true, id: webhookId },
       meta: {
-        endpoint: '/api/v2/webhooks',
+        endpoint: ENDPOINT,
         requestId: ctx.requestId,
         timestamp: new Date().toISOString(),
       },
     });
   } catch (error) {
-    logger.error('Failed to delete webhook', { error, requestId: ctx.requestId });
-    completeRequest(ctx, 500);
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+    logger.error(`Failed to delete webhook: ${errorMessage}`);
+    completeRequest(ctx, 500, error instanceof Error ? error : undefined);
     
     return NextResponse.json(
       { success: false, error: 'Failed to delete webhook' },

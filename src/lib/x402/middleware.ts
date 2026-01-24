@@ -6,17 +6,20 @@
  *
  * Authentication flow:
  * 1. Check for valid API key → Use subscription tier rate limits
- * 2. Check for x402 payment signature → Verify and allow
- * 3. No auth → Return 402 Payment Required
+ * 2. Check for active access pass → Use pass rate limits
+ * 3. Check for x402 payment signature → Verify and allow
+ * 4. No auth → Return 402 Payment Required
  */
 
 import { NextRequest, NextResponse } from 'next/server';
 import { paymentProxy } from '@x402/next';
 import { x402Server } from './server';
 import { createRoutes, isPricedRoute, getRoutePrice } from './routes';
-import { getTierFromApiKey, checkTierRateLimit } from './rate-limit';
+import { getTierFromApiKey, checkTierRateLimit, checkRateLimit } from './rate-limit';
 import { API_TIERS, API_PRICING } from './pricing';
-import { PAYMENT_ADDRESS, CURRENT_NETWORK } from './config';
+import { PAYMENT_ADDRESS, CURRENT_NETWORK, USDC_ADDRESSES, getSupportedNetworks } from './config';
+import { getActivePass, recordPassRequest, getPassRateLimit, PASS_CONFIG } from './passes';
+import { createReceipt } from './payments';
 
 // =============================================================================
 // MIDDLEWARE CONFIGURATION
@@ -56,7 +59,7 @@ export async function hybridAuthMiddleware(
   request: NextRequest,
   endpoint: string
 ): Promise<NextResponse | null> {
-  // 1. Check for API key
+  // 1. Check for API key (subscription model)
   const apiKey = request.headers.get('X-API-Key') || request.nextUrl.searchParams.get('api_key');
 
   if (apiKey) {
@@ -89,7 +92,6 @@ export async function hybridAuthMiddleware(
       }
 
       // Rate limit OK - allow request
-      // Add rate limit headers to response later
       return null;
     }
 
@@ -104,7 +106,45 @@ export async function hybridAuthMiddleware(
     );
   }
 
-  // 2. Check for x402 payment signature
+  // 2. Check for access pass (wallet-based)
+  const walletAddress = request.headers.get('X-Wallet-Address');
+  if (walletAddress) {
+    const pass = getActivePass(walletAddress);
+
+    if (pass) {
+      // Check pass rate limit (per minute)
+      const passRateLimit = getPassRateLimit(pass);
+      const rateLimit = checkRateLimit(`pass:${pass.id}`, passRateLimit);
+
+      if (!rateLimit.allowed) {
+        return NextResponse.json(
+          {
+            error: 'Rate Limit Exceeded',
+            message: `Pass rate limit: ${passRateLimit} requests/minute`,
+            passId: pass.id,
+            resetAt: new Date(rateLimit.resetAt).toISOString(),
+          },
+          {
+            status: 429,
+            headers: {
+              'X-RateLimit-Limit': passRateLimit.toString(),
+              'X-RateLimit-Remaining': '0',
+              'X-RateLimit-Reset': rateLimit.resetAt.toString(),
+              'Retry-After': Math.ceil((rateLimit.resetAt - Date.now()) / 1000).toString(),
+            },
+          }
+        );
+      }
+
+      // Record request against pass
+      recordPassRequest(pass.id);
+
+      // Allow request
+      return null;
+    }
+  }
+
+  // 3. Check for x402 payment signature
   const paymentSignature =
     request.headers.get('X-Payment') || request.headers.get('PAYMENT-SIGNATURE');
 
@@ -114,7 +154,7 @@ export async function hybridAuthMiddleware(
     return null;
   }
 
-  // 3. No authentication - return 402 Payment Required
+  // 4. No authentication - return 402 Payment Required
   const price = getRoutePrice('GET', endpoint);
 
   if (!price) {
@@ -131,29 +171,34 @@ export async function hybridAuthMiddleware(
 
 /**
  * Create a 402 Payment Required response
- * Follows x402 protocol specification
+ * Follows x402 protocol specification with multi-network support
  */
 export function create402Response(endpoint: string, price: string): NextResponse {
   const requestId = crypto.randomUUID();
   const priceNum = parseFloat(price.replace('$', ''));
   const priceInUSDC = Math.round(priceNum * 1e6); // USDC has 6 decimals
 
+  // Get all supported networks for payment
+  const networks = getSupportedNetworks(process.env.NODE_ENV !== 'production');
+
   const paymentRequirements = {
     x402Version: 2,
-    accepts: [
-      {
-        scheme: 'exact',
-        network: CURRENT_NETWORK,
-        maxAmountRequired: priceInUSDC.toString(),
-        resource: endpoint,
-        description: `API access: ${endpoint}`,
-        mimeType: 'application/json',
-        payTo: PAYMENT_ADDRESS,
-        paymentNonce: requestId,
-        // Token info (USDC on Base)
-        asset: '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913',
+    accepts: networks.map((network) => ({
+      scheme: 'exact',
+      network: network.id,
+      maxAmountRequired: priceInUSDC.toString(),
+      resource: endpoint,
+      description: `API access: ${endpoint}`,
+      mimeType: 'application/json',
+      payTo: PAYMENT_ADDRESS,
+      paymentNonce: requestId,
+      asset: USDC_ADDRESSES[network.id],
+      extra: {
+        networkName: network.name,
+        gasCost: network.gasCost,
+        recommended: network.recommended,
       },
-    ],
+    })),
   };
 
   return NextResponse.json(
@@ -166,9 +211,24 @@ export function create402Response(endpoint: string, price: string): NextResponse
       paymentMethods: [
         {
           type: 'x402',
-          description: 'Pay per request with USDC on Base',
-          network: CURRENT_NETWORK,
+          description: 'Pay per request with USDC',
+          networks: networks.map((n) => ({
+            id: n.id,
+            name: n.name,
+            recommended: n.recommended,
+            gasCost: n.gasCost,
+          })),
           docs: 'https://docs.x402.org',
+        },
+        {
+          type: 'accessPass',
+          description: 'Buy unlimited access for a time period',
+          options: Object.values(PASS_CONFIG).map((p) => ({
+            duration: p.duration,
+            name: p.name,
+            price: `$${p.priceUsd.toFixed(2)}`,
+            url: `/api/premium/pass/${p.duration}`,
+          })),
         },
         {
           type: 'subscription',

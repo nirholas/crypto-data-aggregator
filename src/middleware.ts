@@ -25,6 +25,7 @@ export const config = {
   matcher: [
     // Match all API routes (both free and premium)
     '/api/v1/:path*',
+    '/api/v2/:path*',
     '/api/premium/:path*',
   ],
 };
@@ -113,6 +114,12 @@ async function handleV1Route(request: NextRequest): Promise<NextResponse> {
   response.headers.set('X-RateLimit-Limit', rateLimit.limit.toString());
   response.headers.set('X-RateLimit-Remaining', rateLimit.remaining.toString());
   response.headers.set('X-RateLimit-Reset', rateLimit.resetAt.toString());
+  
+  // Add deprecation headers for v1 API
+  response.headers.set('Deprecation', '@2026-01-24');
+  response.headers.set('Sunset', 'Sat, 25 Jul 2026 00:00:00 GMT');
+  response.headers.set('Link', '</docs/swagger>; rel="deprecation"; title="API v2 Migration Guide"');
+  response.headers.set('Warning', '299 - "API v1 is deprecated. Please migrate to /api/v2. Sunset: July 25, 2026"');
 
   return response;
 }
@@ -194,10 +201,112 @@ export async function middleware(request: NextRequest) {
   if (pathname.startsWith('/api/v1')) {
     return handleV1Route(request);
   }
+  
+  if (pathname.startsWith('/api/v2')) {
+    return handleV2Route(request);
+  }
 
   if (pathname.startsWith('/api/premium')) {
     return handlePremiumRoute(request);
   }
 
   return NextResponse.next();
+}
+
+/**
+ * Handle /api/v2/* routes - modern API with improved features
+ */
+async function handleV2Route(request: NextRequest): Promise<NextResponse> {
+  // Allow documentation and health endpoints without auth
+  const pathname = request.nextUrl.pathname;
+  const publicEndpoints = ['/api/v2', '/api/v2/health', '/api/v2/openapi.json'];
+  
+  if (publicEndpoints.includes(pathname)) {
+    return NextResponse.next();
+  }
+  
+  // Allow GraphQL playground (GET)
+  if (pathname === '/api/v2/graphql' && request.method === 'GET') {
+    return NextResponse.next();
+  }
+  
+  // For other v2 routes, check for internal batch calls
+  if (request.headers.get('X-Internal-Batch') === 'true') {
+    return NextResponse.next();
+  }
+  
+  // Check for API key
+  const rawKey = extractApiKey(request);
+  
+  if (!rawKey) {
+    // In development without KV, allow with warning
+    if (!isKvConfigured() && process.env.NODE_ENV === 'development') {
+      console.warn('[API v2] KV not configured - allowing request in development');
+      const response = NextResponse.next();
+      response.headers.set('X-API-Warning', 'API key validation disabled in development');
+      return response;
+    }
+    
+    return NextResponse.json(
+      {
+        success: false,
+        error: 'API key required',
+        code: 'UNAUTHORIZED',
+        message: 'Include your API key in the X-API-Key header or api_key query parameter',
+        docs: '/docs/swagger',
+      },
+      { status: 401 }
+    );
+  }
+  
+  // Validate the key
+  const keyData = await validateApiKey(rawKey);
+  
+  if (!keyData) {
+    return NextResponse.json(
+      {
+        success: false,
+        error: 'Invalid API key',
+        code: 'UNAUTHORIZED',
+        message: 'The provided API key is invalid or has been revoked',
+      },
+      { status: 401 }
+    );
+  }
+  
+  // Check rate limit
+  const rateLimit = await checkKeyRateLimit(keyData);
+  
+  if (!rateLimit.allowed) {
+    const tierConfig = API_KEY_TIERS[keyData.tier];
+    return NextResponse.json(
+      {
+        success: false,
+        error: 'Rate limit exceeded',
+        code: 'RATE_LIMITED',
+        limit: tierConfig.requestsPerDay,
+        resetAt: new Date(rateLimit.resetAt).toISOString(),
+        retryAfter: Math.ceil((rateLimit.resetAt - Date.now()) / 1000),
+      },
+      {
+        status: 429,
+        headers: {
+          'X-RateLimit-Limit': rateLimit.limit.toString(),
+          'X-RateLimit-Remaining': '0',
+          'X-RateLimit-Reset': rateLimit.resetAt.toString(),
+          'Retry-After': Math.ceil((rateLimit.resetAt - Date.now()) / 1000).toString(),
+        },
+      }
+    );
+  }
+  
+  // Valid key - allow request with rate limit headers
+  const response = NextResponse.next();
+  response.headers.set('X-API-Key-Id', keyData.id);
+  response.headers.set('X-API-Tier', keyData.tier);
+  response.headers.set('X-RateLimit-Limit', rateLimit.limit.toString());
+  response.headers.set('X-RateLimit-Remaining', rateLimit.remaining.toString());
+  response.headers.set('X-RateLimit-Reset', rateLimit.resetAt.toString());
+  
+  return response;
 }

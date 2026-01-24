@@ -59,7 +59,7 @@ export default function Hero() {
               className="text-5xl sm:text-6xl lg:text-7xl font-black text-black leading-[1.1] tracking-tight"
             >
               <span className="relative inline-block">
-                <span className="relative z-10 bg-gradient-to-r from-black via-gray-800 to-black bg-clip-text text-transparent animate-[gradient_8s_ease_infinite] bg-[length:200%_200%] motion-reduce:animate-none">
+                <span className="relative z-10 bg-gradient-to-r from-text-primary via-text-secondary to-text-primary bg-clip-text text-transparent animate-[gradient_8s_ease_infinite] bg-[length:200%_200%] motion-reduce:animate-none">
                   Free
                 </span>
                 <span 

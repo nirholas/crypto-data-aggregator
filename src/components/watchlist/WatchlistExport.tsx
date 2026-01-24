@@ -99,7 +99,7 @@ export function WatchlistExport({ onClose }: WatchlistExportProps) {
             <button
               onClick={handleExportJSON}
               disabled={watchlist.length === 0}
-              className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed text-white rounded-lg font-medium transition-colors"
+              className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-text-muted disabled:cursor-not-allowed text-white rounded-lg font-medium transition-colors"
             >
               <FileJson className="w-4 h-4" />
               Export JSON
@@ -107,7 +107,7 @@ export function WatchlistExport({ onClose }: WatchlistExportProps) {
             <button
               onClick={handleExportCSV}
               disabled={watchlist.length === 0}
-              className="flex items-center gap-2 px-4 py-2 bg-green-600 hover:bg-green-700 disabled:bg-gray-400 disabled:cursor-not-allowed text-white rounded-lg font-medium transition-colors"
+              className="flex items-center gap-2 px-4 py-2 bg-green-600 hover:bg-green-700 disabled:bg-text-muted disabled:cursor-not-allowed text-white rounded-lg font-medium transition-colors"
             >
               <FileSpreadsheet className="w-4 h-4" />
               Export CSV

@@ -31,16 +31,75 @@ interface SocialMetrics {
   topPlatform: string;
 }
 
-// Generate mock social metrics based on trending data
-function generateSocialMetrics(trending: TrendingCoin[]): SocialMetrics[] {
-  return trending.slice(0, 10).map((coin, i) => ({
-    coin: coin.name,
-    symbol: coin.symbol.toUpperCase(),
-    mentions: Math.floor(10000 / (i + 1) + Math.random() * 5000),
-    sentiment: i < 3 ? 'bullish' : i > 7 ? 'bearish' : 'neutral',
-    change: Math.floor(Math.random() * 200 - 50),
-    topPlatform: ['Twitter', 'Reddit', 'Discord', 'Telegram'][Math.floor(Math.random() * 4)],
-  }));
+/**
+ * Calculate social metrics from trending data and CoinGecko community data
+ * Uses real trending score as a proxy for social activity
+ */
+async function fetchSocialMetrics(trending: TrendingCoin[]): Promise<SocialMetrics[]> {
+  const metrics: SocialMetrics[] = [];
+
+  for (const coin of trending.slice(0, 10)) {
+    try {
+      // Fetch community data from CoinGecko
+      const res = await fetch(`https://api.coingecko.com/api/v3/coins/${coin.id}?localization=false&tickers=false&market_data=true&community_data=true&developer_data=false&sparkline=false`);
+      
+      if (res.ok) {
+        const data = await res.json();
+        const community = data.community_data || {};
+        
+        // Calculate mentions from real community data
+        const twitterFollowers = community.twitter_followers || 0;
+        const redditSubscribers = community.reddit_subscribers || 0;
+        const telegramChannelUserCount = community.telegram_channel_user_count || 0;
+        
+        // Use trending score weighted by social following
+        const totalFollowing = twitterFollowers + redditSubscribers + telegramChannelUserCount;
+        const mentions = Math.round(totalFollowing * (1 + coin.score / 10) / 100);
+        
+        // Determine sentiment from price change
+        const priceChange24h = data.market_data?.price_change_percentage_24h || 0;
+        let sentiment: 'bullish' | 'bearish' | 'neutral' = 'neutral';
+        if (priceChange24h > 5) sentiment = 'bullish';
+        else if (priceChange24h < -5) sentiment = 'bearish';
+        
+        // Determine top platform from community data
+        let topPlatform = 'Twitter';
+        if (redditSubscribers > twitterFollowers) topPlatform = 'Reddit';
+        if (telegramChannelUserCount > Math.max(redditSubscribers, twitterFollowers)) topPlatform = 'Telegram';
+        
+        metrics.push({
+          coin: coin.name,
+          symbol: coin.symbol.toUpperCase(),
+          mentions,
+          sentiment,
+          change: Math.round(priceChange24h), // Use price change as proxy for buzz change
+          topPlatform,
+        });
+      } else {
+        // Fallback: use trending score as proxy
+        metrics.push({
+          coin: coin.name,
+          symbol: coin.symbol.toUpperCase(),
+          mentions: (10 - coin.score) * 1000,
+          sentiment: coin.score < 3 ? 'bullish' : coin.score > 7 ? 'bearish' : 'neutral',
+          change: (10 - coin.score) * 10,
+          topPlatform: 'Twitter',
+        });
+      }
+    } catch {
+      // Fallback for failed requests
+      metrics.push({
+        coin: coin.name,
+        symbol: coin.symbol.toUpperCase(),
+        mentions: (10 - coin.score) * 1000,
+        sentiment: 'neutral',
+        change: 0,
+        topPlatform: 'Twitter',
+      });
+    }
+  }
+
+  return metrics.sort((a, b) => b.mentions - a.mentions);
 }
 
 export function SocialBuzz() {
@@ -57,7 +116,9 @@ export function SocialBuzz() {
           const data: TrendingData = await res.json();
           const coins = data.coins.map((c) => c.item);
           setTrending(coins);
-          setSocialMetrics(generateSocialMetrics(coins));
+          // Fetch real social metrics
+          const metrics = await fetchSocialMetrics(coins);
+          setSocialMetrics(metrics);
         }
       } catch (e) {
         console.error('Failed to fetch trending:', e);

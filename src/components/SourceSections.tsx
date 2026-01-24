@@ -95,7 +95,7 @@ export default function SourceSections({
           const info = sourceInfo[source] || {
             slug: source.toLowerCase().replace(/\s+/g, ''),
             color: 'text-text-secondary',
-            bgGradient: 'from-gray-600',
+            bgGradient: 'from-slate-500',
           };
           const displayArticles = sourceArticles.slice(0, articlesPerSource);
 

@@ -64,7 +64,7 @@ export function NewsletterForm({ variant = 'card' }: NewsletterFormProps) {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="Enter your email"
-              className="px-3 py-1.5 rounded text-gray-900 text-sm w-48"
+              className="px-3 py-1.5 rounded text-text-primary text-sm w-48"
               disabled={status === 'loading' || status === 'success'}
             />
             <button

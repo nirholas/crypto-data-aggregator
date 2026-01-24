@@ -8,7 +8,7 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { checkAuth, unauthorizedResponse } from '@/lib/auth';
+import { hybridAuthMiddleware } from '@/lib/x402';
 import { logger, createRequestContext, completeRequest } from '@/lib/monitoring';
 import { 
   getCoinMarkets, 
@@ -20,6 +20,8 @@ import {
   getGasPrices,
   getVolatilityMetrics,
 } from '@/lib/data-sources';
+
+const ENDPOINT = '/api/v2/graphql';
 
 // =============================================================================
 // GRAPHQL SCHEMA DEFINITION
@@ -213,7 +215,7 @@ const resolvers = {
       page,
       perPage,
       order,
-      ids: ids?.join(','),
+      ids,
     });
     
     return {
@@ -235,24 +237,23 @@ const resolvers = {
   
   trending: async () => {
     const result = await getTrendingCoins();
-    return result.coins || [];
+    return result;
   },
   
   search: async (args: GraphQLArgs) => {
     const query = args.query as string;
     const result = await searchCoins(query);
     return {
-      coins: result.coins || [],
-      total: result.coins?.length || 0,
+      coins: result,
+      total: result.length,
     };
   },
   
-  defi: async (args: GraphQLArgs) => {
-    const limit = (args.limit as number) || 50;
-    const result = await getDefiTVL({ limit });
+  defi: async () => {
+    const result = await getDefiTVL();
     return {
       protocols: result.protocols || [],
-      totalTVL: result.summary?.totalTVL || 0,
+      totalTVL: result.totalTVL || 0,
       protocolCount: result.protocols?.length || 0,
     };
   },
@@ -274,12 +275,17 @@ const resolvers = {
   volatility: async (args: GraphQLArgs) => {
     const ids = (args.ids as string[]) || ['bitcoin', 'ethereum'];
     const result = await getVolatilityMetrics(ids);
+    const avgVolatility = result.length > 0 
+      ? result.reduce((sum, m) => sum + (m.volatility30d || 0), 0) / result.length
+      : 0;
+    const highRiskCount = result.filter(m => (m.volatility30d || 0) > 50).length;
+    
     return {
-      metrics: result.metrics || [],
-      summary: result.summary || {
-        averageVolatility30d: 0,
-        highRiskCount: 0,
-        totalAnalyzed: 0,
+      metrics: result,
+      summary: {
+        averageVolatility30d: avgVolatility,
+        highRiskCount,
+        totalAnalyzed: result.length,
       },
     };
   },
@@ -359,11 +365,12 @@ function selectFields<T extends Record<string, unknown>>(obj: T, fields: string[
 
 export async function POST(request: NextRequest) {
   const startTime = performance.now();
-  const ctx = createRequestContext(request, '/api/v2/graphql');
+  const ctx = createRequestContext(ENDPOINT, 'POST');
   
-  const authResult = await checkAuth(request);
-  if (!authResult.authenticated) {
-    return unauthorizedResponse(authResult.error || 'Unauthorized');
+  const authResponse = await hybridAuthMiddleware(request, ENDPOINT);
+  if (authResponse) {
+    completeRequest(ctx, 401);
+    return authResponse;
   }
   
   try {
@@ -421,33 +428,38 @@ export async function POST(request: NextRequest) {
           }
         }
         
-        let result = await resolver(args);
+        const result = await resolver(args);
         
-        // Apply field selection for arrays
+        // Apply field selection for arrays - cast through unknown to avoid type conflicts
         if (Array.isArray(result)) {
-          result = result.map(item => 
-            typeof item === 'object' ? selectFields(item as Record<string, unknown>, pq.fields) : item
+          data[pq.operation] = result.map(item => 
+            typeof item === 'object' && item !== null
+              ? selectFields(item as unknown as Record<string, unknown>, pq.fields)
+              : item
           );
         } else if (typeof result === 'object' && result !== null) {
           // For objects with nested arrays (like coins connection)
-          const obj = result as Record<string, unknown>;
+          const obj = { ...result } as Record<string, unknown>;
           for (const [key, value] of Object.entries(obj)) {
             if (Array.isArray(value)) {
               obj[key] = value.map(item =>
-                typeof item === 'object' ? selectFields(item as Record<string, unknown>, pq.fields) : item
+                typeof item === 'object' && item !== null
+                  ? selectFields(item as unknown as Record<string, unknown>, pq.fields)
+                  : item
               );
             }
           }
+          data[pq.operation] = obj;
+        } else {
+          data[pq.operation] = result;
         }
-        
-        data[pq.operation] = result;
       } catch (err) {
         const errorMessage = err instanceof Error ? err.message : 'Unknown error';
         errors.push({
           message: errorMessage,
           path: [pq.operation],
         });
-        logger.error(`GraphQL resolver error: ${pq.operation}`, { error: err });
+        logger.error(`GraphQL resolver error: ${pq.operation} - ${errorMessage}`);
       }
     }
     
@@ -463,8 +475,9 @@ export async function POST(request: NextRequest) {
       },
     });
   } catch (error) {
-    logger.error('GraphQL request failed', { error, requestId: ctx.requestId });
-    completeRequest(ctx, 500);
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+    logger.error(`GraphQL request failed: ${errorMessage}`);
+    completeRequest(ctx, 500, error instanceof Error ? error : undefined);
     
     return NextResponse.json(
       {

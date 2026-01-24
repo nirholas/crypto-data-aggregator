@@ -172,7 +172,7 @@ export default function SearchAutocomplete({
           />
           <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
             {isLoading ? (
-              <svg className="animate-spin h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24">
+              <svg className="animate-spin h-5 w-5 text-text-muted" fill="none" viewBox="0 0 24 24">
                 <circle
                   className="opacity-25"
                   cx="12"
@@ -189,7 +189,7 @@ export default function SearchAutocomplete({
               </svg>
             ) : (
               <svg
-                className="h-5 w-5 text-gray-400"
+                className="h-5 w-5 text-text-muted"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"

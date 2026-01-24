@@ -55,6 +55,7 @@ interface PortfolioExport {
 
 /**
  * Handler for portfolio export
+ * Accepts portfolio data from client and enriches with current prices
  */
 async function handler(
   request: NextRequest
@@ -63,62 +64,87 @@ async function handler(
   const format = (searchParams.get('format') || 'json') as 'json' | 'csv';
 
   try {
-    // In a real implementation, this would fetch from a database
-    // For demo, we return sample data structure
+    // Get portfolio data from request body (client sends their localStorage data)
+    let clientPortfolio: {
+      holdings?: Array<{ coinId: string; symbol: string; name: string; quantity: number; avgBuyPrice: number }>;
+      transactions?: Array<{ id: string; coinId: string; type: 'buy' | 'sell'; quantity: number; price: number; total: number; date: string }>;
+    } = {};
+    
+    try {
+      const body = await request.json();
+      clientPortfolio = body || {};
+    } catch {
+      // No body provided - return error
+      return NextResponse.json(
+        { error: 'Portfolio data required in request body' },
+        { status: 400 }
+      );
+    }
+    
+    if (!clientPortfolio.holdings || clientPortfolio.holdings.length === 0) {
+      return NextResponse.json(
+        { error: 'No holdings found in portfolio' },
+        { status: 400 }
+      );
+    }
+    
+    // Fetch current prices from CoinGecko
+    const coinIds = clientPortfolio.holdings.map(h => h.coinId).join(',');
+    const pricesRes = await fetch(
+      `https://api.coingecko.com/api/v3/simple/price?ids=${coinIds}&vs_currencies=usd`,
+      { next: { revalidate: 60 } }
+    );
+    
+    const prices: Record<string, { usd: number }> = pricesRes.ok 
+      ? await pricesRes.json() 
+      : {};
+    
+    // Calculate enriched holdings with current prices
+    let totalValue = 0;
+    let totalCost = 0;
+    
+    const enrichedHoldings = clientPortfolio.holdings.map(h => {
+      const currentPrice = prices[h.coinId]?.usd || h.avgBuyPrice;
+      const value = h.quantity * currentPrice;
+      const cost = h.quantity * h.avgBuyPrice;
+      const pnl = value - cost;
+      const pnlPercent = cost > 0 ? (pnl / cost) * 100 : 0;
+      
+      totalValue += value;
+      totalCost += cost;
+      
+      return {
+        coinId: h.coinId,
+        symbol: h.symbol,
+        name: h.name,
+        quantity: h.quantity,
+        avgBuyPrice: h.avgBuyPrice,
+        currentPrice,
+        value,
+        pnl,
+        pnlPercent,
+        allocation: 0, // Will calculate after totals
+      };
+    });
+    
+    // Calculate allocations
+    enrichedHoldings.forEach(h => {
+      h.allocation = totalValue > 0 ? (h.value / totalValue) * 100 : 0;
+    });
+    
+    const totalPnL = totalValue - totalCost;
+    const totalPnLPercent = totalCost > 0 ? (totalPnL / totalCost) * 100 : 0;
+
     const exportData: PortfolioExport = {
       format,
       exportedAt: new Date().toISOString(),
       portfolio: {
-        totalValue: 10000,
-        totalCost: 8500,
-        totalPnL: 1500,
-        totalPnLPercent: 17.65,
-        holdings: [
-          {
-            coinId: 'bitcoin',
-            symbol: 'BTC',
-            name: 'Bitcoin',
-            quantity: 0.15,
-            avgBuyPrice: 35000,
-            currentPrice: 42000,
-            value: 6300,
-            pnl: 1050,
-            pnlPercent: 20,
-            allocation: 63,
-          },
-          {
-            coinId: 'ethereum',
-            symbol: 'ETH',
-            name: 'Ethereum',
-            quantity: 1.5,
-            avgBuyPrice: 2000,
-            currentPrice: 2466.67,
-            value: 3700,
-            pnl: 700,
-            pnlPercent: 23.33,
-            allocation: 37,
-          },
-        ],
-        transactions: [
-          {
-            id: 'tx-001',
-            coinId: 'bitcoin',
-            type: 'buy',
-            quantity: 0.15,
-            price: 35000,
-            total: 5250,
-            date: '2025-01-15T10:30:00Z',
-          },
-          {
-            id: 'tx-002',
-            coinId: 'ethereum',
-            type: 'buy',
-            quantity: 1.5,
-            price: 2000,
-            total: 3000,
-            date: '2025-01-10T14:20:00Z',
-          },
-        ],
+        totalValue,
+        totalCost,
+        totalPnL,
+        totalPnLPercent,
+        holdings: enrichedHoldings,
+        transactions: clientPortfolio.transactions || [],
       },
       meta: {
         premium: true,
@@ -178,11 +204,19 @@ async function handler(
 }
 
 /**
- * GET /api/premium/export/portfolio
+ * POST /api/premium/export/portfolio
  *
  * Premium endpoint - requires x402 payment ($0.10)
+ * Send portfolio data in request body to export with current prices
  *
  * Query parameters:
  * - format: 'json' | 'csv' (default: 'json')
+ * 
+ * Body:
+ * - holdings: Array of { coinId, symbol, name, quantity, avgBuyPrice }
+ * - transactions: Array of transaction history (optional)
  */
+export const POST = withX402(handler, getRouteConfig('/api/premium/export/portfolio'), x402Server);
+
+// GET is deprecated - use POST with body data
 export const GET = withX402(handler, getRouteConfig('/api/premium/export/portfolio'), x402Server);

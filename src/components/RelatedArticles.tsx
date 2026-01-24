@@ -42,7 +42,7 @@ export function RelatedArticles({ articles }: RelatedArticlesProps) {
             <article className="p-3 -mx-3 rounded-lg hover:bg-surface-hover transition">
               <div className="flex items-start gap-3">
                 <div
-                  className={`w-8 h-8 rounded-lg flex items-center justify-center text-xs font-bold flex-shrink-0 ${sourceColors[article.source]?.replace('text-', 'text-').split(' ')[0] || 'bg-gray-100'}`}
+                  className={`w-8 h-8 rounded-lg flex items-center justify-center text-xs font-bold flex-shrink-0 ${sourceColors[article.source]?.replace('text-', 'text-').split(' ')[0] || 'bg-surface-alt'}`}
                 >
                   {article.source.charAt(0)}
                 </div>

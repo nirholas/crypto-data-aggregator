@@ -119,25 +119,25 @@ export default async function SourcePage({ params }: PageProps) {
   const allSources = Object.entries(sourceInfo);
   
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-surface">
       <div className="max-w-7xl mx-auto">
         <Header />
         
         <main className="px-4 py-8">
           {/* Source Header */}
-          <div className="bg-white rounded-xl border p-6 mb-8">
+          <div className="bg-surface rounded-xl border border-surface-border p-6 mb-8">
             <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
               <div className="flex-1">
                 <h1 className="text-3xl font-bold mb-2">{info.name}</h1>
-                <p className="text-gray-600 mb-4">{info.description}</p>
+                <p className="text-text-muted mb-4">{info.description}</p>
                 <div className="flex flex-wrap gap-2 mb-4">
                   {info.focus.map(tag => (
-                    <span key={tag} className="bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-sm">
+                    <span key={tag} className="bg-surface-alt text-text-secondary px-3 py-1 rounded-full text-sm">
                       {tag}
                     </span>
                   ))}
                 </div>
-                <div className="flex items-center gap-4 text-sm text-gray-500">
+                <div className="flex items-center gap-4 text-sm text-text-muted">
                   {info.founded && (
                     <span>Founded: {info.founded}</span>
                   )}
@@ -177,8 +177,8 @@ export default async function SourcePage({ params }: PageProps) {
                 href={`/source/${key}`}
                 className={`whitespace-nowrap px-4 py-2 rounded-full text-sm font-medium transition ${
                   key === source
-                    ? 'bg-blue-600 text-white'
-                    : 'bg-white border hover:bg-gray-50'
+                    ? 'bg-primary text-white'
+                    : 'bg-surface border border-surface-border hover:bg-surface-hover'
                 }`}
               >
                 {src.name}
@@ -188,21 +188,21 @@ export default async function SourcePage({ params }: PageProps) {
 
           {/* Stats */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-            <div className="bg-white rounded-xl p-4 border">
-              <p className="text-gray-500 text-sm">Articles</p>
+            <div className="bg-surface rounded-xl p-4 border border-surface-border">
+              <p className="text-text-muted text-sm">Articles</p>
               <p className="text-2xl font-bold">{newsData.totalCount}</p>
             </div>
-            <div className="bg-white rounded-xl p-4 border">
-              <p className="text-gray-500 text-sm">Focus</p>
+            <div className="bg-surface rounded-xl p-4 border border-surface-border">
+              <p className="text-text-muted text-sm">Focus</p>
               <p className="text-2xl font-bold">{info.focus[0]}</p>
             </div>
-            <div className="bg-white rounded-xl p-4 border">
-              <p className="text-gray-500 text-sm">Since</p>
+            <div className="bg-surface rounded-xl p-4 border border-surface-border">
+              <p className="text-text-muted text-sm">Since</p>
               <p className="text-2xl font-bold">{info.founded || 'N/A'}</p>
             </div>
-            <div className="bg-white rounded-xl p-4 border">
-              <p className="text-gray-500 text-sm">Status</p>
-              <p className="text-2xl font-bold text-green-600">Active</p>
+            <div className="bg-surface rounded-xl p-4 border border-surface-border">
+              <p className="text-text-muted text-sm">Status</p>
+              <p className="text-2xl font-bold text-gain">Active</p>
             </div>
           </div>
 
@@ -216,9 +216,9 @@ export default async function SourcePage({ params }: PageProps) {
           {newsData.articles.length > 0 ? (
             <Posts articles={newsData.articles} />
           ) : (
-            <div className="bg-white rounded-xl border p-8 text-center">
-              <p className="text-gray-600">No articles available at the moment.</p>
-              <p className="text-gray-500 text-sm mt-2">Check back soon for updates.</p>
+            <div className="bg-surface rounded-xl border border-surface-border p-8 text-center">
+              <p className="text-text-muted">No articles available at the moment.</p>
+              <p className="text-text-muted text-sm mt-2">Check back soon for updates.</p>
             </div>
           )}
         </main>

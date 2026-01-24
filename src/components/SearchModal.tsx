@@ -54,45 +54,39 @@ const quickActions = [
   { label: 'News Sources', href: '/sources', icon: Folder, description: 'Browse by source' },
 ];
 
-// Mock function to simulate live search - in production, replace with actual API call
+// Fetch search results from the real API
 async function fetchSearchResults(query: string): Promise<SearchResult[]> {
-  // Simulate API delay
-  await new Promise((resolve) => setTimeout(resolve, 200));
-
   if (!query.trim()) return [];
 
-  // Mock results based on query
-  const mockResults: SearchResult[] = [
-    {
-      id: '1',
-      title: `${query} - Latest developments and analysis`,
-      category: 'bitcoin',
+  try {
+    const response = await fetch(`/api/search?q=${encodeURIComponent(query)}&limit=8`);
+    
+    if (!response.ok) return [];
+    
+    const data = await response.json();
+    
+    if (!data.articles || !Array.isArray(data.articles)) return [];
+    
+    // Transform API response to SearchResult format
+    return data.articles.map((article: {
+      title: string;
+      link: string;
+      source: string;
+      pubDate?: string;
+      timeAgo?: string;
+    }, index: number) => ({
+      id: `${index}-${Date.now()}`,
+      title: article.title,
+      category: article.source?.toLowerCase() || 'news',
       categoryIcon: TrendingUp,
-      source: 'CoinDesk',
-      date: '2 hours ago',
-      url: `/search?q=${encodeURIComponent(query)}`,
-    },
-    {
-      id: '2',
-      title: `Breaking: ${query} sees major institutional interest`,
-      category: 'markets',
-      categoryIcon: TrendingUp,
-      source: 'Bloomberg',
-      date: '4 hours ago',
-      url: `/search?q=${encodeURIComponent(query)}`,
-    },
-    {
-      id: '3',
-      title: `How ${query} is reshaping the crypto landscape`,
-      category: 'analysis',
-      categoryIcon: BarChart3,
-      source: 'CryptoSlate',
-      date: '1 day ago',
-      url: `/search?q=${encodeURIComponent(query)}`,
-    },
-  ];
-
-  return mockResults;
+      source: article.source,
+      date: article.timeAgo || article.pubDate || '',
+      url: `/article/${encodeURIComponent(article.title.slice(0, 50))}?url=${encodeURIComponent(article.link)}`,
+    }));
+  } catch (error) {
+    console.error('Search API error:', error);
+    return [];
+  }
 }
 
 export function SearchModal({ isOpen, onClose }: SearchModalProps) {

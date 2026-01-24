@@ -365,7 +365,7 @@ export async function getWhaleTransactions(request: NextRequest): Promise<NextRe
 }
 
 /**
- * Analyze a specific wallet address
+ * Analyze a specific wallet address using real blockchain data
  */
 export async function analyzeWallet(request: NextRequest): Promise<NextResponse> {
   const searchParams = request.nextUrl.searchParams;
@@ -385,62 +385,115 @@ export async function analyzeWallet(request: NextRequest): Promise<NextResponse>
   }
 
   try {
-    // In production, query:
-    // - Etherscan/Basescan for balances
-    // - DeBank for DeFi positions
-    // - Nansen for labels
-    // - Historical transaction data
+    const apiKey = process.env.ETHERSCAN_API_KEY || '';
+    const ethPrice = await getEthPrice();
+    
+    // Fetch real data from Etherscan
+    const [balanceData, txListData, tokenTxData, internalTxData] = await Promise.all([
+      // ETH Balance
+      fetch(`${ETHERSCAN_API}?module=account&action=balance&address=${address}&tag=latest${apiKey ? `&apikey=${apiKey}` : ''}`).then(r => r.json()),
+      // Transaction list
+      fetch(`${ETHERSCAN_API}?module=account&action=txlist&address=${address}&startblock=0&endblock=99999999&page=1&offset=100&sort=desc${apiKey ? `&apikey=${apiKey}` : ''}`).then(r => r.json()),
+      // ERC20 token transfers
+      fetch(`${ETHERSCAN_API}?module=account&action=tokentx&address=${address}&page=1&offset=50&sort=desc${apiKey ? `&apikey=${apiKey}` : ''}`).then(r => r.json()),
+      // Internal transactions
+      fetch(`${ETHERSCAN_API}?module=account&action=txlistinternal&address=${address}&startblock=0&endblock=99999999&page=1&offset=20&sort=desc${apiKey ? `&apikey=${apiKey}` : ''}`).then(r => r.json()),
+    ]);
 
-    // Mock wallet analysis
+    // Parse ETH balance
+    const ethBalance = balanceData.status === '1' ? parseFloat(balanceData.result) / 1e18 : 0;
+    const ethBalanceUsd = ethBalance * ethPrice;
+
+    // Parse transactions for activity metrics
+    const transactions = txListData.status === '1' ? txListData.result : [];
+    const tokenTransfers = tokenTxData.status === '1' ? tokenTxData.result : [];
+    
+    // Calculate activity metrics from real data
+    const firstTx = transactions[transactions.length - 1];
+    const lastTx = transactions[0];
+    
+    // Check if address is a contract
+    const codeCheck = await fetch(`${ETHERSCAN_API}?module=proxy&action=eth_getCode&address=${address}&tag=latest${apiKey ? `&apikey=${apiKey}` : ''}`).then(r => r.json());
+    const isContract = codeCheck.result && codeCheck.result !== '0x';
+
+    // Get unique addresses interacted with
+    const uniqueAddresses = new Set<string>();
+    transactions.forEach((tx: { to: string; from: string }) => {
+      if (tx.to && tx.to.toLowerCase() !== address.toLowerCase()) uniqueAddresses.add(tx.to.toLowerCase());
+      if (tx.from && tx.from.toLowerCase() !== address.toLowerCase()) uniqueAddresses.add(tx.from.toLowerCase());
+    });
+
+    // Aggregate token holdings from recent transfers
+    const tokenHoldings: Record<string, { symbol: string; name: string; amount: number }> = {};
+    tokenTransfers.forEach((tx: { tokenSymbol: string; tokenName: string; value: string; tokenDecimal: string; to: string; from: string }) => {
+      const symbol = tx.tokenSymbol;
+      if (!tokenHoldings[symbol]) {
+        tokenHoldings[symbol] = { symbol, name: tx.tokenName, amount: 0 };
+      }
+      const amount = parseFloat(tx.value) / Math.pow(10, parseInt(tx.tokenDecimal || '18'));
+      // Add if received, subtract if sent
+      if (tx.to.toLowerCase() === address.toLowerCase()) {
+        tokenHoldings[symbol].amount += amount;
+      } else if (tx.from.toLowerCase() === address.toLowerCase()) {
+        tokenHoldings[symbol].amount -= amount;
+      }
+    });
+
+    // Identify DeFi protocols from contract interactions
+    const defiProtocols = new Set<string>();
+    const knownProtocols: Record<string, string> = {
+      '0x7a250d5630b4cf539739df2c5dacb4c659f2488d': 'Uniswap',
+      '0x68b3465833fb72a70ecdf485e0e4c7bd8665fc45': 'Uniswap V3',
+      '0x87870bca3f3fd6335c3f4ce8392d69350b4fa4e2': 'Aave V3',
+      '0x7d2768de32b0b80b7a3454c06bdac94a69ddc7a9': 'Aave V2',
+      '0x3d9819210a31b4961b30ef54be2aed79b9c9cd3b': 'Compound',
+      '0xdef1c0ded9bec7f1a1670819833240f027b25eff': '0x Protocol',
+      '0xae7ab96520de3a18e5e111b5eaab095312d7fe84': 'Lido',
+      '0x1111111254fb6c44bac0bed2854e76f90643097d': '1inch',
+    };
+    
+    transactions.forEach((tx: { to: string }) => {
+      const protocol = knownProtocols[tx.to?.toLowerCase()];
+      if (protocol) defiProtocols.add(protocol);
+    });
+
     const analysis = {
       address,
       chain,
       label: KNOWN_EXCHANGES[address.toLowerCase()] || null,
       isExchange: !!KNOWN_EXCHANGES[address.toLowerCase()],
-      isContract: Math.random() > 0.8,
+      isContract,
 
-      // Balance information
+      // Real balance information
       balance: {
-        total_usd: Math.floor(Math.random() * 100_000_000),
-        tokens: [
-          { symbol: 'ETH', amount: Math.random() * 1000, usd: Math.random() * 4_000_000 },
-          { symbol: 'USDC', amount: Math.random() * 5_000_000, usd: Math.random() * 5_000_000 },
-          { symbol: 'WBTC', amount: Math.random() * 50, usd: Math.random() * 5_000_000 },
-        ],
+        total_usd: ethBalanceUsd,
+        eth: ethBalance,
+        tokens: Object.values(tokenHoldings).filter(t => t.amount > 0).slice(0, 10).map(t => ({
+          symbol: t.symbol,
+          name: t.name,
+          amount: t.amount,
+        })),
       },
 
-      // Activity metrics
+      // Real activity metrics
       activity: {
-        firstSeen: new Date(
-          Date.now() - Math.random() * 365 * 24 * 60 * 60 * 1000 * 3
-        ).toISOString(),
-        lastActive: new Date(Date.now() - Math.random() * 24 * 60 * 60 * 1000).toISOString(),
-        transactionCount: Math.floor(Math.random() * 10000),
-        uniqueInteractions: Math.floor(Math.random() * 500),
+        firstSeen: firstTx ? new Date(parseInt(firstTx.timeStamp) * 1000).toISOString() : null,
+        lastActive: lastTx ? new Date(parseInt(lastTx.timeStamp) * 1000).toISOString() : null,
+        transactionCount: transactions.length,
+        uniqueInteractions: uniqueAddresses.size,
       },
 
-      // DeFi positions (if applicable)
+      // DeFi positions
       defi: {
-        protocols: ['Uniswap', 'Aave', 'Compound'].slice(0, Math.floor(Math.random() * 4)),
-        totalValueLocked: Math.random() * 10_000_000,
-        positions: [],
+        protocols: Array.from(defiProtocols),
+        protocolCount: defiProtocols.size,
       },
-
-      // Related wallets
-      relatedWallets: [
-        {
-          address: `0x${Math.random().toString(16).slice(2, 42)}`,
-          relationship: 'frequent_interaction',
-        },
-        { address: `0x${Math.random().toString(16).slice(2, 42)}`, relationship: 'funding_source' },
-      ],
 
       // Risk indicators
       risk: {
-        score: Math.floor(Math.random() * 100),
+        isWhitelisted: !!KNOWN_EXCHANGES[address.toLowerCase()],
+        isBlacklisted: false, // Would need sanctions list check
         flags: [] as string[],
-        isWhitelisted: false,
-        isBlacklisted: false,
       },
     };
 
@@ -450,6 +503,7 @@ export async function analyzeWallet(request: NextRequest): Promise<NextResponse>
         analyzedAt: new Date().toISOString(),
         endpoint: '/api/premium/wallets/analyze',
         price: PREMIUM_PRICING['/api/premium/wallets/analyze'].price,
+        dataSource: 'etherscan',
       },
     });
   } catch (error) {
@@ -464,7 +518,7 @@ export async function analyzeWallet(request: NextRequest): Promise<NextResponse>
 }
 
 /**
- * Get smart money movements
+ * Get smart money movements from real on-chain data
  */
 export async function getSmartMoney(request: NextRequest): Promise<NextResponse> {
   const searchParams = request.nextUrl.searchParams;
@@ -472,79 +526,107 @@ export async function getSmartMoney(request: NextRequest): Promise<NextResponse>
   const timeframe = searchParams.get('timeframe') || '24h';
 
   try {
-    // Smart money categories
+    // Fetch real data from multiple sources in parallel
+    const [defiTvlData, exchangeFlowData, whaleTransactions] = await Promise.all([
+      fetchDeFiTVLData(),
+      fetchExchangeFlowData(),
+      fetchWhaleAlertTransactions(1_000_000, 50),
+    ]);
+
+    // Analyze whale transactions for accumulation/distribution signals
+    const exchangeInflows = whaleTransactions.filter(tx => tx.type === 'exchange_inflow');
+    const exchangeOutflows = whaleTransactions.filter(tx => tx.type === 'exchange_outflow');
+    
+    const totalInflow = exchangeInflows.reduce((sum, tx) => sum + tx.amountUsd, 0);
+    const totalOutflow = exchangeOutflows.reduce((sum, tx) => sum + tx.amountUsd, 0);
+    const netFlow = totalOutflow - totalInflow;
+    
+    // Determine accumulation vs distribution
+    const isAccumulation = netFlow > 0;
+    
+    // Group by token for top buys/sells
+    const tokenFlows: Record<string, { buys: number; sells: number }> = {};
+    whaleTransactions.forEach(tx => {
+      const sym = tx.token.symbol;
+      if (!tokenFlows[sym]) tokenFlows[sym] = { buys: 0, sells: 0 };
+      if (tx.type === 'exchange_outflow') tokenFlows[sym].buys += tx.amountUsd;
+      else if (tx.type === 'exchange_inflow') tokenFlows[sym].sells += tx.amountUsd;
+    });
+
+    const topBuys = Object.entries(tokenFlows)
+      .filter(([_, v]) => v.buys > 0)
+      .sort((a, b) => b[1].buys - a[1].buys)
+      .slice(0, 5)
+      .map(([token, data]) => ({ token, usd: data.buys }));
+
+    const topSells = Object.entries(tokenFlows)
+      .filter(([_, v]) => v.sells > 0)
+      .sort((a, b) => b[1].sells - a[1].sells)
+      .slice(0, 5)
+      .map(([token, data]) => ({ token, usd: data.sells }));
+
+    // Categorize tokens by flow direction
+    const accumulating = Object.entries(tokenFlows)
+      .filter(([_, v]) => v.buys > v.sells * 1.2)
+      .map(([token]) => token)
+      .slice(0, 5);
+    
+    const distributing = Object.entries(tokenFlows)
+      .filter(([_, v]) => v.sells > v.buys * 1.2)
+      .map(([token]) => token)
+      .slice(0, 5);
+
+    // Find largest transactions
+    const sortedByValue = [...whaleTransactions].sort((a, b) => b.amountUsd - a.amountUsd);
+    const largestOutflow = sortedByValue.find(tx => tx.type === 'exchange_outflow');
+    const largestInflow = sortedByValue.find(tx => tx.type === 'exchange_inflow');
+
     const smartMoneyData = {
-      // Top fund/VC wallets activity
+      // Institutions/whale activity derived from real transactions
       institutions: {
-        netBuying: Math.random() > 0.5,
-        volume24h: Math.floor(Math.random() * 100_000_000),
-        topBuys: [
-          { token: 'ETH', amount: Math.random() * 10000, usd: Math.random() * 40_000_000 },
-          { token: 'SOL', amount: Math.random() * 100000, usd: Math.random() * 20_000_000 },
-          { token: 'LINK', amount: Math.random() * 500000, usd: Math.random() * 10_000_000 },
-        ],
-        topSells: [{ token: 'BTC', amount: Math.random() * 500, usd: Math.random() * 50_000_000 }],
+        netBuying: isAccumulation,
+        volume24h: totalInflow + totalOutflow,
+        topBuys,
+        topSells,
       },
 
-      // Whale accumulation/distribution
+      // Whale accumulation/distribution from real data
       whaleActivity: {
-        accumulationPhase: Math.random() > 0.4,
+        accumulationPhase: isAccumulation,
         distribution: {
-          accumulating: ['ETH', 'SOL', 'AVAX'],
-          distributing: ['DOGE', 'SHIB'],
-          neutral: ['BTC'],
+          accumulating,
+          distributing,
+          neutral: Object.keys(tokenFlows).filter(
+            t => !accumulating.includes(t) && !distributing.includes(t)
+          ).slice(0, 3),
         },
-        largestBuy: {
-          token: 'ETH',
-          amount: 5000,
-          usd: 20_000_000,
-          wallet: '0x...',
-        },
-        largestSell: {
-          token: 'BTC',
-          amount: 200,
-          usd: 20_000_000,
-          wallet: '0x...',
-        },
+        largestBuy: largestOutflow ? {
+          token: largestOutflow.token.symbol,
+          amount: largestOutflow.amount,
+          usd: largestOutflow.amountUsd,
+          wallet: largestOutflow.to.address.slice(0, 10) + '...',
+        } : null,
+        largestSell: largestInflow ? {
+          token: largestInflow.token.symbol,
+          amount: largestInflow.amount,
+          usd: largestInflow.amountUsd,
+          wallet: largestInflow.from.address.slice(0, 10) + '...',
+        } : null,
       },
 
-      // Exchange netflow
-      exchangeFlow: {
-        btc: { inflow: Math.random() * 1000, outflow: Math.random() * 1500, net: 0 },
-        eth: { inflow: Math.random() * 20000, outflow: Math.random() * 15000, net: 0 },
-        usdt: { inflow: Math.random() * 100_000_000, outflow: Math.random() * 80_000_000, net: 0 },
-      },
+      // Exchange netflow from real transaction data
+      exchangeFlow: exchangeFlowData,
 
-      // DeFi smart money
-      defiActivity: {
-        topProtocolInflows: [
-          { protocol: 'Aave', usd: Math.random() * 50_000_000 },
-          { protocol: 'Uniswap', usd: Math.random() * 30_000_000 },
-          { protocol: 'Lido', usd: Math.random() * 100_000_000 },
-        ],
-        newPositions: Math.floor(Math.random() * 1000),
-        closedPositions: Math.floor(Math.random() * 800),
-      },
+      // DeFi activity from DeFiLlama
+      defiActivity: defiTvlData,
 
-      // Signals
+      // Signals derived from real data
       signals: {
-        overallSentiment: Math.random() > 0.5 ? 'accumulation' : 'distribution',
-        confidence: Math.floor(Math.random() * 40) + 60,
-        keyInsights: [
-          'Large ETH accumulation by institutional wallets',
-          'Exchange reserves declining for BTC',
-          'Smart money rotating into L2 tokens',
-        ],
+        overallSentiment: isAccumulation ? 'accumulation' : 'distribution',
+        confidence: Math.min(90, 50 + Math.abs(netFlow / (totalInflow + totalOutflow + 1)) * 100),
+        keyInsights: generateInsights(whaleTransactions, isAccumulation, topBuys, topSells),
       },
     };
-
-    // Calculate net flows
-    smartMoneyData.exchangeFlow.btc.net =
-      smartMoneyData.exchangeFlow.btc.outflow - smartMoneyData.exchangeFlow.btc.inflow;
-    smartMoneyData.exchangeFlow.eth.net =
-      smartMoneyData.exchangeFlow.eth.outflow - smartMoneyData.exchangeFlow.eth.inflow;
-    smartMoneyData.exchangeFlow.usdt.net =
-      smartMoneyData.exchangeFlow.usdt.outflow - smartMoneyData.exchangeFlow.usdt.inflow;
 
     return NextResponse.json({
       ...smartMoneyData,
@@ -554,6 +636,7 @@ export async function getSmartMoney(request: NextRequest): Promise<NextResponse>
         fetchedAt: new Date().toISOString(),
         endpoint: '/api/premium/smart-money',
         price: PREMIUM_PRICING['/api/premium/smart-money'].price,
+        dataSource: 'etherscan,whale-alert,defillama',
         disclaimer: 'Data for informational purposes only. Not financial advice.',
       },
     });
@@ -566,6 +649,98 @@ export async function getSmartMoney(request: NextRequest): Promise<NextResponse>
       { status: 500 }
     );
   }
+}
+
+/**
+ * Fetch DeFi TVL data from DeFiLlama
+ */
+async function fetchDeFiTVLData() {
+  try {
+    const response = await fetch('https://api.llama.fi/protocols', {
+      next: { revalidate: 300 },
+    });
+
+    if (response.ok) {
+      const protocols = await response.json();
+      const topProtocols = protocols
+        .sort((a: { tvl: number }, b: { tvl: number }) => b.tvl - a.tvl)
+        .slice(0, 10);
+
+      return {
+        topProtocolInflows: topProtocols.slice(0, 5).map((p: { name: string; tvl: number; change_1d: number }) => ({
+          protocol: p.name,
+          usd: p.tvl,
+          change24h: p.change_1d || 0,
+        })),
+        totalTVL: protocols.reduce((sum: number, p: { tvl: number }) => sum + (p.tvl || 0), 0),
+      };
+    }
+  } catch (error) {
+    console.error('DeFiLlama fetch error:', error);
+  }
+
+  return { topProtocolInflows: [], totalTVL: 0 };
+}
+
+/**
+ * Calculate exchange flow from whale transactions
+ */
+async function fetchExchangeFlowData() {
+  // Use whale transactions to calculate exchange flows
+  const transactions = await fetchWhaleAlertTransactions(500_000, 100);
+  
+  const flows: Record<string, { inflow: number; outflow: number; net: number }> = {
+    BTC: { inflow: 0, outflow: 0, net: 0 },
+    ETH: { inflow: 0, outflow: 0, net: 0 },
+    USDT: { inflow: 0, outflow: 0, net: 0 },
+  };
+
+  for (const tx of transactions) {
+    const symbol = tx.token.symbol;
+    if (!flows[symbol]) flows[symbol] = { inflow: 0, outflow: 0, net: 0 };
+    
+    if (tx.type === 'exchange_inflow') {
+      flows[symbol].inflow += tx.amountUsd;
+    } else if (tx.type === 'exchange_outflow') {
+      flows[symbol].outflow += tx.amountUsd;
+    }
+    flows[symbol].net = flows[symbol].outflow - flows[symbol].inflow;
+  }
+
+  return flows;
+}
+
+/**
+ * Generate insights from whale data
+ */
+function generateInsights(
+  transactions: WhaleTransaction[],
+  isAccumulation: boolean,
+  topBuys: { token: string; usd: number }[],
+  topSells: { token: string; usd: number }[]
+): string[] {
+  const insights: string[] = [];
+
+  if (isAccumulation) {
+    insights.push('Net outflow from exchanges indicates accumulation phase');
+  } else {
+    insights.push('Net inflow to exchanges suggests distribution phase');
+  }
+
+  if (topBuys.length > 0) {
+    insights.push(`Heavy ${topBuys[0].token} withdrawals from exchanges ($${(topBuys[0].usd / 1_000_000).toFixed(1)}M)`);
+  }
+
+  if (topSells.length > 0) {
+    insights.push(`${topSells[0].token} deposits to exchanges increasing ($${(topSells[0].usd / 1_000_000).toFixed(1)}M)`);
+  }
+
+  const highValueTx = transactions.filter(tx => tx.amountUsd > 10_000_000).length;
+  if (highValueTx > 0) {
+    insights.push(`${highValueTx} whale transactions over $10M in last 24h`);
+  }
+
+  return insights.slice(0, 5);
 }
 
 // In-memory alert storage (use DB in production)

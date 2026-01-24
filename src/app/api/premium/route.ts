@@ -78,6 +78,22 @@ export async function GET() {
       // Endpoints by category
       categories: endpointsByCategory,
 
+      // Payment Networks
+      networks: [
+        { id: 'eip155:8453', name: 'Base', recommended: true, gasCost: '~$0.001' },
+        { id: 'eip155:137', name: 'Polygon', recommended: true, gasCost: '~$0.01' },
+        { id: 'eip155:42161', name: 'Arbitrum', recommended: true, gasCost: '~$0.05' },
+        { id: 'eip155:10', name: 'Optimism', recommended: false, gasCost: '~$0.05' },
+        { id: 'eip155:1', name: 'Ethereum', recommended: false, gasCost: '~$2-10' },
+      ],
+
+      // Account management
+      accountEndpoints: [
+        { path: '/api/premium/pass/status', method: 'GET', description: 'Check your active access pass' },
+        { path: '/api/premium/receipts', method: 'GET', description: 'Get your payment history and receipts' },
+        { path: '/api/premium/receipts?format=csv', method: 'GET', description: 'Export receipts as CSV' },
+      ],
+
       // Free alternatives
       freeEndpoints: [
         { path: '/api/market/coins', description: 'Basic market data (limited)' },
@@ -99,8 +115,10 @@ export async function GET() {
           'Pay only for what you use',
           'No subscription commitment',
           'Start for just $0.01',
-          'Crypto-native payments',
-          'No API key management',
+          'Crypto-native payments (USDC)',
+          'Multi-chain support (Base, Polygon, Arbitrum)',
+          'Access passes for heavy users',
+          'No API key required for x402 payments',
         ],
       },
 

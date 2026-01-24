@@ -112,7 +112,7 @@ export default function HeroArticle({ article }: HeroArticleProps) {
         </div>
 
         {/* Bottom gradient for readability */}
-        <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-gray-900 via-gray-900/80 to-transparent pointer-events-none" />
+        <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-surface-alt via-surface-alt/80 to-transparent pointer-events-none" />
       </Link>
     </section>
   );

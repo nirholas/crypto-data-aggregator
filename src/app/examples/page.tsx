@@ -496,14 +496,14 @@ if __name__ == "__main__":
 
 export default function ExamplesPage() {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
+    <div className="min-h-screen bg-gradient-to-b from-surface to-surface">
       <div className="max-w-7xl mx-auto">
         <Header />
         
         <main className="px-5 py-10">
           <div className="text-center mb-12">
             <h1 className="text-4xl font-bold mb-4">📚 Code Examples</h1>
-            <p className="text-gray-600 text-lg max-w-2xl mx-auto">
+            <p className="text-text-muted text-lg max-w-2xl mx-auto">
               Ready-to-use code examples for integrating the Free Crypto News API. 
               No API keys required — just copy, paste, and run!
             </p>

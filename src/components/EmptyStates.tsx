@@ -286,7 +286,7 @@ export function OfflineState() {
     <EmptyState
       icon={
         <svg
-          className="w-8 h-8 text-gray-400"
+          className="w-8 h-8 text-text-muted"
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
