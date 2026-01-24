@@ -70,8 +70,8 @@ export function usePriceFlash(
 
   const [flash, setFlash] = useState<FlashDirection>(null);
   const previousPriceRef = useRef<number | null>(null);
-  const timeoutRef = useRef<ReturnType<typeof setTimeout>>();
-  const debounceRef = useRef<ReturnType<typeof setTimeout>>();
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+  const debounceRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
   const prefersReducedMotion = useRef(false);
 
   // Check for reduced motion preference

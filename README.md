@@ -634,6 +634,45 @@ curl -X POST "http://localhost:3000/api/premium/ai/analyze" \
 | `/api/premium/screener`          | GET    | Advanced screener                    |
 | `/api/premium/whales`            | GET    | Premium whale tracking               |
 
+### 🌟 Power Features (Often Overlooked)
+
+These powerful endpoints are frequently missed - try them out!
+
+#### AI Intelligence
+
+| Endpoint             | Method | Description                                   |
+| -------------------- | ------ | --------------------------------------------- |
+| `/api/signals`       | GET    | AI-generated trading signals with confidence  |
+| `/api/narratives`    | GET    | Dominant market narratives (ETF, AI, DeFi)    |
+| `/api/entities`      | GET    | Named entity extraction from news             |
+| `/api/factcheck`     | POST   | Verify claims in crypto news                  |
+| `/api/clickbait`     | POST   | Score headline quality (0-100)                |
+| `/api/ask`           | POST   | Natural language Q&A about crypto             |
+| `/api/digest`        | GET    | AI-curated daily news digest                  |
+| `/api/origins`       | GET    | Trace news to original sources                |
+
+#### Advanced Analytics
+
+| Endpoint                     | Method | Description                          |
+| ---------------------------- | ------ | ------------------------------------ |
+| `/api/analytics/anomalies`   | GET    | Unusual pattern detection            |
+| `/api/analytics/sources`     | GET    | Source credibility scores            |
+| `/api/analytics/headlines`   | GET    | Track headline edits over time       |
+| `/api/bitcoin/halving`       | GET    | Halving countdown with estimates     |
+
+#### Developer Tools
+
+| Endpoint               | Method | Description                    |
+| ---------------------- | ------ | ------------------------------ |
+| `/api/v2/graphql`      | POST   | Full GraphQL API for queries   |
+| `/api/v2/batch`        | POST   | Batch multiple API calls       |
+| `/api/atom`            | GET    | Atom feed (alt to RSS)         |
+| `/api/opml`            | GET    | OPML export for RSS readers    |
+| `/api/sse`             | GET    | Server-Sent Events stream      |
+| `/api/article?url=`    | GET    | Fetch & summarize any article  |
+| `/api/v2/openapi.json` | GET    | OpenAPI 3.1 specification      |
+| `/docs/swagger`        | GET    | Interactive Swagger UI         |
+
 📚 See [docs/API.md](docs/API.md) for complete API reference with examples.
 
 ---

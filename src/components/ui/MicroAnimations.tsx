@@ -99,6 +99,10 @@ export function AnimatedNumber({
   );
 }
 
+// Alias for backward compatibility
+export { AnimatedNumber as AnimatedCounter };
+export type { AnimatedNumberProps as AnimatedCounterProps };
+
 // ===========================================
 // FadeIn - Wrapper with configurable delay and direction
 // ===========================================

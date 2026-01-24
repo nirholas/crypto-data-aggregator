@@ -31,22 +31,100 @@ See [Authentication](authentication.md) for details.
 
 ### Free Endpoints
 
-| Method | Endpoint         | Description         |
-| ------ | ---------------- | ------------------- |
-| `GET`  | `/api/market`    | Global market stats |
-| `GET`  | `/api/trending`  | Trending coins      |
-| `GET`  | `/api/news`      | Latest crypto news  |
-| `GET`  | `/api/sentiment` | Market sentiment    |
+#### News & Content
+
+| Method | Endpoint              | Description                        |
+| ------ | --------------------- | ---------------------------------- |
+| `GET`  | `/api/news`           | Latest news from all sources       |
+| `GET`  | `/api/search?q=`      | Search news by keywords            |
+| `GET`  | `/api/bitcoin`        | Bitcoin-specific news              |
+| `GET`  | `/api/defi`           | DeFi news and updates              |
+| `GET`  | `/api/breaking`       | Breaking news (last 2 hours)       |
+| `GET`  | `/api/trending`       | Trending topics analysis           |
+| `GET`  | `/api/sources`        | List of news sources               |
+| `GET`  | `/api/article?url=`   | Fetch & summarize article by URL   |
+
+#### AI & Intelligence
+
+| Method | Endpoint            | Description                           |
+| ------ | ------------------- | ------------------------------------- |
+| `GET`  | `/api/sentiment`    | Market sentiment analysis             |
+| `POST` | `/api/summarize`    | AI article summarization              |
+| `GET`  | `/api/signals`      | AI-generated trading signals          |
+| `GET`  | `/api/narratives`   | Dominant market narratives & themes   |
+| `GET`  | `/api/entities`     | Named entity recognition              |
+| `POST` | `/api/factcheck`    | Fact-check crypto claims              |
+| `POST` | `/api/clickbait`    | Headline quality/clickbait scoring    |
+| `GET`  | `/api/digest`       | AI-curated daily news digest          |
+| `POST` | `/api/ask`          | Natural language Q&A about crypto     |
+| `GET`  | `/api/classify`     | Topic classification & categorization |
+| `POST` | `/api/analyze`      | Multi-function AI analysis            |
+
+#### Market Data
+
+| Method | Endpoint              | Description                    |
+| ------ | --------------------- | ------------------------------ |
+| `GET`  | `/api/market`         | Global market stats            |
+| `GET`  | `/api/v2/coins`       | Top coins with market data     |
+| `GET`  | `/api/v2/coin/:id`    | Detailed coin information      |
+| `GET`  | `/api/v2/global`      | Global crypto market metrics   |
+| `GET`  | `/api/v2/defi`        | DeFi TVL & top protocols       |
+| `GET`  | `/api/v2/gas`         | Multi-chain gas prices         |
+| `GET`  | `/api/v2/trending`    | Trending coins                 |
+| `GET`  | `/api/v2/search`      | Search coins by name/symbol    |
+| `GET`  | `/api/v2/volatility`  | Volatility metrics             |
+| `GET`  | `/api/v2/ticker`      | Real-time ticker data          |
+| `GET`  | `/api/exchanges`      | Exchange listings & volumes    |
+| `GET`  | `/api/bitcoin/halving`| Bitcoin halving countdown      |
+
+#### Analytics
+
+| Method | Endpoint                   | Description                        |
+| ------ | -------------------------- | ---------------------------------- |
+| `GET`  | `/api/analytics/anomalies` | Unusual pattern detection          |
+| `GET`  | `/api/analytics/sources`   | Source credibility scores          |
+| `GET`  | `/api/analytics/headlines` | Track headline changes over time   |
+| `GET`  | `/api/origins`             | Trace news to original sources     |
+| `GET`  | `/api/stats`               | API usage & aggregation statistics |
+
+#### Feeds & Integration
+
+| Method | Endpoint    | Description                      |
+| ------ | ----------- | -------------------------------- |
+| `GET`  | `/api/rss`  | RSS feed output                  |
+| `GET`  | `/api/atom` | Atom feed format                 |
+| `GET`  | `/api/opml` | OPML export for RSS readers      |
+| `GET`  | `/api/sse`  | Server-Sent Events live stream   |
+| `WS`   | `/api/ws`   | WebSocket real-time connection   |
+
+#### Developer Tools
+
+| Method | Endpoint              | Description                    |
+| ------ | --------------------- | ------------------------------ |
+| `POST` | `/api/v2/graphql`     | Full GraphQL API               |
+| `POST` | `/api/v2/batch`       | Batch multiple API calls       |
+| `GET`  | `/api/webhooks`       | Manage webhook subscriptions   |
+| `GET`  | `/api/health`         | API health check               |
+| `GET`  | `/api/v2/openapi.json`| OpenAPI 3.1 specification      |
+| `GET`  | `/docs/swagger`       | Interactive Swagger UI         |
 
 ### Premium Endpoints
 
-| Method | Endpoint                          | Price  | Description        |
-| ------ | --------------------------------- | ------ | ------------------ |
-| `GET`  | `/api/premium/market/coins`       | $0.001 | Extended coin data |
-| `GET`  | `/api/premium/market/history`     | $0.005 | Historical data    |
-| `POST` | `/api/premium/analytics/screener` | $0.01  | Advanced screener  |
-| `GET`  | `/api/premium/export/portfolio`   | $0.10  | Portfolio export   |
-| `POST` | `/api/premium/ai/analyze`         | $0.05  | AI analysis        |
+| Method | Endpoint                          | Price  | Description              |
+| ------ | --------------------------------- | ------ | ------------------------ |
+| `GET`  | `/api/premium/market/coins`       | $0.001 | Extended coin data       |
+| `GET`  | `/api/premium/market/history`     | $0.005 | Historical OHLCV data    |
+| `POST` | `/api/premium/analytics/screener` | $0.01  | Advanced screener        |
+| `GET`  | `/api/premium/export/portfolio`   | $0.10  | Portfolio CSV export     |
+| `POST` | `/api/premium/ai/analyze`         | $0.05  | Deep AI analysis         |
+| `POST` | `/api/premium/ai/compare`         | $0.03  | AI coin comparison       |
+| `GET`  | `/api/premium/ai/signals`         | $0.05  | AI trading signals       |
+| `GET`  | `/api/premium/ai/sentiment`       | $0.02  | Deep sentiment analysis  |
+| `GET`  | `/api/premium/whales`             | $0.05  | Whale wallet tracking    |
+| `GET`  | `/api/premium/smart-money`        | $0.05  | Institutional flows      |
+| `GET`  | `/api/premium/portfolio/analytics`| $0.02  | Portfolio analytics      |
+| `GET`  | `/api/premium/defi`               | $0.01  | Extended DeFi data       |
+| `GET`  | `/api/premium/alerts`             | $0.10  | Custom price alerts      |
 
 ## Response Format
 

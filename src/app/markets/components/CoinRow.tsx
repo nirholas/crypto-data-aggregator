@@ -2,24 +2,48 @@
 
 /**
  * Coin Row Component
- * Individual row in the coins table
+ * Individual row in the coins table with premium animations
  */
 
 import Link from 'next/link';
-import Image from 'next/image';
+import { useRef, useEffect, useState } from 'react';
 import type { TokenPrice } from '@/lib/market-data';
-import { formatPrice, formatNumber, formatPercent } from '@/lib/market-data';
 import SparklineCell from './SparklineCell';
 import { useWatchlist } from '@/components/watchlist/WatchlistProvider';
+import {
+  FormattedNumber,
+  PriceDisplay,
+  PercentChange,
+  MarketCapDisplay,
+  SupplyDisplay,
+} from '@/components/ui/FormattedNumber';
+import { TokenIcon } from '@/components/ui/TokenWithChain';
 
 interface CoinRowProps {
   coin: TokenPrice;
   showWatchlist?: boolean;
+  /** Stagger index for animation delay */
+  staggerIndex?: number;
 }
 
-export default function CoinRow({ coin, showWatchlist = false }: CoinRowProps) {
+export default function CoinRow({ coin, showWatchlist = false, staggerIndex }: CoinRowProps) {
   const { addToWatchlist, removeFromWatchlist, isWatchlisted } = useWatchlist();
   const isInWatchlist = isWatchlisted(coin.id);
+  
+  // Track price changes for flash effect
+  const previousPrice = useRef<number>(coin.current_price);
+  const [priceFlash, setPriceFlash] = useState<'up' | 'down' | null>(null);
+
+  useEffect(() => {
+    if (previousPrice.current !== coin.current_price) {
+      const direction = coin.current_price > previousPrice.current ? 'up' : 'down';
+      setPriceFlash(direction);
+      previousPrice.current = coin.current_price;
+
+      const timeout = setTimeout(() => setPriceFlash(null), 500);
+      return () => clearTimeout(timeout);
+    }
+  }, [coin.current_price]);
   
   const supplyPercentage = coin.max_supply
     ? (coin.circulating_supply / coin.max_supply) * 100
@@ -35,25 +59,34 @@ export default function CoinRow({ coin, showWatchlist = false }: CoinRowProps) {
     }
   };
 
+  // Animation style for staggered entrance
+  const animationStyle = staggerIndex !== undefined
+    ? {
+        animationDelay: `${staggerIndex * 30}ms`,
+        animationFillMode: 'both' as const,
+      }
+    : {};
+
+  // Price flash class
+  const priceFlashClass = priceFlash === 'up' ? 'price-flash-up' : priceFlash === 'down' ? 'price-flash-down' : '';
+
   return (
-    <tr className="border-b border-surface-border hover:bg-surface-hover/50 transition-all duration-200 group cursor-pointer">
+    <tr 
+      className={`border-b border-surface-border row-highlight group cursor-pointer ${staggerIndex !== undefined ? 'animate-slide-up-fade' : ''}`}
+      style={animationStyle}
+    >
       {/* Rank */}
       <td className="p-4 text-text-muted text-sm font-medium">{coin.market_cap_rank}</td>
 
       {/* Coin */}
       <td className="p-4">
         <Link href={`/coin/${coin.id}`} className="flex items-center gap-3">
-          <div className="relative w-8 h-8 flex-shrink-0">
-            {coin.image && (
-              <Image
-                src={coin.image}
-                alt={coin.name}
-                fill
-                className="rounded-full object-cover"
-                unoptimized
-              />
-            )}
-          </div>
+          <TokenIcon
+            symbol={coin.symbol}
+            name={coin.name}
+            iconUrl={coin.image}
+            size="md"
+          />
           <div>
             <span className="font-medium text-text-primary group-hover:text-primary transition-colors">
               {coin.name}
@@ -66,57 +99,47 @@ export default function CoinRow({ coin, showWatchlist = false }: CoinRowProps) {
       </td>
 
       {/* Price */}
-      <td className="p-4 text-right font-medium text-text-primary">
-        {formatPrice(coin.current_price)}
+      <td className={`p-4 text-right ${priceFlashClass}`}>
+        <PriceDisplay value={coin.current_price} className="font-medium" />
       </td>
 
       {/* 24h % */}
-      <td
-        className={`p-4 text-right font-medium hidden sm:table-cell ${
-          (coin.price_change_percentage_24h || 0) >= 0
-            ? 'text-gain'
-            : 'text-loss'
-        }`}
-      >
-        {formatPercent(coin.price_change_percentage_24h)}
+      <td className="p-4 text-right hidden sm:table-cell">
+        <PercentChange value={coin.price_change_percentage_24h} />
       </td>
 
       {/* 7d % */}
-      <td
-        className={`p-4 text-right font-medium hidden md:table-cell ${
-          (coin.price_change_percentage_7d_in_currency || 0) >= 0
-            ? 'text-gain'
-            : 'text-loss'
-        }`}
-      >
-        {formatPercent(coin.price_change_percentage_7d_in_currency)}
+      <td className="p-4 text-right hidden md:table-cell">
+        <PercentChange value={coin.price_change_percentage_7d_in_currency} />
       </td>
 
       {/* Market Cap */}
-      <td className="p-4 text-right text-text-secondary hidden lg:table-cell">
-        ${formatNumber(coin.market_cap)}
+      <td className="p-4 text-right hidden lg:table-cell">
+        <MarketCapDisplay value={coin.market_cap} className="text-text-secondary" />
       </td>
 
       {/* 24h Volume */}
-      <td className="p-4 text-right text-text-secondary hidden xl:table-cell">
-        ${formatNumber(coin.total_volume)}
+      <td className="p-4 text-right hidden xl:table-cell">
+        <FormattedNumber value={coin.total_volume} type="currency" className="text-text-secondary" />
       </td>
 
       {/* Circulating Supply */}
       <td className="p-4 text-right hidden xl:table-cell">
         <div className="flex flex-col items-end">
-          <span className="text-text-secondary">
-            {formatNumber(coin.circulating_supply)} {coin.symbol.toUpperCase()}
-          </span>
+          <SupplyDisplay
+            value={coin.circulating_supply}
+            symbol={coin.symbol}
+            className="text-text-secondary"
+          />
           {supplyPercentage !== null && (
             <div className="w-full max-w-[80px] mt-1">
               <div className="h-1.5 bg-surface-hover rounded-full overflow-hidden">
                 <div
-                  className="h-full bg-blue-500 rounded-full"
+                  className="h-full bg-primary rounded-full"
                   style={{ width: `${Math.min(supplyPercentage, 100)}%` }}
                 />
               </div>
-              <span className="text-xs text-text-muted">
+              <span className="text-xs text-text-muted font-mono tabular-nums">
                 {supplyPercentage.toFixed(0)}%
               </span>
             </div>

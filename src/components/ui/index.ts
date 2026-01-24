@@ -49,29 +49,96 @@ export type { AvatarProps, AvatarGroupProps } from './Avatar';
 export { default as Skeleton, TextSkeleton, AvatarSkeleton, CardSkeleton, TableRowSkeleton, CoinRowSkeleton, ChartSkeleton } from './Skeleton';
 export type { SkeletonProps } from './Skeleton';
 
+// Enhanced Skeleton Component
+export {
+  EnhancedSkeleton,
+  SkeletonStagger,
+  EnhancedTextSkeleton,
+  EnhancedAvatarSkeleton,
+  EnhancedCardSkeleton,
+  EnhancedTableRowSkeleton,
+  EnhancedChartSkeleton,
+} from './EnhancedSkeleton';
+export type { EnhancedSkeletonProps, SkeletonStaggerProps } from './EnhancedSkeleton';
+
 // Sparkline Component
 export { default as Sparkline, SparklineWithLoader, InlineSparkline } from './Sparkline';
 export type { SparklineProps } from './Sparkline';
 
 // Micro-Animation Components
 export {
+  AnimatedNumber,
   AnimatedCounter,
   Typewriter,
+  FadeIn,
   FadeStagger,
+  RippleButton,
   Ripple,
   Float,
   Shake,
   PulseGlow,
   PriceFlash,
+  PriceFlashWrapper,
+  ValueUpdate,
+  StaggerContainer,
+  SkeletonWave,
   Confetti,
 } from './MicroAnimations';
 export type {
+  AnimatedNumberProps,
   AnimatedCounterProps,
   TypewriterProps,
+  FadeInProps,
   FadeStaggerProps,
+  RippleButtonProps,
   RippleProps,
   FloatProps,
   ShakeProps,
   PulseGlowProps,
   PriceFlashProps,
+  PriceFlashWrapperProps,
+  ValueUpdateProps,
+  StaggerContainerProps,
+  SkeletonWaveProps,
 } from './MicroAnimations';
+
+// FormattedNumber Components
+export {
+  FormattedNumber,
+  PriceDisplay,
+  PercentChange,
+  MarketCapDisplay,
+  SupplyDisplay,
+} from './FormattedNumber';
+export type {
+  FormattedNumberProps,
+  PriceDisplayProps,
+  PercentChangeProps,
+  MarketCapDisplayProps,
+  SupplyDisplayProps,
+  NumberType,
+} from './FormattedNumber';
+
+// ChainBadge Components (enhanced)
+export {
+  ChainBadge as ChainBadgeNew,
+  ChainBadgeGroup,
+  ChainSelectorItem,
+} from './ChainBadge';
+export type {
+  ChainBadgeProps as ChainBadgeNewProps,
+  ChainBadgeGroupProps,
+  ChainSelectorItemProps,
+} from './ChainBadge';
+
+// TokenWithChain Components
+export {
+  TokenWithChain,
+  TokenIcon,
+  TokenWithInfo,
+} from './TokenWithChain';
+export type {
+  TokenWithChainProps,
+  TokenIconProps,
+  TokenWithInfoProps,
+} from './TokenWithChain';

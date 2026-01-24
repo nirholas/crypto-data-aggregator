@@ -563,3 +563,235 @@ html, body {
     transition-duration: 0.01ms !important;
   }
 }
+
+/* ===========================================
+   LIVE PRICE INDICATORS
+   =========================================== */
+
+/* Pulsing green live dot */
+.live-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  background-color: var(--gain);
+  border-radius: 50%;
+  animation: live-dot-pulse 2s ease-in-out infinite;
+  box-shadow: 0 0 0 0 rgba(22, 199, 132, 0.7);
+}
+
+.live-dot-small {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  background-color: var(--gain);
+  border-radius: 50%;
+  animation: live-dot-pulse 2s ease-in-out infinite;
+}
+
+@keyframes live-dot-pulse {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(22, 199, 132, 0.7);
+    opacity: 1;
+  }
+  50% {
+    box-shadow: 0 0 0 6px rgba(22, 199, 132, 0);
+    opacity: 0.8;
+  }
+}
+
+/* Subtle pulse while updating */
+.price-updating {
+  animation: price-update-pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes price-update-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.85; }
+}
+
+/* ===========================================
+   CONNECTION STATUS INDICATORS
+   =========================================== */
+
+.connection-status-dot {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+}
+
+.connection-status-dot-connected {
+  background-color: var(--gain);
+  box-shadow: 0 0 8px rgba(22, 199, 132, 0.5);
+  animation: connection-pulse-green 2s ease-in-out infinite;
+}
+
+.connection-status-dot-connecting {
+  background-color: var(--warning);
+  animation: connection-blink 1s ease-in-out infinite;
+}
+
+.connection-status-dot-disconnected {
+  background-color: var(--text-muted);
+}
+
+.connection-status-dot-error {
+  background-color: var(--loss);
+  animation: connection-pulse-red 1.5s ease-in-out infinite;
+}
+
+@keyframes connection-pulse-green {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(22, 199, 132, 0.6); }
+  50% { box-shadow: 0 0 0 4px rgba(22, 199, 132, 0); }
+}
+
+@keyframes connection-pulse-red {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(234, 57, 67, 0.6); }
+  50% { box-shadow: 0 0 0 4px rgba(234, 57, 67, 0); }
+}
+
+@keyframes connection-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+/* ===========================================
+   ENHANCED SKELETON ANIMATIONS
+   =========================================== */
+
+/* Enhanced skeleton with smoother wave */
+.skeleton-enhanced {
+  background: linear-gradient(
+    90deg,
+    var(--surface) 0%,
+    var(--surface) 35%,
+    var(--surface-hover) 50%,
+    var(--surface) 65%,
+    var(--surface) 100%
+  );
+  background-size: 300% 100%;
+  animation: skeleton-wave-enhanced 1.8s ease-in-out infinite;
+  border-radius: 0.25rem;
+}
+
+@keyframes skeleton-wave-enhanced {
+  0% { background-position: 100% 50%; }
+  100% { background-position: -100% 50%; }
+}
+
+/* Coin row skeleton stagger animation */
+.coin-row-skeleton {
+  opacity: 0;
+  animation: coin-row-fade-in 0.4s ease-out forwards;
+}
+
+@keyframes coin-row-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Stagger fade directions */
+.stagger-fade-down > .stagger-item {
+  opacity: 0;
+  animation: stagger-fade-down 0.4s ease-out forwards;
+}
+
+.stagger-fade-up > .stagger-item {
+  opacity: 0;
+  animation: stagger-fade-up 0.4s ease-out forwards;
+}
+
+.stagger-fade-left > .stagger-item {
+  opacity: 0;
+  animation: stagger-fade-left 0.4s ease-out forwards;
+}
+
+.stagger-fade-right > .stagger-item {
+  opacity: 0;
+  animation: stagger-fade-right 0.4s ease-out forwards;
+}
+
+@keyframes stagger-fade-down {
+  from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes stagger-fade-up {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes stagger-fade-left {
+  from { opacity: 0; transform: translateX(8px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes stagger-fade-right {
+  from { opacity: 0; transform: translateX(-8px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+/* Price flash with border highlight */
+.price-flash-border-up {
+  animation: flash-border-green 0.5s ease;
+}
+
+.price-flash-border-down {
+  animation: flash-border-red 0.5s ease;
+}
+
+@keyframes flash-border-green {
+  0% { border-color: transparent; }
+  50% { border-color: var(--gain); box-shadow: 0 0 8px rgba(22, 199, 132, 0.3); }
+  100% { border-color: transparent; }
+}
+
+@keyframes flash-border-red {
+  0% { border-color: transparent; }
+  50% { border-color: var(--loss); box-shadow: 0 0 8px rgba(234, 57, 67, 0.3); }
+  100% { border-color: transparent; }
+}
+
+/* Skeleton pulse variant */
+.skeleton-pulse {
+  background: var(--surface);
+  animation: skeleton-pulse-animation 1.5s ease-in-out infinite;
+}
+
+@keyframes skeleton-pulse-animation {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+/* Prefers reduced motion - disable all animations */
+@media (prefers-reduced-motion: reduce) {
+  .live-dot,
+  .live-dot-small,
+  .price-updating,
+  .skeleton-enhanced,
+  .skeleton-wave,
+  .skeleton-pulse,
+  .coin-row-skeleton,
+  .connection-status-dot-connected,
+  .connection-status-dot-connecting,
+  .connection-status-dot-error {
+    animation: none !important;
+  }
+  
+  .skeleton-enhanced,
+  .skeleton-wave {
+    background: var(--surface-hover) !important;
+  }
+  
+  .coin-row-skeleton {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}

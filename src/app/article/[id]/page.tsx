@@ -22,7 +22,7 @@ import { RelatedArticles } from '@/components/RelatedArticles';
 import TrendingSidebar from '@/components/TrendingSidebar';
 import { ArticleStructuredData, BreadcrumbStructuredData } from '@/components/StructuredData';
 import ShareButtons from '@/components/ShareButtons';
-import { ArticleReactions } from '@/components/ArticleReactions';
+import ArticleReactions from '@/components/ArticleReactions';
 import { BookmarkButton } from '@/components/BookmarkButton';
 
 interface Props {
