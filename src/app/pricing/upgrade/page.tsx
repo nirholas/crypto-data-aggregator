@@ -41,8 +41,8 @@ const tierIcons = {
 };
 
 const tierColors = {
-  free: 'text-neutral-500',
-  pro: 'text-blue-500',
+  free: 'text-text-muted',
+  pro: 'text-primary',
   enterprise: 'text-purple-500',
 };
 
@@ -487,7 +487,7 @@ function UpgradeContent() {
                 )}
               </button>
 
-              <p className="text-xs text-center text-neutral-500 mt-3">
+              <p className="text-xs text-center text-text-muted mt-3">
                 Powered by x402 protocol • Pay with USDC on Base
               </p>
             </div>

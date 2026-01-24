@@ -106,7 +106,7 @@ export function PushNotifications() {
     localStorage.removeItem('notification-history');
   };
 
-  // Simulate receiving notifications (in real app, this would be from a push service)
+  // Poll for breaking news and show push notifications
   useEffect(() => {
     if (permission !== 'granted') return;
 
@@ -121,8 +121,9 @@ export function PushNotifications() {
           const lastNotified = localStorage.getItem('last-notified-article');
 
           if (article.url !== lastNotified) {
-            // New breaking article
-            // Uncomment to enable auto-notifications:
+            // New breaking article found
+            // Auto-notifications are disabled by default to avoid spam
+            // Uncomment below to enable automatic push notifications:
             // showNotification(
             //   '🚨 Breaking News',
             //   article.title,

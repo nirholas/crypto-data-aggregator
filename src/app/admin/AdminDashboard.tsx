@@ -271,10 +271,10 @@ export default function AdminDashboard() {
   // Login screen
   if (!authenticated) {
     return (
-      <div className="min-h-screen bg-black flex items-center justify-center p-4">
-        <div className="bg-neutral-900 rounded-2xl p-8 w-full max-w-md border border-neutral-800">
+      <div className="min-h-screen bg-background flex items-center justify-center p-4">
+        <div className="bg-background-secondary rounded-2xl p-8 w-full max-w-md border border-surface">
           <h1 className="text-2xl font-bold mb-2">Admin Dashboard</h1>
-          <p className="text-neutral-400 text-sm mb-6">Enter your admin token to continue</p>
+          <p className="text-text-secondary text-sm mb-6">Enter your admin token to continue</p>
           <form onSubmit={handleLogin} className="space-y-4">
             <div>
               <label htmlFor="token" className="block text-sm font-medium mb-2">
@@ -285,7 +285,7 @@ export default function AdminDashboard() {
                 id="token"
                 value={token}
                 onChange={(e) => setToken(e.target.value)}
-                className="w-full px-4 py-3 bg-neutral-800 border border-neutral-700 rounded-lg placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent"
+                className="w-full px-4 py-3 bg-surface border border-surface-border rounded-lg placeholder-text-muted focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent"
                 placeholder="Enter admin token"
                 required
               />
@@ -307,7 +307,7 @@ export default function AdminDashboard() {
   // Loading state
   if (loading && !data && !keyStats) {
     return (
-      <div className="min-h-screen bg-black flex items-center justify-center">
+      <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-amber-500"></div>
       </div>
     );
@@ -316,7 +316,7 @@ export default function AdminDashboard() {
   // Error state
   if (error && !data && !keyStats) {
     return (
-      <div className="min-h-screen bg-black flex items-center justify-center p-4">
+      <div className="min-h-screen bg-background flex items-center justify-center p-4">
         <div className="bg-red-900/20 border border-red-500/50 rounded-xl p-6 text-center">
           <p className="text-red-400">{error}</p>
           <button
@@ -386,13 +386,13 @@ export default function AdminDashboard() {
   };
 
   return (
-    <div className="min-h-screen bg-black p-4 md:p-8">
+    <div className="min-h-screen bg-background p-4 md:p-8">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
           <div>
             <h1 className="text-3xl font-bold">Admin Dashboard</h1>
-            <p className="text-neutral-400 mt-1">Monitor API keys, usage, and system health</p>
+            <p className="text-text-secondary mt-1">Monitor API keys, usage, and system health</p>
           </div>
           <div className="flex items-center gap-4">
             {data?.health && (
@@ -404,7 +404,7 @@ export default function AdminDashboard() {
             )}
             <button
               onClick={fetchAllData}
-              className="p-2 bg-neutral-800 hover:bg-neutral-700 rounded-lg transition-colors"
+              className="p-2 bg-surface hover:bg-surface-border rounded-lg transition-colors"
               title="Refresh"
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -420,7 +420,7 @@ export default function AdminDashboard() {
         </div>
 
         {/* Tabs */}
-        <div className="flex gap-2 mb-8 border-b border-neutral-800">
+        <div className="flex gap-2 mb-8 border-b border-surface">
           {[
             { id: 'overview', label: 'API Key Analytics', icon: '📊' },
             { id: 'keys', label: 'Manage Keys', icon: '🔑' },
@@ -430,7 +430,7 @@ export default function AdminDashboard() {
               key={tab.id}
               onClick={() => setActiveTab(tab.id as TabType)}
               className={`px-4 py-3 text-sm font-medium transition-colors relative ${
-                activeTab === tab.id ? 'text-amber-400' : 'text-neutral-400 hover:text-neutral-200'
+                activeTab === tab.id ? 'text-amber-400' : 'text-text-secondary hover:text-text-primary'
               }`}
             >
               <span className="mr-2">{tab.icon}</span>
@@ -471,7 +471,7 @@ export default function AdminDashboard() {
               <UsageChart data={keyStats.usageByDay} title="Daily API Requests (Last 30 Days)" />
 
               {/* Tier Distribution */}
-              <div className="bg-neutral-900 rounded-xl p-6 border border-neutral-800">
+              <div className="bg-background-secondary rounded-xl p-6 border border-surface">
                 <h3 className="text-lg font-semibold mb-4">Keys by Tier</h3>
                 <TierDistribution
                   free={keyStats.byTier.free}
@@ -483,36 +483,36 @@ export default function AdminDashboard() {
 
             {/* Activity Stats */}
             <div className="grid md:grid-cols-3 gap-4">
-              <div className="bg-neutral-900 rounded-xl p-6 border border-neutral-800">
+              <div className="bg-background-secondary rounded-xl p-6 border border-surface">
                 <div className="flex items-center gap-3 mb-4">
                   <div className="w-10 h-10 rounded-full bg-green-500/20 flex items-center justify-center">
                     <span className="text-green-400">24h</span>
                   </div>
                   <div>
                     <p className="text-2xl font-bold">{keyStats.active24h}</p>
-                    <p className="text-sm text-neutral-400">Active last 24 hours</p>
+                    <p className="text-sm text-text-secondary">Active last 24 hours</p>
                   </div>
                 </div>
               </div>
-              <div className="bg-neutral-900 rounded-xl p-6 border border-neutral-800">
+              <div className="bg-background-secondary rounded-xl p-6 border border-surface">
                 <div className="flex items-center gap-3 mb-4">
                   <div className="w-10 h-10 rounded-full bg-blue-500/20 flex items-center justify-center">
                     <span className="text-blue-400">7d</span>
                   </div>
                   <div>
                     <p className="text-2xl font-bold">{keyStats.active7d}</p>
-                    <p className="text-sm text-neutral-400">Active last 7 days</p>
+                    <p className="text-sm text-text-secondary">Active last 7 days</p>
                   </div>
                 </div>
               </div>
-              <div className="bg-neutral-900 rounded-xl p-6 border border-neutral-800">
+              <div className="bg-background-secondary rounded-xl p-6 border border-surface">
                 <div className="flex items-center gap-3 mb-4">
                   <div className="w-10 h-10 rounded-full bg-purple-500/20 flex items-center justify-center">
                     <span className="text-purple-400">30d</span>
                   </div>
                   <div>
                     <p className="text-2xl font-bold">{keyStats.active30d}</p>
-                    <p className="text-sm text-neutral-400">Active last 30 days</p>
+                    <p className="text-sm text-text-secondary">Active last 30 days</p>
                   </div>
                 </div>
               </div>
@@ -520,12 +520,12 @@ export default function AdminDashboard() {
 
             {/* Top Users Table */}
             {keyStats.topKeys.length > 0 && (
-              <div className="bg-neutral-900 rounded-xl p-6 border border-neutral-800">
+              <div className="bg-background-secondary rounded-xl p-6 border border-surface">
                 <h3 className="text-lg font-semibold mb-4">Top 10 API Keys by Usage</h3>
                 <div className="overflow-x-auto">
                   <table className="w-full">
                     <thead>
-                      <tr className="text-left text-neutral-400 border-b border-neutral-800">
+                      <tr className="text-left text-text-secondary border-b border-surface">
                         <th className="pb-3 font-medium">Key</th>
                         <th className="pb-3 font-medium">Email</th>
                         <th className="pb-3 font-medium">Tier</th>
@@ -536,7 +536,7 @@ export default function AdminDashboard() {
                     </thead>
                     <tbody>
                       {keyStats.topKeys.map((key) => (
-                        <tr key={key.id} className="border-b border-neutral-800/50">
+                        <tr key={key.id} className="border-b border-surface/50">
                           <td className="py-3 font-mono text-sm">{key.keyPrefix}...</td>
                           <td className="py-3 text-sm">{key.email}</td>
                           <td className="py-3">
@@ -550,7 +550,7 @@ export default function AdminDashboard() {
                             {formatNumber(key.usageToday)}
                           </td>
                           <td className="py-3 text-right">{formatNumber(key.usageMonth)}</td>
-                          <td className="py-3 text-right text-sm text-neutral-400">
+                          <td className="py-3 text-right text-sm text-text-secondary">
                             {key.lastUsedAt ? formatRelativeTime(key.lastUsedAt) : 'Never'}
                           </td>
                         </tr>
@@ -566,7 +566,7 @@ export default function AdminDashboard() {
         {activeTab === 'keys' && (
           <div className="space-y-6">
             {/* Filters */}
-            <div className="bg-neutral-900 rounded-xl p-4 border border-neutral-800">
+            <div className="bg-background-secondary rounded-xl p-4 border border-surface">
               <div className="flex flex-col md:flex-row gap-4">
                 <div className="flex-1">
                   <input
@@ -577,7 +577,7 @@ export default function AdminDashboard() {
                       setSearchQuery(e.target.value);
                       setCurrentPage(1);
                     }}
-                    className="w-full px-4 py-2 bg-neutral-800 border border-neutral-700 rounded-lg placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-amber-500"
+                    className="w-full px-4 py-2 bg-surface border border-surface-border rounded-lg placeholder-text-muted focus:outline-none focus:ring-2 focus:ring-amber-500"
                   />
                 </div>
                 <select
@@ -586,7 +586,7 @@ export default function AdminDashboard() {
                     setTierFilter(e.target.value);
                     setCurrentPage(1);
                   }}
-                  className="px-4 py-2 bg-neutral-800 border border-neutral-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500"
+                  className="px-4 py-2 bg-surface border border-surface-border rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500"
                 >
                   <option value="">All Tiers</option>
                   <option value="free">Free</option>
@@ -599,7 +599,7 @@ export default function AdminDashboard() {
                     setStatusFilter(e.target.value);
                     setCurrentPage(1);
                   }}
-                  className="px-4 py-2 bg-neutral-800 border border-neutral-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500"
+                  className="px-4 py-2 bg-surface border border-surface-border rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500"
                 >
                   <option value="">All Status</option>
                   <option value="active">Active</option>
@@ -613,7 +613,7 @@ export default function AdminDashboard() {
                     setSortOrder(order as 'asc' | 'desc');
                     setCurrentPage(1);
                   }}
-                  className="px-4 py-2 bg-neutral-800 border border-neutral-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500"
+                  className="px-4 py-2 bg-surface border border-surface-border rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500"
                 >
                   <option value="createdAt-desc">Newest First</option>
                   <option value="createdAt-asc">Oldest First</option>
@@ -627,11 +627,11 @@ export default function AdminDashboard() {
             {/* Keys Table */}
             {keysList && (
               <>
-                <div className="bg-neutral-900 rounded-xl border border-neutral-800 overflow-hidden">
+                <div className="bg-background-secondary rounded-xl border border-surface overflow-hidden">
                   <div className="overflow-x-auto">
                     <table className="w-full">
                       <thead>
-                        <tr className="text-left text-neutral-400 bg-neutral-800/50">
+                        <tr className="text-left text-text-secondary bg-surface/50">
                           <th className="px-4 py-3 font-medium">Key</th>
                           <th className="px-4 py-3 font-medium">Email</th>
                           <th className="px-4 py-3 font-medium">Tier</th>
@@ -645,12 +645,12 @@ export default function AdminDashboard() {
                         {keysList.keys.map((key) => (
                           <tr
                             key={key.id}
-                            className="border-t border-neutral-800 hover:bg-neutral-800/30"
+                            className="border-t border-surface hover:bg-surface/30"
                           >
                             <td className="px-4 py-3">
                               <div>
                                 <span className="font-mono text-sm">{key.keyPrefix}...</span>
-                                <p className="text-xs text-neutral-500">{key.name}</p>
+                                <p className="text-xs text-text-muted">{key.name}</p>
                               </div>
                             </td>
                             <td className="px-4 py-3 text-sm">{key.email}</td>
@@ -677,14 +677,14 @@ export default function AdminDashboard() {
                                 <span className="text-amber-400 font-medium">
                                   {formatNumber(key.usageToday)}
                                 </span>
-                                <span className="text-neutral-500">
+                                <span className="text-text-muted">
                                   {' '}
                                   / {formatNumber(key.usageMonth)}
                                 </span>
                               </div>
-                              <p className="text-xs text-neutral-500">today / month</p>
+                              <p className="text-xs text-text-muted">today / month</p>
                             </td>
-                            <td className="px-4 py-3 text-right text-sm text-neutral-400">
+                            <td className="px-4 py-3 text-right text-sm text-text-secondary">
                               {formatDate(key.createdAt)}
                             </td>
                             <td className="px-4 py-3 text-right">
@@ -711,7 +711,7 @@ export default function AdminDashboard() {
                   </div>
 
                   {keysList.keys.length === 0 && (
-                    <div className="p-8 text-center text-neutral-500">
+                    <div className="p-8 text-center text-text-muted">
                       No API keys found matching your criteria
                     </div>
                   )}
@@ -720,7 +720,7 @@ export default function AdminDashboard() {
                 {/* Pagination */}
                 {keysList.pagination.totalPages > 1 && (
                   <div className="flex items-center justify-between">
-                    <p className="text-sm text-neutral-400">
+                    <p className="text-sm text-text-secondary">
                       Showing {(keysList.pagination.page - 1) * keysList.pagination.limit + 1} -{' '}
                       {Math.min(
                         keysList.pagination.page * keysList.pagination.limit,
@@ -732,17 +732,17 @@ export default function AdminDashboard() {
                       <button
                         onClick={() => setCurrentPage((p) => p - 1)}
                         disabled={!keysList.pagination.hasPrev}
-                        className="px-4 py-2 bg-neutral-800 hover:bg-neutral-700 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="px-4 py-2 bg-surface hover:bg-surface-border rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                       >
                         Previous
                       </button>
-                      <span className="px-4 py-2 bg-neutral-900 rounded-lg">
+                      <span className="px-4 py-2 bg-background-secondary rounded-lg">
                         {keysList.pagination.page} / {keysList.pagination.totalPages}
                       </span>
                       <button
                         onClick={() => setCurrentPage((p) => p + 1)}
                         disabled={!keysList.pagination.hasNext}
-                        className="px-4 py-2 bg-neutral-800 hover:bg-neutral-700 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="px-4 py-2 bg-surface hover:bg-surface-border rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                       >
                         Next
                       </button>
@@ -753,7 +753,7 @@ export default function AdminDashboard() {
             )}
 
             {!keysList && (
-              <div className="bg-neutral-900 rounded-xl p-8 border border-neutral-800 text-center text-neutral-500">
+              <div className="bg-background-secondary rounded-xl p-8 border border-surface text-center text-text-muted">
                 Loading API keys...
               </div>
             )}
@@ -776,7 +776,7 @@ export default function AdminDashboard() {
             {/* Charts Row */}
             <div className="grid md:grid-cols-2 gap-6">
               {/* Calls by Hour */}
-              <div className="bg-neutral-900 rounded-xl p-6 border border-neutral-800">
+              <div className="bg-background-secondary rounded-xl p-6 border border-surface">
                 <h2 className="text-lg font-semibold mb-4">Calls by Hour (Last 24h)</h2>
                 <div className="h-48 flex items-end gap-1">
                   {data.stats.callsByHour.map((item, i) => {
@@ -790,7 +790,7 @@ export default function AdminDashboard() {
                           title={`${item.hour}: ${item.calls} calls`}
                         />
                         {i % 4 === 0 && (
-                          <span className="text-xs text-neutral-500 mt-1">{item.hour}</span>
+                          <span className="text-xs text-text-muted mt-1">{item.hour}</span>
                         )}
                       </div>
                     );
@@ -799,7 +799,7 @@ export default function AdminDashboard() {
               </div>
 
               {/* Top Endpoints */}
-              <div className="bg-neutral-900 rounded-xl p-6 border border-neutral-800">
+              <div className="bg-background-secondary rounded-xl p-6 border border-surface">
                 <h2 className="text-lg font-semibold mb-4">Top Endpoints</h2>
                 <div className="space-y-3">
                   {data.stats.topEndpoints.slice(0, 5).map((endpoint, i) => (
@@ -817,15 +817,15 @@ export default function AdminDashboard() {
             {/* System Health */}
             <div className="grid md:grid-cols-2 gap-6">
               {/* Memory Usage */}
-              <div className="bg-neutral-900 rounded-xl p-6 border border-neutral-800">
+              <div className="bg-background-secondary rounded-xl p-6 border border-surface">
                 <h2 className="text-lg font-semibold mb-4">System Resources</h2>
                 <div className="space-y-4">
                   <div>
                     <div className="flex justify-between mb-2">
-                      <span className="text-neutral-400">Memory Usage</span>
+                      <span className="text-text-secondary">Memory Usage</span>
                       <span>{data.health.memoryUsage.percentage}%</span>
                     </div>
-                    <div className="h-3 bg-neutral-800 rounded-full overflow-hidden">
+                    <div className="h-3 bg-surface rounded-full overflow-hidden">
                       <div
                         className={`h-full transition-all ${
                           data.health.memoryUsage.percentage > 80
@@ -837,17 +837,17 @@ export default function AdminDashboard() {
                         style={{ width: `${data.health.memoryUsage.percentage}%` }}
                       />
                     </div>
-                    <p className="text-sm text-neutral-500 mt-1">
+                    <p className="text-sm text-text-muted mt-1">
                       {formatBytes(data.health.memoryUsage.used)} /{' '}
                       {formatBytes(data.health.memoryUsage.total)}
                     </p>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-neutral-400">Uptime</span>
+                    <span className="text-text-secondary">Uptime</span>
                     <span>{formatUptime(data.health.uptime)}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-neutral-400">Error Rate</span>
+                    <span className="text-text-secondary">Error Rate</span>
                     <span className={data.stats.errorRate > 5 ? 'text-red-400' : 'text-green-400'}>
                       {data.stats.errorRate}%
                     </span>
@@ -856,20 +856,20 @@ export default function AdminDashboard() {
               </div>
 
               {/* Services Status */}
-              <div className="bg-neutral-900 rounded-xl p-6 border border-neutral-800">
+              <div className="bg-background-secondary rounded-xl p-6 border border-surface">
                 <h2 className="text-lg font-semibold mb-4">External Services</h2>
                 <div className="space-y-3">
                   {data.health.services.map((service, i) => (
                     <div
                       key={i}
-                      className="flex items-center justify-between p-3 bg-neutral-800/50 rounded-lg"
+                      className="flex items-center justify-between p-3 bg-surface/50 rounded-lg"
                     >
                       <div className="flex items-center gap-3">
                         <div className={`w-3 h-3 rounded-full ${statusColors[service.status]}`} />
                         <span>{service.name}</span>
                       </div>
                       {service.responseTime && (
-                        <span className="text-neutral-400 text-sm">{service.responseTime}ms</span>
+                        <span className="text-text-secondary text-sm">{service.responseTime}ms</span>
                       )}
                     </div>
                   ))}
@@ -879,19 +879,19 @@ export default function AdminDashboard() {
 
             {/* Error Table */}
             {data.stats.errorsByEndpoint.length > 0 && (
-              <div className="bg-neutral-900 rounded-xl p-6 border border-neutral-800">
+              <div className="bg-background-secondary rounded-xl p-6 border border-surface">
                 <h2 className="text-lg font-semibold mb-4">Errors by Endpoint</h2>
                 <div className="overflow-x-auto">
                   <table className="w-full">
                     <thead>
-                      <tr className="text-left text-neutral-400 border-b border-neutral-800">
+                      <tr className="text-left text-text-secondary border-b border-surface">
                         <th className="pb-3 font-medium">Endpoint</th>
                         <th className="pb-3 font-medium text-right">Error Count</th>
                       </tr>
                     </thead>
                     <tbody>
                       {data.stats.errorsByEndpoint.map((error, i) => (
-                        <tr key={i} className="border-b border-neutral-800/50">
+                        <tr key={i} className="border-b border-surface/50">
                           <td className="py-3 font-mono text-sm">{error.endpoint}</td>
                           <td className="py-3 text-right text-red-400">{error.count}</td>
                         </tr>
@@ -920,8 +920,8 @@ function StatCard({
   trend?: 'up' | 'down' | 'neutral';
 }) {
   return (
-    <div className="bg-neutral-900 rounded-xl p-4 border border-neutral-800">
-      <p className="text-neutral-400 text-sm mb-1">{label}</p>
+    <div className="bg-background-secondary rounded-xl p-4 border border-surface">
+      <p className="text-text-secondary text-sm mb-1">{label}</p>
       <div className="flex items-center gap-2">
         <p className="text-2xl font-bold">{value}</p>
         {trend === 'up' && (
@@ -955,7 +955,7 @@ function StatCard({
           </svg>
         )}
       </div>
-      {subtitle && <p className="text-xs text-neutral-500 mt-1">{subtitle}</p>}
+      {subtitle && <p className="text-xs text-text-muted mt-1">{subtitle}</p>}
     </div>
   );
 }

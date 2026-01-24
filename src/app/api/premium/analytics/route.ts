@@ -36,7 +36,7 @@ export async function GET(request: NextRequest) {
     );
   }
 
-  const stats = getPaymentStats();
+  const stats = await getPaymentStats();
   const serverStatus = getServerStatus();
   const networks = getSupportedNetworks(true);
 

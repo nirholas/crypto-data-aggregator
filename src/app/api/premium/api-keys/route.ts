@@ -17,6 +17,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { withX402 } from '@x402/next';
 import { x402Server, getRouteConfig } from '@/lib/x402-server';
+import { get, set, del, scan, isPersistentStorage } from '@/lib/storage';
 
 export const runtime = 'nodejs';
 
@@ -58,7 +59,68 @@ interface APIKeysResponse {
   };
 }
 
-// Simulated key storage (in production, use a database)
+// Storage key prefix for API keys
+const API_KEY_PREFIX = 'apikeys:';
+
+/**
+ * Get all API keys from storage
+ */
+async function getAllKeys(): Promise<APIKey[]> {
+  const keys: APIKey[] = [];
+  
+  if (isPersistentStorage()) {
+    // Scan for all API keys in storage
+    let cursor = '0';
+    do {
+      const result = await scan(`${API_KEY_PREFIX}*`, cursor, 100);
+      cursor = result.cursor;
+      
+      for (const key of result.keys) {
+        const keyData = await get<APIKey>(key);
+        if (keyData) {
+          keys.push(keyData);
+        }
+      }
+    } while (cursor !== '0');
+  } else {
+    // Fall back to in-memory for development
+    keyStore.forEach((value) => keys.push(value));
+  }
+  
+  return keys;
+}
+
+/**
+ * Save an API key to storage
+ */
+async function saveKey(apiKey: APIKey): Promise<void> {
+  const storageKey = `${API_KEY_PREFIX}${apiKey.id}`;
+  
+  if (isPersistentStorage()) {
+    // Calculate TTL based on expiration (plus 1 day buffer)
+    const expiresAt = new Date(apiKey.expiresAt).getTime();
+    const ttlSeconds = Math.max(0, Math.floor((expiresAt - Date.now()) / 1000) + 86400);
+    await set(storageKey, apiKey, { ttl: ttlSeconds });
+  }
+  
+  // Also keep in memory for quick access
+  keyStore.set(apiKey.id, apiKey);
+}
+
+/**
+ * Delete an API key from storage
+ */
+async function deleteKey(keyId: string): Promise<void> {
+  const storageKey = `${API_KEY_PREFIX}${keyId}`;
+  
+  if (isPersistentStorage()) {
+    await del(storageKey);
+  }
+  
+  keyStore.delete(keyId);
+}
+
+// In-memory cache (synced with persistent storage)
 const keyStore = new Map<string, APIKey>();
 
 /**
@@ -103,8 +165,9 @@ const AVAILABLE_PERMISSIONS = [
  * Handler for GET requests - list keys
  */
 async function handleGet(): Promise<NextResponse<APIKeysResponse>> {
-  // Get all keys (mask the actual key value)
-  const keys = Array.from(keyStore.values()).map((k) => ({
+  // Get all keys from storage (mask the actual key value)
+  const allKeys = await getAllKeys();
+  const keys = allKeys.map((k) => ({
     ...k,
     key: k.key.substring(0, 8) + '...' + k.key.substring(k.key.length - 4),
   }));
@@ -169,7 +232,8 @@ async function handlePost(
   }
 
   // Check key limit
-  if (keyStore.size >= 10) {
+  const existingKeys = await getAllKeys();
+  if (existingKeys.length >= 10) {
     return NextResponse.json(
       { error: 'Key limit reached', message: 'Maximum 10 API keys allowed' },
       { status: 400 }
@@ -197,8 +261,8 @@ async function handlePost(
     active: true,
   };
 
-  // Store the key
-  keyStore.set(newKey.id, newKey);
+  // Store the key in persistent storage
+  await saveKey(newKey);
 
   return NextResponse.json(
     {

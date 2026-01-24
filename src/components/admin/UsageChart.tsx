@@ -15,9 +15,9 @@ export function UsageChart({
 }: UsageChartProps) {
   if (!data || data.length === 0) {
     return (
-      <div className="bg-neutral-900 rounded-xl p-6 border border-neutral-800">
+      <div className="bg-background-secondary rounded-xl p-6 border border-surface">
         <h3 className="text-lg font-semibold mb-4">{title}</h3>
-        <div className="flex items-center justify-center h-48 text-neutral-500">
+        <div className="flex items-center justify-center h-48 text-text-muted">
           No usage data available
         </div>
       </div>
@@ -55,10 +55,10 @@ export function UsageChart({
   };
 
   return (
-    <div className="bg-neutral-900 rounded-xl p-6 border border-neutral-800">
+    <div className="bg-background-secondary rounded-xl p-6 border border-surface">
       <div className="flex items-center justify-between mb-4">
         <h3 className="text-lg font-semibold">{title}</h3>
-        <div className="text-sm text-neutral-400">
+        <div className="text-sm text-text-secondary">
           Total: {formatNumber(data.reduce((sum, d) => sum + d.requests, 0))} requests
         </div>
       </div>
@@ -66,7 +66,7 @@ export function UsageChart({
       <div className="relative" style={{ height: `${height}px` }}>
         {/* Y-axis labels */}
         {showLabels && (
-          <div className="absolute left-0 top-0 bottom-6 w-12 flex flex-col justify-between text-xs text-neutral-500">
+          <div className="absolute left-0 top-0 bottom-6 w-12 flex flex-col justify-between text-xs text-text-muted">
             {yTicks.reverse().map((tick, i) => (
               <span key={i} className="text-right pr-2">
                 {formatNumber(tick)}
@@ -121,7 +121,7 @@ export function UsageChart({
 
                   {/* Tooltip */}
                   <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10">
-                    <div className="bg-neutral-800 border border-neutral-700 rounded-lg px-3 py-2 text-sm whitespace-nowrap shadow-lg">
+                    <div className="bg-surface border border-surface-border rounded-lg px-3 py-2 text-sm whitespace-nowrap shadow-lg">
                       <div className="font-medium">{formatDate(item.date)}</div>
                       <div className="text-amber-400">{formatNumber(item.requests)} requests</div>
                     </div>
@@ -135,7 +135,7 @@ export function UsageChart({
         {/* X-axis labels */}
         {showLabels && (
           <div
-            className="absolute bottom-0 h-6 flex justify-between text-xs text-neutral-500"
+            className="absolute bottom-0 h-6 flex justify-between text-xs text-text-muted"
             style={{ left: showLabels ? '48px' : '0', right: '0' }}
           >
             {data
@@ -160,7 +160,7 @@ interface SparklineProps {
 
 export function Sparkline({ data, width = 80, height = 24, color = '#f59e0b' }: SparklineProps) {
   if (!data || data.length < 2) {
-    return <div style={{ width, height }} className="bg-neutral-800 rounded" />;
+    return <div style={{ width, height }} className="bg-surface rounded" />;
   }
 
   const max = Math.max(...data, 1);
@@ -206,7 +206,7 @@ export function TierDistribution({ free, pro, enterprise }: TierDistributionProp
 
   if (total === 0) {
     return (
-      <div className="flex items-center justify-center h-32 text-neutral-500">No API keys yet</div>
+      <div className="flex items-center justify-center h-32 text-text-muted">No API keys yet</div>
     );
   }
 
@@ -273,7 +273,7 @@ export function TierDistribution({ free, pro, enterprise }: TierDistributionProp
           y="75"
           textAnchor="middle"
           dominantBaseline="middle"
-          className="text-xs fill-neutral-400"
+          className="text-xs fill-text-secondary"
         >
           total
         </text>

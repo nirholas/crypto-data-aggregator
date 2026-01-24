@@ -187,7 +187,7 @@ export default function CoinHeader({
                   initial={{ opacity: 0, y: 5 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: 5 }}
-                  className="absolute top-full left-1/2 -translate-x-1/2 mt-2 px-2 py-1 bg-black text-white text-xs rounded whitespace-nowrap"
+                  className="absolute top-full left-1/2 -translate-x-1/2 mt-2 px-2 py-1 bg-surface-elevated text-white text-xs rounded whitespace-nowrap"
                 >
                   Link copied!
                 </motion.div>

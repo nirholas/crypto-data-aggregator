@@ -9,10 +9,19 @@
  * - hour: 1 hour unlimited access ($0.25)
  * - day: 24 hour unlimited access ($2.00)
  * - week: 7 day unlimited access ($10.00)
+ * 
+ * Uses unified storage layer (Upstash Redis / memory fallback)
  */
 
 import { CURRENT_NETWORK, PAYMENT_ADDRESS, USDC_ADDRESS } from './config';
 import { createReceipt } from './payments';
+import * as storage from '../storage';
+
+// Storage namespace for pass data
+const NAMESPACE = 'x402:passes';
+const PASSES_KEY = 'passes'; // Hash of pass ID -> pass data
+const WALLET_INDEX_PREFIX = 'wallet:'; // wallet:address -> list of pass IDs
+const ACTIVE_PASSES_KEY = 'active'; // Set of active pass IDs
 
 // =============================================================================
 // TYPES
@@ -132,11 +141,52 @@ export const PASS_CONFIG: Record<PassDuration, PassConfig> = {
 };
 
 // =============================================================================
-// STORAGE (In-memory for demo, use Redis/DB in production)
+// STORAGE HELPERS
 // =============================================================================
 
-const passStore = new Map<string, AccessPass>();
-const walletPassIndex = new Map<string, string[]>(); // wallet -> pass IDs
+/**
+ * Get pass from storage
+ */
+async function getPassFromStorage(passId: string): Promise<AccessPass | null> {
+  return storage.hget<AccessPass>(`${NAMESPACE}:${PASSES_KEY}`, passId);
+}
+
+/**
+ * Save pass to storage
+ */
+async function savePassToStorage(pass: AccessPass): Promise<void> {
+  // Store pass in hash
+  await storage.hset(`${NAMESPACE}:${PASSES_KEY}`, pass.id, pass);
+  
+  // Add to wallet index
+  const walletKey = `${NAMESPACE}:${WALLET_INDEX_PREFIX}${pass.walletAddress}`;
+  await storage.rpush(walletKey, pass.id);
+  
+  // Add to active passes set if active
+  if (pass.status === 'active') {
+    await storage.sadd(`${NAMESPACE}:${ACTIVE_PASSES_KEY}`, pass.id);
+  }
+}
+
+/**
+ * Update pass in storage
+ */
+async function updatePassInStorage(pass: AccessPass): Promise<void> {
+  await storage.hset(`${NAMESPACE}:${PASSES_KEY}`, pass.id, pass);
+  
+  // Remove from active set if no longer active
+  if (pass.status !== 'active') {
+    await storage.srem(`${NAMESPACE}:${ACTIVE_PASSES_KEY}`, pass.id);
+  }
+}
+
+/**
+ * Get wallet pass IDs from storage
+ */
+async function getWalletPassIds(walletAddress: string): Promise<string[]> {
+  const walletKey = `${NAMESPACE}:${WALLET_INDEX_PREFIX}${walletAddress}`;
+  return storage.lrange(walletKey, 0, -1);
+}
 
 // =============================================================================
 // PASS MANAGEMENT
@@ -154,11 +204,11 @@ function generatePassId(): string {
 /**
  * Create a new access pass
  */
-export function createPass(
+export async function createPass(
   walletAddress: string,
   duration: PassDuration,
   transactionHash?: string
-): AccessPass {
+): Promise<AccessPass> {
   const config = PASS_CONFIG[duration];
   const now = new Date();
   const expiresAt = new Date(now.getTime() + config.durationSeconds * 1000);
@@ -177,23 +227,17 @@ export function createPass(
     createdAt: now.toISOString(),
   };
 
-  // Store pass
-  passStore.set(pass.id, pass);
+  // Store pass in persistent storage
+  await savePassToStorage(pass);
 
-  // Index by wallet
-  const walletKey = pass.walletAddress;
-  const walletPasses = walletPassIndex.get(walletKey) || [];
-  walletPasses.push(pass.id);
-  walletPassIndex.set(walletKey, walletPasses);
-
-  // Create receipt
+  // Create receipt (async, don't await)
   createReceipt({
     walletAddress: pass.walletAddress,
     amount: config.priceUsdc,
     resource: `/api/premium/pass/${duration}`,
     description: config.description,
     transactionHash,
-  });
+  }).catch(err => console.error('[Passes] Failed to create receipt:', err));
 
   return pass;
 }
@@ -201,22 +245,23 @@ export function createPass(
 /**
  * Get active pass for a wallet
  */
-export function getActivePass(walletAddress: string): AccessPass | null {
+export async function getActivePass(walletAddress: string): Promise<AccessPass | null> {
   const normalizedAddress = walletAddress.toLowerCase();
-  const passIds = walletPassIndex.get(normalizedAddress) || [];
+  const passIds = await getWalletPassIds(normalizedAddress);
 
   const now = new Date();
 
-  for (const passId of passIds.reverse()) {
-    // Check most recent first
-    const pass = passStore.get(passId);
+  // Check most recent first (reverse order)
+  for (let i = passIds.length - 1; i >= 0; i--) {
+    const passId = passIds[i];
+    const pass = await getPassFromStorage(passId);
     if (!pass) continue;
 
     // Check if expired
     if (new Date(pass.expiresAt) < now) {
       if (pass.status === 'active') {
         pass.status = 'expired';
-        passStore.set(passId, pass);
+        await updatePassInStorage(pass);
       }
       continue;
     }
@@ -232,15 +277,16 @@ export function getActivePass(walletAddress: string): AccessPass | null {
 /**
  * Check if wallet has active pass
  */
-export function hasActivePass(walletAddress: string): boolean {
-  return getActivePass(walletAddress) !== null;
+export async function hasActivePass(walletAddress: string): Promise<boolean> {
+  const pass = await getActivePass(walletAddress);
+  return pass !== null;
 }
 
 /**
  * Record a request against a pass
  */
-export function recordPassRequest(passId: string): boolean {
-  const pass = passStore.get(passId);
+export async function recordPassRequest(passId: string): Promise<boolean> {
+  const pass = await getPassFromStorage(passId);
   if (!pass) return false;
 
   if (pass.status !== 'active') return false;
@@ -248,13 +294,13 @@ export function recordPassRequest(passId: string): boolean {
   // Check if expired
   if (new Date(pass.expiresAt) < new Date()) {
     pass.status = 'expired';
-    passStore.set(passId, pass);
+    await updatePassInStorage(pass);
     return false;
   }
 
   pass.requestCount += 1;
   pass.lastRequestAt = new Date().toISOString();
-  passStore.set(passId, pass);
+  await updatePassInStorage(pass);
 
   return true;
 }
@@ -262,20 +308,22 @@ export function recordPassRequest(passId: string): boolean {
 /**
  * Get pass by ID
  */
-export function getPass(passId: string): AccessPass | null {
-  return passStore.get(passId) || null;
+export async function getPass(passId: string): Promise<AccessPass | null> {
+  return getPassFromStorage(passId);
 }
 
 /**
  * Get all passes for a wallet
  */
-export function getWalletPasses(walletAddress: string): AccessPass[] {
+export async function getWalletPasses(walletAddress: string): Promise<AccessPass[]> {
   const normalizedAddress = walletAddress.toLowerCase();
-  const passIds = walletPassIndex.get(normalizedAddress) || [];
+  const passIds = await getWalletPassIds(normalizedAddress);
 
-  return passIds
-    .map((id) => passStore.get(id))
-    .filter((p): p is AccessPass => p !== undefined)
+  const passPromises = passIds.map((id: string) => getPassFromStorage(id));
+  const passesRaw = await Promise.all(passPromises);
+
+  return passesRaw
+    .filter((p): p is AccessPass => p !== null)
     .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
 }
 

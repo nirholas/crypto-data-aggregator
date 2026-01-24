@@ -110,7 +110,7 @@ export default function MarketsTable({ tickers, coinSymbol }: MarketsTableProps)
     <button
       onClick={() => handleSort(sortKeyName)}
       className={`flex items-center gap-1 text-xs font-medium uppercase tracking-wide transition-colors ${
-        sortKey === sortKeyName ? 'text-white' : 'text-neutral-500 hover:text-neutral-300'
+        sortKey === sortKeyName ? 'text-white' : 'text-text-muted hover:text-text-secondary'
       }`}
     >
       {label}
@@ -131,13 +131,13 @@ export default function MarketsTable({ tickers, coinSymbol }: MarketsTableProps)
   );
 
   return (
-    <div className="bg-black/50 rounded-2xl border border-neutral-700/50 overflow-hidden">
+    <div className="bg-background/50 rounded-2xl border border-surface-border/50 overflow-hidden">
       {/* Header */}
-      <div className="p-4 border-b border-neutral-700/50">
+      <div className="p-4 border-b border-surface-border/50">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
             <h3 className="text-lg font-semibold text-white">{coinSymbol.toUpperCase()} Markets</h3>
-            <p className="text-sm text-neutral-400">
+            <p className="text-sm text-text-secondary">
               {filteredTickers.length} trading pairs across{' '}
               {new Set(tickers.map((t) => t.market.identifier)).size} exchanges
             </p>
@@ -166,7 +166,7 @@ export default function MarketsTable({ tickers, coinSymbol }: MarketsTableProps)
                 setSearchQuery(e.target.value);
                 setPage(1);
               }}
-              className="pl-9 pr-4 py-2 bg-black border border-neutral-700 rounded-lg text-white text-sm placeholder-neutral-500 focus:outline-none focus:border-white/50 w-full sm:w-64"
+              className="pl-9 pr-4 py-2 bg-background border border-surface-border rounded-lg text-white text-sm placeholder-text-muted focus:outline-none focus:border-white/50 w-full sm:w-64"
             />
           </div>
         </div>
@@ -209,7 +209,7 @@ export default function MarketsTable({ tickers, coinSymbol }: MarketsTableProps)
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: index * 0.02 }}
-                className="hover:bg-black/20 transition-colors"
+                className="hover:bg-background/20 transition-colors"
               >
                 {/* Exchange */}
                 <td className="px-4 py-3">

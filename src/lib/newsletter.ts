@@ -5,7 +5,17 @@
  * - Email subscription management
  * - Daily/weekly digest generation
  * - Multiple email providers (Resend, SendGrid, Postmark)
+ * 
+ * Uses unified storage layer (Upstash Redis / memory fallback)
  */
+
+import * as storage from './storage';
+
+// Storage namespace
+const NAMESPACE = 'newsletter';
+const SUBSCRIBERS_KEY = 'subscribers'; // Hash: id -> Subscriber
+const EMAIL_INDEX_KEY = 'email_index'; // Hash: email -> id
+const TOKEN_INDEX_KEY = 'token_index'; // Hash: token -> id
 
 // Types
 export interface Subscriber {
@@ -27,8 +37,47 @@ export interface DigestEmail {
   text: string;
 }
 
-// In-memory store (replace with DB in production)
-const subscribers = new Map<string, Subscriber>();
+// =============================================================================
+// STORAGE HELPERS
+// =============================================================================
+
+async function getSubscriberById(id: string): Promise<Subscriber | null> {
+  return storage.hget<Subscriber>(`${NAMESPACE}:${SUBSCRIBERS_KEY}`, id);
+}
+
+async function getSubscriberByEmail(email: string): Promise<Subscriber | null> {
+  const id = await storage.hget<string>(`${NAMESPACE}:${EMAIL_INDEX_KEY}`, email.toLowerCase());
+  if (!id) return null;
+  return getSubscriberById(id);
+}
+
+async function getSubscriberByToken(token: string): Promise<Subscriber | null> {
+  const id = await storage.hget<string>(`${NAMESPACE}:${TOKEN_INDEX_KEY}`, token);
+  if (!id) return null;
+  return getSubscriberById(id);
+}
+
+async function saveSubscriber(subscriber: Subscriber): Promise<void> {
+  // Save subscriber data
+  await storage.hset(`${NAMESPACE}:${SUBSCRIBERS_KEY}`, subscriber.id, subscriber);
+  // Index by email
+  await storage.hset(`${NAMESPACE}:${EMAIL_INDEX_KEY}`, subscriber.email.toLowerCase(), subscriber.id);
+  // Index by token
+  await storage.hset(`${NAMESPACE}:${TOKEN_INDEX_KEY}`, subscriber.unsubscribeToken, subscriber.id);
+  // Add to frequency set
+  await storage.sadd(`${NAMESPACE}:freq:${subscriber.frequency}`, subscriber.id);
+  // Track in all subscribers set
+  await storage.sadd(`${NAMESPACE}:all`, subscriber.id);
+}
+
+async function deleteSubscriber(subscriber: Subscriber): Promise<void> {
+  // Remove from all indexes
+  await storage.hdel(`${NAMESPACE}:${SUBSCRIBERS_KEY}`, subscriber.id);
+  await storage.hdel(`${NAMESPACE}:${EMAIL_INDEX_KEY}`, subscriber.email.toLowerCase());
+  await storage.hdel(`${NAMESPACE}:${TOKEN_INDEX_KEY}`, subscriber.unsubscribeToken);
+  await storage.srem(`${NAMESPACE}:freq:${subscriber.frequency}`, subscriber.id);
+  await storage.srem(`${NAMESPACE}:all`, subscriber.id);
+}
 
 // Generate tokens
 function generateToken(): string {
@@ -57,7 +106,7 @@ export async function subscribe(
   }
 
   // Check if already subscribed
-  const existing = Array.from(subscribers.values()).find((s) => s.email === email);
+  const existing = await getSubscriberByEmail(email);
   if (existing) {
     return { success: false, message: 'Email already subscribed' };
   }
@@ -73,7 +122,7 @@ export async function subscribe(
     unsubscribeToken: generateToken(),
   };
 
-  subscribers.set(subscriber.id, subscriber);
+  await saveSubscriber(subscriber);
 
   // Send verification email
   await sendVerificationEmail(subscriber);
@@ -171,14 +220,14 @@ If you didn't subscribe, you can safely ignore this email.
 export async function verifySubscription(
   token: string
 ): Promise<{ success: boolean; message: string }> {
-  const subscriber = Array.from(subscribers.values()).find((s) => s.unsubscribeToken === token);
+  const subscriber = await getSubscriberByToken(token);
 
   if (!subscriber) {
     return { success: false, message: 'Invalid verification token' };
   }
 
   subscriber.verified = true;
-  subscribers.set(subscriber.id, subscriber);
+  await saveSubscriber(subscriber);
 
   return { success: true, message: 'Email verified successfully' };
 }
@@ -187,13 +236,13 @@ export async function verifySubscription(
  * Unsubscribe
  */
 export async function unsubscribe(token: string): Promise<{ success: boolean; message: string }> {
-  const subscriber = Array.from(subscribers.values()).find((s) => s.unsubscribeToken === token);
+  const subscriber = await getSubscriberByToken(token);
 
   if (!subscriber) {
     return { success: false, message: 'Invalid unsubscribe token' };
   }
 
-  subscribers.delete(subscriber.id);
+  await deleteSubscriber(subscriber);
   return { success: true, message: 'Unsubscribed successfully' };
 }
 
@@ -208,27 +257,46 @@ export async function updatePreferences(
     sources?: string[];
   }
 ): Promise<{ success: boolean; message: string }> {
-  const subscriber = Array.from(subscribers.values()).find((s) => s.unsubscribeToken === token);
+  const subscriber = await getSubscriberByToken(token);
 
   if (!subscriber) {
     return { success: false, message: 'Invalid token' };
   }
 
+  // If frequency changed, update the frequency sets
+  const oldFrequency = subscriber.frequency;
+  
   if (options.frequency) subscriber.frequency = options.frequency;
   if (options.categories) subscriber.categories = options.categories;
   if (options.sources) subscriber.sources = options.sources;
 
-  subscribers.set(subscriber.id, subscriber);
+  // Update frequency index if changed
+  if (options.frequency && oldFrequency !== options.frequency) {
+    await storage.srem(`${NAMESPACE}:freq:${oldFrequency}`, subscriber.id);
+    await storage.sadd(`${NAMESPACE}:freq:${options.frequency}`, subscriber.id);
+  }
+
+  await saveSubscriber(subscriber);
   return { success: true, message: 'Preferences updated' };
 }
 
 /**
  * Get subscribers by frequency
  */
-export function getSubscribersByFrequency(
+export async function getSubscribersByFrequency(
   frequency: 'daily' | 'weekly' | 'breaking'
-): Subscriber[] {
-  return Array.from(subscribers.values()).filter((s) => s.verified && s.frequency === frequency);
+): Promise<Subscriber[]> {
+  const ids = await storage.smembers(`${NAMESPACE}:freq:${frequency}`);
+  
+  const subscribers: Subscriber[] = [];
+  for (const id of ids) {
+    const sub = await getSubscriberById(id);
+    if (sub && sub.verified) {
+      subscribers.push(sub);
+    }
+  }
+  
+  return subscribers;
 }
 
 /**
@@ -410,20 +478,32 @@ export async function sendViaSendGrid(email: DigestEmail): Promise<boolean> {
 /**
  * Get subscriber stats
  */
-export function getSubscriberStats(): {
+export async function getSubscriberStats(): Promise<{
   total: number;
   verified: number;
   byFrequency: Record<string, number>;
-} {
-  const all = Array.from(subscribers.values());
+}> {
+  const allIds = await storage.smembers(`${NAMESPACE}:all`);
+  
+  let verified = 0;
+  for (const id of allIds) {
+    const sub = await getSubscriberById(id);
+    if (sub?.verified) verified++;
+  }
+  
+  const [dailyCount, weeklyCount, breakingCount] = await Promise.all([
+    storage.smembers(`${NAMESPACE}:freq:daily`).then(m => m.length),
+    storage.smembers(`${NAMESPACE}:freq:weekly`).then(m => m.length),
+    storage.smembers(`${NAMESPACE}:freq:breaking`).then(m => m.length),
+  ]);
 
   return {
-    total: all.length,
-    verified: all.filter((s) => s.verified).length,
+    total: allIds.length,
+    verified,
     byFrequency: {
-      daily: all.filter((s) => s.frequency === 'daily').length,
-      weekly: all.filter((s) => s.frequency === 'weekly').length,
-      breaking: all.filter((s) => s.frequency === 'breaking').length,
+      daily: dailyCount,
+      weekly: weeklyCount,
+      breaking: breakingCount,
     },
   };
 }

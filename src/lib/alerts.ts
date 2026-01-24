@@ -682,9 +682,52 @@ export async function evaluateCondition(
       }
 
       case 'whale_movement': {
-        // Whale movements would typically come from on-chain data providers
-        // This is a placeholder that could be connected to Whale Alert API
-        // For now, return not triggered
+        // Fetch real whale data from our internal API
+        try {
+          const baseUrl = typeof window !== 'undefined' 
+            ? window.location.origin 
+            : process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
+          
+          const response = await fetch(
+            `${baseUrl}/api/premium/alerts/whales?minThreshold=${condition.minUSD}`,
+            { next: { revalidate: 60 } }
+          );
+          
+          if (response.ok) {
+            const data = await response.json();
+            const transactions = data.transactions || [];
+            
+            // Check if there are any transactions above the threshold
+            const largeTransactions = transactions.filter(
+              (tx: { valueUsd: number; timestamp: number }) => 
+                tx.valueUsd >= condition.minUSD && 
+                tx.timestamp > Date.now() - 60 * 60 * 1000 // Last hour
+            );
+            
+            if (largeTransactions.length > 0) {
+              const largest = largeTransactions.reduce(
+                (max: { valueUsd: number }, tx: { valueUsd: number }) => 
+                  tx.valueUsd > max.valueUsd ? tx : max, 
+                largeTransactions[0]
+              );
+              
+              return {
+                triggered: true,
+                currentValue: largest.valueUsd,
+                context: {
+                  count: largeTransactions.length,
+                  largestTx: largest,
+                  totalValue: largeTransactions.reduce(
+                    (sum: number, tx: { valueUsd: number }) => sum + tx.valueUsd, 0
+                  ),
+                },
+              };
+            }
+          }
+        } catch (error) {
+          console.error('Whale movement check error:', error);
+        }
+        
         return { triggered: false, currentValue: 0 };
       }
 

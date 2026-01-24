@@ -1,11 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server';
+import * as storage from '@/lib/storage';
 
 export const runtime = 'edge';
 
-// In-memory storage for push subscriptions (use a database in production)
-const pushSubscriptions = new Map<string, PushSubscriptionData>();
+// Storage namespace
+const NAMESPACE = 'push';
+const SUBSCRIPTIONS_KEY = 'subscriptions'; // Hash: id -> subscription
+const TOPIC_INDEX_PREFIX = 'topic:'; // Set: topic -> subscription IDs
 
 interface PushSubscriptionData {
+  id: string;
   endpoint: string;
   keys: {
     p256dh: string;
@@ -23,6 +27,47 @@ interface PushNotificationPayload {
   badge?: string;
   url?: string;
   tag?: string;
+}
+
+// =============================================================================
+// STORAGE HELPERS
+// =============================================================================
+
+async function getSubscription(id: string): Promise<PushSubscriptionData | null> {
+  return storage.hget<PushSubscriptionData>(`${NAMESPACE}:${SUBSCRIPTIONS_KEY}`, id);
+}
+
+async function saveSubscription(sub: PushSubscriptionData): Promise<void> {
+  // Save subscription data
+  await storage.hset(`${NAMESPACE}:${SUBSCRIPTIONS_KEY}`, sub.id, sub);
+  // Index by topics
+  for (const topic of sub.topics) {
+    await storage.sadd(`${NAMESPACE}:${TOPIC_INDEX_PREFIX}${topic}`, sub.id);
+  }
+}
+
+async function deleteSubscription(sub: PushSubscriptionData): Promise<void> {
+  // Remove from subscriptions hash
+  await storage.hdel(`${NAMESPACE}:${SUBSCRIPTIONS_KEY}`, sub.id);
+  // Remove from topic indexes
+  for (const topic of sub.topics) {
+    await storage.srem(`${NAMESPACE}:${TOPIC_INDEX_PREFIX}${topic}`, sub.id);
+  }
+}
+
+async function updateSubscriptionTopics(sub: PushSubscriptionData, oldTopics: string[], newTopics: string[]): Promise<void> {
+  // Remove from old topics
+  for (const topic of oldTopics) {
+    if (!newTopics.includes(topic)) {
+      await storage.srem(`${NAMESPACE}:${TOPIC_INDEX_PREFIX}${topic}`, sub.id);
+    }
+  }
+  // Add to new topics
+  for (const topic of newTopics) {
+    if (!oldTopics.includes(topic)) {
+      await storage.sadd(`${NAMESPACE}:${TOPIC_INDEX_PREFIX}${topic}`, sub.id);
+    }
+  }
 }
 
 /**
@@ -129,6 +174,7 @@ export async function POST(request: NextRequest) {
     
     // Store subscription
     const subscriptionData: PushSubscriptionData = {
+      id: subscriptionId,
       endpoint: subscription.endpoint,
       keys: {
         p256dh: subscription.keys.p256dh,
@@ -138,7 +184,7 @@ export async function POST(request: NextRequest) {
       createdAt: new Date().toISOString()
     };
     
-    pushSubscriptions.set(subscriptionId, subscriptionData);
+    await saveSubscription(subscriptionData);
     
     return NextResponse.json({
       success: true,
@@ -179,9 +225,10 @@ export async function DELETE(request: NextRequest) {
     }
     
     const subscriptionId = await hashEndpoint(endpoint);
+    const subscription = await getSubscription(subscriptionId);
     
-    if (pushSubscriptions.has(subscriptionId)) {
-      pushSubscriptions.delete(subscriptionId);
+    if (subscription) {
+      await deleteSubscription(subscription);
       return NextResponse.json({
         success: true,
         message: 'Unsubscribed from push notifications'

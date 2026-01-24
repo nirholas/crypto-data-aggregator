@@ -558,8 +558,8 @@ export async function handleOAuthCallback(
     if (!user) {
       user = await createUser({
         email: email || `${providerId}@${provider}.oauth`,
-        name,
-        image,
+        name: name ?? undefined,
+        image: image ?? undefined,
         provider,
         providerId,
         emailVerified: !!email,
@@ -567,8 +567,8 @@ export async function handleOAuthCallback(
     } else {
       // Update user info
       await updateUser(user.id, {
-        name: name || user.name,
-        image: image || user.image,
+        name: name ?? user.name ?? undefined,
+        image: image ?? user.image ?? undefined,
         emailVerified: user.emailVerified || !!email,
       });
       user = (await getUserById(user.id))!;

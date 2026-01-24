@@ -45,11 +45,11 @@ function formatDate(dateString: string): string {
 function getSentimentColor(sentiment?: string): string {
   switch (sentiment) {
     case 'bullish':
-      return 'bg-white/20 text-white';
+      return 'bg-gain/20 text-gain';
     case 'bearish':
-      return 'bg-neutral-500/20 text-neutral-400';
+      return 'bg-loss/20 text-loss';
     default:
-      return 'bg-neutral-500/20 text-neutral-400';
+      return 'bg-surface-hover/50 text-text-muted';
   }
 }
 
@@ -60,11 +60,11 @@ function ArticleCard({ article }: { article: Article }) {
     <motion.article
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
-      className="group bg-black/50 rounded-xl border border-neutral-700/30 overflow-hidden hover:border-neutral-600/50 transition-all"
+      className="group bg-background/50 rounded-xl border border-surface-border/30 overflow-hidden hover:border-surface-border transition-all"
     >
       {/* Image */}
       <Link href={article.url} target="_blank" rel="noopener noreferrer">
-        <div className="relative aspect-[16/9] bg-black overflow-hidden">
+        <div className="relative aspect-[16/9] bg-background overflow-hidden">
           {article.imageUrl && !imgError ? (
             <img
               src={article.imageUrl}
@@ -73,9 +73,9 @@ function ArticleCard({ article }: { article: Article }) {
               onError={() => setImgError(true)}
             />
           ) : (
-            <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-neutral-700 to-neutral-800">
+            <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-surface to-surface-hover">
               <svg
-                className="w-12 h-12 text-neutral-600"
+                className="w-12 h-12 text-text-disabled"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -106,26 +106,26 @@ function ArticleCard({ article }: { article: Article }) {
         {/* Source and date */}
         <div className="flex items-center justify-between mb-2">
           <span className="text-xs text-white font-medium">{article.source}</span>
-          <span className="text-xs text-neutral-500">{formatDate(article.publishedAt)}</span>
+          <span className="text-xs text-text-muted">{formatDate(article.publishedAt)}</span>
         </div>
 
         {/* Title */}
         <Link href={article.url} target="_blank" rel="noopener noreferrer">
-          <h3 className="text-sm font-medium text-white line-clamp-2 group-hover:text-neutral-300 transition-colors mb-2">
+          <h3 className="text-sm font-medium text-white line-clamp-2 group-hover:text-text-secondary transition-colors mb-2">
             {article.title}
           </h3>
         </Link>
 
         {/* Excerpt */}
         {article.excerpt && (
-          <p className="text-xs text-neutral-400 line-clamp-2">{article.excerpt}</p>
+          <p className="text-xs text-text-secondary line-clamp-2">{article.excerpt}</p>
         )}
 
         {/* Categories */}
         {article.categories && article.categories.length > 0 && (
           <div className="flex flex-wrap gap-1 mt-3">
             {article.categories.slice(0, 3).map((cat) => (
-              <span key={cat} className="px-1.5 py-0.5 bg-black text-neutral-400 text-xs rounded">
+              <span key={cat} className="px-1.5 py-0.5 bg-background text-text-secondary text-xs rounded">
                 {cat}
               </span>
             ))}
@@ -148,9 +148,9 @@ export default function CoinNews({ articles, coinName, coinSymbol }: CoinNewsPro
 
   if (articles.length === 0) {
     return (
-      <div className="bg-black/50 rounded-2xl border border-neutral-700/50 p-8 text-center">
+      <div className="bg-background/50 rounded-2xl border border-surface-border/50 p-8 text-center">
         <svg
-          className="w-12 h-12 text-neutral-600 mx-auto mb-4"
+          className="w-12 h-12 text-surface-hover mx-auto mb-4"
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"
@@ -191,13 +191,13 @@ export default function CoinNews({ articles, coinName, coinSymbol }: CoinNewsPro
             </svg>
             <h3 className="text-lg font-semibold text-white">{coinName} News</h3>
           </div>
-          <p className="text-sm text-neutral-400">
+          <p className="text-sm text-text-secondary">
             Latest news and updates about {coinSymbol.toUpperCase()}
           </p>
         </div>
 
         {/* Sentiment Filter */}
-        <div className="flex bg-black rounded-lg p-0.5">
+        <div className="flex bg-background rounded-lg p-0.5">
           {(['all', 'bullish', 'bearish'] as const).map((f) => (
             <button
               key={f}
@@ -210,9 +210,9 @@ export default function CoinNews({ articles, coinName, coinSymbol }: CoinNewsPro
                   ? f === 'bullish'
                     ? 'bg-white/20 text-white'
                     : f === 'bearish'
-                      ? 'bg-neutral-500/20 text-neutral-400'
-                      : 'bg-black text-white'
-                  : 'text-neutral-500 hover:text-neutral-300'
+                      ? 'bg-text-muted/20 text-text-secondary'
+                      : 'bg-background text-white'
+                  : 'text-text-muted hover:text-text-secondary'
               }`}
             >
               {f}
@@ -233,7 +233,7 @@ export default function CoinNews({ articles, coinName, coinSymbol }: CoinNewsPro
         <div className="text-center pt-4">
           <button
             onClick={() => setVisibleCount((c) => c + ITEMS_PER_PAGE)}
-            className="px-6 py-2 bg-black hover:bg-neutral-600 text-white text-sm font-medium rounded-lg transition-colors"
+            className="px-6 py-2 bg-background hover:bg-surface-hover text-white text-sm font-medium rounded-lg transition-colors"
           >
             Load More ({filteredArticles.length - visibleCount} remaining)
           </button>
@@ -243,7 +243,7 @@ export default function CoinNews({ articles, coinName, coinSymbol }: CoinNewsPro
       {/* Empty filter state */}
       {filteredArticles.length === 0 && (
         <div className="text-center py-8">
-          <p className="text-neutral-400">No {filter} news found. Try changing the filter.</p>
+          <p className="text-text-secondary">No {filter} news found. Try changing the filter.</p>
         </div>
       )}
     </div>

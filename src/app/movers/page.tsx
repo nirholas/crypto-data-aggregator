@@ -122,13 +122,13 @@ export default async function MoversPage() {
                     className="flex items-center justify-between p-4 hover:bg-surface-alt transition"
                   >
                     <div className="flex items-center gap-3">
-                      <span className="text-neutral-400 text-sm w-6">{index + 1}</span>
+                      <span className="text-text-muted text-sm w-6">{index + 1}</span>
                       {coin.image && (
                         <img src={coin.image} alt={coin.name} className="w-8 h-8 rounded-full" />
                       )}
                       <div>
                         <span className="font-medium text-text-primary">{coin.name}</span>
-                        <span className="text-neutral-500 text-sm ml-2">
+                        <span className="text-text-muted text-sm ml-2">
                           {coin.symbol.toUpperCase()}
                         </span>
                       </div>
@@ -177,13 +177,13 @@ export default async function MoversPage() {
                     className="flex items-center justify-between p-4 hover:bg-surface-alt transition"
                   >
                     <div className="flex items-center gap-3">
-                      <span className="text-neutral-400 text-sm w-6">{index + 1}</span>
+                      <span className="text-text-muted text-sm w-6">{index + 1}</span>
                       {coin.image && (
                         <img src={coin.image} alt={coin.name} className="w-8 h-8 rounded-full" />
                       )}
                       <div>
                         <span className="font-medium text-text-primary">{coin.name}</span>
-                        <span className="text-neutral-500 text-sm ml-2">
+                        <span className="text-text-muted text-sm ml-2">
                           {coin.symbol.toUpperCase()}
                         </span>
                       </div>

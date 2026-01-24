@@ -179,6 +179,15 @@ export function isAnalyticsEnabled(): boolean {
   return analyticsEnabled;
 }
 
+// In-memory API metrics (reset on server restart)
+const apiMetrics = {
+  totalRequests: 0,
+  totalErrors: 0,
+  totalResponseTime: 0,
+  requestsPerEndpoint: new Map<string, number>(),
+  startTime: Date.now(),
+};
+
 /**
  * Track API call (server-side)
  */
@@ -191,7 +200,21 @@ export function trackAPICall(data: {
   ip?: string;
   timestamp?: Date;
 }): void {
-  // Server-side tracking - would typically send to monitoring service
+  // Update in-memory metrics
+  apiMetrics.totalRequests++;
+  apiMetrics.totalResponseTime += data.responseTime;
+  
+  if (data.statusCode >= 400) {
+    apiMetrics.totalErrors++;
+  }
+  
+  const key = `${data.method}:${data.endpoint}`;
+  apiMetrics.requestsPerEndpoint.set(
+    key, 
+    (apiMetrics.requestsPerEndpoint.get(key) || 0) + 1
+  );
+  
+  // Server-side logging in development
   if (process.env.NODE_ENV === 'development') {
     console.log('[API]', data.method, data.endpoint, `${data.responseTime}ms`, data.statusCode);
   }
@@ -199,35 +222,73 @@ export function trackAPICall(data: {
 
 /**
  * Get dashboard stats (server-side)
+ * Uses real in-memory metrics from API calls
  */
 export function getDashboardStats(): Record<string, number | string> {
-  // In production, this would query actual metrics
+  const uptimeMs = Date.now() - apiMetrics.startTime;
+  const uptimeHours = Math.floor(uptimeMs / (1000 * 60 * 60));
+  const uptimeDays = Math.floor(uptimeHours / 24);
+  
   return {
-    totalRequests: 0,
-    uniqueUsers: 0,
-    avgResponseTime: 0,
-    errorRate: 0,
-    uptime: '100%',
+    totalRequests: apiMetrics.totalRequests,
+    totalErrors: apiMetrics.totalErrors,
+    avgResponseTime: apiMetrics.totalRequests > 0 
+      ? Math.round(apiMetrics.totalResponseTime / apiMetrics.totalRequests) 
+      : 0,
+    errorRate: apiMetrics.totalRequests > 0 
+      ? Math.round((apiMetrics.totalErrors / apiMetrics.totalRequests) * 100 * 100) / 100 
+      : 0,
+    uptime: uptimeDays > 0 ? `${uptimeDays}d ${uptimeHours % 24}h` : `${uptimeHours}h`,
     lastUpdated: new Date().toISOString(),
   };
 }
 
 /**
  * Get system health (server-side)
+ * Provides real system metrics
  */
 export async function getSystemHealth(): Promise<Record<string, unknown>> {
-  // In production, this would check actual system health
+  const memoryUsage = process.memoryUsage?.() || { heapUsed: 0, heapTotal: 0, rss: 0 };
+  const cpuUsage = process.cpuUsage?.() || { user: 0, system: 0 };
+  
+  // Check service health
+  const services: Record<string, string> = {
+    api: 'up',
+  };
+  
+  // Check storage
+  try {
+    const { isPersistentStorage, getStats } = await import('@/lib/storage');
+    if (isPersistentStorage()) {
+      const stats = await getStats();
+      services.cache = stats.connected ? 'up' : 'down';
+    } else {
+      services.cache = 'memory-only';
+    }
+  } catch {
+    services.cache = 'unknown';
+  }
+  
+  // Calculate health status
+  const healthyServices = Object.values(services).filter(s => s === 'up' || s === 'memory-only').length;
+  const totalServices = Object.keys(services).length;
+  const status = healthyServices === totalServices ? 'healthy' 
+    : healthyServices > totalServices / 2 ? 'degraded' 
+    : 'unhealthy';
+  
   return {
-    status: 'healthy',
-    services: {
-      api: 'up',
-      database: 'up',
-      cache: 'up',
-    },
+    status,
+    services,
     memory: {
-      used: process.memoryUsage?.().heapUsed || 0,
-      total: process.memoryUsage?.().heapTotal || 0,
+      heapUsed: memoryUsage.heapUsed,
+      heapTotal: memoryUsage.heapTotal,
+      rss: memoryUsage.rss,
+      heapUsedMB: Math.round(memoryUsage.heapUsed / 1024 / 1024),
+      heapTotalMB: Math.round(memoryUsage.heapTotal / 1024 / 1024),
     },
+    cpu: cpuUsage,
+    uptime: process.uptime?.() || 0,
+    nodeVersion: process.version,
     timestamp: new Date().toISOString(),
   };
 }

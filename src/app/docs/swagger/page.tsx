@@ -67,7 +67,7 @@ export default function SwaggerDocsPage() {
   };
   
   return (
-    <div className="min-h-screen bg-neutral-950">
+    <div className="min-h-screen bg-background">
       {/* Swagger UI CSS */}
       <link
         rel="stylesheet"
@@ -362,7 +362,7 @@ export default function SwaggerDocsPage() {
       `}</style>
       
       {/* Header */}
-      <header className="sticky top-0 z-50 border-b border-neutral-800 bg-neutral-950/95 backdrop-blur supports-[backdrop-filter]:bg-neutral-950/80">
+      <header className="sticky top-0 z-50 border-b border-surface-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80">
         <div className="container mx-auto px-4 py-3 flex items-center justify-between">
           <div className="flex items-center gap-4">
             <Link 
@@ -378,7 +378,7 @@ export default function SwaggerDocsPage() {
           <nav className="flex items-center gap-4">
             <Link
               href="/docs/api"
-              className="text-sm text-neutral-400 hover:text-white transition-colors"
+              className="text-sm text-text-secondary hover:text-white transition-colors"
             >
               Quick Reference
             </Link>
@@ -386,8 +386,8 @@ export default function SwaggerDocsPage() {
               href="/api/v2/openapi.json"
               target="_blank"
               rel="noopener noreferrer"
-              className="px-4 py-1.5 text-sm font-medium text-neutral-300 hover:text-white 
-                         border border-neutral-700 rounded-lg hover:bg-neutral-800 transition-colors"
+              className="px-4 py-1.5 text-sm font-medium text-text-secondary hover:text-white 
+                         border border-surface-border rounded-lg hover:bg-surface-hover transition-colors"
             >
               OpenAPI Spec ↗
             </a>
@@ -403,11 +403,11 @@ export default function SwaggerDocsPage() {
       </header>
       
       {/* API Key Input */}
-      <div className="border-b border-neutral-800 bg-neutral-900/50">
+      <div className="border-b border-surface-border bg-background-secondary/50">
         <div className="container mx-auto px-4 py-4">
           <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
             <div className="flex-1">
-              <label className="block text-sm font-medium text-neutral-300 mb-1.5">
+              <label className="block text-sm font-medium text-text-secondary mb-1.5">
                 🔑 API Key
               </label>
               <input
@@ -415,12 +415,12 @@ export default function SwaggerDocsPage() {
                 placeholder="Enter your API key for authenticated requests..."
                 value={apiKey}
                 onChange={(e) => handleApiKeyChange(e.target.value)}
-                className="w-full max-w-md px-4 py-2 bg-neutral-900 border border-neutral-700 rounded-lg
-                           text-white placeholder:text-neutral-500 focus:ring-2 focus:ring-cyan-500/50 
-                           focus:border-cyan-500 transition-colors"
+                className="w-full max-w-md px-4 py-2 bg-background-secondary border border-surface-border rounded-lg
+                           text-white placeholder:text-text-muted focus:ring-2 focus:ring-primary/50 
+                           focus:border-primary transition-colors"
               />
             </div>
-            <div className="text-sm text-neutral-500">
+            <div className="text-sm text-text-muted">
               <p>API key will be included in all &quot;Try it out&quot; requests.</p>
               <p>
                 Don&apos;t have a key?{' '}

@@ -3,9 +3,18 @@
  *
  * Tracks payments, generates receipts, and provides payment history
  * for users who pay via x402 micropayments.
+ * 
+ * Uses unified storage layer (Upstash Redis / memory fallback)
  */
 
 import { CURRENT_NETWORK, USDC_ADDRESS, PAYMENT_ADDRESS } from './config';
+import * as storage from '../storage';
+
+// Storage namespace for payment data
+const NAMESPACE = 'x402:payments';
+const RECEIPTS_KEY = 'receipts'; // Hash of receipt ID -> receipt data
+const WALLET_INDEX_PREFIX = 'wallet:'; // wallet:address -> list of receipt IDs
+const STATS_KEY = 'stats'; // Aggregate statistics
 
 // =============================================================================
 // TYPES
@@ -85,11 +94,61 @@ export interface PaymentStats {
 }
 
 // =============================================================================
-// STORAGE (In-memory for demo, use Redis/DB in production)
+// STORAGE HELPERS
 // =============================================================================
 
-const receiptsStore = new Map<string, PaymentReceipt>();
-const walletReceiptsIndex = new Map<string, string[]>(); // wallet -> receipt IDs
+/**
+ * Get receipt from storage
+ */
+async function getReceiptFromStorage(receiptId: string): Promise<PaymentReceipt | null> {
+  return storage.hget<PaymentReceipt>(`${NAMESPACE}:${RECEIPTS_KEY}`, receiptId);
+}
+
+/**
+ * Save receipt to storage
+ */
+async function saveReceiptToStorage(receipt: PaymentReceipt): Promise<void> {
+  // Store receipt in hash
+  await storage.hset(`${NAMESPACE}:${RECEIPTS_KEY}`, receipt.id, receipt);
+  
+  // Add to wallet index
+  const walletKey = `${NAMESPACE}:${WALLET_INDEX_PREFIX}${receipt.walletAddress}`;
+  await storage.rpush(walletKey, receipt.id);
+  
+  // Update stats
+  await updateStats(receipt);
+}
+
+/**
+ * Update aggregate stats
+ */
+async function updateStats(receipt: PaymentReceipt): Promise<void> {
+  const usd = parseInt(receipt.amount, 10) / 1_000_000;
+  
+  // Increment counters
+  await storage.incrby(`${NAMESPACE}:stats:total_revenue`, Math.round(usd * 100)); // Store as cents
+  await storage.incr(`${NAMESPACE}:stats:total_payments`);
+  await storage.sadd(`${NAMESPACE}:stats:unique_wallets`, receipt.walletAddress);
+  
+  // Daily stats
+  const dateKey = new Date().toISOString().slice(0, 10);
+  await storage.incrby(`${NAMESPACE}:stats:daily:${dateKey}:revenue`, Math.round(usd * 100));
+  await storage.incr(`${NAMESPACE}:stats:daily:${dateKey}:count`);
+  await storage.expire(`${NAMESPACE}:stats:daily:${dateKey}:revenue`, 90 * 24 * 60 * 60); // 90 days
+  await storage.expire(`${NAMESPACE}:stats:daily:${dateKey}:count`, 90 * 24 * 60 * 60);
+  
+  // Endpoint stats
+  await storage.incrby(`${NAMESPACE}:stats:endpoint:${receipt.resource}:revenue`, Math.round(usd * 100));
+  await storage.incr(`${NAMESPACE}:stats:endpoint:${receipt.resource}:count`);
+}
+
+/**
+ * Get wallet receipt IDs from storage
+ */
+async function getWalletReceiptIds(walletAddress: string): Promise<string[]> {
+  const walletKey = `${NAMESPACE}:${WALLET_INDEX_PREFIX}${walletAddress}`;
+  return storage.lrange(walletKey, 0, -1);
+}
 
 // =============================================================================
 // RECEIPT GENERATION
@@ -149,7 +208,7 @@ function getExplorerUrl(network: string, txHash: string): string {
 /**
  * Create a new payment receipt
  */
-export function createReceipt(params: {
+export async function createReceipt(params: {
   walletAddress: string;
   amount: string;
   resource: string;
@@ -157,7 +216,7 @@ export function createReceipt(params: {
   network?: string;
   transactionHash?: string;
   metadata?: Record<string, unknown>;
-}): PaymentReceipt {
+}): Promise<PaymentReceipt> {
   const id = generateReceiptId();
   const now = new Date().toISOString();
   const network = params.network || CURRENT_NETWORK;
@@ -180,14 +239,8 @@ export function createReceipt(params: {
     metadata: params.metadata,
   };
 
-  // Store receipt
-  receiptsStore.set(id, receipt);
-
-  // Index by wallet
-  const walletKey = receipt.walletAddress;
-  const walletReceipts = walletReceiptsIndex.get(walletKey) || [];
-  walletReceipts.push(id);
-  walletReceiptsIndex.set(walletKey, walletReceipts);
+  // Store receipt in persistent storage
+  await saveReceiptToStorage(receipt);
 
   return receipt;
 }
@@ -195,11 +248,11 @@ export function createReceipt(params: {
 /**
  * Update receipt status (e.g., when settled on-chain)
  */
-export function updateReceipt(
+export async function updateReceipt(
   receiptId: string,
   updates: Partial<Pick<PaymentReceipt, 'status' | 'transactionHash' | 'settledAt' | 'error'>>
-): PaymentReceipt | null {
-  const receipt = receiptsStore.get(receiptId);
+): Promise<PaymentReceipt | null> {
+  const receipt = await getReceiptFromStorage(receiptId);
   if (!receipt) return null;
 
   const updated = {
@@ -212,15 +265,15 @@ export function updateReceipt(
     updated.explorerUrl = getExplorerUrl(receipt.network, updates.transactionHash);
   }
 
-  receiptsStore.set(receiptId, updated);
+  await storage.hset(`${NAMESPACE}:${RECEIPTS_KEY}`, receiptId, updated);
   return updated;
 }
 
 /**
  * Get a receipt by ID
  */
-export function getReceipt(receiptId: string): PaymentReceipt | null {
-  return receiptsStore.get(receiptId) || null;
+export async function getReceipt(receiptId: string): Promise<PaymentReceipt | null> {
+  return getReceiptFromStorage(receiptId);
 }
 
 // =============================================================================
@@ -230,17 +283,21 @@ export function getReceipt(receiptId: string): PaymentReceipt | null {
 /**
  * Get payment history for a wallet
  */
-export function getPaymentHistory(
+export async function getPaymentHistory(
   walletAddress: string,
   options: { limit?: number; offset?: number } = {}
-): PaymentHistory {
+): Promise<PaymentHistory> {
   const { limit = 50, offset = 0 } = options;
   const normalizedAddress = walletAddress.toLowerCase();
 
-  const receiptIds = walletReceiptsIndex.get(normalizedAddress) || [];
-  const allReceipts = receiptIds
-    .map((id) => receiptsStore.get(id))
-    .filter((r): r is PaymentReceipt => r !== undefined)
+  const receiptIds = await getWalletReceiptIds(normalizedAddress);
+  
+  // Fetch all receipts for this wallet
+  const receiptPromises = receiptIds.map((id: string) => getReceiptFromStorage(id));
+  const receiptsRaw = await Promise.all(receiptPromises);
+  
+  const allReceipts = receiptsRaw
+    .filter((r): r is PaymentReceipt => r !== null)
     .sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
 
   // Calculate totals
@@ -284,43 +341,60 @@ export function getPaymentHistory(
 /**
  * Get payment statistics (for admin dashboard)
  */
-export function getPaymentStats(): PaymentStats {
-  const now = Date.now();
-  const dayStart = now - 24 * 60 * 60 * 1000;
-  const weekStart = now - 7 * 24 * 60 * 60 * 1000;
-  const monthStart = now - 30 * 24 * 60 * 60 * 1000;
+export async function getPaymentStats(): Promise<PaymentStats> {
+  // Get stats from storage counters
+  const [
+    totalRevenueCents,
+    totalPayments,
+    uniqueWalletsCount
+  ] = await Promise.all([
+    storage.get<number>(`${NAMESPACE}:stats:total_revenue`) || 0,
+    storage.get<number>(`${NAMESPACE}:stats:total_payments`) || 0,
+    storage.smembers(`${NAMESPACE}:stats:unique_wallets`).then(m => m.length),
+  ]);
 
-  let totalRevenue = 0;
-  let todayRevenue = 0;
-  let weekRevenue = 0;
-  let monthRevenue = 0;
-  const uniqueWallets = new Set<string>();
-  const endpointRevenue = new Map<string, { revenue: number; count: number }>();
+  const totalRevenue = (totalRevenueCents || 0) / 100;
+  const totalPaymentsNum = totalPayments || 0;
 
-  for (const receipt of receiptsStore.values()) {
-    if (receipt.status !== 'settled' && receipt.status !== 'pending') continue;
-
-    const usd = parseInt(receipt.amount, 10) / 1_000_000;
-    const ts = new Date(receipt.timestamp).getTime();
-
-    totalRevenue += usd;
-    uniqueWallets.add(receipt.walletAddress);
-
-    if (ts > dayStart) todayRevenue += usd;
-    if (ts > weekStart) weekRevenue += usd;
-    if (ts > monthStart) monthRevenue += usd;
-
-    // Track by endpoint
-    const endpoint = receipt.resource;
-    const existing = endpointRevenue.get(endpoint) || { revenue: 0, count: 0 };
-    existing.revenue += usd;
-    existing.count += 1;
-    endpointRevenue.set(endpoint, existing);
+  // Get daily stats for time-based revenue
+  const today = new Date().toISOString().slice(0, 10);
+  const dates: string[] = [];
+  for (let i = 0; i < 30; i++) {
+    const d = new Date();
+    d.setDate(d.getDate() - i);
+    dates.push(d.toISOString().slice(0, 10));
   }
 
-  // Sort endpoints by revenue
-  const topEndpoints = Array.from(endpointRevenue.entries())
-    .map(([endpoint, data]) => ({ endpoint, ...data }))
+  // Fetch daily revenue
+  const dailyRevenues = await Promise.all(
+    dates.map(async (date) => ({
+      date,
+      revenue: ((await storage.get<number>(`${NAMESPACE}:stats:daily:${date}:revenue`)) || 0) / 100,
+    }))
+  );
+
+  const todayRevenue = dailyRevenues[0]?.revenue || 0;
+  const weekRevenue = dailyRevenues.slice(0, 7).reduce((sum, d) => sum + d.revenue, 0);
+  const monthRevenue = dailyRevenues.reduce((sum, d) => sum + d.revenue, 0);
+
+  // Get top endpoints (scan for endpoint stats keys)
+  const endpointStats: Array<{ endpoint: string; revenue: number; count: number }> = [];
+  const { keys: endpointKeys } = await storage.scan(`${NAMESPACE}:stats:endpoint:*:revenue`);
+  
+  for (const key of endpointKeys.slice(0, 20)) {
+    const endpoint = key.replace(`${NAMESPACE}:stats:endpoint:`, '').replace(':revenue', '');
+    const [revenueCents, count] = await Promise.all([
+      storage.get<number>(key) || 0,
+      storage.get<number>(key.replace(':revenue', ':count')) || 0,
+    ]);
+    endpointStats.push({
+      endpoint,
+      revenue: (revenueCents || 0) / 100,
+      count: count || 0,
+    });
+  }
+
+  const topEndpoints = endpointStats
     .sort((a, b) => b.revenue - a.revenue)
     .slice(0, 10);
 
@@ -329,9 +403,9 @@ export function getPaymentStats(): PaymentStats {
     todayRevenue,
     weekRevenue,
     monthRevenue,
-    totalPayments: receiptsStore.size,
-    uniquePayers: uniqueWallets.size,
-    averagePayment: receiptsStore.size > 0 ? totalRevenue / receiptsStore.size : 0,
+    totalPayments: totalPaymentsNum,
+    uniquePayers: uniqueWalletsCount,
+    averagePayment: totalPaymentsNum > 0 ? totalRevenue / totalPaymentsNum : 0,
     topEndpoints,
   };
 }
@@ -343,12 +417,12 @@ export function getPaymentStats(): PaymentStats {
 /**
  * Verify a receipt is valid (for dispute resolution)
  */
-export function verifyReceipt(receiptId: string): {
+export async function verifyReceipt(receiptId: string): Promise<{
   valid: boolean;
   receipt?: PaymentReceipt;
   reason?: string;
-} {
-  const receipt = receiptsStore.get(receiptId);
+}> {
+  const receipt = await getReceiptFromStorage(receiptId);
 
   if (!receipt) {
     return { valid: false, reason: 'Receipt not found' };
@@ -368,11 +442,11 @@ export function verifyReceipt(receiptId: string): {
 /**
  * Export receipts for a wallet (for tax/accounting)
  */
-export function exportReceipts(
+export async function exportReceipts(
   walletAddress: string,
   format: 'json' | 'csv' = 'json'
-): string {
-  const history = getPaymentHistory(walletAddress, { limit: 10000 });
+): Promise<string> {
+  const history = await getPaymentHistory(walletAddress, { limit: 10000 });
 
   if (format === 'csv') {
     const headers = [

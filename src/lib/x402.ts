@@ -372,6 +372,23 @@ export async function verifyX402Payment(
 // API KEY AUTHENTICATION
 // =============================================================================
 
+import { get, isPersistentStorage } from '@/lib/storage';
+
+// API Key interface for lookup
+interface StoredAPIKey {
+  id: string;
+  key: string;
+  permissions: string[];
+  rateLimit: number;
+  usageToday: number;
+  active: boolean;
+  expiresAt: string;
+}
+
+// Cache for API key lookups
+const apiKeyCache = new Map<string, { tier: ApiTier; remaining: number; expiresAt: number }>();
+const CACHE_TTL = 5 * 60 * 1000; // 5 minutes
+
 /**
  * Check API key and tier
  */
@@ -384,15 +401,48 @@ export async function checkApiKey(
     return null;
   }
 
-  // In production, look up API key in database
-  // For demo, use key prefixes to determine tier
-  if (apiKey.startsWith('ent_')) {
+  // Check cache first
+  const cached = apiKeyCache.get(apiKey);
+  if (cached && cached.expiresAt > Date.now()) {
+    return { tier: cached.tier, remaining: cached.remaining };
+  }
+
+  // Try to look up key in storage
+  if (isPersistentStorage()) {
+    try {
+      // Scan for the API key
+      const keyData = await get<StoredAPIKey>(`apikeys:${apiKey.substring(0, 20)}`);
+      if (keyData && keyData.key === apiKey && keyData.active) {
+        // Check expiration
+        if (new Date(keyData.expiresAt) > new Date()) {
+          // Determine tier based on permissions
+          const tier: ApiTier = keyData.permissions.includes('market:premium') 
+            ? 'enterprise' 
+            : keyData.permissions.includes('ai:analyze') 
+              ? 'pro' 
+              : 'free';
+          
+          const remaining = keyData.rateLimit - keyData.usageToday;
+          
+          // Cache the result
+          apiKeyCache.set(apiKey, { tier, remaining, expiresAt: Date.now() + CACHE_TTL });
+          
+          return { tier, remaining };
+        }
+      }
+    } catch (error) {
+      console.error('[x402] API key lookup error:', error);
+    }
+  }
+
+  // Fallback: use key prefixes to determine tier (for backward compatibility)
+  if (apiKey.startsWith('cda_ent_') || apiKey.startsWith('ent_')) {
     return { tier: 'enterprise', remaining: -1 };
   }
-  if (apiKey.startsWith('pro_')) {
+  if (apiKey.startsWith('cda_pro_') || apiKey.startsWith('pro_')) {
     return { tier: 'pro', remaining: 10000 };
   }
-  if (apiKey.startsWith('free_')) {
+  if (apiKey.startsWith('cda_') || apiKey.startsWith('free_')) {
     return { tier: 'free', remaining: 100 };
   }
 

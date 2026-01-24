@@ -61,7 +61,7 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
   const walletAddress = request.headers.get('X-Wallet-Address');
   let activePass = null;
   if (walletAddress) {
-    const pass = getActivePass(walletAddress);
+    const pass = await getActivePass(walletAddress);
     if (pass) {
       activePass = {
         ...pass,
@@ -169,7 +169,7 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
   }
 
   // Check for existing active pass
-  const existingPass = getActivePass(walletAddress);
+  const existingPass = await getActivePass(walletAddress);
   if (existingPass) {
     const status = getPassStatus(existingPass);
     return NextResponse.json(
@@ -190,7 +190,7 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
 
   // Create the pass
   const transactionHash = payment.transactionHash || undefined;
-  const pass = createPass(walletAddress, passDuration, transactionHash);
+  const pass = await createPass(walletAddress, passDuration, transactionHash);
   const status = getPassStatus(pass);
 
   return NextResponse.json(

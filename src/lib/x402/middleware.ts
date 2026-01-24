@@ -109,7 +109,7 @@ export async function hybridAuthMiddleware(
   // 2. Check for access pass (wallet-based)
   const walletAddress = request.headers.get('X-Wallet-Address');
   if (walletAddress) {
-    const pass = getActivePass(walletAddress);
+    const pass = await getActivePass(walletAddress);
 
     if (pass) {
       // Check pass rate limit (per minute)
@@ -137,7 +137,7 @@ export async function hybridAuthMiddleware(
       }
 
       // Record request against pass
-      recordPassRequest(pass.id);
+      await recordPassRequest(pass.id);
 
       // Allow request
       return null;

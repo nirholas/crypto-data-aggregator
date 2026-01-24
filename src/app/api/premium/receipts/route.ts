@@ -27,7 +27,7 @@ export async function GET(request: NextRequest) {
   // Get single receipt by ID
   const receiptId = searchParams.get('id');
   if (receiptId) {
-    const receipt = getReceipt(receiptId);
+    const receipt = await getReceipt(receiptId);
 
     if (!receipt) {
       return NextResponse.json(
@@ -38,7 +38,7 @@ export async function GET(request: NextRequest) {
 
     // Verify if requested
     if (searchParams.get('verify') === 'true') {
-      const verification = verifyReceipt(receiptId);
+      const verification = await verifyReceipt(receiptId);
       return NextResponse.json({
         receipt,
         verification,
@@ -67,7 +67,7 @@ export async function GET(request: NextRequest) {
   // Check for export format
   const format = searchParams.get('format');
   if (format === 'csv') {
-    const csv = exportReceipts(walletAddress, 'csv');
+    const csv = await exportReceipts(walletAddress, 'csv');
     return new NextResponse(csv, {
       status: 200,
       headers: {
@@ -82,7 +82,7 @@ export async function GET(request: NextRequest) {
   const offset = parseInt(searchParams.get('offset') || '0', 10);
 
   // Get payment history
-  const history = getPaymentHistory(walletAddress, { limit, offset });
+  const history = await getPaymentHistory(walletAddress, { limit, offset });
 
   return NextResponse.json({
     wallet: history.walletAddress,

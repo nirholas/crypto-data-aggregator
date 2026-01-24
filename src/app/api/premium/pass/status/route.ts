@@ -36,11 +36,11 @@ export async function GET(request: NextRequest) {
   }
 
   // Get active pass
-  const activePass = getActivePass(walletAddress);
+  const activePass = await getActivePass(walletAddress);
 
   if (!activePass) {
     // Get past passes
-    const pastPasses = getWalletPasses(walletAddress);
+    const pastPasses = await getWalletPasses(walletAddress);
 
     return NextResponse.json({
       hasActivePass: false,

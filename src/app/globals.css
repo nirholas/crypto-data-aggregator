@@ -1,38 +1,35 @@
-/* Custom Fonts - Must be at the top */
+/* Fonts */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
-
 @import "tailwindcss";
 
-/* ============================================
-   Crypto Data Aggregator - CMC/CoinGecko Theme
-   Deep navy background with blue accents
-   ============================================ */
-
-/* CSS Custom Properties for easy theming */
+/* ===========================================
+   DESIGN TOKENS - Single Source of Truth
+   All colors defined here, used via Tailwind
+   =========================================== */
 :root {
-  /* Background colors */
+  /* Backgrounds */
   --bg-primary: #0D1421;
   --bg-secondary: #131A2A;
   --bg-tertiary: #171E2E;
   
-  /* Surface/Card colors */
+  /* Surfaces */
   --surface: #1E2329;
   --surface-hover: #252B36;
   --surface-elevated: #2B3139;
   --surface-border: #2B3544;
   
-  /* Text colors */
+  /* Text */
   --text-primary: #FFFFFF;
   --text-secondary: #A6B0C3;
   --text-muted: #808A9D;
   --text-disabled: #5E6673;
   
-  /* Brand colors */
+  /* Brand */
   --primary: #3861FB;
   --primary-hover: #4A73FF;
   --secondary: #8DC647;
   
-  /* Semantic colors */
+  /* Semantic */
   --gain: #16C784;
   --gain-bg: rgba(22, 199, 132, 0.1);
   --loss: #EA3943;
@@ -41,298 +38,113 @@
   --info: #3B82F6;
 }
 
-/* Base Styles */
+/* ===========================================
+   BASE STYLES
+   =========================================== */
 html, body {
-  background-color: var(--bg-primary) !important;
-  color: var(--text-primary) !important;
-  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  scroll-behavior: smooth;
 }
 
-/* ============================================
-   Override bg-black and dark:bg-black patterns
-   ============================================ */
-.dark .dark\:bg-black,
-.bg-black,
-[class*="dark:bg-black"],
-.dark\:bg-black {
-  background-color: var(--bg-primary) !important;
-}
-
-.dark .dark\:bg-gray-800,
-.dark .dark\:bg-gray-900,
-.dark .dark\:bg-neutral-800,
-.dark .dark\:bg-neutral-900 {
-  background-color: var(--bg-secondary) !important;
-}
-
-/* Override borders */
-.dark .dark\:border-gray-700,
-.dark .dark\:border-gray-800,
-.dark .dark\:border-neutral-700,
-.dark .dark\:border-neutral-800 {
-  border-color: var(--surface-border) !important;
-}
-
-/* Text hierarchy - NOT all white */
-h1, h2, h3, h4, h5, h6 {
-  color: var(--text-primary) !important;
-}
-
-/* Secondary text for descriptions, metadata */
-.text-secondary,
-.text-muted,
-[class*="text-neutral-400"],
-[class*="text-gray-400"],
-[class*="text-slate-400"] {
-  color: var(--text-secondary) !important;
-}
-
-/* Muted text for less important info */
-.text-muted-foreground,
-[class*="text-neutral-500"],
-[class*="text-gray-500"],
-[class*="text-slate-500"] {
-  color: var(--text-muted) !important;
-}
-
-/* Placeholder text */
 ::placeholder {
-  color: var(--text-muted) !important;
-  opacity: 1;
+  color: var(--text-muted);
 }
 
-/* ============================================
-   Gain/Loss Colors - Market Data
-   ============================================ */
-.text-gain, .text-green-500, .text-green-400, .text-emerald-500 {
-  color: var(--gain) !important;
-}
-
-.text-loss, .text-red-500, .text-red-400 {
-  color: var(--loss) !important;
-}
-
-.bg-gain {
-  background-color: var(--gain-bg) !important;
-}
-
-.bg-loss {
-  background-color: var(--loss-bg) !important;
-}
-
-/* ============================================
-   Background & Surface Colors
-   ============================================ */
-
-/* Main background */
-.bg-black, 
-body {
-  background-color: var(--bg-primary) !important;
-}
-
-/* Secondary backgrounds */
-.dark .bg-neutral-900,
-.bg-neutral-900,
-[class*="bg-gray-900"],
-[class*="bg-slate-900"] {
-  background-color: var(--bg-secondary) !important;
-}
-
-/* Card/Surface backgrounds */
-.dark .bg-neutral-800,
-.bg-neutral-800,
-[class*="bg-gray-800"],
-[class*="bg-slate-800"],
-.card,
-.bg-surface {
-  background-color: var(--surface) !important;
-}
-
-/* Hover states for cards */
-.dark .bg-neutral-700,
-.bg-neutral-700,
-[class*="bg-gray-700"],
-[class*="bg-slate-700"] {
-  background-color: var(--surface-hover) !important;
-}
-
-/* ============================================
-   Card & Component Styling
-   ============================================ */
-
-/* Cards with subtle border and shadow */
-.card,
-[class*="rounded-xl"][class*="border"],
-[class*="rounded-2xl"][class*="border"],
-[class*="rounded-lg"][class*="border"] {
-  background-color: var(--surface) !important;
-  border-color: var(--surface-border) !important;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
-  transition: all 0.2s ease;
-}
-
-/* Card hover effect */
-[class*="rounded-xl"]:hover,
-[class*="rounded-2xl"]:hover,
-[class*="rounded-lg"]:hover {
-  border-color: #3B4754 !important;
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.4);
-}
-
-/* All borders */
-* {
-  border-color: var(--surface-border);
-}
-
-/* ============================================
-   Buttons
-   ============================================ */
-
-/* Primary button - CMC Blue */
-.btn-primary,
-button[class*="bg-primary"],
-button[class*="bg-blue"] {
-  background-color: var(--primary) !important;
-  color: white !important;
-  border: none !important;
-  transition: all 0.2s ease;
-}
-
-.btn-primary:hover,
-button[class*="bg-primary"]:hover,
-button[class*="bg-blue"]:hover {
-  background-color: var(--primary-hover) !important;
-  box-shadow: 0 0 20px rgba(56, 97, 251, 0.3);
-}
-
-/* Secondary/Ghost buttons */
-button,
-.btn {
-  transition: all 0.2s ease;
-}
-
-button:hover,
-.btn:hover {
-  background-color: var(--surface-hover);
-}
-
-/* ============================================
-   Input Fields
-   ============================================ */
-input, select, textarea {
-  background-color: var(--bg-secondary) !important;
-  border: 1px solid var(--surface-border) !important;
-  color: var(--text-primary) !important;
-  transition: all 0.2s ease;
-}
-
-input:focus, select:focus, textarea:focus {
-  border-color: var(--primary) !important;
-  box-shadow: 0 0 0 2px rgba(56, 97, 251, 0.2);
-  outline: none;
-}
-
-/* Search input - like CMC */
-input[type="search"],
-.search-input {
-  background-color: var(--surface) !important;
-  border-radius: 0.5rem;
-}
-
-/* ============================================
-   Tables - Like CMC coin table
-   ============================================ */
-table {
-  border-collapse: separate;
-  border-spacing: 0;
-}
-
-th {
-  background-color: var(--bg-secondary) !important;
-  color: var(--text-muted) !important;
-  font-weight: 500;
-  text-transform: uppercase;
-  font-size: 0.75rem;
-  letter-spacing: 0.05em;
-  border-bottom: 1px solid var(--surface-border);
-}
-
-td {
-  border-bottom: 1px solid var(--surface-border);
-}
-
-tr {
-  transition: background-color 0.15s ease;
-}
-
-tr:hover {
-  background-color: var(--surface) !important;
-}
-
-/* ============================================
-   Navigation
-   ============================================ */
-nav {
-  background-color: var(--bg-primary);
-  border-bottom: 1px solid var(--surface-border);
-}
-
-nav a, .nav-link {
-  color: var(--text-secondary) !important;
-  transition: color 0.2s ease;
-}
-
-nav a:hover, .nav-link:hover {
-  color: var(--text-primary) !important;
-}
-
-nav a.active, .nav-link.active {
-  color: var(--text-primary) !important;
-}
-
-/* ============================================
-   Tags/Badges/Pills
-   ============================================ */
-.badge,
-.tag,
-.pill {
-  font-size: 0.75rem;
-  font-weight: 500;
-  padding: 0.25rem 0.5rem;
-  border-radius: 0.375rem;
-}
-
-.badge-primary {
-  background-color: rgba(56, 97, 251, 0.15);
-  color: var(--primary);
-}
-
-.badge-success, .badge-gain {
-  background-color: var(--gain-bg);
-  color: var(--gain);
-}
-
-.badge-danger, .badge-loss {
-  background-color: var(--loss-bg);
-  color: var(--loss);
-}
-
-.badge-warning {
-  background-color: rgba(247, 147, 26, 0.15);
-  color: var(--warning);
-}
-
-/* ============================================
-   Focus & Accessibility
-   ============================================ */
 :focus-visible {
   outline: 2px solid var(--primary);
   outline-offset: 2px;
 }
 
+/* ===========================================
+   SCROLLBAR
+   =========================================== */
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: var(--bg-primary); }
+::-webkit-scrollbar-thumb { background: var(--surface-border); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: #3B4754; }
+
+/* ===========================================
+   ANIMATIONS
+   =========================================== */
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes fadeInUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes shimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
+@keyframes live-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(22, 199, 132, 0.7); }
+  50% { box-shadow: 0 0 0 8px rgba(22, 199, 132, 0); }
+}
+
+.animate-fade-in { animation: fadeIn 200ms ease-out; }
+.animate-fade-in-up { animation: fadeInUp 300ms ease-out; }
+
+/* Skeleton loader */
+.skeleton {
+  background: linear-gradient(90deg, var(--surface) 25%, var(--surface-hover) 50%, var(--surface) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: 0.25rem;
+}
+
+/* ===========================================
+   UTILITY CLASSES
+   =========================================== */
+
+/* Gradient text */
+.gradient-text {
+  background: linear-gradient(135deg, var(--primary) 0%, #818CF8 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Glass effects */
+.glass {
+  background: rgba(13, 20, 33, 0.8);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--surface-border);
+}
+
+.glass-card {
+  background: rgba(30, 35, 41, 0.7);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.3);
+}
+
+/* Glow effects */
+.glow-primary { box-shadow: 0 0 20px rgba(56, 97, 251, 0.25); }
+.glow-gain { box-shadow: 0 0 20px rgba(22, 199, 132, 0.25); }
+.glow-loss { box-shadow: 0 0 20px rgba(234, 57, 67, 0.25); }
+
+/* Live indicator */
+.live-pulse::after {
+  content: '';
+  position: absolute;
+  top: 0; right: 0;
+  width: 8px; height: 8px;
+  background: var(--gain);
+  border-radius: 50%;
+  animation: live-pulse 2s ease-in-out infinite;
+}
+
+/* Price flash */
+.price-flash-up { animation: flash-green 0.5s ease; }
+.price-flash-down { animation: flash-red 0.5s ease; }
+@keyframes flash-green { 50% { background-color: rgba(22, 199, 132, 0.2); } }
+@keyframes flash-red { 50% { background-color: rgba(234, 57, 67, 0.2); } }
+
+/* Number formatting */
+.number-mono {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum";
+}
+
+/* ===========================================
+   ACCESSIBILITY
+   =========================================== */
 .skip-link {
   position: absolute;
   top: -100%;
@@ -344,759 +156,12 @@ nav a.active, .nav-link.active {
   border-radius: 0 0 0.5rem 0.5rem;
   font-weight: 600;
   z-index: 9999;
-  transition: top 150ms ease;
 }
+.skip-link:focus { top: 0; }
 
-.skip-link:focus {
-  top: 0;
-}
-
-/* ============================================
-   Scrollbar - Subtle dark
-   ============================================ */
-::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
-}
-
-::-webkit-scrollbar-track {
-  background: var(--bg-primary);
-}
-
-::-webkit-scrollbar-thumb {
-  background: var(--surface-border);
-  border-radius: 4px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: #3B4754;
-}
-
-/* ============================================
-   Animations
-   ============================================ */
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes pulse-gentle {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.7; }
-}
-
-@keyframes shimmer {
-  0% { background-position: -200% 0; }
-  100% { background-position: 200% 0; }
-}
-
-.animate-fade-in {
-  animation: fadeIn 200ms ease-out;
-}
-
-.animate-fade-in-up {
-  animation: fadeInUp 300ms ease-out;
-}
-
-/* ============================================
-   Skeleton Loading
-   ============================================ */
-.skeleton {
-  background: linear-gradient(90deg, 
-    var(--surface) 25%, 
-    var(--surface-hover) 50%, 
-    var(--surface) 75%
-  );
-  background-size: 200% 100%;
-  animation: shimmer 1.5s infinite;
-  border-radius: 0.25rem;
-}
-
-/* ============================================
-   Gradient Text - Brand accent
-   ============================================ */
-.gradient-text {
-  background: linear-gradient(135deg, var(--primary) 0%, #818CF8 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-.gradient-text-gain {
-  background: linear-gradient(135deg, var(--gain) 0%, #34D399 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-/* ============================================
-   Glass Effect
-   ============================================ */
-.glass {
-  background: rgba(13, 20, 33, 0.8);
-  backdrop-filter: blur(12px);
-  border: 1px solid var(--surface-border);
-}
-
-/* ============================================
-   Charts - Consistent colors
-   ============================================ */
-.chart-gain {
-  stroke: var(--gain);
-  fill: var(--gain);
-}
-
-.chart-loss {
-  stroke: var(--loss);
-  fill: var(--loss);
-}
-
-.chart-primary {
-  stroke: var(--primary);
-  fill: var(--primary);
-}
-
-/* Mini sparkline charts like CMC */
-.sparkline-gain {
-  stroke: var(--gain);
-  fill: url(#sparkline-gain-gradient);
-}
-
-.sparkline-loss {
-  stroke: var(--loss);
-  fill: url(#sparkline-loss-gradient);
-}
-
-/* ============================================
-   Utility Classes
-   ============================================ */
-
-/* CMC-style stat cards */
-.stat-card {
-  background: var(--surface);
-  border: 1px solid var(--surface-border);
-  border-radius: 0.5rem;
-  padding: 1rem;
-}
-
-.stat-card-title {
-  color: var(--text-muted);
-  font-size: 0.75rem;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-}
-
-.stat-card-value {
-  color: var(--text-primary);
-  font-size: 1.25rem;
-  font-weight: 600;
-}
-
-/* Network/Chain pills like CMC */
-.network-pill {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.375rem;
-  padding: 0.375rem 0.75rem;
-  background: var(--surface);
-  border: 1px solid var(--surface-border);
-  border-radius: 9999px;
-  font-size: 0.875rem;
-  color: var(--text-secondary);
-  transition: all 0.2s ease;
-}
-
-.network-pill:hover {
-  background: var(--surface-hover);
-  color: var(--text-primary);
-}
-
-.network-pill.active {
-  background: rgba(56, 97, 251, 0.15);
-  border-color: var(--primary);
-  color: var(--primary);
-}
-
-/* Tab navigation like CMC */
-.tab-nav {
-  display: flex;
-  gap: 0.5rem;
-  border-bottom: 1px solid var(--surface-border);
-}
-
-.tab-item {
-  padding: 0.75rem 1rem;
-  color: var(--text-muted);
-  font-weight: 500;
-  border-bottom: 2px solid transparent;
-  transition: all 0.2s ease;
-}
-
-.tab-item:hover {
-  color: var(--text-primary);
-}
-
-.tab-item.active {
-  color: var(--primary);
-  border-bottom-color: var(--primary);
-}
-
-/* Buy badge like CMC */
-.buy-badge {
-  display: inline-flex;
-  align-items: center;
-  padding: 0.25rem 0.5rem;
-  background: var(--primary);
-  color: white;
-  font-size: 0.75rem;
-  font-weight: 600;
-  border-radius: 0.25rem;
-}
-
-/* ============================================
-   Responsive adjustments
-   ============================================ */
-@media (max-width: 768px) {
-  .stat-card {
-    padding: 0.75rem;
-  }
-  
-  .stat-card-value {
-    font-size: 1rem;
-  }
-}
-
-/* ============================================
-   Premium Glassmorphism Effects
-   ============================================ */
-.glass-card {
-  background: rgba(30, 35, 41, 0.7);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: 
-    0 4px 24px rgba(0, 0, 0, 0.3),
-    inset 0 1px 0 rgba(255, 255, 255, 0.05);
-}
-
-.glass-card-hover:hover {
-  background: rgba(43, 49, 57, 0.8);
-  border-color: rgba(255, 255, 255, 0.12);
-  box-shadow: 
-    0 8px 32px rgba(0, 0, 0, 0.4),
-    inset 0 1px 0 rgba(255, 255, 255, 0.08);
-  transform: translateY(-2px);
-}
-
-.glass-subtle {
-  background: rgba(19, 26, 42, 0.6);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.05);
-}
-
-/* Premium frosted glass for modals */
-.glass-modal {
-  background: rgba(13, 20, 33, 0.95);
-  backdrop-filter: blur(32px) saturate(180%);
-  -webkit-backdrop-filter: blur(32px) saturate(180%);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 
-    0 24px 48px rgba(0, 0, 0, 0.5),
-    inset 0 1px 0 rgba(255, 255, 255, 0.08);
-}
-
-/* ============================================
-   Gradient Accents & Glow Effects
-   ============================================ */
-.gradient-border {
-  position: relative;
-}
-
-.gradient-border::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  padding: 1px;
-  border-radius: inherit;
-  background: linear-gradient(135deg, var(--primary) 0%, #818CF8 50%, var(--gain) 100%);
-  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-  -webkit-mask-composite: xor;
-  mask-composite: exclude;
-  pointer-events: none;
-}
-
-.glow-primary {
-  box-shadow: 0 0 20px rgba(56, 97, 251, 0.25), 0 0 40px rgba(56, 97, 251, 0.1);
-}
-
-.glow-gain {
-  box-shadow: 0 0 20px rgba(22, 199, 132, 0.25), 0 0 40px rgba(22, 199, 132, 0.1);
-}
-
-.glow-loss {
-  box-shadow: 0 0 20px rgba(234, 57, 67, 0.25), 0 0 40px rgba(234, 57, 67, 0.1);
-}
-
-/* Animated gradient background */
-.gradient-animated {
-  background: linear-gradient(-45deg, var(--bg-primary), var(--bg-secondary), var(--surface), var(--bg-tertiary));
-  background-size: 400% 400%;
-  animation: gradient-shift 15s ease infinite;
-}
-
-@keyframes gradient-shift {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
-}
-
-/* ============================================
-   Enhanced Buttons
-   ============================================ */
-.btn-glow {
-  position: relative;
-  overflow: hidden;
-  transition: all 0.3s ease;
-}
-
-.btn-glow::before {
-  content: '';
-  position: absolute;
-  inset: -2px;
-  background: linear-gradient(135deg, var(--primary), #818CF8, var(--primary));
-  border-radius: inherit;
-  filter: blur(12px);
-  opacity: 0;
-  transition: opacity 0.3s ease;
-  z-index: -1;
-}
-
-.btn-glow:hover::before {
-  opacity: 0.6;
-}
-
-.btn-shine {
-  position: relative;
-  overflow: hidden;
-}
-
-.btn-shine::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(255, 255, 255, 0.2),
-    transparent
-  );
-  transition: left 0.5s ease;
-}
-
-.btn-shine:hover::after {
-  left: 100%;
-}
-
-/* ============================================
-   Premium Card Variants
-   ============================================ */
-.card-elevated {
-  background: var(--surface);
-  border: 1px solid var(--surface-border);
-  border-radius: 1rem;
-  box-shadow: 
-    0 4px 6px -1px rgba(0, 0, 0, 0.3),
-    0 2px 4px -2px rgba(0, 0, 0, 0.2),
-    0 0 0 1px rgba(255, 255, 255, 0.02);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.card-elevated:hover {
-  border-color: rgba(255, 255, 255, 0.1);
-  box-shadow: 
-    0 20px 25px -5px rgba(0, 0, 0, 0.4),
-    0 8px 10px -6px rgba(0, 0, 0, 0.3),
-    0 0 0 1px rgba(255, 255, 255, 0.05);
-  transform: translateY(-4px);
-}
-
-.card-interactive {
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.card-interactive:hover {
-  background: var(--surface-hover);
-}
-
-.card-interactive:active {
-  transform: scale(0.98);
-}
-
-/* Gradient accent card */
-.card-gradient {
-  position: relative;
-  background: var(--surface);
-  border-radius: 1rem;
-  overflow: hidden;
-}
-
-.card-gradient::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 3px;
-  background: linear-gradient(90deg, var(--primary), #818CF8, var(--gain));
-}
-
-/* ============================================
-   Live Data Indicators
-   ============================================ */
-.live-pulse {
-  position: relative;
-}
-
-.live-pulse::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  right: 0;
-  width: 8px;
-  height: 8px;
-  background: var(--gain);
-  border-radius: 50%;
-  animation: live-pulse 2s ease-in-out infinite;
-}
-
-@keyframes live-pulse {
-  0%, 100% { 
-    box-shadow: 0 0 0 0 rgba(22, 199, 132, 0.7);
-    opacity: 1;
-  }
-  50% { 
-    box-shadow: 0 0 0 8px rgba(22, 199, 132, 0);
-    opacity: 0.8;
-  }
-}
-
-/* Price flash animation */
-.price-flash-up {
-  animation: flash-green 0.5s ease;
-}
-
-.price-flash-down {
-  animation: flash-red 0.5s ease;
-}
-
-@keyframes flash-green {
-  0%, 100% { background-color: transparent; }
-  50% { background-color: rgba(22, 199, 132, 0.2); }
-}
-
-@keyframes flash-red {
-  0%, 100% { background-color: transparent; }
-  50% { background-color: rgba(234, 57, 67, 0.2); }
-}
-
-/* Animated number counter effect */
-.counter-animate {
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-/* ============================================
-   Enhanced Badges & Pills
-   ============================================ */
-.badge-glow {
-  position: relative;
-  z-index: 1;
-}
-
-.badge-glow::before {
-  content: '';
-  position: absolute;
-  inset: -1px;
-  border-radius: inherit;
-  background: inherit;
-  filter: blur(6px);
-  opacity: 0.5;
-  z-index: -1;
-}
-
-.badge-gradient {
-  background: linear-gradient(135deg, var(--primary) 0%, #818CF8 100%);
-  color: white;
-  font-weight: 600;
-}
-
-.badge-outline {
-  background: transparent;
-  border: 1px solid currentColor;
-  opacity: 0.9;
-}
-
-/* Rank badge with shine effect */
-.rank-badge {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 2rem;
-  height: 1.5rem;
-  padding: 0 0.5rem;
-  background: linear-gradient(135deg, var(--surface) 0%, var(--surface-hover) 100%);
-  border: 1px solid var(--surface-border);
-  border-radius: 0.375rem;
-  font-size: 0.75rem;
-  font-weight: 600;
-  color: var(--text-secondary);
-}
-
-.rank-badge.top-10 {
-  background: linear-gradient(135deg, rgba(56, 97, 251, 0.2) 0%, rgba(129, 140, 248, 0.2) 100%);
-  border-color: rgba(56, 97, 251, 0.3);
-  color: var(--primary);
-}
-
-.rank-badge.top-3 {
-  background: linear-gradient(135deg, rgba(247, 147, 26, 0.2) 0%, rgba(251, 191, 36, 0.2) 100%);
-  border-color: rgba(247, 147, 26, 0.3);
-  color: var(--warning);
-}
-
-/* ============================================
-   Data Table Enhancements
-   ============================================ */
-.table-premium th {
-  background: linear-gradient(180deg, var(--bg-secondary) 0%, var(--bg-tertiary) 100%);
-  position: sticky;
-  top: 0;
-  z-index: 10;
-}
-
-.table-premium tr {
-  transition: background-color 0.15s ease;
-}
-
-.table-premium tr:hover {
-  background: linear-gradient(90deg, rgba(56, 97, 251, 0.05) 0%, transparent 50%, rgba(56, 97, 251, 0.05) 100%);
-}
-
-.table-premium td {
-  border-bottom: 1px solid rgba(43, 53, 68, 0.5);
-}
-
-/* Zebra striping - subtle */
-.table-striped tr:nth-child(even) {
-  background: rgba(23, 30, 46, 0.3);
-}
-
-/* ============================================
-   Sparkline Chart Enhancements
-   ============================================ */
-.sparkline-container {
-  position: relative;
-  overflow: hidden;
-}
-
-.sparkline-container::after {
-  content: '';
-  position: absolute;
-  right: 0;
-  top: 0;
-  bottom: 0;
-  width: 20px;
-  background: linear-gradient(90deg, transparent, var(--surface));
-  pointer-events: none;
-}
-
-/* ============================================
-   Tooltip Enhancements
-   ============================================ */
-.tooltip-premium {
-  background: var(--surface-elevated);
-  border: 1px solid var(--surface-border);
-  border-radius: 0.5rem;
-  padding: 0.75rem 1rem;
-  box-shadow: 
-    0 10px 15px -3px rgba(0, 0, 0, 0.4),
-    0 4px 6px -4px rgba(0, 0, 0, 0.3);
-  font-size: 0.875rem;
-  z-index: 50;
-}
-
-.tooltip-premium::before {
-  content: '';
-  position: absolute;
-  bottom: -6px;
-  left: 50%;
-  transform: translateX(-50%) rotate(45deg);
-  width: 12px;
-  height: 12px;
-  background: var(--surface-elevated);
-  border-right: 1px solid var(--surface-border);
-  border-bottom: 1px solid var(--surface-border);
-}
-
-/* ============================================
-   Input Enhancements
-   ============================================ */
-.input-premium {
-  background: var(--bg-tertiary);
-  border: 1px solid var(--surface-border);
-  border-radius: 0.75rem;
-  padding: 0.75rem 1rem;
-  color: var(--text-primary);
-  transition: all 0.2s ease;
-}
-
-.input-premium:focus {
-  border-color: var(--primary);
-  box-shadow: 0 0 0 3px rgba(56, 97, 251, 0.15);
-  outline: none;
-}
-
-.input-premium::placeholder {
-  color: var(--text-muted);
-}
-
-/* Search input with icon */
-.search-premium {
-  padding-left: 2.75rem;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23808A9D'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z'%3E%3C/path%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: 0.75rem center;
-  background-size: 1.25rem;
-}
-
-/* ============================================
-   Section Headers
-   ============================================ */
-.section-header {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  margin-bottom: 1.5rem;
-}
-
-.section-header::before {
-  content: '';
-  width: 4px;
-  height: 1.5rem;
-  background: linear-gradient(180deg, var(--primary) 0%, #818CF8 100%);
-  border-radius: 2px;
-}
-
-.section-title {
-  font-size: 1.25rem;
-  font-weight: 700;
-  color: var(--text-primary);
-  letter-spacing: -0.01em;
-}
-
-/* ============================================
-   Dividers
-   ============================================ */
-.divider-gradient {
-  height: 1px;
-  background: linear-gradient(90deg, transparent, var(--surface-border), transparent);
-}
-
-.divider-glow {
-  height: 1px;
-  background: linear-gradient(90deg, transparent, var(--primary), transparent);
-  opacity: 0.3;
-}
-
-/* ============================================
-   Hover Reveal Effects
-   ============================================ */
-.hover-reveal .reveal-content {
-  opacity: 0;
-  transform: translateY(4px);
-  transition: all 0.2s ease;
-}
-
-.hover-reveal:hover .reveal-content {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-/* ============================================
-   Number Formatting
-   ============================================ */
-.number-mono {
-  font-variant-numeric: tabular-nums;
-  font-feature-settings: "tnum";
-}
-
-/* Large display numbers */
-.number-display {
-  font-size: 2rem;
-  font-weight: 700;
-  letter-spacing: -0.02em;
-  line-height: 1.1;
-}
-
-/* ============================================
-   Loading & Progress States
-   ============================================ */
-.progress-bar {
-  height: 4px;
-  background: var(--surface);
-  border-radius: 2px;
-  overflow: hidden;
-}
-
-.progress-bar-fill {
-  height: 100%;
-  background: linear-gradient(90deg, var(--primary), #818CF8);
-  border-radius: 2px;
-  transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.progress-bar-animated .progress-bar-fill {
-  background-size: 200% 100%;
-  animation: progress-shimmer 2s linear infinite;
-}
-
-@keyframes progress-shimmer {
-  0% { background-position: 200% 0; }
-  100% { background-position: -200% 0; }
-}
-
-/* ============================================
-   Motion Preferences
-   ============================================ */
 @media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
+  *, *::before, *::after {
     animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
-    scroll-behavior: auto !important;
-  }
-  
-  .animate-ping,
-  .animate-pulse,
-  .animate-spin,
-  .animate-bounce {
-    animation: none !important;
   }
 }

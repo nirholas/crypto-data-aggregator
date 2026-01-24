@@ -52,7 +52,7 @@ const getTextColor = (change: number): string => {
 
   if (change >= 0) {
     // On light background, use dark text
-    return intensity > 0.3 ? 'text-neutral-900' : 'text-neutral-700';
+    return intensity > 0.3 ? 'text-background-secondary' : 'text-surface-border';
   } else {
     // On dark background, use light text
     return 'text-white';
@@ -241,11 +241,11 @@ export function Heatmap({ coins }: HeatmapProps) {
               </div>
 
               {/* Hover tooltip */}
-              <div className="absolute inset-0 bg-black/95 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center text-white p-2 rounded-lg">
+              <div className="absolute inset-0 bg-background/95 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center text-white p-2 rounded-lg">
                 <span className="text-xs font-bold truncate w-full text-center">{coin.name}</span>
                 <span className="text-xs font-mono">{formatPrice(coin.current_price)}</span>
                 <span className="text-xs font-mono">{formatPercent(change)}</span>
-                <span className="text-[10px] text-neutral-400">
+                <span className="text-[10px] text-text-secondary">
                   ${formatMarketCap(coin.market_cap)}
                 </span>
               </div>

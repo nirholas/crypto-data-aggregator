@@ -306,7 +306,7 @@ export default function CoinPageClient({
                     </div>
                     <button
                       onClick={() => setActiveTab('news')}
-                      className="text-sm text-neutral-400 hover:text-white transition-colors"
+                      className="text-sm text-text-secondary hover:text-white transition-colors"
                     >
                       View all →
                     </button>
