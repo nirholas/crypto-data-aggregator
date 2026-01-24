@@ -349,8 +349,8 @@ export default function MarketsTable({ tickers, coinSymbol }: MarketsTableProps)
                     onClick={() => setPage(pageNum)}
                     className={`w-8 h-8 text-sm rounded-lg transition-colors ${
                       page === pageNum
-                        ? 'bg-white text-neutral-900 font-medium'
-                        : 'bg-black hover:bg-neutral-600 text-white'
+                        ? 'bg-white text-background font-medium'
+                        : 'bg-background hover:bg-surface-hover text-white'
                     }`}
                   >
                     {pageNum}

@@ -149,7 +149,7 @@ export default async function DefiPage() {
                                     {protocol.symbol}
                                   </span>
                                 )}
-                                <div className="text-xs text-neutral-400">{protocol.chain}</div>
+                                <div className="text-xs text-text-secondary">{protocol.chain}</div>
                               </div>
                             </div>
                           </td>
@@ -211,7 +211,7 @@ export default async function DefiPage() {
                       className="flex items-center justify-between p-4 hover:bg-surface-alt transition"
                     >
                       <div className="flex items-center gap-3">
-                        <span className="text-neutral-400 text-sm w-5">{index + 1}</span>
+                        <span className="text-text-muted text-sm w-5">{index + 1}</span>
                         <div>
                           <span className="font-medium text-text-primary">{chain.name}</span>
                           {chain.tokenSymbol && (

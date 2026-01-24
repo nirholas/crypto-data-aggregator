@@ -14,6 +14,7 @@ import {
   getAggregatedPortfolio,
   getUserExchanges,
   SUPPORTED_EXCHANGES,
+  DEMO_MODE,
   type ExchangeId,
   type ExchangeCredentials,
 } from '@/lib/exchange-sync';
@@ -48,6 +49,18 @@ export async function GET(request: NextRequest) {
     const action = searchParams.get('action') || 'list';
 
     switch (action) {
+      case 'status': {
+        // Return exchange service status
+        return NextResponse.json({
+          configured: !DEMO_MODE,
+          demoMode: DEMO_MODE,
+          supportedExchanges: SUPPORTED_EXCHANGES.map(e => e.id),
+          notes: DEMO_MODE
+            ? 'Exchange sync is in demo mode. Set EXCHANGE_ENCRYPTION_KEY in environment for live data.'
+            : undefined,
+        });
+      }
+
       case 'list': {
         // Get connected exchanges
         const userExchanges = await getUserExchanges(session.user.id);

@@ -58,8 +58,8 @@ export function MobileBottomNav() {
       <nav
         className={cn(
           'fixed bottom-0 left-0 right-0 z-50 lg:hidden',
-          'bg-white/95 dark:bg-slate-900/95 backdrop-blur-lg',
-          'border-t border-gray-200 dark:border-slate-800',
+          'bg-background/95 backdrop-blur-lg',
+          'border-t border-surface-border',
           'pb-[env(safe-area-inset-bottom)]'
         )}
         aria-label="Mobile navigation"
@@ -121,8 +121,8 @@ function NavItem({ href, icon: Icon, label, isActive, badge }: NavItemProps) {
         'rounded-xl transition-colors duration-200',
         'active:scale-95',
         isActive
-          ? 'text-blue-600 dark:text-blue-400'
-          : 'text-gray-500 dark:text-slate-400 hover:text-gray-900 dark:hover:text-white'
+          ? 'text-primary'
+          : 'text-text-muted hover:text-text-primary'
       )}
     >
       {/* Active indicator */}
@@ -130,7 +130,7 @@ function NavItem({ href, icon: Icon, label, isActive, badge }: NavItemProps) {
         {isActive && (
           <motion.div
             layoutId="bottomNavIndicator"
-            className="absolute inset-0 bg-blue-50 dark:bg-blue-900/30 rounded-xl"
+            className="absolute inset-0 bg-primary/10 rounded-xl"
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.8 }}

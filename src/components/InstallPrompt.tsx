@@ -53,7 +53,7 @@ export function InstallPrompt() {
 
   return (
     <div className="fixed bottom-4 left-4 right-4 md:left-auto md:right-4 md:max-w-sm z-50 animate-fade-in">
-      <div className="bg-black border border-white/10 rounded-lg p-3 flex items-center gap-3">
+      <div className="bg-surface border border-surface-border rounded-lg p-3 flex items-center gap-3">
         <span className="text-white text-sm">Install app for a better experience</span>
         <Link
           href="/install"

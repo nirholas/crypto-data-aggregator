@@ -55,7 +55,7 @@ export default async function ScreenerPage() {
         {coins.length > 0 ? (
           <Screener coins={coins} />
         ) : (
-          <div className="text-center py-12 text-neutral-500">
+          <div className="text-center py-12 text-text-muted">
             Unable to load coin data. Please try again later.
           </div>
         )}

@@ -151,7 +151,7 @@ export default function CardsShowcasePage() {
   ];
 
   return (
-    <div className="min-h-screen flex flex-col bg-slate-950">
+    <div className="min-h-screen flex flex-col bg-background">
       <Header />
 
       <main className="flex-1">
@@ -169,7 +169,7 @@ export default function CardsShowcasePage() {
             <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
               Article Card Components
             </h1>
-            <p className="text-xl text-slate-400 max-w-2xl mx-auto">
+            <p className="text-xl text-text-secondary max-w-2xl mx-auto">
               Premium card components for displaying crypto news with source-specific
               styling, sentiment indicators, and interactive features.
             </p>
@@ -188,7 +188,7 @@ export default function CardsShowcasePage() {
                   className={`px-4 py-2 rounded-lg font-medium transition-all ${
                     activeTab === tab.id
                       ? 'bg-brand-500 text-white shadow-lg shadow-brand-500/25'
-                      : 'bg-slate-800/50 text-slate-400 hover:bg-slate-700/50 hover:text-white'
+                      : 'bg-surface/50 text-text-secondary hover:bg-surface-border/50 hover:text-white'
                   }`}
                 >
                   <span className="mr-2">{tab.icon}</span>
@@ -198,59 +198,59 @@ export default function CardsShowcasePage() {
             </div>
 
             {/* Feature Toggles */}
-            <div className="flex flex-wrap justify-center gap-4 mb-8 p-4 bg-slate-900/50 rounded-xl border border-slate-800">
-              <label className="flex items-center gap-2 text-sm text-slate-300 cursor-pointer">
+            <div className="flex flex-wrap justify-center gap-4 mb-8 p-4 bg-background-secondary/50 rounded-xl border border-surface">
+              <label className="flex items-center gap-2 text-sm text-text-secondary cursor-pointer">
                 <input
                   type="checkbox"
                   checked={showFeatures.bookmark}
                   onChange={(e) =>
                     setShowFeatures((f) => ({ ...f, bookmark: e.target.checked }))
                   }
-                  className="w-4 h-4 rounded border-slate-600 bg-slate-800 text-brand-500 focus:ring-brand-500"
+                  className="w-4 h-4 rounded border-surface-hover bg-surface text-brand-500 focus:ring-brand-500"
                 />
                 Bookmark
               </label>
-              <label className="flex items-center gap-2 text-sm text-slate-300 cursor-pointer">
+              <label className="flex items-center gap-2 text-sm text-text-secondary cursor-pointer">
                 <input
                   type="checkbox"
                   checked={showFeatures.share}
                   onChange={(e) =>
                     setShowFeatures((f) => ({ ...f, share: e.target.checked }))
                   }
-                  className="w-4 h-4 rounded border-slate-600 bg-slate-800 text-brand-500 focus:ring-brand-500"
+                  className="w-4 h-4 rounded border-surface-hover bg-surface text-brand-500 focus:ring-brand-500"
                 />
                 Share
               </label>
-              <label className="flex items-center gap-2 text-sm text-slate-300 cursor-pointer">
+              <label className="flex items-center gap-2 text-sm text-text-secondary cursor-pointer">
                 <input
                   type="checkbox"
                   checked={showFeatures.sentiment}
                   onChange={(e) =>
                     setShowFeatures((f) => ({ ...f, sentiment: e.target.checked }))
                   }
-                  className="w-4 h-4 rounded border-slate-600 bg-slate-800 text-brand-500 focus:ring-brand-500"
+                  className="w-4 h-4 rounded border-surface-hover bg-surface text-brand-500 focus:ring-brand-500"
                 />
                 Sentiment
               </label>
-              <label className="flex items-center gap-2 text-sm text-slate-300 cursor-pointer">
+              <label className="flex items-center gap-2 text-sm text-text-secondary cursor-pointer">
                 <input
                   type="checkbox"
                   checked={showFeatures.progress}
                   onChange={(e) =>
                     setShowFeatures((f) => ({ ...f, progress: e.target.checked }))
                   }
-                  className="w-4 h-4 rounded border-slate-600 bg-slate-800 text-brand-500 focus:ring-brand-500"
+                  className="w-4 h-4 rounded border-surface-hover bg-surface text-brand-500 focus:ring-brand-500"
                 />
                 Progress
               </label>
-              <label className="flex items-center gap-2 text-sm text-slate-300 cursor-pointer">
+              <label className="flex items-center gap-2 text-sm text-text-secondary cursor-pointer">
                 <input
                   type="checkbox"
                   checked={showFeatures.rank}
                   onChange={(e) =>
                     setShowFeatures((f) => ({ ...f, rank: e.target.checked }))
                   }
-                  className="w-4 h-4 rounded border-slate-600 bg-slate-800 text-brand-500 focus:ring-brand-500"
+                  className="w-4 h-4 rounded border-surface-hover bg-surface text-brand-500 focus:ring-brand-500"
                 />
                 Rank Numbers
               </label>
@@ -268,7 +268,7 @@ export default function CardsShowcasePage() {
                   <h2 className="text-2xl font-bold text-white mb-2">
                     Large Cards (Editor&apos;s Picks)
                   </h2>
-                  <p className="text-slate-400">
+                  <p className="text-text-secondary">
                     Premium horizontal cards for featured content. 320px height with
                     animated mesh gradients.
                   </p>
@@ -291,7 +291,7 @@ export default function CardsShowcasePage() {
                   <h2 className="text-2xl font-bold text-white mb-2">
                     Medium Cards (Grid Layout)
                   </h2>
-                  <p className="text-slate-400">
+                  <p className="text-text-secondary">
                     Vertical grid cards with 200px image area. Perfect for news feeds.
                   </p>
                 </div>
@@ -313,7 +313,7 @@ export default function CardsShowcasePage() {
                   <h2 className="text-2xl font-bold text-white mb-2">
                     Small Cards (Trending List)
                   </h2>
-                  <p className="text-slate-400">
+                  <p className="text-text-secondary">
                     Compact sidebar cards for trending lists with optional rank numbers.
                   </p>
                 </div>
@@ -338,7 +338,7 @@ export default function CardsShowcasePage() {
                   <h2 className="text-2xl font-bold text-white mb-2">
                     List Cards (More Stories)
                   </h2>
-                  <p className="text-slate-400">
+                  <p className="text-text-secondary">
                     Full-width horizontal cards with thumbnails and reading progress.
                   </p>
                 </div>
@@ -360,7 +360,7 @@ export default function CardsShowcasePage() {
               <div className="space-y-12">
                 <div className="text-center mb-8">
                   <h2 className="text-2xl font-bold text-white mb-2">Loading Skeletons</h2>
-                  <p className="text-slate-400">
+                  <p className="text-text-secondary">
                     Animated loading states for each card variant.
                   </p>
                 </div>
@@ -421,10 +421,10 @@ export default function CardsShowcasePage() {
               ].map((source) => (
                 <div
                   key={source.name}
-                  className="p-4 bg-slate-900/50 rounded-xl border border-slate-800 text-center"
+                  className="p-4 bg-background-secondary/50 rounded-xl border border-surface text-center"
                 >
                   <div className={`w-12 h-12 ${source.color} rounded-lg mx-auto mb-2`} />
-                  <p className="text-sm text-slate-300">{source.name}</p>
+                  <p className="text-sm text-text-secondary">{source.name}</p>
                 </div>
               ))}
             </div>
@@ -435,15 +435,15 @@ export default function CardsShowcasePage() {
         <section className="px-4 pb-16">
           <div className="max-w-4xl mx-auto">
             <h2 className="text-2xl font-bold text-white text-center mb-8">Quick Start</h2>
-            <div className="bg-slate-900/80 rounded-xl border border-slate-800 overflow-hidden">
-              <div className="flex items-center gap-2 px-4 py-3 bg-slate-800/50 border-b border-slate-700">
+            <div className="bg-background-secondary/80 rounded-xl border border-surface overflow-hidden">
+              <div className="flex items-center gap-2 px-4 py-3 bg-surface/50 border-b border-surface-border">
                 <div className="w-3 h-3 rounded-full bg-red-500" />
                 <div className="w-3 h-3 rounded-full bg-yellow-500" />
                 <div className="w-3 h-3 rounded-full bg-green-500" />
-                <span className="ml-2 text-sm text-slate-400">page.tsx</span>
+                <span className="ml-2 text-sm text-text-secondary">page.tsx</span>
               </div>
               <pre className="p-4 overflow-x-auto text-sm">
-                <code className="text-slate-300">
+                <code className="text-text-secondary">
                   {`import {
   ArticleCardLarge,
   ArticleCardMedium,

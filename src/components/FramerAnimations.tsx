@@ -326,7 +326,7 @@ export function AnimatedSkeleton({ className, count = 1 }: SkeletonProps) {
       {Array.from({ length: count }).map((_, i) => (
         <motion.div
           key={i}
-          className={`bg-black rounded ${className}`}
+          className={`bg-surface rounded ${className}`}
           animate={{
             opacity: [0.5, 1, 0.5],
           }}
@@ -360,7 +360,7 @@ export function AnimatedTooltip({ children, content, position = 'top' }: Tooltip
     <motion.div className="relative group" whileHover="hover">
       {children}
       <motion.div
-        className={`absolute ${positionClasses[position]} px-2 py-1 bg-black text-white text-xs rounded whitespace-nowrap pointer-events-none z-50`}
+        className={`absolute ${positionClasses[position]} px-2 py-1 bg-surface-elevated text-white text-xs rounded whitespace-nowrap pointer-events-none z-50`}
         initial={{ opacity: 0, scale: 0.9 }}
         variants={{
           hover: { opacity: 1, scale: 1 },

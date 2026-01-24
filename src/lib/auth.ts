@@ -396,10 +396,29 @@ export async function verifyMagicLink(token: string): Promise<AuthResult> {
 // OAUTH AUTHENTICATION
 // =============================================================================
 
+/**
+ * Check if an OAuth provider is configured
+ */
+export function isOAuthProviderConfigured(provider: AuthProvider): boolean {
+  if (provider === 'email') return true;
+  const config = OAUTH_PROVIDERS[provider as keyof typeof OAUTH_PROVIDERS];
+  return !!(config?.clientId && config?.clientSecret);
+}
+
+/**
+ * Get list of configured OAuth providers
+ */
+export function getConfiguredOAuthProviders(): AuthProvider[] {
+  return (['google', 'github', 'discord', 'twitter'] as AuthProvider[]).filter(isOAuthProviderConfigured);
+}
+
 export function getOAuthUrl(provider: AuthProvider, redirectTo: string = '/'): string {
   const config = OAUTH_PROVIDERS[provider as keyof typeof OAUTH_PROVIDERS];
-  if (!config || !config.clientId) {
-    throw new Error(`OAuth provider ${provider} not configured`);
+  if (!config || !config.clientId || !config.clientSecret) {
+    // Fallback: return a disabled state URL that will show an error
+    console.warn(`[Auth] OAuth provider ${provider} not configured - missing credentials`);
+    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
+    return `${baseUrl}/auth/error?error=provider_not_configured&provider=${provider}`;
   }
 
   const state = generateSecureToken();
@@ -438,6 +457,11 @@ export async function handleOAuthCallback(
   code: string,
   state: string
 ): Promise<AuthResult> {
+  // Check if provider is configured
+  if (!isOAuthProviderConfigured(provider)) {
+    return { success: false, error: `OAuth provider ${provider} is not configured` };
+  }
+
   // Verify state
   const stateData = oauthStates.get(state);
   if (!stateData || stateData.provider !== provider || stateData.expiresAt < Date.now()) {
@@ -447,7 +471,7 @@ export async function handleOAuthCallback(
   oauthStates.delete(state);
 
   const config = OAUTH_PROVIDERS[provider as keyof typeof OAUTH_PROVIDERS];
-  if (!config) {
+  if (!config || !config.clientId) {
     return { success: false, error: `Unknown provider: ${provider}` };
   }
 

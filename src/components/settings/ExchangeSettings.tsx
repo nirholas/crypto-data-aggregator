@@ -106,7 +106,7 @@ export function ExchangeSettings() {
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-xl font-semibold text-white">Connected Exchanges</h2>
-          <p className="text-sm text-slate-400 mt-1">
+          <p className="text-sm text-text-secondary mt-1">
             Sync your portfolio from major exchanges
           </p>
         </div>
@@ -150,13 +150,13 @@ export function ExchangeSettings() {
 
       {/* Portfolio summary */}
       {portfolio && (
-        <div className="bg-slate-800/50 border border-slate-700 rounded-xl p-6">
+        <div className="bg-surface/50 border border-surface-border rounded-xl p-6">
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-lg font-medium text-white flex items-center gap-2">
               <Wallet className="w-5 h-5 text-blue-400" />
               Total Portfolio Value
             </h3>
-            <div className="flex items-center gap-2 text-xs text-slate-500">
+            <div className="flex items-center gap-2 text-xs text-text-muted">
               <Clock className="w-3 h-3" />
               Last synced: {new Date(portfolio.lastUpdated).toLocaleTimeString()}
             </div>
@@ -278,23 +278,23 @@ function ExchangeCard({
 
   return (
     <div className={cn(
-      'bg-slate-800/50 border rounded-xl overflow-hidden transition-colors duration-200',
-      exchange.connected ? 'border-green-500/30' : 'border-slate-700',
+      'bg-surface/50 border rounded-xl overflow-hidden transition-colors duration-200',
+      exchange.connected ? 'border-green-500/30' : 'border-surface-border',
       isExpanded && 'border-blue-500/50'
     )}>
       {/* Header */}
       <button
         onClick={onToggle}
-        className="w-full flex items-center justify-between p-4 hover:bg-slate-700/30 transition-colors"
+        className="w-full flex items-center justify-between p-4 hover:bg-surface-border/30 transition-colors"
       >
         <div className="flex items-center gap-3">
           {ExchangeLogos[exchange.id] || (
-            <div className="w-6 h-6 bg-slate-600 rounded" />
+            <div className="w-6 h-6 bg-surface-hover rounded" />
           )}
           <div className="text-left">
             <h3 className="font-medium text-white">{exchange.name}</h3>
             {exchange.connected && exchange.lastSync && (
-              <p className="text-xs text-slate-400">
+              <p className="text-xs text-text-secondary">
                 Last sync: {new Date(exchange.lastSync).toLocaleString()}
               </p>
             )}
@@ -308,12 +308,12 @@ function ExchangeCard({
               Connected
             </span>
           ) : (
-            <span className="flex items-center gap-1.5 px-2 py-1 bg-slate-700 text-slate-400 text-xs font-medium rounded-full">
+            <span className="flex items-center gap-1.5 px-2 py-1 bg-surface-border text-text-secondary text-xs font-medium rounded-full">
               Not connected
             </span>
           )}
           <ChevronDown className={cn(
-            'w-4 h-4 text-slate-400 transition-transform duration-200',
+            'w-4 h-4 text-text-secondary transition-transform duration-200',
             isExpanded && 'rotate-180'
           )} />
         </div>
@@ -328,7 +328,7 @@ function ExchangeCard({
             exit={{ height: 0, opacity: 0 }}
             transition={{ duration: 0.2 }}
           >
-            <div className="px-4 pb-4 border-t border-slate-700/50">
+            <div className="px-4 pb-4 border-t border-surface-border/50">
               {exchange.connected ? (
                 /* Connected state - show actions */
                 <div className="pt-4 space-y-3">
@@ -369,7 +369,7 @@ function ExchangeCard({
                 <form onSubmit={handleConnect} className="pt-4 space-y-4">
                   {/* API Key */}
                   <div>
-                    <label className="block text-sm font-medium text-slate-300 mb-1.5">
+                    <label className="block text-sm font-medium text-text-secondary mb-1.5">
                       API Key
                     </label>
                     <input
@@ -379,8 +379,8 @@ function ExchangeCard({
                       placeholder="Enter your API key"
                       required
                       className={cn(
-                        'w-full px-3 py-2 bg-slate-900/50 border border-slate-700 rounded-lg',
-                        'text-white placeholder-slate-500',
+                        'w-full px-3 py-2 bg-background-secondary/50 border border-surface-border rounded-lg',
+                        'text-white placeholder-text-muted',
                         'focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500'
                       )}
                     />
@@ -388,7 +388,7 @@ function ExchangeCard({
 
                   {/* API Secret */}
                   <div>
-                    <label className="block text-sm font-medium text-slate-300 mb-1.5">
+                    <label className="block text-sm font-medium text-text-secondary mb-1.5">
                       API Secret
                     </label>
                     <div className="relative">
@@ -399,15 +399,15 @@ function ExchangeCard({
                         placeholder="Enter your API secret"
                         required
                         className={cn(
-                          'w-full px-3 py-2 pr-10 bg-slate-900/50 border border-slate-700 rounded-lg',
-                          'text-white placeholder-slate-500',
+                          'w-full px-3 py-2 pr-10 bg-background-secondary/50 border border-surface-border rounded-lg',
+                          'text-white placeholder-text-muted',
                           'focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500'
                         )}
                       />
                       <button
                         type="button"
                         onClick={() => setShowSecret(!showSecret)}
-                        className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300"
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-text-muted hover:text-text-secondary"
                       >
                         {showSecret ? (
                           <EyeOff className="w-4 h-4" />
@@ -421,7 +421,7 @@ function ExchangeCard({
                   {/* Passphrase (for Kraken, OKX) */}
                   {needsPassphrase && (
                     <div>
-                      <label className="block text-sm font-medium text-slate-300 mb-1.5">
+                      <label className="block text-sm font-medium text-text-secondary mb-1.5">
                         API Passphrase
                       </label>
                       <input
@@ -431,8 +431,8 @@ function ExchangeCard({
                         placeholder="Enter your API passphrase"
                         required
                         className={cn(
-                          'w-full px-3 py-2 bg-slate-900/50 border border-slate-700 rounded-lg',
-                          'text-white placeholder-slate-500',
+                          'w-full px-3 py-2 bg-background-secondary/50 border border-surface-border rounded-lg',
+                          'text-white placeholder-text-muted',
                           'focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500'
                         )}
                       />
@@ -470,7 +470,7 @@ function ExchangeCard({
                     <button
                       type="button"
                       onClick={() => setShowForm(false)}
-                      className="px-4 py-2 text-slate-400 hover:text-white transition-colors"
+                      className="px-4 py-2 text-text-secondary hover:text-white transition-colors"
                     >
                       Cancel
                     </button>
@@ -503,7 +503,7 @@ function ExchangeCard({
                     <span>Connect {exchange.name}</span>
                   </button>
                   
-                  <p className="mt-3 text-xs text-slate-500">
+                  <p className="mt-3 text-xs text-text-muted">
                     Connect your {exchange.name} account to automatically sync your portfolio.
                     We only request read-only permissions.
                   </p>

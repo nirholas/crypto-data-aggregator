@@ -127,13 +127,13 @@ export default function AuthPage({ mode = 'login' }: AuthPageProps) {
   // Success state - check email
   if (success) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-4">
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background via-background-secondary to-background p-4">
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           className="w-full max-w-md"
         >
-          <div className="bg-slate-800/80 backdrop-blur-xl rounded-2xl border border-slate-700/50 p-8 text-center">
+          <div className="bg-surface/80 backdrop-blur-xl rounded-2xl border border-surface-border/50 p-8 text-center">
             <motion.div
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}
@@ -146,12 +146,12 @@ export default function AuthPage({ mode = 'login' }: AuthPageProps) {
             <h1 className="text-2xl font-bold text-white mb-2">
               Check your email
             </h1>
-            <p className="text-slate-400 mb-6">
+            <p className="text-text-secondary mb-6">
               We sent a magic link to <span className="text-white">{email}</span>
             </p>
             
             <div className="space-y-3">
-              <p className="text-sm text-slate-500">
+              <p className="text-sm text-text-muted">
                 Click the link in your email to sign in. The link expires in 15 minutes.
               </p>
               
@@ -169,7 +169,7 @@ export default function AuthPage({ mode = 'login' }: AuthPageProps) {
   }
 
   return (
-    <div className="min-h-screen flex bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
+    <div className="min-h-screen flex bg-gradient-to-br from-background via-background-secondary to-background">
       {/* Left side - branding */}
       <div className="hidden lg:flex lg:flex-1 flex-col justify-center px-12 xl:px-20">
         <motion.div
@@ -206,7 +206,7 @@ export default function AuthPage({ mode = 'login' }: AuthPageProps) {
           animate={{ opacity: 1, y: 0 }}
           className="w-full max-w-md"
         >
-          <div className="bg-slate-800/80 backdrop-blur-xl rounded-2xl border border-slate-700/50 p-8">
+          <div className="bg-surface/80 backdrop-blur-xl rounded-2xl border border-surface-border/50 p-8">
             {/* Mobile logo */}
             <div className="lg:hidden flex items-center justify-center gap-2 mb-8">
               <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center">
@@ -218,7 +218,7 @@ export default function AuthPage({ mode = 'login' }: AuthPageProps) {
             <h2 className="text-2xl font-bold text-white mb-2">
               {mode === 'signup' ? 'Create your account' : 'Welcome back'}
             </h2>
-            <p className="text-slate-400 mb-8">
+            <p className="text-text-secondary mb-8">
               {mode === 'signup' 
                 ? 'Start tracking crypto news and portfolios'
                 : 'Sign in to access your dashboard'
@@ -257,19 +257,19 @@ export default function AuthPage({ mode = 'login' }: AuthPageProps) {
 
             {/* Divider */}
             <div className="flex items-center gap-4 my-6">
-              <div className="flex-1 h-px bg-slate-700" />
-              <span className="text-sm text-slate-500">or continue with email</span>
-              <div className="flex-1 h-px bg-slate-700" />
+              <div className="flex-1 h-px bg-surface-border" />
+              <span className="text-sm text-text-muted">or continue with email</span>
+              <div className="flex-1 h-px bg-surface-border" />
             </div>
 
             {/* Magic link form */}
             <form onSubmit={handleMagicLink} className="space-y-4">
               <div>
-                <label htmlFor="email" className="block text-sm font-medium text-slate-300 mb-2">
+                <label htmlFor="email" className="block text-sm font-medium text-text-secondary mb-2">
                   Email address
                 </label>
                 <div className="relative">
-                  <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500" />
+                  <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-text-muted" />
                   <input
                     type="email"
                     id="email"
@@ -278,8 +278,8 @@ export default function AuthPage({ mode = 'login' }: AuthPageProps) {
                     placeholder="you@example.com"
                     required
                     className={cn(
-                      'w-full pl-10 pr-4 py-3 bg-slate-900/50 border border-slate-700 rounded-lg',
-                      'text-white placeholder-slate-500',
+                      'w-full pl-10 pr-4 py-3 bg-background-secondary/50 border border-surface-border rounded-lg',
+                      'text-white placeholder-text-muted',
                       'focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500',
                       'transition-all duration-200'
                     )}
@@ -311,7 +311,7 @@ export default function AuthPage({ mode = 'login' }: AuthPageProps) {
             </form>
 
             {/* Footer */}
-            <p className="mt-6 text-center text-sm text-slate-500">
+            <p className="mt-6 text-center text-sm text-text-muted">
               By continuing, you agree to our{' '}
               <a href="/terms" className="text-blue-400 hover:text-blue-300">
                 Terms of Service
@@ -335,10 +335,10 @@ export default function AuthPage({ mode = 'login' }: AuthPageProps) {
 function FeatureItem({ icon: Icon, text }: { icon: typeof Zap; text: string }) {
   return (
     <div className="flex items-center gap-3">
-      <div className="w-8 h-8 bg-slate-800 rounded-lg flex items-center justify-center">
+      <div className="w-8 h-8 bg-surface rounded-lg flex items-center justify-center">
         <Icon className="w-4 h-4 text-blue-400" />
       </div>
-      <span className="text-slate-300">{text}</span>
+      <span className="text-text-secondary">{text}</span>
     </div>
   );
 }
@@ -365,9 +365,9 @@ function OAuthButton({ provider, isLoading, disabled, onClick }: OAuthButtonProp
       disabled={disabled}
       className={cn(
         'w-full flex items-center justify-center gap-3 py-3 px-4',
-        'bg-slate-900/50 border border-slate-700 rounded-lg',
+        'bg-background-secondary/50 border border-surface-border rounded-lg',
         'text-white font-medium',
-        'hover:bg-slate-700/50 hover:border-slate-600',
+        'hover:bg-surface-border/50 hover:border-surface-hover',
         'transition-all duration-200',
         'disabled:opacity-50 disabled:cursor-not-allowed'
       )}

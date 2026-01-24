@@ -90,25 +90,64 @@ Open [http://localhost:3000](http://localhost:3000) — no API keys needed! 🎉
 - **Chain Analytics** — Ethereum, Solana, Arbitrum, Base, and 50+ chains
 - **Category Filters** — DEX, Lending, Bridges, Liquid Staking, Derivatives
 - **Protocol Comparison** — Side-by-side TVL and metrics comparison
+- **DeFi Yields** — Track yield farming APYs across protocols
 
-### 📊 Advanced Tools
+### 📊 Advanced Analytics
 
-| Tool             | Description                                                    |
-| ---------------- | -------------------------------------------------------------- |
-| **🔥 Heatmap**   | Visual market overview with size-by-market-cap                 |
-| **🔍 Screener**  | Filter coins by market cap, volume, price change, ATH distance |
-| **⚖️ Compare**   | Compare up to 5 coins side-by-side with historical charts      |
-| **📉 Charts**    | Interactive price charts with OHLC candlesticks                |
-| **😱 Sentiment** | Fear & Greed Index with historical trends                      |
+| Tool                 | Description                                                        |
+| -------------------- | ------------------------------------------------------------------ |
+| **🔥 Heatmap**       | Visual market overview with size-by-market-cap                     |
+| **🔍 Screener**      | Filter coins by market cap, volume, price change, ATH distance     |
+| **⚖️ Compare**       | Compare up to 5 coins side-by-side with historical charts          |
+| **📉 Charts**        | Interactive price charts with OHLC candlesticks                    |
+| **😱 Sentiment**     | Fear & Greed Index with historical trends                          |
+| **📊 Volatility**    | Risk metrics, Sharpe ratios, max drawdowns                         |
+| **🔗 Correlation**   | Asset correlation matrix for portfolio diversification             |
+| **💥 Liquidations**  | Real-time futures liquidation feed from major exchanges            |
+| **⛽ Gas Tracker**   | Multi-chain gas prices (ETH, Polygon, Base, Arbitrum, Optimism)    |
+| **📈 Derivatives**   | Funding rates, open interest, long/short ratios                    |
+
+### 🐋 On-Chain Analytics
+
+| Feature              | Description                                                    |
+| -------------------- | -------------------------------------------------------------- |
+| **Whale Tracking**   | Real-time large transaction alerts via Whale Alert API         |
+| **Exchange Flows**   | Track inflows/outflows from major exchanges                    |
+| **Smart Money**      | Follow institutional and whale wallet movements                |
+| **Bitcoin On-Chain** | Mempool stats, fee estimates, block data via Mempool.space     |
+| **Token Unlocks**    | Track upcoming vesting schedules via DeFiLlama emissions       |
 
 ### 💼 Portfolio & Tracking
 
-| Feature             | Description                                         |
-| ------------------- | --------------------------------------------------- |
-| **💰 Portfolio**    | Track holdings with P&L, cost basis, and allocation |
-| **⭐ Watchlist**    | Custom watchlists with drag-and-drop reordering     |
-| **🔔 Price Alerts** | Set alerts for price targets (above/below)          |
-| **📤 Export**       | Export portfolio & watchlist as JSON/CSV            |
+| Feature                | Description                                            |
+| ---------------------- | ------------------------------------------------------ |
+| **💰 Portfolio**       | Track holdings with P&L, cost basis, and allocation    |
+| **⭐ Watchlist**       | Custom watchlists with drag-and-drop reordering        |
+| **🔔 Price Alerts**    | Set alerts for price targets (above/below)             |
+| **📤 Export**          | Export portfolio & watchlist as JSON/CSV               |
+| **🔄 Exchange Sync**   | Import holdings from Binance, Coinbase, Kraken, OKX    |
+| **📊 Analytics**       | Portfolio performance, allocation, and risk metrics    |
+
+### 🔐 Authentication & User Features
+
+| Feature              | Description                                                |
+| -------------------- | ---------------------------------------------------------- |
+| **OAuth Login**      | Sign in with Google, GitHub, or Discord                    |
+| **Magic Links**      | Passwordless email authentication                          |
+| **Email Alerts**     | Receive price alerts and digests via email (Resend)        |
+| **Newsletter**       | Daily/weekly crypto news digests                           |
+| **Push Notifications**| Browser push for breaking news                            |
+
+### 🤖 AI Features
+
+| Feature              | Description                                                |
+| -------------------- | ---------------------------------------------------------- |
+| **AI Analysis**      | GPT-powered market analysis and insights                   |
+| **AI Debate**        | Bull vs Bear AI debates on market topics                   |
+| **Claim Extraction** | Extract verifiable claims from news articles               |
+| **Clickbait Detector**| Score headlines for clickbait content                     |
+| **Summarization**    | AI-powered article summaries                               |
+| **Ask AI**           | Natural language queries about crypto data                 |
 
 ### ⚡ Power User Features
 
@@ -117,10 +156,86 @@ Open [http://localhost:3000](http://localhost:3000) — no API keys needed! 🎉
 - **🌙 Dark Mode** — Beautiful dark theme with `d` toggle
 - **📱 PWA** — Install as app on mobile & desktop
 - **🔄 Cross-Tab Sync** — Watchlist syncs across browser tabs
+- **🌍 18 Languages** — Full i18n support
 
 ---
 
-## � Feature Deep Dive
+## 🧩 Integrations & SDKs
+
+### Official SDKs
+
+| SDK          | Installation                            | Features                            |
+| ------------ | --------------------------------------- | ----------------------------------- |
+| **Python**   | `curl -O .../crypto_news.py`            | Zero dependencies, async support    |
+| **TypeScript**| `npm install @crypto-data/sdk`         | Full types, SWR integration         |
+| **React**    | `npm install @crypto-data/react`        | Hooks: `useCryptoNews`, `usePrice`  |
+| **Go**       | `go get github.com/.../cryptonews`      | Goroutine-safe, context support     |
+| **PHP**      | `composer require crypto-data/sdk`      | PSR-4, Guzzle HTTP                  |
+| **JavaScript**| `npm install crypto-news-sdk`          | Browser & Node.js compatible        |
+
+### Browser Extension
+
+Chrome/Edge extension for quick crypto news access:
+- Tab-based navigation (Latest, Breaking, DeFi, Bitcoin)
+- Quick coin search and price lookup
+- Configurable API base URL
+
+### Raycast Extension
+
+Native Raycast commands:
+- `crypto-news` — Latest news
+- `crypto-breaking` — Breaking news
+- `crypto-trending` — Trending topics
+
+### CLI Tool
+
+```bash
+npx crypto-news              # Latest news
+npx crypto-news --bitcoin    # Bitcoin news only
+npx crypto-news -s "ethereum" # Search
+npx crypto-news --breaking   # Breaking news
+npx crypto-news --json       # JSON output
+```
+
+### MCP Server (AI Agents)
+
+Model Context Protocol server for Claude, ChatGPT, and other AI assistants:
+
+```bash
+# Claude Desktop (stdio mode)
+node mcp/index.js
+
+# ChatGPT Developer Mode (HTTP/SSE)
+node mcp/index.js --http
+```
+
+**Available Tools:**
+- `get_crypto_news` — Latest headlines
+- `search_crypto_news` — Search by keywords
+- `get_defi_news` — DeFi-specific news
+- `get_bitcoin_news` — Bitcoin news
+- `get_market_data` — Real-time prices
+- `get_trending_coins` — Trending cryptocurrencies
+
+### ChatGPT Plugin
+
+OpenAPI-compatible plugin for ChatGPT:
+- Full OpenAPI 3.0 specification at `/chatgpt/openapi.yaml`
+- AI plugin manifest at `/.well-known/ai-plugin.json`
+
+### Embeddable Widgets
+
+```html
+<!-- Price Ticker -->
+<iframe src="https://your-domain.com/widget/ticker.html" />
+
+<!-- News Carousel -->
+<iframe src="https://your-domain.com/widget/carousel.html" />
+```
+
+---
+
+## 🎯 Feature Deep Dive
 
 ### Market Heatmap
 
@@ -387,7 +502,7 @@ Interactive price charts with multiple timeframes and data types.
 
 ---
 
-## �🖥️ Pages & Routes
+## 🖥️ Pages & Routes
 
 ### Market Data
 
@@ -410,36 +525,50 @@ Interactive price charts with multiple timeframes and data types.
 
 ### Analytics
 
-| Route        | Description                            |
-| ------------ | -------------------------------------- |
-| `/defi`      | DeFi dashboard with protocols & chains |
-| `/heatmap`   | Visual market heatmap                  |
-| `/screener`  | Advanced coin screener with filters    |
-| `/compare`   | Compare multiple coins                 |
-| `/sentiment` | Fear & Greed analysis                  |
-| `/movers`    | Top movers overview                    |
+| Route          | Description                              |
+| -------------- | ---------------------------------------- |
+| `/defi`        | DeFi dashboard with protocols & chains   |
+| `/heatmap`     | Visual market heatmap                    |
+| `/screener`    | Advanced coin screener with filters      |
+| `/compare`     | Compare multiple coins                   |
+| `/sentiment`   | Fear & Greed analysis                    |
+| `/movers`      | Top movers overview                      |
+| `/volatility`  | Volatility analysis & risk metrics       |
+| `/correlation` | Asset correlation matrix                 |
+| `/liquidations`| Futures liquidation feed                 |
+| `/derivatives` | Funding rates & open interest            |
+| `/gas`         | Multi-chain gas tracker                  |
+| `/unlocks`     | Token unlock schedule                    |
 
 ### User Features
 
-| Route        | Description           |
-| ------------ | --------------------- |
-| `/portfolio` | Portfolio tracker     |
-| `/watchlist` | Saved coins watchlist |
+| Route           | Description                     |
+| --------------- | ------------------------------- |
+| `/portfolio`    | Portfolio tracker               |
+| `/watchlist`    | Saved coins watchlist           |
+| `/alerts`       | Manage price alerts             |
+| `/auth/signin`  | Sign in with OAuth/Magic Link   |
+| `/settings`     | User preferences                |
+
+### AI Features
+
+| Route           | Description                      |
+| --------------- | -------------------------------- |
+| `/ai`           | AI market analysis               |
+| `/ai/debate`    | Bull vs Bear AI debates          |
+| `/ask`          | Natural language queries         |
 
 ---
 
 ## 🔌 API Endpoints
 
-All endpoints return JSON. No API key required.
+All endpoints return JSON. Free tier requires no API key. Premium tier supports x402 micropayments.
 
-### Market Data
+### Free API (v1)
 
 ```bash
 # Get top 100 coins by market cap
 curl "http://localhost:3000/api/market/coins"
-
-# Get top 10 coins
-curl "http://localhost:3000/api/market/coins?type=top&limit=10"
 
 # Get coin details
 curl "http://localhost:3000/api/market/snapshot/bitcoin"
@@ -447,41 +576,63 @@ curl "http://localhost:3000/api/market/snapshot/bitcoin"
 # Get price history (7 days)
 curl "http://localhost:3000/api/market/history/bitcoin?days=7"
 
-# Get OHLC candlestick data
-curl "http://localhost:3000/api/market/ohlc/bitcoin?days=14"
-
 # Search coins
 curl "http://localhost:3000/api/market/search?q=ethereum"
-```
 
-### DeFi & Analytics
-
-```bash
-# Get DeFi protocol rankings
+# DeFi protocols
 curl "http://localhost:3000/api/defi"
 
-# Get trending coins
-curl "http://localhost:3000/api/trending"
-
-# Get Fear & Greed Index
+# Fear & Greed Index
 curl "http://localhost:3000/api/sentiment"
+```
+
+### Premium API (v2)
+
+```bash
+# GraphQL endpoint
+curl -X POST "http://localhost:3000/api/v2/graphql" \
+  -H "Content-Type: application/json" \
+  -d '{"query": "{ coins(limit: 10) { id name price } }"}'
+
+# Batch requests (up to 10 coins)
+curl "http://localhost:3000/api/v2/batch?coins=bitcoin,ethereum,solana"
+
+# Volatility metrics
+curl "http://localhost:3000/api/v2/volatility/bitcoin"
+
+# AI-powered analysis
+curl -X POST "http://localhost:3000/api/premium/ai/analyze" \
+  -H "Content-Type: application/json" \
+  -d '{"coin": "bitcoin", "prompt": "What is the outlook?"}'
 ```
 
 ### Endpoint Reference
 
-| Endpoint                        | Method | Description                          |
-| ------------------------------- | ------ | ------------------------------------ |
-| `/api/market/coins`             | GET    | Paginated coin list with market data |
-| `/api/market/snapshot/[coinId]` | GET    | Detailed coin data                   |
-| `/api/market/history/[coinId]`  | GET    | Historical price data                |
-| `/api/market/ohlc/[coinId]`     | GET    | OHLC candlestick data                |
-| `/api/market/search`            | GET    | Search coins by name/symbol          |
-| `/api/market/categories`        | GET    | List all categories                  |
-| `/api/market/exchanges`         | GET    | Exchange rankings                    |
-| `/api/defi`                     | GET    | Protocol TVL rankings                |
-| `/api/trending`                 | GET    | Trending coins                       |
-| `/api/sentiment`                | GET    | Fear & Greed index                   |
-| `/api/charts/[coinId]`          | GET    | Chart data for visualization         |
+| Endpoint                         | Method | Description                          |
+| -------------------------------- | ------ | ------------------------------------ |
+| `/api/market/coins`              | GET    | Paginated coin list with market data |
+| `/api/market/snapshot/[coinId]`  | GET    | Detailed coin data                   |
+| `/api/market/history/[coinId]`   | GET    | Historical price data                |
+| `/api/market/ohlc/[coinId]`      | GET    | OHLC candlestick data                |
+| `/api/market/search`             | GET    | Search coins by name/symbol          |
+| `/api/market/categories`         | GET    | List all categories                  |
+| `/api/market/exchanges`          | GET    | Exchange rankings                    |
+| `/api/defi`                      | GET    | Protocol TVL rankings                |
+| `/api/trending`                  | GET    | Trending coins                       |
+| `/api/sentiment`                 | GET    | Fear & Greed index                   |
+| `/api/gas`                       | GET    | Multi-chain gas prices               |
+| `/api/v1/alerts`                 | GET    | Price alerts                         |
+| `/api/v1/whales`                 | GET    | Whale transactions                   |
+| `/api/v1/liquidations`           | GET    | Futures liquidations                 |
+| `/api/v1/derivatives`            | GET    | Funding rates & open interest        |
+| `/api/v2/graphql`                | POST   | GraphQL API (premium)                |
+| `/api/v2/batch`                  | GET    | Batch coin data (premium)            |
+| `/api/v2/webhooks`               | POST   | Webhook management (premium)         |
+| `/api/v2/volatility/[coinId]`    | GET    | Volatility metrics (premium)         |
+| `/api/premium/ai/analyze`        | POST   | AI market analysis                   |
+| `/api/premium/ai/debate`         | POST   | Bull vs Bear debate                  |
+| `/api/premium/screener`          | GET    | Advanced screener                    |
+| `/api/premium/whales`            | GET    | Premium whale tracking               |
 
 📚 See [docs/API.md](docs/API.md) for complete API reference with examples.
 
@@ -702,18 +853,61 @@ npm start
 
 ## 🔧 Environment Variables
 
-| Variable             | Required | Default                            | Description                        |
-| -------------------- | -------- | ---------------------------------- | ---------------------------------- |
-| `COINGECKO_API_KEY`  | No       | -                                  | Pro API key for higher rate limits |
-| `COINGECKO_BASE_URL` | No       | `https://api.coingecko.com/api/v3` | API base URL                       |
-| `DEFILLAMA_BASE_URL` | No       | `https://api.llama.fi`             | DeFiLlama API URL                  |
+| Variable                   | Required | Default                            | Description                        |
+| -------------------------- | -------- | ---------------------------------- | ---------------------------------- |
+| **Market Data**            |          |                                    |                                    |
+| `COINGECKO_API_KEY`        | No       | -                                  | Pro API key for higher rate limits |
+| `COINGECKO_BASE_URL`       | No       | `https://api.coingecko.com/api/v3` | API base URL                       |
+| `DEFILLAMA_BASE_URL`       | No       | `https://api.llama.fi`             | DeFiLlama API URL                  |
+| **Authentication**         |          |                                    |                                    |
+| `AUTH_SECRET`              | Yes*     | -                                  | NextAuth secret (for OAuth)        |
+| `GOOGLE_CLIENT_ID`         | No       | -                                  | Google OAuth client ID             |
+| `GOOGLE_CLIENT_SECRET`     | No       | -                                  | Google OAuth client secret         |
+| `GITHUB_CLIENT_ID`         | No       | -                                  | GitHub OAuth client ID             |
+| `GITHUB_CLIENT_SECRET`     | No       | -                                  | GitHub OAuth client secret         |
+| `DISCORD_CLIENT_ID`        | No       | -                                  | Discord OAuth client ID            |
+| `DISCORD_CLIENT_SECRET`    | No       | -                                  | Discord OAuth client secret        |
+| `TWITTER_CLIENT_ID`        | No       | -                                  | Twitter OAuth client ID            |
+| `TWITTER_CLIENT_SECRET`    | No       | -                                  | Twitter OAuth client secret        |
+| **Email**                  |          |                                    |                                    |
+| `RESEND_API_KEY`           | No       | -                                  | Resend API key for email           |
+| **AI Providers**           |          |                                    |                                    |
+| `OPENAI_API_KEY`           | No       | -                                  | OpenAI API key for AI features     |
+| `ANTHROPIC_API_KEY`        | No       | -                                  | Anthropic Claude API key           |
+| `GROQ_API_KEY`             | No       | -                                  | Groq API key (fast inference)      |
+| **Storage**                |          |                                    |                                    |
+| `UPSTASH_REDIS_REST_URL`   | No       | -                                  | Upstash Redis URL                  |
+| `UPSTASH_REDIS_REST_TOKEN` | No       | -                                  | Upstash Redis token                |
+| **Exchange APIs**          |          |                                    |                                    |
+| `BINANCE_API_KEY`          | No       | -                                  | Binance API key for portfolio sync |
+| `BINANCE_API_SECRET`       | No       | -                                  | Binance API secret                 |
+| `COINBASE_API_KEY`         | No       | -                                  | Coinbase API key                   |
+| `KRAKEN_API_KEY`           | No       | -                                  | Kraken API key                     |
+| **x402 Payments**          |          |                                    |                                    |
+| `X402_PRIVATE_KEY`         | No       | -                                  | Wallet private key for x402        |
+| `X402_FACILITATOR_URL`     | No       | `https://x402.org/facilitator`     | x402 facilitator URL               |
+
+*Required only if using authentication features.
 
 Create `.env.local` for local development:
 
 ```env
+# Required for authentication
+AUTH_SECRET=your-random-secret-key
+
 # Optional: For production with higher rate limits
 COINGECKO_API_KEY=your_api_key
 COINGECKO_BASE_URL=https://pro-api.coingecko.com/api/v3
+
+# Optional: For AI features
+OPENAI_API_KEY=sk-...
+
+# Optional: For email notifications
+RESEND_API_KEY=re_...
+
+# Optional: For Redis caching
+UPSTASH_REDIS_REST_URL=https://...
+UPSTASH_REDIS_REST_TOKEN=...
 ```
 
 > 💡 **Note:** No API keys required for basic usage! The free tier works great for development and
@@ -732,8 +926,16 @@ COINGECKO_BASE_URL=https://pro-api.coingecko.com/api/v3
 | **Charts**        | [Recharts](https://recharts.org/)                                                                                         |
 | **Animations**    | [Framer Motion](https://www.framer.com/motion/)                                                                           |
 | **Icons**         | [Lucide React](https://lucide.dev/) + [Heroicons](https://heroicons.com/)                                                 |
-| **Testing**       | [Vitest](https://vitest.dev/) + Testing Library                                                                           |
-| **APIs**          | [CoinGecko](https://www.coingecko.com/) • [DeFiLlama](https://defillama.com/) • [Alternative.me](https://alternative.me/) |
+| **Testing**       | [Vitest](https://vitest.dev/) + [Playwright](https://playwright.dev/) + Testing Library                                   |
+| **i18n**          | [next-intl](https://next-intl-docs.vercel.app/) with 18 languages                                                         |
+| **Auth**          | NextAuth.js with OAuth + Magic Links                                                                                      |
+| **Email**         | [Resend](https://resend.com/) for transactional email                                                                     |
+| **Storage**       | [Upstash Redis](https://upstash.com/) with memory fallback                                                                |
+| **APIs**          | [CoinGecko](https://www.coingecko.com/) • [DeFiLlama](https://defillama.com/) • [Alternative.me](https://alternative.me/) • [Whale Alert](https://whale-alert.io/) |
+
+### Supported Languages
+
+🇺🇸 English • 🇪🇸 Español • 🇫🇷 Français • 🇩🇪 Deutsch • 🇮🇹 Italiano • 🇵🇹 Português • 🇳🇱 Nederlands • 🇵🇱 Polski • 🇷🇺 Русский • 🇹🇷 Türkçe • 🇸🇦 العربية • 🇯🇵 日本語 • 🇰🇷 한국어 • 🇨🇳 简体中文 • 🇹🇼 繁體中文 • 🇻🇳 Tiếng Việt • 🇹🇭 ไทย • 🇮🇩 Indonesia
 
 ---
 
@@ -778,30 +980,58 @@ Multi-layer caching strategy for optimal performance and API efficiency.
 crypto-data-aggregator/
 ├── src/
 │   ├── app/                    # Next.js App Router pages
-│   │   ├── api/                # API routes (Edge Runtime)
+│   │   ├── api/                # 100+ API routes
 │   │   │   ├── market/         # Market data endpoints
-│   │   │   ├── defi/           # DeFi endpoints
-│   │   │   ├── trending/       # Trending endpoints
-│   │   │   └── sentiment/      # Sentiment endpoints
+│   │   │   ├── v1/             # Free tier API
+│   │   │   ├── v2/             # Premium tier API
+│   │   │   ├── premium/        # Paid features (AI, screener)
+│   │   │   ├── auth/           # OAuth & magic links
+│   │   │   ├── exchanges/      # Exchange sync
+│   │   │   └── webhooks/       # Webhook management
 │   │   ├── coin/[coinId]/      # Coin detail pages
 │   │   ├── compare/            # Coin comparison
+│   │   ├── correlation/        # Correlation matrix
 │   │   ├── defi/               # DeFi dashboard
+│   │   ├── derivatives/        # Derivatives dashboard
+│   │   ├── gas/                # Gas tracker
 │   │   ├── heatmap/            # Market heatmap
+│   │   ├── liquidations/       # Liquidation feed
 │   │   ├── markets/            # Market listings
 │   │   ├── portfolio/          # Portfolio tracker
 │   │   ├── screener/           # Advanced screener
 │   │   ├── sentiment/          # Sentiment analysis
+│   │   ├── volatility/         # Volatility analysis
 │   │   └── watchlist/          # User watchlist
-│   ├── components/             # React components
+│   ├── components/             # 100+ React components
 │   │   ├── portfolio/          # Portfolio components
 │   │   ├── watchlist/          # Watchlist components
 │   │   ├── alerts/             # Alert components
+│   │   ├── auth/               # Auth UI components
 │   │   └── ...                 # Shared components
-│   └── lib/                    # Utilities & data fetching
-│       ├── market-data.ts      # CoinGecko/DeFiLlama API
+│   └── lib/                    # 70+ utility modules
+│       ├── market-data.ts      # CoinGecko API client
+│       ├── defillama.ts        # DeFiLlama client
 │       ├── cache.ts            # Memory caching layer
-│       ├── portfolio.ts        # Portfolio logic
-│       └── alerts.ts           # Alert system
+│       ├── storage.ts          # Redis/memory storage
+│       ├── auth.ts             # Authentication logic
+│       ├── email.ts            # Resend email service
+│       ├── exchange-sync.ts    # Exchange API integrations
+│       ├── ai-providers.ts     # OpenAI/Anthropic/Groq
+│       └── x402.ts             # x402 micropayments
+├── sdk/                        # Official SDKs
+│   ├── python/                 # Python SDK
+│   ├── typescript/             # TypeScript SDK
+│   ├── react/                  # React hooks & components
+│   ├── go/                     # Go SDK
+│   ├── php/                    # PHP SDK
+│   └── javascript/             # Browser/Node.js SDK
+├── cli/                        # Command line tool
+├── mcp/                        # MCP server for AI agents
+├── extension/                  # Chrome browser extension
+├── raycast/                    # Raycast extension
+├── widget/                     # Embeddable widgets
+├── examples/                   # Integration examples
+├── chatgpt/                    # ChatGPT plugin
 ├── docs/                       # Documentation
 ├── public/                     # Static assets & PWA files
 └── scripts/                    # Build & setup scripts
@@ -824,10 +1054,25 @@ crypto-data-aggregator/
 | [Deployment](docs/DEPLOYMENT.md)             | Vercel, Railway, Docker, self-hosting         |
 | [Performance](docs/PERFORMANCE.md)           | Optimization strategies & monitoring          |
 | [Security](docs/SECURITY.md)                 | Security practices & hardening                |
+| [Authentication](docs/AUTHENTICATION.md)     | OAuth, magic links & session management       |
 | [PWA Guide](docs/PWA.md)                     | Progressive Web App features                  |
 | [x402 Integration](docs/X402_INTEGRATION.md) | Micropayments & API monetization              |
+| [AI Agents](docs/AI_AGENTS.md)               | MCP server & AI integrations                  |
 | [Troubleshooting](docs/TROUBLESHOOTING.md)   | Common issues & solutions                     |
 | [Changelog](docs/CHANGELOG.md)               | Version history & upgrades                    |
+
+### Integration Examples
+
+| Example                            | Description                          |
+| ---------------------------------- | ------------------------------------ |
+| [Discord Bot](examples/discord-bot.js)      | Discord bot for crypto updates       |
+| [Slack Bot](examples/slack-bot.js)          | Slack integration for news           |
+| [Telegram Bot](examples/telegram-bot.py)    | Telegram bot with Python             |
+| [Telegram Digest](examples/telegram-digest.py) | Daily digest bot                    |
+| [LangChain Tool](examples/langchain-tool.py)| LangChain integration for AI agents  |
+| [x402 Payment](examples/x402-payment.py)    | x402 micropayment example            |
+| [Real-time Stream](examples/realtime-stream.js) | WebSocket streaming client       |
+| [API Key Usage](examples/api-key-usage.js)  | API key authentication example       |
 
 ---
 

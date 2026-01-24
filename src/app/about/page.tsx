@@ -159,7 +159,7 @@ export default function AboutPage() {
               </a>
               <a
                 href="https://github.com/nirholas/free-crypto-news"
-                className="px-6 py-3 border border-black rounded-full font-medium hover:bg-black hover:text-white transition"
+                className="px-6 py-3 border border-surface-border rounded-full font-medium hover:bg-surface hover:text-white transition"
               >
                 ⭐ Star on GitHub
               </a>

@@ -14,6 +14,8 @@ import {
   getSessionFromCookie,
   getUserByEmail,
   signOut,
+  isOAuthProviderConfigured,
+  getConfiguredOAuthProviders,
   type AuthProvider,
 } from '@/lib/auth';
 import { sendMagicLink, sendWelcomeEmail } from '@/lib/email';
@@ -117,6 +119,31 @@ export async function POST(request: NextRequest) {
 
 export async function GET(request: NextRequest) {
   try {
+    const { searchParams } = new URL(request.url);
+    const action = searchParams.get('action');
+
+    // Return auth configuration status
+    if (action === 'status') {
+      const configuredProviders = getConfiguredOAuthProviders();
+      const hasEmailConfigured = !!process.env.RESEND_API_KEY;
+      
+      return NextResponse.json({
+        configured: true,
+        magicLinkEnabled: true, // Always available (logs in dev if no Resend key)
+        emailServiceConfigured: hasEmailConfigured,
+        oauthProviders: {
+          google: isOAuthProviderConfigured('google'),
+          github: isOAuthProviderConfigured('github'),
+          discord: isOAuthProviderConfigured('discord'),
+          twitter: isOAuthProviderConfigured('twitter'),
+        },
+        configuredProviders,
+        notes: !hasEmailConfigured 
+          ? 'Magic links will be logged to console in development. Set RESEND_API_KEY for production.' 
+          : undefined,
+      });
+    }
+
     const session = await getSessionFromCookie();
 
     if (!session) {

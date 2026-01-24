@@ -163,28 +163,6 @@ export async function POST(request: NextRequest) {
         return NextResponse.json(result);
       }
 
-      case 'exchange-notification': {
-        const { to, exchange, eventType, details, timestamp, actionRequired, actionUrl } = data;
-        
-        if (!to || !exchange || !eventType || !details) {
-          return NextResponse.json(
-            { error: 'Missing required fields for exchange notification' },
-            { status: 400 }
-          );
-        }
-
-        const result = await sendExchangeNotification(to, {
-          exchange,
-          eventType,
-          details,
-          timestamp,
-          actionRequired,
-          actionUrl,
-        });
-
-        return NextResponse.json(result);
-      }
-
       default:
         return NextResponse.json(
           { error: 'Invalid notification type' },
@@ -201,24 +179,22 @@ export async function POST(request: NextRequest) {
 }
 
 // =============================================================================
-// GET - Email stats (admin only)
+// GET - Email API info and status
 // =============================================================================
 
-export async function GET(request: NextRequest) {
-  try {
-    const session = await getSessionFromCookie();
-    
-    if (!session || session.user.role !== 'admin') {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
-
-    const stats = getEmailStats();
-    return NextResponse.json(stats);
-  } catch (error) {
-    console.error('Email stats error:', error);
-    return NextResponse.json(
-      { error: 'Failed to get stats' },
-      { status: 500 }
-    );
-  }
+export async function GET() {
+  const isConfigured = !!process.env.RESEND_API_KEY;
+  const isDevelopment = process.env.NODE_ENV === 'development';
+  
+  return NextResponse.json({
+    message: 'Email notification API',
+    status: isConfigured ? 'configured' : (isDevelopment ? 'dev-mode' : 'not-configured'),
+    configured: isConfigured,
+    fallbackEnabled: isDevelopment && !isConfigured,
+    supportedTypes: ['price-alert', 'news-alert', 'portfolio-digest', 'weekly-digest'],
+    documentation: '/docs/api#email-notifications',
+    note: !isConfigured 
+      ? 'Set RESEND_API_KEY environment variable to enable email sending. In development, emails are logged to console.' 
+      : undefined,
+  });
 }

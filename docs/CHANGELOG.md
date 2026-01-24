@@ -5,29 +5,74 @@ All notable changes to Crypto Data Aggregator will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project
 adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+> **Auto-sync available:** Run `npm run changelog:sync` to check for missing commits or 
+> `npm run changelog:update` to auto-update this file.
+
 ---
 
 ## [Unreleased]
 
 ### Added
 
-- **Swagger UI Documentation** (`/docs/swagger`)
+- **Unified Storage Layer** (`src/lib/storage.ts`) - `e74c734`
+  - Abstraction layer for Upstash Redis with memory fallback
+  - Edge-compatible REST API for Redis operations
+  - Support for all Redis data types (strings, hashes, sets, lists)
+  - Namespace pattern for data isolation
+
+- **x402 Payment Persistence** - Full integration with storage layer
+  - Payment receipts stored persistently
+  - Access passes with expiration tracking
+  - Payment analytics and statistics
+
+- **Alert Email Integration** - Complete email notification system
+  - Price alert emails with proper interfaces
+  - News/keyword alert emails
+  - Digest email summaries
+
+- **Changelog Automation Scripts** (`scripts/changelog/`)
+  - `changelog-generator.js` - Generate changelog from git history
+  - `sync-changelog.js` - Compare changelog with git commits
+  - Multiple output formats (Markdown, JSON, HTML)
+  - Statistics and coverage reporting
+
+### Fixed
+
+- Fixed 35+ TypeScript compilation errors across API routes
+- Fixed `useAuth.ts` → `useAuth.tsx` for JSX support
+- Fixed email/route.ts interface mismatches with email.ts
+- Fixed exchanges/route.ts function signature errors
+- Fixed auth.ts type narrowing issues (null vs undefined)
+
+---
+
+## [1.1.0] - 2026-01-24
+
+### Added
+
+- **Complete Mock Data Elimination** - `e74c734`, `9aac946`
+  - Full real API integrations replacing all mock/fake data
+  - Persistent storage for x402 payments, passes, and receipts
+  - Newsletter subscriptions with storage layer
+  - Push notification subscriptions with storage
+
+- **Swagger UI Documentation** (`/docs/swagger`) - `d0a5ce9`
   - Interactive API documentation with "Try it out" functionality
   - Dark theme styling matching app design
   - API key persistence in localStorage
   - OpenAPI 3.1 specification at `/api/v2/openapi.json`
 
-- **Rate Limiting for API v2** - All v2 endpoints now include rate limiting
+- **Rate Limiting for API v2** - `d0a5ce9`
   - Rate limit headers: `X-RateLimit-Limit`, `X-RateLimit-Remaining`, `X-RateLimit-Reset`
   - Configurable limits per endpoint
   - Graceful 429 responses with retry information
 
-- **SEO Enhancements**
+- **SEO Enhancements** - `d0a5ce9`
   - JSON-LD structured data in layout for WebApplication, WebAPI, FAQPage schemas
   - Enhanced sitemap with MCP and AI discovery files
   - Schema.org structured data at `/schema.json`
 
-- **MCP Server Discovery Files**
+- **MCP Server Discovery Files** - `d0a5ce9`
   - `/.well-known/mcp.json` - MCP server configuration
   - `/.well-known/security.txt` - Security policy
   - `/.well-known/attribution.txt` - Data source credits
@@ -56,7 +101,8 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   - DeveloperStats, HistoricalTable, MarketStats, MarketsTable
   - Digest page, Sources page, Topic page, FeaturedArticle, ReaderContent
 
-- **Archive Runner Script** - Local scheduler for archive collection without GitHub Actions
+- **Archive Runner Script** - `737a00d`
+  - Local scheduler for archive collection without GitHub Actions
   - `npm run archive` - Single collection run
   - `npm run archive:watch` - Continuous hourly collection
   - `npm run archive:daemon` - Background daemon mode
@@ -67,14 +113,24 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   - PID file management for daemon mode
   - Graceful shutdown handling
 
-- **Archive Documentation** (`docs/ARCHIVE.md`)
+- **Archive Documentation** (`docs/ARCHIVE.md`) - `737a00d`
   - Complete guide to the V1 and V2 archive systems
   - Collection script usage and configuration
   - Intelligence services documentation
   - Cron and systemd integration examples
   - Troubleshooting guide
 
-- **Complete Multi-Source Data Integration** - Full API integrations with 4 new data providers
+- **Component Integration** - `4f1203f`, `294a330`
+  - All previously unused components now integrated
+  - Orphaned features linked to main navigation
+  - Complete feature discoverability
+
+- **New Market Features** - `ff38de4`
+  - Bitcoin Halving Countdown widget
+  - Market Mood Ring visualization
+  - Volatility Analysis dashboard
+
+- **Complete Multi-Source Data Integration** - `c39a903`
   - **CryptoCompare** (`src/lib/cryptocompare.ts`): 600+ lines
     - Historical OHLCV data (daily/hourly/minute intervals)
     - Social stats (Twitter followers, Reddit subscribers, GitHub activity)
@@ -136,7 +192,11 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   - POLYGONSCAN_API_KEY, OPTIMISTIC_ETHERSCAN_API_KEY
   - BSCSCAN_API_KEY, SNOWTRACE_API_KEY
 
-- **13 New Free Data Sources** (previous) - Expanded data aggregation capabilities
+- **Unified Navigation** - `48c1718`
+  - CMC-inspired theme implementation
+  - Consistent navigation across all pages
+
+- **13 New Free Data Sources** - `c39a903`, `a1769fa`
   - CryptoCompare: Historical OHLCV data, social stats (Twitter, Reddit, GitHub)
   - Blockchain.com: Bitcoin on-chain stats, block height, network difficulty
   - Messari: Research data, asset metrics (FREE tier: 20 requests/minute)
@@ -192,17 +252,75 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
 
+## [1.0.1] - 2026-01-23
+
+### Added
+
+- **x402 Payment Protocol Integration** - `1acc947`, `7e20882`
+  - Full micropayment support via x402 protocol
+  - Wallet connection for Ethereum/Base payments
+  - Premium tier access via crypto payments
+  - Payment verification and receipt generation
+
+- **Tier Upgrade Flow** - `88552b5`
+  - Premium tier upgrade with x402 payments
+  - Pro and Enterprise tier support
+  - Seamless payment experience
+
+- **Dual License Model** - `67f73ba`
+  - Free for personal use
+  - Commercial license required for business use
+
+- **Pure Black Theme** - `f7f30ca`, `eb73fe2`, `6e8d965`, `b0e1ad3`, `c2547d8`
+  - Unified pure black background across all pages
+  - Subtle glow effects for component depth
+  - White text for maximum contrast and readability
+
+- **Install Page** - `65ff520`
+  - Less intrusive PWA install prompt
+  - Dedicated `/install` page with instructions
+
+### Fixed
+
+- x402 TypeScript errors - `ce3845d`, `795f0e9`, `65c9e5b`, `8a02bd3`
+  - Added missing premium routes and types
+  - Added cache export for build compatibility
+- Window.ethereum TypeScript narrowing - `e1967fb`
+- Dynamic coin price fetching - `e69aaf6`
+- Missing x402 exports and groqClient - `88ca40a`
+
+### Documentation
+
+- x402 Payment Protocol Integration Guide - `eb2b71a`
+
+### Maintenance
+
+- Redeployment with X402_PAYMENT_ADDRESS - `9e5f6f6`
+- Mainnet configuration - `0926526`
+- Updated gitignore patterns - `07c2828`
+
+---
+
 ## [1.0.0] - 2026-01-22
 
 ### Added
 
-#### Core Features
+#### Core Features (`77c2795`)
 
 - Real-time cryptocurrency market data from CoinGecko API
 - Track 10,000+ cryptocurrencies with live prices
 - DeFi protocol analytics with DeFiLlama integration
 - Fear & Greed Index sentiment tracking
 - Global market statistics dashboard
+
+### Documentation (`8a708ca`)
+
+- Comprehensive README rewrite with detailed feature documentation
+
+### Developer Experience (`d39bca7`)
+
+- Improved contribution workflow
+- Enhanced developer tooling
 
 #### Portfolio Management
 

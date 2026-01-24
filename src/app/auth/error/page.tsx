@@ -55,13 +55,13 @@ function AuthErrorContent() {
   const errorInfo = errorMessages[errorCode] || errorMessages.default;
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-4">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background via-background-secondary to-background p-4">
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         className="w-full max-w-md"
       >
-        <div className="bg-slate-800/80 backdrop-blur-xl rounded-2xl border border-slate-700/50 p-8 text-center">
+        <div className="bg-surface/80 backdrop-blur-xl rounded-2xl border border-surface-border/50 p-8 text-center">
           {/* Error icon */}
           <motion.div
             initial={{ scale: 0 }}
@@ -78,12 +78,12 @@ function AuthErrorContent() {
           </h1>
 
           {/* Message */}
-          <p className="text-slate-400 mb-8">
+          <p className="text-text-secondary mb-8">
             {errorInfo.message}
           </p>
 
           {/* Error code (for debugging) */}
-          <p className="text-xs text-slate-600 mb-6 font-mono">
+          <p className="text-xs text-surface-hover mb-6 font-mono">
             Error code: {errorCode}
           </p>
 
@@ -99,7 +99,7 @@ function AuthErrorContent() {
 
             <Link
               href="/"
-              className="flex items-center justify-center gap-2 w-full py-3 px-4 bg-slate-700 hover:bg-slate-600 text-white font-medium rounded-lg transition-colors duration-200"
+              className="flex items-center justify-center gap-2 w-full py-3 px-4 bg-surface-border hover:bg-surface-hover text-white font-medium rounded-lg transition-colors duration-200"
             >
               <ArrowLeft className="w-4 h-4" />
               Back to Home
@@ -107,7 +107,7 @@ function AuthErrorContent() {
           </div>
 
           {/* Help link */}
-          <p className="mt-6 text-sm text-slate-500">
+          <p className="mt-6 text-sm text-text-muted">
             Need help?{' '}
             <a href="/support" className="text-blue-400 hover:text-blue-300">
               Contact support
@@ -122,7 +122,7 @@ function AuthErrorContent() {
 export default function AuthErrorPage() {
   return (
     <Suspense fallback={
-      <div className="min-h-screen flex items-center justify-center bg-slate-900">
+      <div className="min-h-screen flex items-center justify-center bg-background-secondary">
         <div className="w-8 h-8 border-2 border-blue-500 border-t-transparent rounded-full animate-spin" />
       </div>
     }>

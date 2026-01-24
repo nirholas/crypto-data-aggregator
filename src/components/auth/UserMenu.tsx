@@ -113,7 +113,7 @@ export function UserMenu({ user, onSignOut, className }: UserMenuProps) {
 
   // Role badge colors
   const roleColors = {
-    user: 'bg-slate-600',
+    user: 'bg-surface-hover',
     premium: 'bg-gradient-to-r from-amber-500 to-yellow-500',
     admin: 'bg-gradient-to-r from-purple-500 to-pink-500',
   };
@@ -125,8 +125,8 @@ export function UserMenu({ user, onSignOut, className }: UserMenuProps) {
         onClick={() => setIsOpen(!isOpen)}
         className={cn(
           'flex items-center gap-2 p-1.5 rounded-lg',
-          'hover:bg-slate-800 transition-colors duration-200',
-          isOpen && 'bg-slate-800'
+          'hover:bg-surface transition-colors duration-200',
+          isOpen && 'bg-surface'
         )}
         aria-expanded={isOpen}
         aria-haspopup="true"
@@ -148,7 +148,7 @@ export function UserMenu({ user, onSignOut, className }: UserMenuProps) {
           )}
           
           {/* Online indicator */}
-          <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-green-500 rounded-full border-2 border-slate-900" />
+          <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-green-500 rounded-full border-2 border-background-secondary" />
         </div>
 
         {/* Name (hidden on mobile) */}
@@ -168,7 +168,7 @@ export function UserMenu({ user, onSignOut, className }: UserMenuProps) {
         </div>
 
         <ChevronDown className={cn(
-          'w-4 h-4 text-slate-400 transition-transform duration-200',
+          'w-4 h-4 text-text-secondary transition-transform duration-200',
           isOpen && 'rotate-180'
         )} />
       </button>
@@ -184,12 +184,12 @@ export function UserMenu({ user, onSignOut, className }: UserMenuProps) {
             className={cn(
               'absolute right-0 top-full mt-2 z-50',
               'w-64 py-2',
-              'bg-slate-800 border border-slate-700 rounded-xl shadow-xl',
+              'bg-surface border border-surface-border rounded-xl shadow-xl',
               'ring-1 ring-black/5'
             )}
           >
             {/* User info header */}
-            <div className="px-4 py-3 border-b border-slate-700">
+            <div className="px-4 py-3 border-b border-surface-border">
               <div className="flex items-center gap-3">
                 {user.image ? (
                   <img
@@ -208,7 +208,7 @@ export function UserMenu({ user, onSignOut, className }: UserMenuProps) {
                   <p className="text-sm font-medium text-white truncate">
                     {user.name || 'User'}
                   </p>
-                  <p className="text-xs text-slate-400 truncate">
+                  <p className="text-xs text-text-secondary truncate">
                     {user.email}
                   </p>
                 </div>
@@ -216,7 +216,7 @@ export function UserMenu({ user, onSignOut, className }: UserMenuProps) {
               
               {/* Provider badge */}
               {user.provider && (
-                <div className="mt-2 flex items-center gap-1.5 text-xs text-slate-500">
+                <div className="mt-2 flex items-center gap-1.5 text-xs text-text-muted">
                   <Shield className="w-3 h-3" />
                   <span>Signed in with {user.provider}</span>
                 </div>
@@ -269,7 +269,7 @@ export function UserMenu({ user, onSignOut, className }: UserMenuProps) {
 
             {/* Premium upsell for non-premium users */}
             {user.role === 'user' && (
-              <div className="px-2 py-2 border-t border-slate-700">
+              <div className="px-2 py-2 border-t border-surface-border">
                 <button
                   onClick={() => {
                     router.push('/pricing');
@@ -298,7 +298,7 @@ export function UserMenu({ user, onSignOut, className }: UserMenuProps) {
             )}
 
             {/* Sign out */}
-            <div className="pt-2 border-t border-slate-700">
+            <div className="pt-2 border-t border-surface-border">
               <MenuItem
                 icon={isLoading ? Loader2 : LogOut}
                 label={isLoading ? 'Signing out...' : 'Sign out'}
@@ -345,7 +345,7 @@ function MenuItem({
         'transition-colors duration-150',
         danger
           ? 'text-red-400 hover:bg-red-500/10'
-          : 'text-slate-300 hover:bg-slate-700/50 hover:text-white',
+          : 'text-text-secondary hover:bg-surface-border/50 hover:text-white',
         disabled && 'opacity-50 cursor-not-allowed'
       )}
     >

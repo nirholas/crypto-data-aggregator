@@ -28,7 +28,7 @@ export default function InstallPage() {
   const canInstall = pwa?.isInstallable && !isInstalled;
 
   return (
-    <div className="min-h-screen bg-black text-white">
+    <div className="min-h-screen bg-background text-white">
       <div className="max-w-2xl mx-auto px-4 py-16">
         {/* Header */}
         <div className="text-center mb-12">

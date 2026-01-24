@@ -252,7 +252,7 @@ export default async function SentimentPage() {
           ) : (
             <div className="text-center py-16 bg-surface rounded-xl border border-surface-border">
               <svg
-                className="w-16 h-16 mx-auto mb-4 text-neutral-400"
+                className="w-16 h-16 mx-auto mb-4 text-text-secondary"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"

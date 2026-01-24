@@ -271,7 +271,7 @@ export async function PATCH(request: NextRequest) {
     }
     
     const subscriptionId = await hashEndpoint(endpoint);
-    const subscription = pushSubscriptions.get(subscriptionId);
+    const subscription = await getSubscription(subscriptionId);
     
     if (!subscription) {
       return NextResponse.json({
@@ -283,8 +283,12 @@ export async function PATCH(request: NextRequest) {
     const validTopics = ['bitcoin', 'ethereum', 'defi', 'nft', 'regulation', 'exchange', 'altcoin', 'breaking', 'all'];
     const filteredTopics = (topics || []).filter((t: string) => validTopics.includes(t.toLowerCase()));
     
-    subscription.topics = filteredTopics.length > 0 ? filteredTopics : ['breaking'];
-    pushSubscriptions.set(subscriptionId, subscription);
+    const oldTopics = subscription.topics;
+    const newTopics = filteredTopics.length > 0 ? filteredTopics : ['breaking'];
+    
+    subscription.topics = newTopics;
+    await saveSubscription(subscription);
+    await updateSubscriptionTopics(subscription, oldTopics, newTopics);
     
     return NextResponse.json({
       success: true,
@@ -312,14 +316,20 @@ async function hashEndpoint(endpoint: string): Promise<string> {
 
 // Helper for use by notification sender (e.g., cron job)
 // Note: In production, move this to a separate utility file
-function getSubscriptionsForTopic(topic: string): PushSubscriptionData[] {
+async function getSubscriptionsForTopic(topic: string): Promise<PushSubscriptionData[]> {
+  // Get subscription IDs for this topic and 'all'
+  const topicIds = await storage.smembers(`${NAMESPACE}:${TOPIC_INDEX_PREFIX}${topic}`);
+  const allIds = await storage.smembers(`${NAMESPACE}:${TOPIC_INDEX_PREFIX}all`);
+  
+  const uniqueIds = [...new Set([...topicIds, ...allIds])];
   const results: PushSubscriptionData[] = [];
   
-  pushSubscriptions.forEach(sub => {
-    if (sub.topics.includes(topic) || sub.topics.includes('all')) {
+  for (const id of uniqueIds) {
+    const sub = await getSubscription(id);
+    if (sub) {
       results.push(sub);
     }
-  });
+  }
   
   return results;
 }

@@ -31,7 +31,12 @@
     "archive:watch": "node scripts/archive-runner.js --watch",
     "archive:daemon": "node scripts/archive-runner.js --daemon",
     "archive:stop": "node scripts/archive-runner.js --stop",
-    "archive:status": "node scripts/archive-runner.js --status"
+    "archive:status": "node scripts/archive-runner.js --status",
+    "changelog": "node scripts/changelog/changelog-generator.js",
+    "changelog:json": "node scripts/changelog/changelog-generator.js --format json",
+    "changelog:html": "node scripts/changelog/changelog-generator.js --format html --output docs/changelog.html",
+    "changelog:sync": "node scripts/changelog/sync-changelog.js",
+    "changelog:update": "node scripts/changelog/sync-changelog.js --update"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
