@@ -45,7 +45,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const canonicalPath = buildArticleUrl(article.id, article.title);
   
   // Build OG image URL with article-specific params
-  const sentiment = article.sentiment?.toLowerCase().replace(' ', '_') || '';
+  const sentiment = article.sentiment?.label?.toLowerCase().replace(' ', '_') || '';
   const ogImageParams = new URLSearchParams({
     type: 'article',
     title: article.title.slice(0, 90),
