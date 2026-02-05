@@ -23,20 +23,19 @@ import {
   Pie,
   Cell,
 } from 'recharts';
-import { chartColors, colors } from '@/lib/colors';
 
-// Color palette for charts - using design tokens
+// Color palette for charts
 const COLORS = {
-  primary: colors.primary, // #3861FB
-  secondary: colors.secondary, // #8DC647
-  success: chartColors.gain, // #16C784
-  danger: chartColors.loss, // #EA3943
-  warning: colors.warning, // #F7931A
-  info: colors.info, // #3B82F6
-  gray: colors.textMuted, // #808A9D
+  primary: '#f59e0b',
+  secondary: '#3b82f6',
+  success: '#10b981',
+  danger: '#ef4444',
+  warning: '#f59e0b',
+  info: '#06b6d4',
+  gray: '#6b7280',
 };
 
-const PIE_COLORS = chartColors.palette;
+const PIE_COLORS = ['#f59e0b', '#3b82f6', '#10b981', '#ef4444', '#8b5cf6', '#ec4899', '#06b6d4', '#f97316'];
 
 interface ChartProps {
   data: Record<string, unknown>[];
@@ -49,12 +48,11 @@ function CustomTooltip({ active, payload, label }: any) {
   if (!active || !payload) return null;
 
   return (
-    <div className="bg-surface border border-surface-border rounded-lg p-3 shadow-xl">
-      <p className="text-text-muted text-sm mb-1">{label}</p>
+    <div className="bg-gray-800 border border-gray-700 rounded-lg p-3 shadow-xl">
+      <p className="text-gray-400 text-sm mb-1">{label}</p>
       {payload.map((entry: any, index: number) => (
         <p key={index} className="text-sm" style={{ color: entry.color }}>
-          {entry.name}:{' '}
-          {typeof entry.value === 'number' ? entry.value.toLocaleString() : entry.value}
+          {entry.name}: {typeof entry.value === 'number' ? entry.value.toLocaleString() : entry.value}
         </p>
       ))}
     </div>
@@ -81,17 +79,17 @@ export function PriceLineChart({
       <ResponsiveContainer width="100%" height={height}>
         <LineChart data={data} margin={{ top: 5, right: 5, left: 5, bottom: 5 }}>
           {showGrid && (
-            <CartesianGrid strokeDasharray="3 3" stroke={chartColors.grid} opacity={0.3} />
+            <CartesianGrid strokeDasharray="3 3" stroke="#374151" opacity={0.3} />
           )}
           <XAxis
             dataKey="time"
-            tick={{ fill: chartColors.axis, fontSize: 12 }}
-            axisLine={{ stroke: chartColors.grid }}
+            tick={{ fill: '#9ca3af', fontSize: 12 }}
+            axisLine={{ stroke: '#374151' }}
             tickLine={false}
           />
           <YAxis
-            tick={{ fill: chartColors.axis, fontSize: 12 }}
-            axisLine={{ stroke: chartColors.grid }}
+            tick={{ fill: '#9ca3af', fontSize: 12 }}
+            axisLine={{ stroke: '#374151' }}
             tickLine={false}
             tickFormatter={(value) => `$${value.toLocaleString()}`}
           />
@@ -136,16 +134,16 @@ export function PriceAreaChart({
               <stop offset="95%" stopColor={color} stopOpacity={0} />
             </linearGradient>
           </defs>
-          <CartesianGrid strokeDasharray="3 3" stroke={chartColors.grid} opacity={0.3} />
+          <CartesianGrid strokeDasharray="3 3" stroke="#374151" opacity={0.3} />
           <XAxis
             dataKey="time"
-            tick={{ fill: chartColors.axis, fontSize: 12 }}
-            axisLine={{ stroke: chartColors.grid }}
+            tick={{ fill: '#9ca3af', fontSize: 12 }}
+            axisLine={{ stroke: '#374151' }}
             tickLine={false}
           />
           <YAxis
-            tick={{ fill: chartColors.axis, fontSize: 12 }}
-            axisLine={{ stroke: chartColors.grid }}
+            tick={{ fill: '#9ca3af', fontSize: 12 }}
+            axisLine={{ stroke: '#374151' }}
             tickLine={false}
             tickFormatter={(value) => `$${value.toLocaleString()}`}
           />
@@ -178,16 +176,16 @@ export function VolumeChart({
     <div className={className}>
       <ResponsiveContainer width="100%" height={height}>
         <BarChart data={data} margin={{ top: 5, right: 5, left: 5, bottom: 5 }}>
-          <CartesianGrid strokeDasharray="3 3" stroke={chartColors.grid} opacity={0.3} />
+          <CartesianGrid strokeDasharray="3 3" stroke="#374151" opacity={0.3} />
           <XAxis
             dataKey="time"
-            tick={{ fill: chartColors.axis, fontSize: 12 }}
-            axisLine={{ stroke: chartColors.grid }}
+            tick={{ fill: '#9ca3af', fontSize: 12 }}
+            axisLine={{ stroke: '#374151' }}
             tickLine={false}
           />
           <YAxis
-            tick={{ fill: chartColors.axis, fontSize: 12 }}
-            axisLine={{ stroke: chartColors.grid }}
+            tick={{ fill: '#9ca3af', fontSize: 12 }}
+            axisLine={{ stroke: '#374151' }}
             tickLine={false}
             tickFormatter={(value) => {
               if (value >= 1e9) return `$${(value / 1e9).toFixed(1)}B`;
@@ -208,25 +206,33 @@ interface ComparisonChartProps extends ChartProps {
   lines: { dataKey: string; name: string; color: string }[];
 }
 
-export function ComparisonChart({ data, height = 300, className, lines }: ComparisonChartProps) {
+export function ComparisonChart({
+  data,
+  height = 300,
+  className,
+  lines,
+}: ComparisonChartProps) {
   return (
     <div className={className}>
       <ResponsiveContainer width="100%" height={height}>
         <LineChart data={data} margin={{ top: 5, right: 5, left: 5, bottom: 5 }}>
-          <CartesianGrid strokeDasharray="3 3" stroke={chartColors.grid} opacity={0.3} />
+          <CartesianGrid strokeDasharray="3 3" stroke="#374151" opacity={0.3} />
           <XAxis
             dataKey="time"
-            tick={{ fill: chartColors.axis, fontSize: 12 }}
-            axisLine={{ stroke: chartColors.grid }}
+            tick={{ fill: '#9ca3af', fontSize: 12 }}
+            axisLine={{ stroke: '#374151' }}
             tickLine={false}
           />
           <YAxis
-            tick={{ fill: chartColors.axis, fontSize: 12 }}
-            axisLine={{ stroke: chartColors.grid }}
+            tick={{ fill: '#9ca3af', fontSize: 12 }}
+            axisLine={{ stroke: '#374151' }}
             tickLine={false}
           />
           <Tooltip content={<CustomTooltip />} />
-          <Legend wrapperStyle={{ paddingTop: 20 }} iconType="circle" />
+          <Legend
+            wrapperStyle={{ paddingTop: 20 }}
+            iconType="circle"
+          />
           {lines.map((line) => (
             <Line
               key={line.dataKey}
@@ -337,7 +343,11 @@ interface HeatmapProps {
   className?: string;
 }
 
-export function ActivityHeatmap({ data, height = 200, className }: HeatmapProps) {
+export function ActivityHeatmap({
+  data,
+  height = 200,
+  className,
+}: HeatmapProps) {
   // Group by hour
   const hourlyData = useMemo(() => {
     const grouped: Record<number, number> = {};
@@ -356,7 +366,7 @@ export function ActivityHeatmap({ data, height = 200, className }: HeatmapProps)
         <BarChart data={hourlyData} margin={{ top: 5, right: 5, left: 5, bottom: 5 }}>
           <XAxis
             dataKey="hour"
-            tick={{ fill: chartColors.axis, fontSize: 10 }}
+            tick={{ fill: '#9ca3af', fontSize: 10 }}
             axisLine={false}
             tickLine={false}
           />
