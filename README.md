@@ -12,7 +12,7 @@
   <a href="https://github.com/nirholas/crypto-data-aggregator/pulls"><img src="https://img.shields.io/github/issues-pr/nirholas/crypto-data-aggregator?style=flat-square&color=brightgreen" alt="PRs"></a>
   <img src="https://img.shields.io/github/last-commit/nirholas/crypto-data-aggregator?style=flat-square" alt="Last Commit">
   <img src="https://img.shields.io/github/repo-size/nirholas/crypto-data-aggregator?style=flat-square" alt="Repo Size">
-  <a href="https://crypto-data-aggregator.vercel.app"><img src="https://img.shields.io/website?style=flat-square&url=https%3A%2F%2Fcrypto-data-aggregator.vercel.app" alt="Website"></a>
+  <a href="https://https://crypto-data-demo.vercel.app/"><img src="https://img.shields.io/website?style=flat-square&url=https%3A%2F%2Fhttps://crypto-data-demo.vercel.app/" alt="Website"></a>
 </p>
 
 <p align="center">
