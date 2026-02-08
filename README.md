@@ -1,5 +1,5 @@
 # 📊 Crypto Data Aggregator 
-
+ 
 <p align="center">
   <a href="https://github.com/nirholas/crypto-data-aggregator/stargazers"><img src="https://img.shields.io/github/stars/nirholas/crypto-data-aggregator?style=for-the-badge&logo=github&color=yellow" alt="GitHub Stars"></a>
   <a href="https://github.com/nirholas/crypto-data-aggregator/network/members"><img src="https://img.shields.io/github/forks/nirholas/crypto-data-aggregator?style=for-the-badge&logo=github&color=orange" alt="GitHub Forks"></a>
