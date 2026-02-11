@@ -385,3 +385,7 @@ Feel free to open a
 if you need help!
 
 Thank you for contributing! 🚀
+
+## Code of Conduct
+
+Please read and follow our [Code of Conduct](CODE_OF_CONDUCT.md).
