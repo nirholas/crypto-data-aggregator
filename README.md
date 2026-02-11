@@ -1480,3 +1480,7 @@ curl -X POST https://modelcontextprotocol.name/mcp/crypto-data-aggregator \
 - **All 27 MCP servers** — See the full catalog at [modelcontextprotocol.name](https://modelcontextprotocol.name)
 
 > Powered by [modelcontextprotocol.name](https://modelcontextprotocol.name) — the open MCP HTTP gateway
+
+## Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=nirholas/crypto-data-aggregator&type=Date)](https://star-history.com/#nirholas/crypto-data-aggregator&Date)
