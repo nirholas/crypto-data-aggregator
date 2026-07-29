@@ -1,5 +1,8 @@
 node_modules/
 .next/
+.env
+.env.*
+!.env.example
 .env*.local
 # TypeScript build cache
 *.tsbuildinfo

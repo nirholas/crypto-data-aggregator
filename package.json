@@ -3,6 +3,14 @@
   "version": "1.0.0",
   "description": "Real-time cryptocurrency market data aggregator with DeFi analytics, portfolio tracking, watchlists, and comprehensive market insights.",
   "private": false,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nirholas/crypto-data-aggregator.git"
+  },
+  "bugs": {
+    "url": "https://github.com/nirholas/crypto-data-aggregator/issues"
+  },
+  "homepage": "https://github.com/nirholas/crypto-data-aggregator#readme",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
