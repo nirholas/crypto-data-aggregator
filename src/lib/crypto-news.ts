@@ -588,3 +588,87 @@ export async function getGlobalNews(
     internationalCount: convertedIntlArticles.length,
   };
 }
+
+// ═══════════════════════════════════════════════════════════════
+// CONVENIENCE WRAPPERS
+// ═══════════════════════════════════════════════════════════════
+
+/**
+ * Fetch the latest news. Alias of getLatestNews, kept because pages and the
+ * public docs both refer to this name.
+ */
+export async function fetchNews(
+  limit: number = 10,
+  source?: string,
+  options?: NewsQueryOptions
+): Promise<NewsResponse> {
+  return getLatestNews(limit, source, options);
+}
+
+/**
+ * Get trending articles.
+ *
+ * Trending is derived from the latest feed: articles are scored by how many
+ * other recent headlines share their significant words, so a story several
+ * outlets are covering at once outranks a one-off post. Ties break toward the
+ * more recent article.
+ */
+export async function getTrendingNews(limit: number = 10): Promise<NewsResponse> {
+  const normalizedLimit = Math.min(Math.max(1, limit), 50);
+  const pool = await getLatestNews(50);
+
+  const stopWords = new Set([
+    'the', 'and', 'for', 'with', 'from', 'that', 'this', 'will', 'has', 'have',
+    'are', 'was', 'were', 'its', 'into', 'over', 'after', 'says', 'said', 'new',
+    'not', 'but', 'you', 'your', 'how', 'why', 'what', 'when', 'all', 'out',
+  ]);
+
+  const significantWords = (title: string): string[] =>
+    Array.from(
+      new Set(
+        title
+          .toLowerCase()
+          .replace(/[^a-z0-9\s]/g, ' ')
+          .split(/\s+/)
+          .filter(word => word.length > 3 && !stopWords.has(word))
+      )
+    );
+
+  const wordCounts = new Map<string, number>();
+  const perArticleWords = pool.articles.map(article => {
+    const words = significantWords(article.title);
+    for (const word of words) {
+      wordCounts.set(word, (wordCounts.get(word) || 0) + 1);
+    }
+    return words;
+  });
+
+  const scored = pool.articles.map((article, index) => {
+    // Subtract 1 per word so an article never scores for merely existing.
+    const coverage = perArticleWords[index].reduce(
+      (total, word) => total + ((wordCounts.get(word) || 1) - 1),
+      0
+    );
+    return { article, coverage, publishedAt: new Date(article.pubDate).getTime() };
+  });
+
+  scored.sort((a, b) => b.coverage - a.coverage || b.publishedAt - a.publishedAt);
+
+  const articles = scored.slice(0, normalizedLimit).map(entry => entry.article);
+
+  return {
+    articles,
+    totalCount: articles.length,
+    sources: Array.from(new Set(articles.map(article => article.source))),
+    fetchedAt: new Date().toISOString(),
+  };
+}
+
+/**
+ * Number of RSS sources this aggregator pulls from. Synchronous, so pages can
+ * render the count without awaiting a network round trip (unlike getSources,
+ * which also probes each feed for availability).
+ */
+export function getSourceCount(): number {
+  return Object.keys(RSS_SOURCES).length;
+}

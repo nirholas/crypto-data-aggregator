@@ -5,16 +5,24 @@
 
 import { type Locale, locales, defaultLocale } from '@/i18n/config';
 
+/**
+ * A translation map.
+ *
+ * English is required because every lookup in this file falls back to it. Every
+ * other locale is optional: these maps are hand-written and do not all cover
+ * the full locale list, and claiming otherwise forced a cast on every literal.
+ */
+export type LocalizedStrings = { en: string } & Partial<Record<Locale, string>>;
+
 // Common error messages in all supported languages
 // These are the most frequently used messages that should always be available
-export const errorMessages: Record<string, Record<Locale, string>> = {
+export const errorMessages: Record<string, LocalizedStrings> = {
   'notFound': {
     'en': 'Not found',
     'ar': 'غير موجود',
     'zh-CN': '未找到',
     'zh-TW': '未找到',
     'es': 'No encontrado',
-    'hi': 'नहीं मिला',
     'pt': 'Não encontrado',
     'ru': 'Не найдено',
     'ja': '見つかりません',
@@ -28,18 +36,14 @@ export const errorMessages: Record<string, Record<Locale, string>> = {
     'vi': 'Không tìm thấy',
     'th': 'ไม่พบ',
     'id': 'Tidak ditemukan',
-    'uk': 'Не знайдено',
-    'fa': 'یافت نشد',
-    'he': 'לא נמצא',
     // Add fallback for other languages
-  } as Record<Locale, string>,
+  },
   'serverError': {
     'en': 'Server error',
     'ar': 'خطأ في الخادم',
     'zh-CN': '服务器错误',
     'zh-TW': '伺服器錯誤',
     'es': 'Error del servidor',
-    'hi': 'सर्वर त्रुटि',
     'pt': 'Erro do servidor',
     'ru': 'Ошибка сервера',
     'ja': 'サーバーエラー',
@@ -53,17 +57,13 @@ export const errorMessages: Record<string, Record<Locale, string>> = {
     'vi': 'Lỗi máy chủ',
     'th': 'ข้อผิดพลาดเซิร์ฟเวอร์',
     'id': 'Kesalahan server',
-    'uk': 'Помилка сервера',
-    'fa': 'خطای سرور',
-    'he': 'שגיאת שרת',
-  } as Record<Locale, string>,
+  },
   'unauthorized': {
     'en': 'Unauthorized',
     'ar': 'غير مصرح',
     'zh-CN': '未授权',
     'zh-TW': '未授權',
     'es': 'No autorizado',
-    'hi': 'अनधिकृत',
     'pt': 'Não autorizado',
     'ru': 'Не авторизован',
     'ja': '認証されていません',
@@ -77,17 +77,13 @@ export const errorMessages: Record<string, Record<Locale, string>> = {
     'vi': 'Không được phép',
     'th': 'ไม่ได้รับอนุญาต',
     'id': 'Tidak diizinkan',
-    'uk': 'Не авторизовано',
-    'fa': 'غیرمجاز',
-    'he': 'לא מורשה',
-  } as Record<Locale, string>,
+  },
   'badRequest': {
     'en': 'Bad request',
     'ar': 'طلب غير صالح',
     'zh-CN': '请求无效',
     'zh-TW': '請求無效',
     'es': 'Solicitud incorrecta',
-    'hi': 'खराब अनुरोध',
     'pt': 'Requisição inválida',
     'ru': 'Неверный запрос',
     'ja': '不正なリクエスト',
@@ -101,17 +97,13 @@ export const errorMessages: Record<string, Record<Locale, string>> = {
     'vi': 'Yêu cầu không hợp lệ',
     'th': 'คำขอไม่ถูกต้อง',
     'id': 'Permintaan tidak valid',
-    'uk': 'Невірний запит',
-    'fa': 'درخواست نامعتبر',
-    'he': 'בקשה שגויה',
-  } as Record<Locale, string>,
+  },
   'rateLimited': {
     'en': 'Rate limit exceeded. Please try again later.',
     'ar': 'تم تجاوز حد المعدل. يرجى المحاولة مرة أخرى لاحقًا.',
     'zh-CN': '超出速率限制。请稍后重试。',
     'zh-TW': '超出速率限制。請稍後重試。',
     'es': 'Límite de velocidad excedido. Inténtalo más tarde.',
-    'hi': 'दर सीमा पार हो गई। कृपया बाद में पुनः प्रयास करें।',
     'pt': 'Limite de taxa excedido. Tente novamente mais tarde.',
     'ru': 'Превышен лимит запросов. Повторите попытку позже.',
     'ja': 'レート制限を超えました。後でもう一度お試しください。',
@@ -125,17 +117,13 @@ export const errorMessages: Record<string, Record<Locale, string>> = {
     'vi': 'Vượt quá giới hạn. Vui lòng thử lại sau.',
     'th': 'เกินขีดจำกัด กรุณาลองใหม่ภายหลัง',
     'id': 'Batas kecepatan terlampaui. Coba lagi nanti.',
-    'uk': 'Перевищено ліміт запитів. Спробуйте пізніше.',
-    'fa': 'محدودیت نرخ بیش از حد. لطفاً بعداً دوباره امتحان کنید.',
-    'he': 'חריגה ממגבלת הקצב. נסה שוב מאוחר יותר.',
-  } as Record<Locale, string>,
+  },
   'loading': {
     'en': 'Loading...',
     'ar': 'جار التحميل...',
     'zh-CN': '加载中...',
     'zh-TW': '載入中...',
     'es': 'Cargando...',
-    'hi': 'लोड हो रहा है...',
     'pt': 'Carregando...',
     'ru': 'Загрузка...',
     'ja': '読み込み中...',
@@ -149,10 +137,7 @@ export const errorMessages: Record<string, Record<Locale, string>> = {
     'vi': 'Đang tải...',
     'th': 'กำลังโหลด...',
     'id': 'Memuat...',
-    'uk': 'Завантаження...',
-    'fa': 'در حال بارگذاری...',
-    'he': 'טוען...',
-  } as Record<Locale, string>,
+  },
 };
 
 // Get translated error message
@@ -165,14 +150,13 @@ export function getErrorMessage(key: string, locale: Locale): string {
 }
 
 // Market terms that should be translated
-export const marketTerms: Record<string, Record<Locale, string>> = {
+export const marketTerms: Record<string, LocalizedStrings> = {
   'bullish': {
     'en': 'Bullish',
     'ar': 'صعودي',
     'zh-CN': '看涨',
     'zh-TW': '看漲',
     'es': 'Alcista',
-    'hi': 'तेजी',
     'pt': 'Altista',
     'ru': 'Бычий',
     'ja': '強気',
@@ -181,14 +165,13 @@ export const marketTerms: Record<string, Record<Locale, string>> = {
     'ko': '강세',
     'it': 'Rialzista',
     'tr': 'Yükseliş',
-  } as Record<Locale, string>,
+  },
   'bearish': {
     'en': 'Bearish',
     'ar': 'هبوطي',
     'zh-CN': '看跌',
     'zh-TW': '看跌',
     'es': 'Bajista',
-    'hi': 'मंदी',
     'pt': 'Baixista',
     'ru': 'Медвежий',
     'ja': '弱気',
@@ -197,14 +180,13 @@ export const marketTerms: Record<string, Record<Locale, string>> = {
     'ko': '약세',
     'it': 'Ribassista',
     'tr': 'Düşüş',
-  } as Record<Locale, string>,
+  },
   'neutral': {
     'en': 'Neutral',
     'ar': 'محايد',
     'zh-CN': '中性',
     'zh-TW': '中性',
     'es': 'Neutral',
-    'hi': 'तटस्थ',
     'pt': 'Neutro',
     'ru': 'Нейтральный',
     'ja': '中立',
@@ -213,7 +195,7 @@ export const marketTerms: Record<string, Record<Locale, string>> = {
     'ko': '중립',
     'it': 'Neutrale',
     'tr': 'Nötr',
-  } as Record<Locale, string>,
+  },
 };
 
 // Get translated market term
@@ -224,7 +206,7 @@ export function getMarketTerm(term: string, locale: Locale): string {
 }
 
 // Time-related translations
-export const timeTerms: Record<string, Record<Locale, string>> = {
+export const timeTerms: Record<string, LocalizedStrings> = {
   'justNow': {
     'en': 'Just now',
     'ar': 'الآن',
@@ -235,7 +217,7 @@ export const timeTerms: Record<string, Record<Locale, string>> = {
     'ru': 'Только что',
     'de': 'Gerade eben',
     'fr': "À l'instant",
-  } as Record<Locale, string>,
+  },
   'minutesAgo': {
     'en': '{count} minutes ago',
     'ar': 'منذ {count} دقائق',
@@ -246,7 +228,7 @@ export const timeTerms: Record<string, Record<Locale, string>> = {
     'ru': '{count} минут назад',
     'de': 'Vor {count} Minuten',
     'fr': 'Il y a {count} minutes',
-  } as Record<Locale, string>,
+  },
   'hoursAgo': {
     'en': '{count} hours ago',
     'ar': 'منذ {count} ساعات',
@@ -257,7 +239,7 @@ export const timeTerms: Record<string, Record<Locale, string>> = {
     'ru': '{count} часов назад',
     'de': 'Vor {count} Stunden',
     'fr': 'Il y a {count} heures',
-  } as Record<Locale, string>,
+  },
   'daysAgo': {
     'en': '{count} days ago',
     'ar': 'منذ {count} أيام',
@@ -268,7 +250,7 @@ export const timeTerms: Record<string, Record<Locale, string>> = {
     'ru': '{count} дней назад',
     'de': 'Vor {count} Tagen',
     'fr': 'Il y a {count} jours',
-  } as Record<Locale, string>,
+  },
 };
 
 // Get relative time translation

@@ -6,21 +6,76 @@
 
 import fs from 'fs';
 import path from 'path';
+import matter from 'gray-matter';
 
 // =============================================================================
 // TYPES
 // =============================================================================
+
+/**
+ * Blog categories.
+ *
+ * A post declares one via its `category` frontmatter field. Anything missing or
+ * unrecognised falls back to `guides`, so a post is never uncategorised.
+ */
+export const CATEGORIES = {
+  guides: {
+    name: 'Guides',
+    description: 'Step-by-step walkthroughs for getting things done in crypto.',
+    icon: '📘',
+  },
+  markets: {
+    name: 'Markets',
+    description: 'Price action, market structure, and what is moving capital.',
+    icon: '📈',
+  },
+  defi: {
+    name: 'DeFi',
+    description: 'Protocols, yields, liquidity, and on-chain finance.',
+    icon: '🏦',
+  },
+  security: {
+    name: 'Security',
+    description: 'Custody, key management, scams, and staying safe on-chain.',
+    icon: '🔐',
+  },
+  research: {
+    name: 'Research',
+    description: 'Longer-form analysis and data-driven deep dives.',
+    icon: '🔬',
+  },
+} as const;
+
+export type BlogCategory = keyof typeof CATEGORIES;
+
+export const DEFAULT_CATEGORY: BlogCategory = 'guides';
+
+/**
+ * Narrow an arbitrary frontmatter value to a known category.
+ */
+export function normalizeCategory(value: unknown): BlogCategory {
+  if (typeof value === 'string') {
+    const key = value.trim().toLowerCase();
+    if (key in CATEGORIES) return key as BlogCategory;
+  }
+  return DEFAULT_CATEGORY;
+}
 
 export interface BlogPost {
   slug: string;
   title: string;
   excerpt: string;
   content: string;
+  category: BlogCategory;
   date: string;
+  /** ISO date of the last edit, from the `updatedAt` frontmatter field. */
+  updatedAt?: string;
   author: {
     name: string;
     avatar?: string;
     twitter?: string;
+    /** Short author bio, rendered under the post. */
+    bio?: string;
   };
   coverImage?: string;
   tags: string[];
@@ -33,6 +88,7 @@ export interface BlogPostMeta {
   slug: string;
   title: string;
   excerpt: string;
+  category: BlogCategory;
   date: string;
   author: {
     name: string;
@@ -55,77 +111,16 @@ const BLOG_DIR = path.join(process.cwd(), 'content', 'blog');
 // =============================================================================
 
 /**
- * Parse frontmatter from markdown content
+ * Parse frontmatter from markdown content.
+ *
+ * Uses gray-matter (real YAML) rather than a hand-rolled line parser. The
+ * previous implementation could not read nested objects, so the documented
+ * `author:` block parsed as an empty array and every post page crashed on
+ * `post.author.name`.
  */
 function parseFrontmatter(content: string): { data: Record<string, unknown>; content: string } {
-  const frontmatterRegex = /^---\n([\s\S]*?)\n---\n([\s\S]*)$/;
-  const match = content.match(frontmatterRegex);
-  
-  if (!match) {
-    return { data: {}, content };
-  }
-  
-  const frontmatter = match[1];
-  const body = match[2];
-  
-  // Parse YAML-like frontmatter
-  const data: Record<string, unknown> = {};
-  const lines = frontmatter.split('\n');
-  
-  let currentKey = '';
-  let inArray = false;
-  let arrayItems: string[] = [];
-  
-  for (const line of lines) {
-    // Array item
-    if (line.startsWith('  - ') && inArray) {
-      arrayItems.push(line.replace('  - ', '').trim());
-      continue;
-    }
-    
-    // End array if we hit a new key
-    if (inArray && !line.startsWith('  ')) {
-      data[currentKey] = arrayItems;
-      inArray = false;
-      arrayItems = [];
-    }
-    
-    // Key-value pair
-    const colonIndex = line.indexOf(':');
-    if (colonIndex > 0) {
-      const key = line.slice(0, colonIndex).trim();
-      const value = line.slice(colonIndex + 1).trim();
-      
-      if (value === '') {
-        // Start of array or nested object
-        currentKey = key;
-        inArray = true;
-        arrayItems = [];
-      } else if (value.startsWith('[') && value.endsWith(']')) {
-        // Inline array
-        data[key] = value
-          .slice(1, -1)
-          .split(',')
-          .map(s => s.trim().replace(/^["']|["']$/g, ''));
-      } else if (value === 'true') {
-        data[key] = true;
-      } else if (value === 'false') {
-        data[key] = false;
-      } else if (!isNaN(Number(value))) {
-        data[key] = Number(value);
-      } else {
-        // String value - remove quotes if present
-        data[key] = value.replace(/^["']|["']$/g, '');
-      }
-    }
-  }
-  
-  // Handle final array
-  if (inArray) {
-    data[currentKey] = arrayItems;
-  }
-  
-  return { data, content: body };
+  const parsed = matter(content);
+  return { data: parsed.data as Record<string, unknown>, content: parsed.content };
 }
 
 /**
@@ -242,7 +237,9 @@ export function getPostBySlug(slug: string): BlogPost | null {
       title: (data.title as string) || slug,
       excerpt: (data.excerpt as string) || content.slice(0, 160).replace(/[#*`]/g, '') + '...',
       content,
+      category: normalizeCategory(data.category),
       date: (data.date as string) || new Date().toISOString(),
+      updatedAt: data.updatedAt as string | undefined,
       author,
       coverImage: data.coverImage as string | undefined,
       tags: (data.tags as string[]) || [],
@@ -270,6 +267,7 @@ export function getAllPosts(options: { includeDrafts?: boolean } = {}): BlogPost
         slug: post.slug,
         title: post.title,
         excerpt: post.excerpt,
+        category: post.category,
         date: post.date,
         author: post.author,
         coverImage: post.coverImage,
@@ -341,4 +339,26 @@ export function getRelatedPosts(currentSlug: string, limit = 3): BlogPostMeta[] 
     .sort((a, b) => b.score - a.score)
     .slice(0, limit)
     .map(s => s.post);
+}
+
+/**
+ * Every post slug. Alias of getAllPostSlugs, the name the blog routes use.
+ */
+export function getAllSlugs(): string[] {
+  return getAllPostSlugs();
+}
+
+/**
+ * Every published post's metadata. Alias of getAllPosts, the name the blog
+ * index uses.
+ */
+export function getAllPostsMeta(options: { includeDrafts?: boolean } = {}): BlogPostMeta[] {
+  return getAllPosts(options);
+}
+
+/**
+ * Posts in a category, newest first.
+ */
+export function getPostsByCategory(category: BlogCategory): BlogPostMeta[] {
+  return getAllPosts().filter(post => post.category === category);
 }

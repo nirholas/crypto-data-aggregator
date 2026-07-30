@@ -95,7 +95,7 @@ export default async function CategoryPage({ params }: PageProps) {
                       {post.title}
                     </h2>
                     <p className="text-gray-400 mt-2 line-clamp-2">
-                      {post.description}
+                      {post.excerpt}
                     </p>
                     <div className="flex items-center gap-4 mt-4 text-sm text-gray-500">
                       <span>{post.author.name}</span>

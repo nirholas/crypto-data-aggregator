@@ -145,7 +145,7 @@ function FeaturedPostCard({ post }: { post: ReturnType<typeof getAllPostsMeta>[0
       href={`/blog/${post.slug}`}
       className="group bg-gray-800 rounded-xl overflow-hidden hover:ring-2 hover:ring-blue-500 transition-all"
     >
-      {post.image ? (
+      {post.coverImage ? (
         <div className="aspect-video bg-gray-700 relative overflow-hidden">
           <div className="absolute inset-0 bg-gradient-to-t from-gray-900/80 to-transparent z-10" />
           <div className="absolute bottom-3 left-3 z-20">
@@ -164,7 +164,7 @@ function FeaturedPostCard({ post }: { post: ReturnType<typeof getAllPostsMeta>[0
           {post.title}
         </h3>
         <p className="text-gray-400 text-sm mt-2 line-clamp-2">
-          {post.description}
+          {post.excerpt}
         </p>
         <div className="flex items-center gap-3 mt-3 text-xs text-gray-500">
           <span>{new Date(post.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</span>
@@ -193,7 +193,7 @@ function PostCard({ post }: { post: ReturnType<typeof getAllPostsMeta>[0] }) {
         {post.title}
       </h3>
       <p className="text-gray-400 text-sm mt-2 line-clamp-2">
-        {post.description}
+        {post.excerpt}
       </p>
       <div className="flex items-center gap-3 mt-4 text-xs text-gray-500">
         <span>{new Date(post.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</span>

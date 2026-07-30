@@ -100,6 +100,8 @@ export interface FearGreedIndex {
 export interface ProtocolTVL {
   id: string;
   name: string;
+  /** Present when DefiLlama supplies one; derive with slugifyName otherwise. */
+  slug?: string;
   symbol: string;
   chain: string;
   chains: string[];
@@ -110,6 +112,12 @@ export interface ProtocolTVL {
   category: string;
   logo: string;
   url: string;
+  // Optional fields DefiLlama returns per protocol. Not every protocol has them.
+  description?: string;
+  twitter?: string;
+  mcap?: number;
+  fdv?: number;
+  audit_links?: string[];
 }
 
 export interface ChainTVL {
@@ -814,9 +822,16 @@ async function fetchAndCache<T>(
 
 /**
  * Get simple prices for major coins (fast endpoint)
- * @returns Simple price data for BTC, ETH, and SOL
+ *
+ * Returns an empty object when the upstream is unavailable or rate limited,
+ * matching every other fetcher in this module. Callers already optional-chain
+ * each coin, so a missing price renders as "unavailable" instead of throwing.
+ * Throwing here used to abort the whole production build, because prerendering
+ * hundreds of pages trips CoinGecko's free-tier rate limit.
+ *
+ * @returns Simple price data for BTC, ETH, and SOL, possibly empty
  */
-export async function getSimplePrices(): Promise<SimplePrices> {
+export async function getSimplePrices(): Promise<Partial<SimplePrices>> {
   const cacheKey = 'simple-prices';
   const cached = getCached<SimplePrices>(cacheKey);
   if (cached) return cached.data;
@@ -835,8 +850,8 @@ export async function getSimplePrices(): Promise<SimplePrices> {
     return data;
   } catch (error) {
     console.error('Error fetching simple prices:', error);
-    // Throw error instead of returning fake price data
-    throw new Error(`Failed to fetch real-time prices: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    // Never invent prices: report "no data" rather than fake numbers.
+    return {};
   }
 }
 
@@ -1712,4 +1727,60 @@ export function getFearGreedBgColor(value: number): string {
   if (value <= 55) return 'bg-yellow-500';
   if (value <= 75) return 'bg-lime-500';
   return 'bg-green-500';
+}
+
+// ═══════════════════════════════════════════════════════════════
+// SLUG LOOKUPS
+// ═══════════════════════════════════════════════════════════════
+
+/**
+ * URL slug for a protocol or chain name, matching the form the detail pages
+ * build in their generateStaticParams.
+ */
+export function slugifyName(name: string): string {
+  return name
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+}
+
+/**
+ * Look up a DeFi protocol by URL slug.
+ *
+ * Matches against the protocol's own slug when DefiLlama provides one, then
+ * its id, then a slugified name, so every slug the detail page can generate
+ * resolves. Returns null when nothing matches, letting the page call notFound().
+ */
+export async function getProtocolBySlug(slug: string): Promise<ProtocolTVL | null> {
+  const normalized = slugifyName(slug);
+  const protocols = await getTopProtocols(200);
+
+  return (
+    protocols.find(
+      protocol =>
+        (protocol.slug && slugifyName(protocol.slug) === normalized) ||
+        (protocol.id && slugifyName(protocol.id) === normalized) ||
+        slugifyName(protocol.name) === normalized
+    ) || null
+  );
+}
+
+/**
+ * Look up a chain by URL slug.
+ *
+ * Matches against the CoinGecko id the chain listing exposes, then a slugified
+ * name. Returns null when nothing matches.
+ */
+export async function getChainBySlug(slug: string): Promise<ChainTVL | null> {
+  const normalized = slugifyName(slug);
+  const chains = await getTopChains(200);
+
+  return (
+    chains.find(
+      chain =>
+        (chain.gecko_id && slugifyName(chain.gecko_id) === normalized) ||
+        slugifyName(chain.name) === normalized
+    ) || null
+  );
 }

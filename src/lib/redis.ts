@@ -96,7 +96,6 @@ export async function initRedis(): Promise<boolean> {
   initPromise = (async () => {
     try {
       // Dynamic import to avoid bundling in edge runtime
-      // @ts-expect-error - dynamic import of optional redis package
       const { createClient } = await import('redis');
 
       redisClient = createClient({

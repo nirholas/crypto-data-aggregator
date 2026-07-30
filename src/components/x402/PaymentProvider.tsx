@@ -17,7 +17,7 @@ import React, {
   useEffect,
   ReactNode,
 } from 'react';
-import type { Address } from 'viem';
+import { encodeFunctionData, erc20Abi, type Address, type Hex } from 'viem';
 
 // =============================================================================
 // TYPES
@@ -48,6 +48,21 @@ interface AccessPass {
   paymentId: string;
 }
 
+export interface PaymentRequest {
+  /** Recipient of the USDC transfer. */
+  to: Address | string;
+  /** Amount in USDC minor units (6 decimals), as a decimal string. */
+  amount: string;
+  /** CAIP-2 network id the payment must settle on, e.g. "eip155:8453". */
+  network?: string;
+}
+
+export interface PaymentResult {
+  success: boolean;
+  txHash?: Hex;
+  error?: string;
+}
+
 interface PaymentContextValue {
   // Wallet state
   wallet: WalletState;
@@ -67,6 +82,7 @@ interface PaymentContextValue {
   // Payment actions
   checkAccess: (route: string) => boolean;
   getAccessExpiry: (route: string) => number | null;
+  executePayment: (request: PaymentRequest) => Promise<PaymentResult>;
 
   // Config
   targetChainId: number;
@@ -397,6 +413,76 @@ export function PaymentProvider({ children, testnet = true }: PaymentProviderPro
   // Check if user has any active premium access
   const isPremium = accessPasses.some((pass) => pass.expiresAt > Date.now());
 
+  /**
+   * Send a USDC payment from the connected wallet.
+   *
+   * Encodes an ERC-20 `transfer` and submits it through the injected provider.
+   * The wallet must already be on the target chain; connect() and switchChain()
+   * handle that, and this re-checks rather than silently paying on the wrong
+   * network.
+   */
+  const executePayment = useCallback(
+    async (request: PaymentRequest): Promise<PaymentResult> => {
+      const ethereum = typeof window === 'undefined' ? undefined : window.ethereum;
+
+      if (!ethereum) {
+        return { success: false, error: 'No Ethereum wallet detected. Install MetaMask to pay.' };
+      }
+      if (!wallet.connected || !wallet.address) {
+        return { success: false, error: 'Wallet is not connected.' };
+      }
+
+      if (request.network) {
+        const requestedChainId = Number(request.network.split(':')[1]);
+        if (Number.isFinite(requestedChainId) && requestedChainId !== wallet.chainId) {
+          return {
+            success: false,
+            error: `Wallet is on chain ${wallet.chainId ?? 'unknown'} but this payment settles on chain ${requestedChainId}. Switch networks and try again.`,
+          };
+        }
+      } else if (!wallet.isCorrectChain) {
+        return { success: false, error: 'Wallet is on the wrong network for this payment.' };
+      }
+
+      const usdcAddress = USDC_ADDRESSES[wallet.chainId ?? targetChainId];
+      if (!usdcAddress) {
+        return { success: false, error: `No USDC address configured for chain ${wallet.chainId}.` };
+      }
+
+      let value: bigint;
+      try {
+        value = BigInt(request.amount);
+      } catch {
+        return { success: false, error: `Invalid amount: ${request.amount}` };
+      }
+      if (value <= BigInt(0)) {
+        return { success: false, error: 'Payment amount must be greater than zero.' };
+      }
+
+      try {
+        const data = encodeFunctionData({
+          abi: erc20Abi,
+          functionName: 'transfer',
+          args: [request.to as Address, value],
+        });
+
+        const txHash = (await ethereum.request({
+          method: 'eth_sendTransaction',
+          params: [{ from: wallet.address, to: usdcAddress, data }],
+        })) as Hex;
+
+        return { success: true, txHash };
+      } catch (e) {
+        const err = e as { code?: number; message?: string };
+        if (err.code === 4001) {
+          return { success: false, error: 'Payment rejected in wallet.' };
+        }
+        return { success: false, error: err.message || 'Payment failed.' };
+      }
+    },
+    [wallet, targetChainId]
+  );
+
   const value: PaymentContextValue = {
     wallet,
     isConnecting,
@@ -409,6 +495,7 @@ export function PaymentProvider({ children, testnet = true }: PaymentProviderPro
     isPremium,
     checkAccess,
     getAccessExpiry,
+    executePayment,
     targetChainId,
     isTestnet: testnet,
   };

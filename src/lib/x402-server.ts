@@ -20,7 +20,7 @@
  */
 
 import { x402ResourceServer, HTTPFacilitatorClient } from '@x402/core/server';
-import { ExactEvmScheme } from '@x402/evm/exact/server';
+import { registerExactEvmScheme } from '@x402/evm/exact/server';
 import type { Address } from 'viem';
 
 // ============================================================================
@@ -72,22 +72,13 @@ const facilitatorClient = new HTTPFacilitatorClient({
  */
 export const x402Server = new x402ResourceServer(facilitatorClient);
 
-// Register EVM payment scheme (Base/Ethereum)
-// Wrap in try-catch to prevent build failures when facilitator doesn't support schemes
-try {
-  x402Server.register(defaultNetwork, new ExactEvmScheme());
-
-  // Also register mainnet if we're on testnet (for future-proofing)
-  if (isTestnet) {
-    x402Server.register('eip155:8453', new ExactEvmScheme());
-  }
-} catch (error) {
-  // Silently ignore registration errors during build
-  // The x402 functionality will be unavailable but won't crash the build
-  if (process.env.NODE_ENV !== 'production') {
-    console.warn('[x402] Failed to register payment schemes:', error);
-  }
-}
+// Register the EVM "exact" payment scheme.
+//
+// The SDK's registration helper installs the scheme for every eip155 network it
+// supports, so there is no per-network call and no scheme instance to build by
+// hand. The older `x402Server.register(network, new ExactEvmScheme())` form no
+// longer satisfies the SchemeNetworkServer contract.
+registerExactEvmScheme(x402Server);
 
 // ============================================================================
 // Pricing Configuration

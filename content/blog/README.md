@@ -15,10 +15,13 @@ This directory contains all blog posts written in Markdown format with YAML fron
 title: Your Post Title (required)
 excerpt: A short description for previews (optional, auto-generated from content)
 date: 2026-01-24 (required, YYYY-MM-DD format)
+updatedAt: 2026-02-01 (optional, YYYY-MM-DD, sets the article's modified date)
+category: guides (optional, one of: guides, markets, defi, security, research. Defaults to guides)
 author:
   name: Author Name (required)
   avatar: /path/to/avatar.jpg (optional)
   twitter: twitterhandle (optional, without @)
+  bio: One line about the author (optional)
 coverImage: /path/to/cover.jpg (optional)
 tags: (optional)
   - tag1

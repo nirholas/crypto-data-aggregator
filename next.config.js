@@ -1,3 +1,11 @@
+const createNextIntlPlugin = require('next-intl/plugin');
+
+// next-intl needs to be told where the request config lives. Without this the
+// production build compiles fine and then fails every prerender with
+// "Couldn't find next-intl config file", because this project keeps its config
+// at src/i18n/request.ts rather than one of the default locations.
+const withNextIntl = createNextIntlPlugin('./src/i18n/request.ts');
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   // Compress responses
@@ -212,4 +220,4 @@ const nextConfig = {
     };
   },
 };
-module.exports = nextConfig;
+module.exports = withNextIntl(nextConfig);

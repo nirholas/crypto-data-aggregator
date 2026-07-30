@@ -6,7 +6,7 @@
  */
 
 import { kv } from '@vercel/kv';
-import { getX402Server, validateConfig as validateX402Config } from '@/lib/x402/server';
+import { x402Server, getServerStatus as getX402ServerStatus } from '@/lib/x402/server';
 
 // =============================================================================
 // TYPES
@@ -88,27 +88,26 @@ async function checkX402(): Promise<HealthCheck> {
   const start = Date.now();
   
   try {
-    const config = validateX402Config();
-    
-    if (!config.valid) {
+    const status = getX402ServerStatus();
+
+    if (!status.configured) {
       return {
         name: 'x402',
         status: 'unhealthy',
         responseTime: Date.now() - start,
-        error: config.errors.join(', '),
+        error: `x402 server not configured (facilitator: ${status.facilitator || 'unset'}, network: ${status.primaryNetwork || 'unset'})`,
       };
     }
-    
-    // Try to get server instance
-    const server = getX402Server();
-    
+
     return {
       name: 'x402',
       status: 'healthy',
       responseTime: Date.now() - start,
       details: {
         configured: true,
-        server: !!server,
+        server: Boolean(x402Server),
+        primaryNetwork: status.primaryNetwork,
+        supportedNetworks: status.supportedNetworks.length,
       },
     };
   } catch (error) {

@@ -12,7 +12,7 @@ interface PageProps {
 // Generate static paths for all tags
 export async function generateStaticParams() {
   const tags = getAllTags();
-  return tags.map((tag) => ({ tag }));
+  return tags.map(({ tag }) => ({ tag }));
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
@@ -91,7 +91,7 @@ export default async function TagPage({ params }: PageProps) {
                     {post.title}
                   </h2>
                   <p className="text-gray-400 mt-2 line-clamp-2">
-                    {post.description}
+                    {post.excerpt}
                   </p>
                   <div className="flex flex-wrap items-center gap-2 mt-4">
                     {post.tags.map((t) => (
@@ -129,7 +129,7 @@ export default async function TagPage({ params }: PageProps) {
       <section className="max-w-4xl mx-auto px-4 pb-12">
         <h2 className="text-lg font-semibold text-white mb-4">All Tags</h2>
         <div className="flex flex-wrap gap-2">
-          {allTags.map((t) => (
+          {allTags.map(({ tag: t, count }) => (
             <Link
               key={t}
               href={`/blog/tag/${encodeURIComponent(t)}`}
@@ -139,7 +139,7 @@ export default async function TagPage({ params }: PageProps) {
                   : 'bg-gray-800 hover:bg-gray-700 text-gray-300'
               }`}
             >
-              #{t}
+              #{t} <span className="opacity-60">{count}</span>
             </Link>
           ))}
         </div>

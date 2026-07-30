@@ -20,6 +20,8 @@ export interface EnrichedArticle {
   id: string;
   schema_version: string;
   title: string;
+  /** Present on records the archiver already slugged; derive with generateArticleSlug otherwise. */
+  slug?: string;
   link: string;
   canonical_link: string;
   description: string;
@@ -587,3 +589,49 @@ function getTimeAgo(dateString: string): string {
 // ============================================================================
 
 // Note: Import from './archive' directly for v1 functions
+
+/**
+ * Build a URL-safe slug for an article.
+ *
+ * Archived records may already carry a `slug`. When they do not, derive one
+ * from the title, suffixed with the publication date so two articles that
+ * share a headline do not collide.
+ */
+export function generateArticleSlug(title: string, date?: string | null): string {
+  const base = title
+    .toLowerCase()
+    .normalize('NFKD')
+    .replace(/[̀-ͯ]/g, '')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '')
+    .slice(0, 80)
+    .replace(/-+$/g, '');
+
+  const slug = base || 'article';
+
+  if (!date) return slug;
+
+  const parsed = new Date(date);
+  if (Number.isNaN(parsed.getTime())) return slug;
+
+  return `${slug}-${parsed.toISOString().slice(0, 10)}`;
+}
+
+/**
+ * Every article ID present in the archive, for static generation.
+ *
+ * Reads the by-date index (article IDs grouped by day) and flattens it. Returns
+ * an empty list when the index is unavailable, so a build never fails on a
+ * transient archive fetch.
+ */
+export async function getAllArchivedArticleIds(): Promise<string[]> {
+  const index = await getArchiveV2Index('by-date');
+  if (!index) return [];
+
+  const ids = new Set<string>();
+  for (const dayIds of Object.values(index)) {
+    for (const id of dayIds) ids.add(id);
+  }
+
+  return Array.from(ids);
+}

@@ -30,24 +30,24 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   
   return {
     title: `${post.title} | Free Crypto News Blog`,
-    description: post.description,
+    description: post.excerpt,
     keywords: post.tags,
     authors: [{ name: post.author.name }],
     openGraph: {
       title: post.title,
-      description: post.description,
+      description: post.excerpt,
       type: 'article',
       publishedTime: post.date,
       modifiedTime: post.updatedAt,
       authors: [post.author.name],
       tags: post.tags,
-      images: post.image ? [post.image] : undefined,
+      images: post.coverImage ? [post.coverImage] : undefined,
     },
     twitter: {
       card: 'summary_large_image',
       title: post.title,
-      description: post.description,
-      images: post.image ? [post.image] : undefined,
+      description: post.excerpt,
+      images: post.coverImage ? [post.coverImage] : undefined,
     },
   };
 }
@@ -60,7 +60,7 @@ export default async function BlogPostPage({ params }: PageProps) {
     notFound();
   }
   
-  const relatedPosts = getRelatedPosts(post, 3);
+  const relatedPosts = getRelatedPosts(post.slug, 3);
   const category = CATEGORIES[post.category as BlogCategory];
   
   // Convert markdown to HTML (simple conversion)
@@ -71,8 +71,8 @@ export default async function BlogPostPage({ params }: PageProps) {
     '@context': 'https://schema.org',
     '@type': 'Article',
     headline: post.title,
-    description: post.description,
-    image: post.image,
+    description: post.excerpt,
+    image: post.coverImage,
     datePublished: post.date,
     dateModified: post.updatedAt || post.date,
     author: {
@@ -133,7 +133,7 @@ export default async function BlogPostPage({ params }: PageProps) {
             
             {/* Description */}
             <p className="text-xl text-gray-300 mt-4">
-              {post.description}
+              {post.excerpt}
             </p>
             
             {/* Meta info */}
@@ -163,7 +163,7 @@ export default async function BlogPostPage({ params }: PageProps) {
         </header>
         
         {/* Featured Image */}
-        {post.image && (
+        {post.coverImage && (
           <div className="max-w-4xl mx-auto px-4 -mt-4">
             <div className="aspect-video bg-gray-800 rounded-xl overflow-hidden">
               {/* Image would go here */}

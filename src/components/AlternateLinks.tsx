@@ -21,7 +21,6 @@ interface AlternateLinksProps {
 const hreflangOverrides: Partial<Record<Locale, string>> = {
   'zh-CN': 'zh-Hans',
   'zh-TW': 'zh-Hant',
-  'pt-BR': 'pt-BR',
 };
 
 /**
