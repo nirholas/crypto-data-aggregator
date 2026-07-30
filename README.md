@@ -1279,3 +1279,10 @@ curl -X POST https://modelcontextprotocol.name/mcp/crypto-data-aggregator \
 ## Star History
 
 [![Star History Chart](https://api.star-history.com/svg?repos=nirholas/crypto-data-aggregator&type=Date)](https://star-history.com/#nirholas/crypto-data-aggregator&Date)
+
+## Documentation
+
+Full documentation site: **https://nirholas.github.io/crypto-data-aggregator/**
+
+- [Getting started](docs/getting-started.md) covers install and first run.
+- [Examples](docs/examples.md) has copy-paste snippets.
