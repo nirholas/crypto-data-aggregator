@@ -1,6 +1,6 @@
 {
   "name": "crypto-data-aggregator",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Real-time cryptocurrency market data aggregator with DeFi analytics, portfolio tracking, watchlists, and comprehensive market insights.",
   "private": false,
   "repository": {
