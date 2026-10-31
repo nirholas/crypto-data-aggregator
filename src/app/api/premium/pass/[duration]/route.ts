@@ -18,7 +18,8 @@ import {
   getPassStatus,
   type PassDuration,
 } from '@/lib/x402/passes';
-import { PAYMENT_ADDRESS, CURRENT_NETWORK, USDC_ADDRESS } from '@/lib/x402/config';
+import { PAYMENT_ADDRESS, CURRENT_NETWORK, USDC_ADDRESS, FACILITATOR_URL } from '@/lib/x402/config';
+import { verifyAndSettlePayment } from '@/lib/x402-settlement';
 
 export const runtime = 'edge';
 
@@ -188,8 +189,24 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
     );
   }
 
+  // Verify and settle with the facilitator before granting anything
+  const settlement = await verifyAndSettlePayment(paymentHeader, {
+    amount: String(config.priceUsdc),
+    payTo: PAYMENT_ADDRESS,
+    resource: `/api/premium/pass/${duration}`,
+    facilitatorUrl: FACILITATOR_URL,
+    network: CURRENT_NETWORK,
+    asset: USDC_ADDRESS,
+  });
+  if (!settlement.ok) {
+    return NextResponse.json(
+      { error: 'Payment Invalid', message: settlement.reason || 'Payment could not be settled' },
+      { status: 402 }
+    );
+  }
+
   // Create the pass
-  const transactionHash = payment.transactionHash || undefined;
+  const transactionHash = settlement.transactionHash;
   const pass = await createPass(walletAddress, passDuration, transactionHash);
   const status = getPassStatus(pass);
 

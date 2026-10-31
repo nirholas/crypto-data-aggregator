@@ -13,6 +13,7 @@ import {
   usdToUsdc,
   USDC_BASE,
 } from './x402-config';
+import { verifyAndSettlePayment } from './x402-settlement';
 
 // Environment configuration
 const PAYMENT_ADDRESS =
@@ -26,24 +27,6 @@ const accessPasses = new Map<string, { expiresAt: number; tier: string }>();
 
 // Rate limiting per wallet
 const rateLimits = new Map<string, { count: number; resetAt: number }>();
-
-interface PaymentPayload {
-  x402Version: number;
-  scheme: string;
-  network: string;
-  payload: {
-    signature: string;
-    authorization: {
-      from: string;
-      to: string;
-      asset: string;
-      amount: string;
-      nonce: string;
-      validAfter: number;
-      validBefore: number;
-    };
-  };
-}
 
 interface VerificationResult {
   isValid: boolean;
@@ -61,82 +44,21 @@ async function verifyPaymentWithFacilitator(
   expectedAmount: string,
   resource: string
 ): Promise<VerificationResult> {
-  try {
-    const payload: PaymentPayload = JSON.parse(
-      Buffer.from(paymentHeader, 'base64').toString('utf-8')
-    );
-
-    // Validate basic structure
-    if (payload.x402Version !== 2) {
-      return { isValid: false, invalidReason: 'Unsupported x402 version' };
-    }
-
-    if (payload.scheme !== 'exact') {
-      return { isValid: false, invalidReason: 'Unsupported payment scheme' };
-    }
-
-    // Check amount
-    if (BigInt(payload.payload.authorization.amount) < BigInt(expectedAmount)) {
-      return { isValid: false, invalidReason: 'Insufficient payment amount' };
-    }
-
-    // Check payment recipient
-    if (payload.payload.authorization.to.toLowerCase() !== PAYMENT_ADDRESS.toLowerCase()) {
-      return { isValid: false, invalidReason: 'Incorrect payment recipient' };
-    }
-
-    // Check validity window
-    const now = Math.floor(Date.now() / 1000);
-    if (now < payload.payload.authorization.validAfter) {
-      return { isValid: false, invalidReason: 'Payment not yet valid' };
-    }
-    if (now > payload.payload.authorization.validBefore) {
-      return { isValid: false, invalidReason: 'Payment expired' };
-    }
-
-    // In production, call the facilitator to verify and settle
-    // For now, we trust well-formed payments (facilitator handles verification)
-
-    // Call facilitator for verification
-    const verifyResponse = await fetch(`${FACILITATOR_URL}/verify`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        paymentPayload: payload,
-        resource,
-        expectedAmount,
-      }),
-    });
-
-    if (verifyResponse.ok) {
-      const result = await verifyResponse.json();
-      return {
-        isValid: true,
-        walletAddress: payload.payload.authorization.from,
-        amountPaid: payload.payload.authorization.amount,
-        transactionHash: result.transactionHash,
-      };
-    }
-
-    // If facilitator is unavailable, verify signature locally (simplified)
-    // In production, always use facilitator
-    if (payload.payload.signature && payload.payload.signature.startsWith('0x')) {
-      return {
-        isValid: true,
-        walletAddress: payload.payload.authorization.from,
-        amountPaid: payload.payload.authorization.amount,
-      };
-    }
-
-    return { isValid: false, invalidReason: 'Payment verification failed' };
-  } catch (error) {
-    return {
-      isValid: false,
-      invalidReason: error instanceof Error ? error.message : 'Invalid payment format',
-    };
+  const result = await verifyAndSettlePayment(paymentHeader, {
+    amount: expectedAmount,
+    payTo: PAYMENT_ADDRESS,
+    resource,
+    facilitatorUrl: FACILITATOR_URL,
+  });
+  if (!result.ok) {
+    return { isValid: false, invalidReason: result.reason };
   }
+  return {
+    isValid: true,
+    walletAddress: result.payer,
+    amountPaid: result.amountPaid,
+    transactionHash: result.transactionHash,
+  };
 }
 
 /**
