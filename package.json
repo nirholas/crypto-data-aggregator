@@ -99,9 +99,9 @@
     "@vercel/analytics": "^2.0.1",
     "@vercel/kv": "^3.0.0",
     "@vercel/speed-insights": "^2.0.0",
-    "@x402/core": "^2.2.0",
-    "@x402/evm": "^2.2.0",
-    "@x402/next": "^2.2.0",
+    "@x402/core": "^2.29.0",
+    "@x402/evm": "^2.29.0",
+    "@x402/next": "^2.29.0",
     "critters": "^0.0.23",
     "date-fns": "^4.1.0",
     "framer-motion": "^12.28.1",
@@ -121,7 +121,7 @@
     "viem": "^2.44.4",
     "wagmi": "^3.4.1",
     "web-vitals": "^6.0.1",
-    "zod": "^3.25.76"
+    "zod": "^4.6.7"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4.1.18",
