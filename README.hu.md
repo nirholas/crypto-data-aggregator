@@ -16,7 +16,7 @@
 Kapj valós idejű kripto híreket **200+ forrásból** egyetlen API hívással.
 
 ```bash
-curl https://news-crypto.vercel.app/api/news
+curl https://crypto-data-aggregator.modelcontextprotocol.name/api/news
 ```
 
 ---
@@ -39,13 +39,13 @@ curl https://news-crypto.vercel.app/api/news
 
 ```bash
 # Legújabb hírek
-curl "https://news-crypto.vercel.app/api/news?limit=10"
+curl "https://crypto-data-aggregator.modelcontextprotocol.name/api/news?limit=10"
 
 # Bitcoin hírek
-curl "https://news-crypto.vercel.app/api/news?ticker=BTC"
+curl "https://crypto-data-aggregator.modelcontextprotocol.name/api/news?ticker=BTC"
 
 # Breaking news
-curl "https://news-crypto.vercel.app/api/breaking"
+curl "https://crypto-data-aggregator.modelcontextprotocol.name/api/breaking"
 ```
 
 ### Python példa
@@ -53,7 +53,7 @@ curl "https://news-crypto.vercel.app/api/breaking"
 ```python
 import requests
 
-BASE_URL = "https://news-crypto.vercel.app"
+BASE_URL = "https://crypto-data-aggregator.modelcontextprotocol.name"
 
 # Legújabb hírek lekérése
 news = requests.get(f"{BASE_URL}/api/news?limit=10").json()
@@ -72,7 +72,7 @@ print(f"Piac: {fg['classification']} ({fg['value']}/100)")
 ### JavaScript példa
 
 ```javascript
-const BASE_URL = 'https://news-crypto.vercel.app';
+const BASE_URL = 'https://crypto-data-aggregator.modelcontextprotocol.name';
 
 // Legújabb hírek lekérése
 const news = await fetch(`${BASE_URL}/api/news?limit=10`).then(r => r.json());
@@ -121,10 +121,10 @@ Kapj híreket 18 nyelven:
 
 ```bash
 # Magyar hírek (ha elérhetők)
-curl "https://news-crypto.vercel.app/api/news/international?language=hu"
+curl "https://crypto-data-aggregator.modelcontextprotocol.name/api/news/international?language=hu"
 
 # Angol fordítással
-curl "https://news-crypto.vercel.app/api/news/international?language=ko&translate=true"
+curl "https://crypto-data-aggregator.modelcontextprotocol.name/api/news/international?language=ko&translate=true"
 ```
 
 ---
@@ -143,8 +143,8 @@ npm start
 
 ## 🔗 Linkek
 
-- **API**: https://news-crypto.vercel.app
-- **Dokumentáció**: https://news-crypto.vercel.app/docs
+- **API**: https://crypto-data-aggregator.modelcontextprotocol.name
+- **Dokumentáció**: https://crypto-data-aggregator.modelcontextprotocol.name/docs
 - **GitHub**: https://github.com/AItoolsbyai/free-crypto-news
 
 ---

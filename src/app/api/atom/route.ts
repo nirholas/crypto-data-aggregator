@@ -35,11 +35,11 @@ function generateAtom(articles: any[], title: string, subtitle: string, feedUrl:
   <title>${escapeXml(title)}</title>
   <subtitle>${escapeXml(subtitle)}</subtitle>
   <link href="${escapeXml(feedUrl)}" rel="self" type="application/atom+xml"/>
-  <link href="https://free-crypto-news.vercel.app" rel="alternate" type="text/html"/>
-  <id>https://free-crypto-news.vercel.app/</id>
+  <link href="https://crypto-data-aggregator.modelcontextprotocol.name" rel="alternate" type="text/html"/>
+  <id>https://crypto-data-aggregator.modelcontextprotocol.name/</id>
   <updated>${updated}</updated>
   <generator uri="https://github.com/nirholas/free-crypto-news" version="1.0">Free Crypto News</generator>
-  <icon>https://free-crypto-news.vercel.app/icon.png</icon>
+  <icon>https://crypto-data-aggregator.modelcontextprotocol.name/icon.png</icon>
   ${entries}
 </feed>`;
 }
@@ -60,19 +60,19 @@ export async function GET(request: NextRequest) {
         data = await getDefiNews(limit);
         title = 'Free Crypto News - DeFi Feed';
         subtitle = 'DeFi news aggregated from top crypto sources';
-        feedUrl = 'https://free-crypto-news.vercel.app/api/atom?feed=defi';
+        feedUrl = 'https://crypto-data-aggregator.modelcontextprotocol.name/api/atom?feed=defi';
         break;
       case 'bitcoin':
         data = await getBitcoinNews(limit);
         title = 'Free Crypto News - Bitcoin Feed';
         subtitle = 'Bitcoin news aggregated from top crypto sources';
-        feedUrl = 'https://free-crypto-news.vercel.app/api/atom?feed=bitcoin';
+        feedUrl = 'https://crypto-data-aggregator.modelcontextprotocol.name/api/atom?feed=bitcoin';
         break;
       default:
         data = await getLatestNews(limit);
         title = 'Free Crypto News - All Sources';
         subtitle = 'Crypto news aggregated from 7 top sources - 100% FREE';
-        feedUrl = 'https://free-crypto-news.vercel.app/api/atom';
+        feedUrl = 'https://crypto-data-aggregator.modelcontextprotocol.name/api/atom';
     }
     
     const atom = generateAtom(data.articles, title, subtitle, feedUrl);

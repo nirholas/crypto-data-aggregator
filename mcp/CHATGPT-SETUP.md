@@ -259,7 +259,7 @@ I found 15 articles about Bitcoin ETF:
 ## Support
 
 - **Issues:** https://github.com/nirholas/free-crypto-news/issues
-- **API Docs:** https://free-crypto-news.vercel.app/api/docs
+- **API Docs:** https://crypto-data-aggregator.modelcontextprotocol.name/api/docs
 - **MCP Spec:** https://modelcontextprotocol.io
 
 ---

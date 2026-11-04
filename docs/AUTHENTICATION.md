@@ -39,7 +39,7 @@ API keys provide traditional authentication with tiered rate limits.
 
 #### Getting an API Key
 
-1. Visit [/developers](https://free-crypto-news.vercel.app/developers)
+1. Visit [/developers](https://crypto-data-aggregator.modelcontextprotocol.name/developers)
 2. Enter your email address
 3. Save your API key (shown only once!)
 
@@ -49,13 +49,13 @@ API keys provide traditional authentication with tiered rate limits.
 
 ```bash
 curl -H "X-API-Key: cda_free_xxxxx" \
-  https://free-crypto-news.vercel.app/api/v1/coins
+  https://crypto-data-aggregator.modelcontextprotocol.name/api/v1/coins
 ```
 
 **Option 2: Query Parameter**
 
 ```bash
-curl "https://free-crypto-news.vercel.app/api/v1/coins?api_key=cda_free_xxxxx"
+curl "https://crypto-data-aggregator.modelcontextprotocol.name/api/v1/coins?api_key=cda_free_xxxxx"
 ```
 
 #### API Key Tiers
@@ -318,11 +318,11 @@ except PaymentRequiredError as e:
 ```bash
 # With API key header
 curl -H "X-API-Key: cda_free_xxxxx" \
-  https://free-crypto-news.vercel.app/api/v1/coins
+  https://crypto-data-aggregator.modelcontextprotocol.name/api/v1/coins
 
 # Check rate limits in response headers
 curl -i -H "X-API-Key: cda_free_xxxxx" \
-  https://free-crypto-news.vercel.app/api/v1/coins 2>&1 | grep X-RateLimit
+  https://crypto-data-aggregator.modelcontextprotocol.name/api/v1/coins 2>&1 | grep X-RateLimit
 ```
 
 ---

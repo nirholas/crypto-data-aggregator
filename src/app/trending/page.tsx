@@ -25,7 +25,7 @@ interface TrendingTopic {
 async function getTrending(): Promise<{ trending: TrendingTopic[]; articlesAnalyzed: number }> {
   try {
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL || 'https://crypto-data-aggregator.vercel.app'}/api/trending?limit=20`,
+      `${process.env.NEXT_PUBLIC_BASE_URL || 'https://crypto-data-aggregator.modelcontextprotocol.name'}/api/trending?limit=20`,
       {
         next: { revalidate: 300 },
       }

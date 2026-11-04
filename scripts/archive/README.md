@@ -43,7 +43,7 @@ Full-featured collection with all intelligence services:
 node scripts/archive/collect-enhanced.js
 
 # Environment variables
-API_URL=https://free-crypto-news.vercel.app  # API base URL
+API_URL=https://crypto-data-aggregator.modelcontextprotocol.name  # API base URL
 ARCHIVE_DIR=./archive                         # Output directory
 FEATURE_MARKET=true                           # Market data (CoinGecko, DeFiLlama)
 FEATURE_ONCHAIN=true                          # On-chain events
@@ -363,19 +363,19 @@ Using the API:
 
 ```bash
 # Get articles mentioning BTC
-curl "https://free-crypto-news.vercel.app/api/archive/v2?ticker=BTC"
+curl "https://crypto-data-aggregator.modelcontextprotocol.name/api/archive/v2?ticker=BTC"
 
 # Get positive sentiment articles
-curl "https://free-crypto-news.vercel.app/api/archive/v2?sentiment=positive"
+curl "https://crypto-data-aggregator.modelcontextprotocol.name/api/archive/v2?sentiment=positive"
 
 # Search by keyword
-curl "https://free-crypto-news.vercel.app/api/archive/v2?q=ETF"
+curl "https://crypto-data-aggregator.modelcontextprotocol.name/api/archive/v2?q=ETF"
 
 # Get trending tickers
-curl "https://free-crypto-news.vercel.app/api/archive/v2?trending=true"
+curl "https://crypto-data-aggregator.modelcontextprotocol.name/api/archive/v2?trending=true"
 
 # Get archive stats
-curl "https://free-crypto-news.vercel.app/api/archive/v2?stats=true"
+curl "https://crypto-data-aggregator.modelcontextprotocol.name/api/archive/v2?stats=true"
 ```
 
 Using the raw files:

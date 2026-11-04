@@ -85,7 +85,7 @@ crypto-news --limit 50
 
 ## API
 
-Uses the free [Free Crypto News API](https://news-crypto.vercel.app):
+Uses the free [Free Crypto News API](https://crypto-data-aggregator.modelcontextprotocol.name):
 
 - `/api/news` - Latest news
 - `/api/sentiment` - AI sentiment analysis

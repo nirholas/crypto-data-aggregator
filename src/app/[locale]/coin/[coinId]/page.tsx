@@ -48,7 +48,7 @@ const coinMeta: Record<string, { name: string; symbol: string; keywords: string[
   'matic-network': { name: 'Polygon', symbol: 'MATIC', keywords: ['polygon', 'matic'] },
 };
 
-const BASE_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://news-crypto.vercel.app';
+const BASE_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://crypto-data-aggregator.modelcontextprotocol.name';
 
 // Generate metadata for SEO
 export async function generateMetadata({ params }: Props): Promise<Metadata> {

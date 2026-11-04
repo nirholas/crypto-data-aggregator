@@ -557,11 +557,11 @@ Embeddable JavaScript widgets:
 
 ```html
 <!-- Ticker widget -->
-<script src="https://news-crypto.vercel.app/widget/ticker.js"></script>
+<script src="https://crypto-data-aggregator.modelcontextprotocol.name/widget/ticker.js"></script>
 <div id="crypto-news-ticker"></div>
 
 <!-- Carousel widget -->
-<script src="https://news-crypto.vercel.app/widget/carousel.js"></script>
+<script src="https://crypto-data-aggregator.modelcontextprotocol.name/widget/carousel.js"></script>
 <div id="crypto-news-carousel"></div>
 ```
 

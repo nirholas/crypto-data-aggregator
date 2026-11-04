@@ -51,7 +51,7 @@ Click the gear icon or right-click the extension → Options:
 ## Privacy
 
 This extension:
-- ✅ Only fetches from `free-crypto-news.vercel.app`
+- ✅ Only fetches from `crypto-data-aggregator.modelcontextprotocol.name`
 - ✅ Stores cache locally in your browser
 - ✅ Does not track you
 - ✅ Does not collect any personal data

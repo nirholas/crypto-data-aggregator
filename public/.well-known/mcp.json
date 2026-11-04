@@ -72,7 +72,7 @@
     "server_url": {
       "type": "string",
       "description": "URL of the Crypto Data Aggregator API",
-      "default": "https://crypto-data-aggregator.vercel.app"
+      "default": "https://crypto-data-aggregator.modelcontextprotocol.name"
     }
   },
   "keywords": [

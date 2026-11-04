@@ -4,9 +4,9 @@
 # FREE ENDPOINTS: No API key required
 # PREMIUM ENDPOINTS: Require API key OR x402 payment
 #
-# Get your API key at: https://free-crypto-news.vercel.app/developers
+# Get your API key at: https://crypto-data-aggregator.modelcontextprotocol.name/developers
 
-API="https://free-crypto-news.vercel.app"
+API="https://crypto-data-aggregator.modelcontextprotocol.name"
 
 # Your API key (optional - get one at /developers for higher limits)
 API_KEY="${CRYPTO_NEWS_API_KEY:-}"

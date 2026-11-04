@@ -23,7 +23,7 @@
 Nhận tin tức crypto thời gian thực từ 7 nguồn chính chỉ với một lệnh gọi API.
 
 ```bash
-curl https://news-crypto.vercel.app/api/news
+curl https://crypto-data-aggregator.modelcontextprotocol.name/api/news
 ```
 
 ---
@@ -75,13 +75,13 @@ Nhận tin tức crypto từ **12 nguồn quốc tế** bằng tiếng Hàn, Tru
 
 ```bash
 # Lấy tất cả tin quốc tế
-curl "https://news-crypto.vercel.app/api/news/international"
+curl "https://crypto-data-aggregator.modelcontextprotocol.name/api/news/international"
 
 # Lấy tin Hàn Quốc với dịch tiếng Anh
-curl "https://news-crypto.vercel.app/api/news/international?language=ko&translate=true"
+curl "https://crypto-data-aggregator.modelcontextprotocol.name/api/news/international?language=ko&translate=true"
 
 # Lấy tin khu vực Châu Á
-curl "https://news-crypto.vercel.app/api/news/international?region=asia&limit=20"
+curl "https://crypto-data-aggregator.modelcontextprotocol.name/api/news/international?region=asia&limit=20"
 ```
 
 ### Tính Năng
@@ -117,7 +117,7 @@ Free Crypto News là **PWA có thể cài đặt hoàn toàn** hoạt động ng
 ### Cài Đặt Ứng Dụng
 
 **Desktop (Chrome/Edge):**
-1. Truy cập [news-crypto.vercel.app](https://news-crypto.vercel.app)
+1. Truy cập [crypto-data-aggregator.modelcontextprotocol.name](https://crypto-data-aggregator.modelcontextprotocol.name)
 2. Click biểu tượng cài đặt (⊕) trong thanh địa chỉ
 3. Click "Cài đặt"
 
@@ -233,23 +233,23 @@ Chúng tôi tổng hợp từ **7 trang tin uy tín**:
 
 ```bash
 # Lấy tin mới nhất
-curl "https://news-crypto.vercel.app/api/news"
+curl "https://crypto-data-aggregator.modelcontextprotocol.name/api/news"
 
 # Tìm kiếm tin
-curl "https://news-crypto.vercel.app/api/search?q=ethereum"
+curl "https://crypto-data-aggregator.modelcontextprotocol.name/api/search?q=ethereum"
 
 # Lấy digest AI
-curl "https://news-crypto.vercel.app/api/digest"
+curl "https://crypto-data-aggregator.modelcontextprotocol.name/api/digest"
 
 # Lấy Fear & Greed Index
-curl "https://news-crypto.vercel.app/api/fear-greed"
+curl "https://crypto-data-aggregator.modelcontextprotocol.name/api/fear-greed"
 ```
 
 ### Sử Dụng JavaScript
 
 ```javascript
 // Lấy tin mới nhất
-const response = await fetch('https://news-crypto.vercel.app/api/news');
+const response = await fetch('https://crypto-data-aggregator.modelcontextprotocol.name/api/news');
 const data = await response.json();
 
 console.log(data.articles);
@@ -262,7 +262,7 @@ console.log(data.articles);
 import requests
 
 # Lấy tin mới nhất
-response = requests.get('https://news-crypto.vercel.app/api/news')
+response = requests.get('https://crypto-data-aggregator.modelcontextprotocol.name/api/news')
 data = response.json()
 
 for article in data['articles'][:5]:
@@ -355,5 +355,5 @@ MIT License - xem file [LICENSE](LICENSE).
 <p align="center">
   Được tạo với ❤️ cho cộng đồng crypto
   <br>
-  <a href="https://news-crypto.vercel.app">news-crypto.vercel.app</a>
+  <a href="https://crypto-data-aggregator.modelcontextprotocol.name">crypto-data-aggregator.modelcontextprotocol.name</a>
 </p>

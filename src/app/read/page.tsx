@@ -21,8 +21,8 @@ export default async function ReaderPage() {
       {/* Structured Data for SEO */}
       <BreadcrumbStructuredData
         items={[
-          { name: 'Home', url: 'https://free-crypto-news.vercel.app' },
-          { name: 'Reader', url: 'https://free-crypto-news.vercel.app/read' },
+          { name: 'Home', url: 'https://crypto-data-aggregator.modelcontextprotocol.name' },
+          { name: 'Reader', url: 'https://crypto-data-aggregator.modelcontextprotocol.name/read' },
         ]}
       />
       <NewsListStructuredData

@@ -237,7 +237,7 @@ describe('README Translations', () => {
       it('should preserve URLs', () => {
         if (fs.existsSync(filePath)) {
           const content = fs.readFileSync(filePath, 'utf-8');
-          expect(content).toContain('https://news-crypto.vercel.app');
+          expect(content).toContain('https://crypto-data-aggregator.modelcontextprotocol.name');
           expect(content).toContain('github.com/nirholas/free-crypto-news');
         }
       });

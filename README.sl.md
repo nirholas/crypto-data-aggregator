@@ -21,7 +21,7 @@
 Pridobite crypto novice v realnem času iz **200+ virov** z enim API klicem.
 
 ```bash
-curl https://news-crypto.vercel.app/api/news
+curl https://crypto-data-aggregator.modelcontextprotocol.name/api/news
 ```
 
 ---
@@ -55,13 +55,13 @@ Pridobite crypto novice iz **75 mednarodnih virov** v 18 jezikih — z avtomatsk
 
 ```bash
 # Pridobite najnovejše novice
-curl "https://news-crypto.vercel.app/api/news?limit=10"
+curl "https://crypto-data-aggregator.modelcontextprotocol.name/api/news?limit=10"
 
 # Pridobite Bitcoin sentiment
-curl "https://news-crypto.vercel.app/api/ai/sentiment?asset=BTC"
+curl "https://crypto-data-aggregator.modelcontextprotocol.name/api/ai/sentiment?asset=BTC"
 
 # Iščite članke
-curl "https://news-crypto.vercel.app/api/search?q=ethereum%20upgrade"
+curl "https://crypto-data-aggregator.modelcontextprotocol.name/api/search?q=ethereum%20upgrade"
 ```
 
 ---

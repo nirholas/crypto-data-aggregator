@@ -135,7 +135,7 @@ export async function subscribe(
 }
 
 // App URL for email links
-const APP_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://free-crypto-news.vercel.app';
+const APP_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://crypto-data-aggregator.modelcontextprotocol.name';
 
 /**
  * Send verification email to new subscriber
@@ -366,12 +366,12 @@ export function generateDigestHtml(
           You're receiving this because you subscribed to Free Crypto News.
         </p>
         <p style="margin: 8px 0 0;">
-          <a href="https://free-crypto-news.vercel.app/unsubscribe?token=${subscriber.unsubscribeToken}" 
+          <a href="https://crypto-data-aggregator.modelcontextprotocol.name/unsubscribe?token=${subscriber.unsubscribeToken}" 
              style="color: #999; font-size: 12px;">
             Unsubscribe
           </a>
           •
-          <a href="https://free-crypto-news.vercel.app/preferences?token=${subscriber.unsubscribeToken}" 
+          <a href="https://crypto-data-aggregator.modelcontextprotocol.name/preferences?token=${subscriber.unsubscribeToken}" 
              style="color: #999; font-size: 12px;">
             Update Preferences
           </a>
@@ -402,8 +402,8 @@ Your ${subscriber.frequency} crypto news summary
 ${articlesList}
 
 ---
-Unsubscribe: https://free-crypto-news.vercel.app/unsubscribe?token=${subscriber.unsubscribeToken}
-Update Preferences: https://free-crypto-news.vercel.app/preferences?token=${subscriber.unsubscribeToken}
+Unsubscribe: https://crypto-data-aggregator.modelcontextprotocol.name/unsubscribe?token=${subscriber.unsubscribeToken}
+Update Preferences: https://crypto-data-aggregator.modelcontextprotocol.name/preferences?token=${subscriber.unsubscribeToken}
   `.trim();
 }
 
@@ -425,7 +425,7 @@ export async function sendViaResend(email: DigestEmail): Promise<boolean> {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        from: 'Crypto News <digest@free-crypto-news.vercel.app>',
+        from: 'Crypto News <digest@crypto-data-aggregator.modelcontextprotocol.name>',
         to: email.to,
         subject: email.subject,
         html: email.html,
@@ -459,7 +459,7 @@ export async function sendViaSendGrid(email: DigestEmail): Promise<boolean> {
       },
       body: JSON.stringify({
         personalizations: [{ to: [{ email: email.to }] }],
-        from: { email: 'digest@free-crypto-news.vercel.app', name: 'Crypto News' },
+        from: { email: 'digest@crypto-data-aggregator.modelcontextprotocol.name', name: 'Crypto News' },
         subject: email.subject,
         content: [
           { type: 'text/plain', value: email.text },

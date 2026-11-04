@@ -10,7 +10,7 @@ A scrolling news ticker that displays latest crypto headlines.
 
 ```html
 <div id="crypto-ticker"></div>
-<script src="https://free-crypto-news.vercel.app/widget/ticker.js"></script>
+<script src="https://crypto-data-aggregator.modelcontextprotocol.name/widget/ticker.js"></script>
 ```
 
 ### Configuration Options
@@ -33,7 +33,7 @@ A scrolling news ticker that displays latest crypto headlines.
 
 ### Preview
 
-[View Ticker Demo](https://free-crypto-news.vercel.app/widget/ticker.html)
+[View Ticker Demo](https://crypto-data-aggregator.modelcontextprotocol.name/widget/ticker.html)
 
 ---
 
@@ -45,7 +45,7 @@ A rotating featured news carousel with auto-play.
 
 ```html
 <div id="crypto-carousel"></div>
-<script src="https://free-crypto-news.vercel.app/widget/carousel.js"></script>
+<script src="https://crypto-data-aggregator.modelcontextprotocol.name/widget/carousel.js"></script>
 ```
 
 ### Configuration Options
@@ -70,7 +70,7 @@ A rotating featured news carousel with auto-play.
 
 ### Preview
 
-[View Carousel Demo](https://free-crypto-news.vercel.app/widget/carousel.html)
+[View Carousel Demo](https://crypto-data-aggregator.modelcontextprotocol.name/widget/carousel.html)
 
 ---
 
@@ -98,7 +98,7 @@ To use widgets with a self-hosted API:
 <script>
   window.CRYPTO_NEWS_API = 'https://your-instance.vercel.app';
 </script>
-<script src="https://free-crypto-news.vercel.app/widget/ticker.js"></script>
+<script src="https://crypto-data-aggregator.modelcontextprotocol.name/widget/ticker.js"></script>
 ```
 
 ## No API Key Required!

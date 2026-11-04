@@ -3,7 +3,7 @@
  * 
  * @example
  * <div id="crypto-carousel" class="crypto-carousel">...</div>
- * <script src="https://nirholas.github.io/free-crypto-news/widget/carousel.js"></script>
+ * <script src="https://cdn.jsdelivr.net/gh/nirholas/crypto-data-aggregator@main/widget/carousel.js"></script>
  */
 (function() {
   // Inject CSS
@@ -160,7 +160,7 @@
   document.head.appendChild(style);
 
   window.CryptoCarousel = {
-    API_BASE: 'https://free-crypto-news.vercel.app',
+    API_BASE: 'https://crypto-data-aggregator.modelcontextprotocol.name',
     instances: new Map(),
     
     async init(selector, options) {

@@ -10,7 +10,7 @@ info:
     url: https://github.com/nirholas/free-crypto-news
 
 servers:
-  - url: https://free-crypto-news.vercel.app
+  - url: https://crypto-data-aggregator.modelcontextprotocol.name
 
 paths:
   /api/news:

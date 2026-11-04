@@ -358,7 +358,7 @@ sudo journalctl -u crypto-archive -f
 curl http://localhost:3000/api/health
 
 # Use production API
-API_URL=https://free-crypto-news.vercel.app npm run archive
+API_URL=https://crypto-data-aggregator.modelcontextprotocol.name npm run archive
 ```
 
 ### High memory usage

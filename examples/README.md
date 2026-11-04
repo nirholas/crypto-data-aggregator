@@ -181,15 +181,15 @@ Public endpoints like `/api/news`, `/api/search`, and `/api/trending` require no
 
 Premium endpoints (`/api/v1/*`) require either:
 
-1. **API Key** - Get free at [/developers](https://free-crypto-news.vercel.app/developers)
+1. **API Key** - Get free at [/developers](https://crypto-data-aggregator.modelcontextprotocol.name/developers)
 
    ```bash
-   curl -H "X-API-Key: cda_free_xxxxx" https://free-crypto-news.vercel.app/api/v1/coins
+   curl -H "X-API-Key: cda_free_xxxxx" https://crypto-data-aggregator.modelcontextprotocol.name/api/v1/coins
    ```
 
 2. **x402 Micropayment** - Pay per request with USDC
    ```bash
-   curl -H "X-PAYMENT: <payment-header>" https://free-crypto-news.vercel.app/api/v1/coins
+   curl -H "X-PAYMENT: <payment-header>" https://crypto-data-aggregator.modelcontextprotocol.name/api/v1/coins
    ```
 
 See [Authentication Guide](../docs/AUTHENTICATION.md) for details.

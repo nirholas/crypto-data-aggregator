@@ -45,7 +45,7 @@ async function getDigest(): Promise<DigestData | null> {
   
   try {
     // Use internal API route during development
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://free-crypto-news.vercel.app';
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://crypto-data-aggregator.modelcontextprotocol.name';
     const res = await fetch(`${baseUrl}/api/digest`, {
       next: { revalidate: 300 },
       headers: {

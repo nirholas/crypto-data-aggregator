@@ -16,7 +16,7 @@
 Отримуйте криптоновини в реальному часі з **200+ джерел** одним API-запитом.
 
 ```bash
-curl https://news-crypto.vercel.app/api/news
+curl https://crypto-data-aggregator.modelcontextprotocol.name/api/news
 ```
 
 ---
@@ -39,13 +39,13 @@ curl https://news-crypto.vercel.app/api/news
 
 ```bash
 # Останні новини
-curl "https://news-crypto.vercel.app/api/news?limit=10"
+curl "https://crypto-data-aggregator.modelcontextprotocol.name/api/news?limit=10"
 
 # Новини Bitcoin
-curl "https://news-crypto.vercel.app/api/news?ticker=BTC"
+curl "https://crypto-data-aggregator.modelcontextprotocol.name/api/news?ticker=BTC"
 
 # Breaking news
-curl "https://news-crypto.vercel.app/api/breaking"
+curl "https://crypto-data-aggregator.modelcontextprotocol.name/api/breaking"
 ```
 
 ### Приклад Python
@@ -53,7 +53,7 @@ curl "https://news-crypto.vercel.app/api/breaking"
 ```python
 import requests
 
-BASE_URL = "https://news-crypto.vercel.app"
+BASE_URL = "https://crypto-data-aggregator.modelcontextprotocol.name"
 
 # Отримати останні новини
 news = requests.get(f"{BASE_URL}/api/news?limit=10").json()
@@ -72,7 +72,7 @@ print(f"Ринок: {fg['classification']} ({fg['value']}/100)")
 ### Приклад JavaScript
 
 ```javascript
-const BASE_URL = 'https://news-crypto.vercel.app';
+const BASE_URL = 'https://crypto-data-aggregator.modelcontextprotocol.name';
 
 // Отримати останні новини
 const news = await fetch(`${BASE_URL}/api/news?limit=10`).then(r => r.json());
@@ -121,10 +121,10 @@ console.log(summary.summary);
 
 ```bash
 # Українські новини (якщо доступні)
-curl "https://news-crypto.vercel.app/api/news/international?language=uk"
+curl "https://crypto-data-aggregator.modelcontextprotocol.name/api/news/international?language=uk"
 
 # З англійським перекладом
-curl "https://news-crypto.vercel.app/api/news/international?language=ko&translate=true"
+curl "https://crypto-data-aggregator.modelcontextprotocol.name/api/news/international?language=ko&translate=true"
 ```
 
 ---
@@ -143,8 +143,8 @@ npm start
 
 ## 🔗 Посилання
 
-- **API**: https://news-crypto.vercel.app
-- **Документація**: https://news-crypto.vercel.app/docs
+- **API**: https://crypto-data-aggregator.modelcontextprotocol.name
+- **Документація**: https://crypto-data-aggregator.modelcontextprotocol.name/docs
 - **GitHub**: https://github.com/AItoolsbyai/free-crypto-news
 
 ---

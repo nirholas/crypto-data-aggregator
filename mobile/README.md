@@ -64,7 +64,7 @@ mobile/
 ├── package.json               # Dependencies
 └── src/
     ├── api/
-    │   └── client.ts          # API client for news-crypto.vercel.app
+    │   └── client.ts          # API client for crypto-data-aggregator.modelcontextprotocol.name
     ├── components/
     │   ├── NewsCard.tsx       # Article card component
     │   ├── CoinCard.tsx       # Market coin row
@@ -170,7 +170,7 @@ eas submit --platform android
 Create a `.env` file:
 
 ```env
-EXPO_PUBLIC_API_URL=https://news-crypto.vercel.app
+EXPO_PUBLIC_API_URL=https://crypto-data-aggregator.modelcontextprotocol.name
 ```
 
 ### Push Notifications
@@ -232,6 +232,6 @@ MIT License - see [LICENSE](../LICENSE) for details.
 
 ## Links
 
-- **API**: https://news-crypto.vercel.app
-- **Documentation**: https://news-crypto.vercel.app/docs
+- **API**: https://crypto-data-aggregator.modelcontextprotocol.name
+- **Documentation**: https://crypto-data-aggregator.modelcontextprotocol.name/docs
 - **GitHub**: https://github.com/AItoolsbyai/free-crypto-news

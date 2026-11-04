@@ -45,7 +45,7 @@ Crypto Data Aggregator provides a Model Context Protocol (MCP) server for AI age
 Located at `/.well-known/mcp.json`:
 
 ```bash
-curl https://crypto-data-aggregator.vercel.app/.well-known/mcp.json
+curl https://crypto-data-aggregator.modelcontextprotocol.name/.well-known/mcp.json
 ```
 
 ### Available Tools
@@ -72,7 +72,7 @@ Add to your `claude_desktop_config.json`:
       "command": "npx",
       "args": ["-y", "@crypto-data-aggregator/mcp"],
       "env": {
-        "API_URL": "https://crypto-data-aggregator.vercel.app"
+        "API_URL": "https://crypto-data-aggregator.modelcontextprotocol.name"
       }
     }
   }

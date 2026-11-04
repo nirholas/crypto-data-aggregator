@@ -9,7 +9,7 @@ import json
 import requests
 from typing import Optional
 
-API_URL = "https://free-crypto-news.vercel.app"
+API_URL = "https://crypto-data-aggregator.modelcontextprotocol.name"
 
 
 def analyze_article(title: str, content: str, action: str, options: Optional[dict] = None) -> dict:

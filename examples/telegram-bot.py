@@ -10,7 +10,7 @@ import aiohttp
 from telegram import Update
 from telegram.ext import Application, CommandHandler, ContextTypes
 
-API_BASE = "https://free-crypto-news.vercel.app"
+API_BASE = "https://crypto-data-aggregator.modelcontextprotocol.name"
 BOT_TOKEN = "YOUR_BOT_TOKEN"  # Get from @BotFather
 
 async def fetch_news(endpoint="/api/news", limit=5):

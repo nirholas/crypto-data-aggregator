@@ -37,7 +37,7 @@ This guide is for deploying your own instance.
 
 If needed, set environment variables:
 ```bash
-railway variables set API_BASE=https://free-crypto-news.vercel.app
+railway variables set API_BASE=https://crypto-data-aggregator.modelcontextprotocol.name
 railway variables set PORT=3001
 ```
 
@@ -50,6 +50,6 @@ railway logs
 
 ## One-Click Deploy (Alternative)
 
-[![Deploy on Railway](https://railway.app/button.svg)](https://railway.app/new/template?template=https://github.com/nirholas/free-crypto-news&envs=API_BASE&API_BASEDefault=https://free-crypto-news.vercel.app)
+[![Deploy on Railway](https://railway.app/button.svg)](https://railway.app/new/template?template=https://github.com/nirholas/free-crypto-news&envs=API_BASE&API_BASEDefault=https://crypto-data-aggregator.modelcontextprotocol.name)
 
 Click the button above to deploy without CLI.

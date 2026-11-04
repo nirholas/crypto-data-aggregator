@@ -21,7 +21,7 @@
 Dapatkan berita crypto masa nyata dari **200+ sumber** dengan satu panggilan API.
 
 ```bash
-curl https://news-crypto.vercel.app/api/news
+curl https://crypto-data-aggregator.modelcontextprotocol.name/api/news
 ```
 
 ---
@@ -55,13 +55,13 @@ Dapatkan berita crypto dari **75 sumber antarabangsa** dalam 18 bahasa — denga
 
 ```bash
 # Dapatkan berita terkini
-curl "https://news-crypto.vercel.app/api/news?limit=10"
+curl "https://crypto-data-aggregator.modelcontextprotocol.name/api/news?limit=10"
 
 # Dapatkan sentimen Bitcoin
-curl "https://news-crypto.vercel.app/api/ai/sentiment?asset=BTC"
+curl "https://crypto-data-aggregator.modelcontextprotocol.name/api/ai/sentiment?asset=BTC"
 
 # Cari artikel
-curl "https://news-crypto.vercel.app/api/search?q=ethereum%20upgrade"
+curl "https://crypto-data-aggregator.modelcontextprotocol.name/api/search?q=ethereum%20upgrade"
 ```
 
 ---

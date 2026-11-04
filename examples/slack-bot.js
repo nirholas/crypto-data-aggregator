@@ -14,7 +14,7 @@
  */
 
 const SLACK_WEBHOOK_URL = process.env.SLACK_WEBHOOK_URL;
-const NEWS_API = 'https://free-crypto-news.vercel.app';
+const NEWS_API = 'https://crypto-data-aggregator.modelcontextprotocol.name';
 
 if (!SLACK_WEBHOOK_URL) {
   console.error('❌ Missing SLACK_WEBHOOK_URL environment variable');

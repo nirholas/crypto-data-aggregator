@@ -15,7 +15,7 @@
 
 const https = require('https');
 
-const BASE_URL = 'https://free-crypto-news.vercel.app';
+const BASE_URL = 'https://crypto-data-aggregator.modelcontextprotocol.name';
 
 const COLORS = {
   reset: '\x1b[0m',
@@ -215,7 +215,7 @@ async function main() {
 
     console.log(`${COLORS.dim}---${COLORS.reset}`);
     console.log(`${COLORS.dim}Powered by Free Crypto News API${COLORS.reset}`);
-    console.log(`${COLORS.dim}https://free-crypto-news.vercel.app${COLORS.reset}\n`);
+    console.log(`${COLORS.dim}https://crypto-data-aggregator.modelcontextprotocol.name${COLORS.reset}\n`);
 
   } catch (error) {
     console.error(`${COLORS.red}Error: ${error.message}${COLORS.reset}`);

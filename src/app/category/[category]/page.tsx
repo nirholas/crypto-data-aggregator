@@ -74,7 +74,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       title: `${info.title} - Crypto Data Aggregator`,
       description: info.description,
       type: 'website',
-      url: `https://crypto-data-aggregator.vercel.app/category/${category}`,
+      url: `https://crypto-data-aggregator.modelcontextprotocol.name/category/${category}`,
     },
   };
 }
@@ -94,9 +94,9 @@ export default async function CategoryPage({ params }: Props) {
 
   // Breadcrumb data for enhanced SEO
   const breadcrumbs = [
-    { name: 'Home', url: 'https://crypto-data-aggregator.vercel.app' },
-    { name: 'Categories', url: 'https://crypto-data-aggregator.vercel.app/category/bitcoin' },
-    { name: info.title, url: `https://crypto-data-aggregator.vercel.app/category/${category}` },
+    { name: 'Home', url: 'https://crypto-data-aggregator.modelcontextprotocol.name' },
+    { name: 'Categories', url: 'https://crypto-data-aggregator.modelcontextprotocol.name/category/bitcoin' },
+    { name: info.title, url: `https://crypto-data-aggregator.modelcontextprotocol.name/category/${category}` },
   ];
 
   return (

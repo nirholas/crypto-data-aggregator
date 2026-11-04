@@ -74,7 +74,7 @@ class RateLimitInfo:
 class CryptoAPI:
     """Crypto Data Aggregator API v2 client."""
     
-    BASE_URL = "https://crypto-data-aggregator.vercel.app"
+    BASE_URL = "https://crypto-data-aggregator.modelcontextprotocol.name"
     API_VERSION = "v2"
     
     def __init__(

@@ -137,7 +137,7 @@ export default async function Image() {
             color: 'rgba(255, 255, 255, 0.4)',
           }}
         >
-          crypto-data-aggregator.vercel.app
+          crypto-data-aggregator.modelcontextprotocol.name
         </div>
       </div>
     ),

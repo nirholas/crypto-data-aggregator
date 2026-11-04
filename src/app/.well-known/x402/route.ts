@@ -7,7 +7,7 @@
 
 import { NextResponse } from 'next/server';
 
-const BASE_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://news-crypto.vercel.app';
+const BASE_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://crypto-data-aggregator.modelcontextprotocol.name';
 
 export const runtime = 'edge';
 

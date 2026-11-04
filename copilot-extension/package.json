@@ -73,7 +73,7 @@
       "properties": {
         "cryptonews.apiUrl": {
           "type": "string",
-          "default": "https://news-crypto.vercel.app",
+          "default": "https://crypto-data-aggregator.modelcontextprotocol.name",
           "description": "API base URL for crypto news"
         },
         "cryptonews.defaultLimit": {
@@ -104,6 +104,6 @@
     "type": "git",
     "url": "https://github.com/nirholas/free-crypto-news"
   },
-  "homepage": "https://news-crypto.vercel.app",
+  "homepage": "https://crypto-data-aggregator.modelcontextprotocol.name",
   "icon": "media/icon.png"
 }

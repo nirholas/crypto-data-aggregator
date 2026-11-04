@@ -6,7 +6,7 @@
 
 import { MetadataRoute } from 'next';
 
-const BASE_URL = 'https://crypto-data-aggregator.vercel.app';
+const BASE_URL = 'https://crypto-data-aggregator.modelcontextprotocol.name';
 
 // Extended list of top coins for better SEO coverage (top 100+)
 const TOP_COINS = [

@@ -55,11 +55,11 @@ export async function GET() {
       
       // Documentation
       docs: {
-        api: 'https://crypto-data-aggregator.vercel.app/docs/api',
-        swagger: 'https://crypto-data-aggregator.vercel.app/docs/swagger',
-        openapi: 'https://crypto-data-aggregator.vercel.app/api/v2/openapi.json',
-        quickstart: 'https://crypto-data-aggregator.vercel.app/docs/getting-started',
-        examples: 'https://crypto-data-aggregator.vercel.app/examples',
+        api: 'https://crypto-data-aggregator.modelcontextprotocol.name/docs/api',
+        swagger: 'https://crypto-data-aggregator.modelcontextprotocol.name/docs/swagger',
+        openapi: 'https://crypto-data-aggregator.modelcontextprotocol.name/api/v2/openapi.json',
+        quickstart: 'https://crypto-data-aggregator.modelcontextprotocol.name/docs/getting-started',
+        examples: 'https://crypto-data-aggregator.modelcontextprotocol.name/examples',
       },
 
       // Payment configuration

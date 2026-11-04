@@ -6,17 +6,17 @@
  * 2. Check your usage and rate limits
  * 3. Handle rate limit errors
  *
- * Get your API key at: https://free-crypto-news.vercel.app/developers
+ * Get your API key at: https://crypto-data-aggregator.modelcontextprotocol.name/developers
  */
 
-const API_BASE = 'https://free-crypto-news.vercel.app';
+const API_BASE = 'https://crypto-data-aggregator.modelcontextprotocol.name';
 
 // Get API key from environment
 const API_KEY = process.env.CRYPTO_NEWS_API_KEY;
 
 if (!API_KEY) {
   console.error('❌ Set CRYPTO_NEWS_API_KEY environment variable');
-  console.log('   Get your free key at: https://free-crypto-news.vercel.app/developers');
+  console.log('   Get your free key at: https://crypto-data-aggregator.modelcontextprotocol.name/developers');
   process.exit(1);
 }
 

@@ -1,9 +1,11 @@
 site_name: Crypto Data Aggregator
 site_description: Real-time cryptocurrency market data aggregator with x402 micropayment API
-site_url: https://docs.cryptodata.example.com
+site_url: https://crypto-data-aggregator-docs.modelcontextprotocol.name/
 repo_url: https://github.com/nirholas/crypto-data-aggregator
 repo_name: nirholas/crypto-data-aggregator
 edit_uri: edit/main/docs/
+exclude_docs: |
+  index.html
 
 theme:
   name: material
@@ -116,6 +118,7 @@ nav:
       - Development: guides/development.md
       - Testing: guides/testing.md
       - Deployment: guides/deployment.md
+      - Docs Deployment: guides/docs-deployment.md
       - Performance: guides/performance.md
   - Architecture:
       - Overview: architecture/overview.md

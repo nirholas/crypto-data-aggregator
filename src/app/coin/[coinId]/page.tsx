@@ -278,9 +278,9 @@ export default async function CoinPage({ params, searchParams }: Props) {
 
   // Breadcrumb data for enhanced SEO
   const breadcrumbs = [
-    { name: 'Home', url: 'https://crypto-data-aggregator.vercel.app' },
-    { name: 'Coins', url: 'https://crypto-data-aggregator.vercel.app/markets' },
-    { name: coinData.name, url: `https://crypto-data-aggregator.vercel.app/coin/${coinId}` },
+    { name: 'Home', url: 'https://crypto-data-aggregator.modelcontextprotocol.name' },
+    { name: 'Coins', url: 'https://crypto-data-aggregator.modelcontextprotocol.name/markets' },
+    { name: coinData.name, url: `https://crypto-data-aggregator.modelcontextprotocol.name/coin/${coinId}` },
   ];
 
   return (
@@ -298,7 +298,7 @@ export default async function CoinPage({ params, searchParams }: Props) {
         symbol={coinData.symbol}
         description={coinData.description?.en?.replace(/<[^>]*>/g, '').slice(0, 200)}
         image={coinData.image?.large}
-        url={`https://crypto-data-aggregator.vercel.app/coin/${coinId}`}
+        url={`https://crypto-data-aggregator.modelcontextprotocol.name/coin/${coinId}`}
         price={price}
         priceChange24h={change24h}
         marketCap={marketCap}

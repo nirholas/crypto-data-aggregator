@@ -38,8 +38,8 @@ export function OrganizationStructuredData() {
     '@context': 'https://schema.org',
     '@type': 'Organization',
     name: 'Crypto Data Aggregator',
-    url: 'https://crypto-data-aggregator.vercel.app',
-    logo: 'https://crypto-data-aggregator.vercel.app/icons/icon-512x512.png',
+    url: 'https://crypto-data-aggregator.modelcontextprotocol.name',
+    logo: 'https://crypto-data-aggregator.modelcontextprotocol.name/icons/icon-512x512.png',
     description: 'Real-time cryptocurrency market data, DeFi analytics, and portfolio tracking.',
     sameAs: ['https://github.com/nirholas/crypto-data-aggregator'],
     contactPoint: {
@@ -65,13 +65,13 @@ export function WebsiteStructuredData() {
     '@context': 'https://schema.org',
     '@type': 'WebSite',
     name: 'Crypto Data Aggregator',
-    url: 'https://crypto-data-aggregator.vercel.app',
+    url: 'https://crypto-data-aggregator.modelcontextprotocol.name',
     description: 'Real-time cryptocurrency market data aggregator',
     potentialAction: {
       '@type': 'SearchAction',
       target: {
         '@type': 'EntryPoint',
-        urlTemplate: 'https://crypto-data-aggregator.vercel.app/coin/{search_term_string}',
+        urlTemplate: 'https://crypto-data-aggregator.modelcontextprotocol.name/coin/{search_term_string}',
       },
       'query-input': 'required name=search_term_string',
     },
@@ -114,10 +114,10 @@ export function NewsArticleStructuredData({
       name: publisher,
       logo: {
         '@type': 'ImageObject',
-        url: 'https://crypto-data-aggregator.vercel.app/icons/icon-512x512.png',
+        url: 'https://crypto-data-aggregator.modelcontextprotocol.name/icons/icon-512x512.png',
       },
     },
-    image: image || 'https://crypto-data-aggregator.vercel.app/og-image.png',
+    image: image || 'https://crypto-data-aggregator.modelcontextprotocol.name/og-image.png',
     mainEntityOfPage: {
       '@type': 'WebPage',
       '@id': url,
@@ -225,7 +225,7 @@ export function CryptocurrencyStructuredData({
     '@type': 'Product',
     name: `${name} (${symbol.toUpperCase()})`,
     description: description || `${name} cryptocurrency price, charts, and market data`,
-    image: image || 'https://crypto-data-aggregator.vercel.app/og-image.png',
+    image: image || 'https://crypto-data-aggregator.modelcontextprotocol.name/og-image.png',
     url,
     category: 'Cryptocurrency',
     brand: {

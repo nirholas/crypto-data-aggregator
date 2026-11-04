@@ -25,7 +25,7 @@ import CoinsTable from './components/CoinsTable';
 import { AnomalyAlertsBanner } from '@/components/AnomalyAlertsBanner';
 import type { SortField, SortOrder } from './components/SortableHeader';
 
-const BASE_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://news-crypto.vercel.app';
+const BASE_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://crypto-data-aggregator.modelcontextprotocol.name';
 
 export async function generateMetadata(): Promise<Metadata> {
   // Fetch current market data for dynamic OG image

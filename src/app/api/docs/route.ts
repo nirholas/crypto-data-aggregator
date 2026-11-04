@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from 'next/server';
 export const runtime = 'edge';
 
 export async function GET(request: NextRequest) {
-  const host = request.headers.get('host') || 'free-crypto-news.vercel.app';
+  const host = request.headers.get('host') || 'crypto-data-aggregator.modelcontextprotocol.name';
   const baseUrl = `https://${host}`;
   
   const html = `<!DOCTYPE html>

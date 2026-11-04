@@ -6,7 +6,7 @@
 import { MetadataRoute } from 'next';
 
 export default function robots(): MetadataRoute.Robots {
-  const baseUrl = 'https://crypto-data-aggregator.vercel.app';
+  const baseUrl = 'https://crypto-data-aggregator.modelcontextprotocol.name';
 
   return {
     rules: [

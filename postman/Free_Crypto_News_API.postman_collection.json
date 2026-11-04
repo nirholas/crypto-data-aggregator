@@ -8,7 +8,7 @@
   "variable": [
     {
       "key": "baseUrl",
-      "value": "https://free-crypto-news.vercel.app",
+      "value": "https://crypto-data-aggregator.modelcontextprotocol.name",
       "type": "string"
     }
   ],

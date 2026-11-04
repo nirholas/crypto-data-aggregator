@@ -151,7 +151,7 @@ export type SourceKey =
   | 'defiant';
 
 export interface CryptoNewsOptions {
-  /** Base URL for API (default: https://free-crypto-news.vercel.app) */
+  /** Base URL for API (default: https://crypto-data-aggregator.modelcontextprotocol.name) */
   baseUrl?: string;
   /** Request timeout in milliseconds (default: 30000) */
   timeout?: number;
@@ -202,7 +202,7 @@ export class CryptoNews {
   private lastRateLimit?: RateLimitInfo;
 
   constructor(options: CryptoNewsOptions = {}) {
-    this.baseUrl = options.baseUrl || 'https://free-crypto-news.vercel.app';
+    this.baseUrl = options.baseUrl || 'https://crypto-data-aggregator.modelcontextprotocol.name';
     this.timeout = options.timeout || 30000;
     this.fetchFn = options.fetch || fetch;
     this.apiKey = options.apiKey;

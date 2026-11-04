@@ -10,7 +10,7 @@ authors:
     orcid: ""
     email: nirholas@users.noreply.github.com
 repository-code: "https://github.com/nirholas/crypto-data-aggregator"
-url: "https://crypto-data-aggregator.vercel.app"
+url: "https://crypto-data-aggregator.modelcontextprotocol.name"
 abstract: >-
   Real-time cryptocurrency market data aggregator providing
   free access to 10,000+ coins, 200+ DeFi protocols,

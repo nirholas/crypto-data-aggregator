@@ -77,7 +77,7 @@ export async function hybridAuthMiddleware(
             tier: tier,
             limit: rateLimit.limit,
             resetAt: new Date(rateLimit.resetAt).toISOString(),
-            upgrade: 'https://crypto-data-aggregator.vercel.app/pricing',
+            upgrade: 'https://crypto-data-aggregator.modelcontextprotocol.name/pricing',
           },
           {
             status: 429,
@@ -100,7 +100,7 @@ export async function hybridAuthMiddleware(
       {
         error: 'Invalid API Key',
         message: 'The provided API key is invalid or expired',
-        docs: 'https://crypto-data-aggregator.vercel.app/docs/api',
+        docs: 'https://crypto-data-aggregator.modelcontextprotocol.name/docs/api',
       },
       { status: 401 }
     );
@@ -238,7 +238,7 @@ export function create402Response(endpoint: string, price: string): NextResponse
             price: t.priceDisplay,
             requests: t.rateLimit,
           })),
-          url: 'https://crypto-data-aggregator.vercel.app/pricing',
+          url: 'https://crypto-data-aggregator.modelcontextprotocol.name/pricing',
         },
       ],
       x402: paymentRequirements,

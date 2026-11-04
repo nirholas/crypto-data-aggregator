@@ -29,7 +29,7 @@ export async function GET() {
       name: 'Crypto Data Aggregator API',
       version: '1.0.0',
       description: 'Real-time cryptocurrency market data API with x402 micropayments support',
-      docs: 'https://crypto-data-aggregator.vercel.app/docs/api',
+      docs: 'https://crypto-data-aggregator.modelcontextprotocol.name/docs/api',
 
       // x402 Configuration
       x402: {
@@ -99,7 +99,7 @@ export async function GET() {
       examples: {
         withApiKey: {
           description: 'Using API key authentication',
-          curl: 'curl -H "X-API-Key: pro_your_key_here" https://crypto-data-aggregator.vercel.app/api/v1/coins',
+          curl: 'curl -H "X-API-Key: pro_your_key_here" https://crypto-data-aggregator.modelcontextprotocol.name/api/v1/coins',
         },
         withX402: {
           description: 'Using x402 micropayments',
@@ -116,8 +116,8 @@ export async function GET() {
 
       // Support
       support: {
-        docs: 'https://crypto-data-aggregator.vercel.app/docs/api',
-        pricing: 'https://crypto-data-aggregator.vercel.app/pricing',
+        docs: 'https://crypto-data-aggregator.modelcontextprotocol.name/docs/api',
+        pricing: 'https://crypto-data-aggregator.modelcontextprotocol.name/pricing',
         github: 'https://github.com/nirholas/crypto-data-aggregator',
       },
     },

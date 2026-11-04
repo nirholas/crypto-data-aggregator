@@ -23,7 +23,7 @@
 รับข่าว crypto แบบเรียลไทม์จาก 7 แหล่งหลักด้วยการเรียก API เพียงครั้งเดียว
 
 ```bash
-curl https://news-crypto.vercel.app/api/news
+curl https://crypto-data-aggregator.modelcontextprotocol.name/api/news
 ```
 
 ---
@@ -75,13 +75,13 @@ npm install && npm run dev
 
 ```bash
 # รับข่าวนานาชาติทั้งหมด
-curl "https://news-crypto.vercel.app/api/news/international"
+curl "https://crypto-data-aggregator.modelcontextprotocol.name/api/news/international"
 
 # รับข่าวเกาหลีพร้อมแปลภาษาอังกฤษ
-curl "https://news-crypto.vercel.app/api/news/international?language=ko&translate=true"
+curl "https://crypto-data-aggregator.modelcontextprotocol.name/api/news/international?language=ko&translate=true"
 
 # รับข่าวจากภูมิภาคเอเชีย
-curl "https://news-crypto.vercel.app/api/news/international?region=asia&limit=20"
+curl "https://crypto-data-aggregator.modelcontextprotocol.name/api/news/international?region=asia&limit=20"
 ```
 
 ### คุณสมบัติ
@@ -117,7 +117,7 @@ Free Crypto News เป็น **PWA ที่ติดตั้งได้เ�
 ### การติดตั้งแอป
 
 **เดสก์ท็อป (Chrome/Edge):**
-1. เข้าไปที่ [news-crypto.vercel.app](https://news-crypto.vercel.app)
+1. เข้าไปที่ [crypto-data-aggregator.modelcontextprotocol.name](https://crypto-data-aggregator.modelcontextprotocol.name)
 2. คลิกไอคอนติดตั้ง (⊕) ในแถบที่อยู่
 3. คลิก "ติดตั้ง"
 
@@ -233,23 +233,23 @@ PWA ใช้กลยุทธ์แคชอัจฉริยะ:
 
 ```bash
 # รับข่าวล่าสุด
-curl "https://news-crypto.vercel.app/api/news"
+curl "https://crypto-data-aggregator.modelcontextprotocol.name/api/news"
 
 # ค้นหาข่าว
-curl "https://news-crypto.vercel.app/api/search?q=ethereum"
+curl "https://crypto-data-aggregator.modelcontextprotocol.name/api/search?q=ethereum"
 
 # รับ AI digest
-curl "https://news-crypto.vercel.app/api/digest"
+curl "https://crypto-data-aggregator.modelcontextprotocol.name/api/digest"
 
 # รับ Fear & Greed Index
-curl "https://news-crypto.vercel.app/api/fear-greed"
+curl "https://crypto-data-aggregator.modelcontextprotocol.name/api/fear-greed"
 ```
 
 ### ใช้ JavaScript
 
 ```javascript
 // รับข่าวล่าสุด
-const response = await fetch('https://news-crypto.vercel.app/api/news');
+const response = await fetch('https://crypto-data-aggregator.modelcontextprotocol.name/api/news');
 const data = await response.json();
 
 console.log(data.articles);
@@ -262,7 +262,7 @@ console.log(data.articles);
 import requests
 
 # รับข่าวล่าสุด
-response = requests.get('https://news-crypto.vercel.app/api/news')
+response = requests.get('https://crypto-data-aggregator.modelcontextprotocol.name/api/news')
 data = response.json()
 
 for article in data['articles'][:5]:
@@ -355,5 +355,5 @@ MIT License - ดูไฟล์ [LICENSE](LICENSE)
 <p align="center">
   สร้างด้วย ❤️ สำหรับชุมชน crypto
   <br>
-  <a href="https://news-crypto.vercel.app">news-crypto.vercel.app</a>
+  <a href="https://crypto-data-aggregator.modelcontextprotocol.name">crypto-data-aggregator.modelcontextprotocol.name</a>
 </p>

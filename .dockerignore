@@ -1,0 +1,13 @@
+node_modules
+.next
+.git
+site
+archive
+e2e
+mobile
+extension
+raycast
+alfred
+stories
+*.png
+.env*

@@ -29,6 +29,11 @@
 </p>
 
 <p align="center">
+  <a href="https://crypto-data-aggregator.modelcontextprotocol.name"><b>Live app</b></a> ·
+  <a href="https://crypto-data-aggregator-docs.modelcontextprotocol.name"><b>Documentation</b></a>
+</p>
+
+<p align="center">
   Real-time cryptocurrency market data aggregator. Track 10,000+ coins, monitor 200+ DeFi protocols,<br>
   manage portfolios, set price alerts, and analyze market sentiment—all in one place.
 </p>
@@ -1282,7 +1287,7 @@ curl -X POST https://modelcontextprotocol.name/mcp/crypto-data-aggregator \
 
 ## Documentation
 
-Full documentation site: **https://nirholas.github.io/crypto-data-aggregator/**
+Live app: **https://crypto-data-aggregator.modelcontextprotocol.name** · Full documentation site: **https://crypto-data-aggregator-docs.modelcontextprotocol.name/** (deployment steps in [docs/guides/docs-deployment.md](docs/guides/docs-deployment.md)).
 
 - [Getting started](docs/getting-started.md) covers install and first run.
 - [Examples](docs/examples.md) has copy-paste snippets.

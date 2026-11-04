@@ -38,9 +38,9 @@ export async function GET() {
 ${outlines}
     </outline>
     <outline text="Free Crypto News Aggregated Feeds" title="Aggregated Feeds">
-      <outline text="All News" title="All News" type="rss" xmlUrl="https://free-crypto-news.vercel.app/api/rss" htmlUrl="https://free-crypto-news.vercel.app"/>
-      <outline text="DeFi News" title="DeFi News" type="rss" xmlUrl="https://free-crypto-news.vercel.app/api/rss?feed=defi" htmlUrl="https://free-crypto-news.vercel.app"/>
-      <outline text="Bitcoin News" title="Bitcoin News" type="rss" xmlUrl="https://free-crypto-news.vercel.app/api/rss?feed=bitcoin" htmlUrl="https://free-crypto-news.vercel.app"/>
+      <outline text="All News" title="All News" type="rss" xmlUrl="https://crypto-data-aggregator.modelcontextprotocol.name/api/rss" htmlUrl="https://crypto-data-aggregator.modelcontextprotocol.name"/>
+      <outline text="DeFi News" title="DeFi News" type="rss" xmlUrl="https://crypto-data-aggregator.modelcontextprotocol.name/api/rss?feed=defi" htmlUrl="https://crypto-data-aggregator.modelcontextprotocol.name"/>
+      <outline text="Bitcoin News" title="Bitcoin News" type="rss" xmlUrl="https://crypto-data-aggregator.modelcontextprotocol.name/api/rss?feed=bitcoin" htmlUrl="https://crypto-data-aggregator.modelcontextprotocol.name"/>
     </outline>
   </body>
 </opml>`;

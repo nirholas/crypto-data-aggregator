@@ -50,7 +50,7 @@ export const sortOrderSchema = z.enum([
 export const booleanQuerySchema = z
   .enum(['true', 'false', '1', '0'])
   .transform((val) => val === 'true' || val === '1')
-  .default('false');
+  .default(false);
 
 // =============================================================================
 // ENDPOINT SCHEMAS

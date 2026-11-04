@@ -20,7 +20,7 @@
 1回のAPI呼び出しで7つの主要ソースからリアルタイムの暗号資産ニュースを取得できます。
 
 ```bash
-curl https://news-crypto.vercel.app/api/news
+curl https://crypto-data-aggregator.modelcontextprotocol.name/api/news
 ```
 ---
 
@@ -54,13 +54,13 @@ curl https://news-crypto.vercel.app/api/news
 
 ```bash
 # すべての国際ニュースを取得
-curl "https://news-crypto.vercel.app/api/news/international"
+curl "https://crypto-data-aggregator.modelcontextprotocol.name/api/news/international"
 
 # 韓国のニュースを英語翻訳付きで取得
-curl "https://news-crypto.vercel.app/api/news/international?language=ko&translate=true"
+curl "https://crypto-data-aggregator.modelcontextprotocol.name/api/news/international?language=ko&translate=true"
 
 # アジア地域のニュースを取得
-curl "https://news-crypto.vercel.app/api/news/international?region=asia&limit=20"
+curl "https://crypto-data-aggregator.modelcontextprotocol.name/api/news/international?region=asia&limit=20"
 ```
 
 ### 機能
@@ -91,7 +91,7 @@ Free Crypto Newsはオフラインで動作する**完全にインストール�
 ### アプリのインストール
 
 **デスクトップ（Chrome/Edge）:**
-1. [news-crypto.vercel.app](https://news-crypto.vercel.app)にアクセス
+1. [crypto-data-aggregator.modelcontextprotocol.name](https://crypto-data-aggregator.modelcontextprotocol.name)にアクセス
 2. アドレスバーのインストールアイコン（⊕）をクリック
 3. 「インストール」をクリック
 
@@ -159,7 +159,7 @@ Free Crypto Newsはオフラインで動作する**完全にインストール�
 | [Go](sdk/go/) | Goクライアントライブラリ |
 | [PHP](sdk/php/) | PHP SDK |
 
-**ベースURL:** `https://news-crypto.vercel.app`
+**ベースURL:** `https://crypto-data-aggregator.modelcontextprotocol.name`
 
 ---
 

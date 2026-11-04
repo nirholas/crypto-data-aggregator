@@ -18,7 +18,7 @@ import requests
 from typing import Optional, Dict, Any
 
 # API configuration
-API_BASE = "https://free-crypto-news.vercel.app"
+API_BASE = "https://crypto-data-aggregator.modelcontextprotocol.name"
 
 # For demo purposes - in production, use environment variables
 # from eth_account import Account
@@ -137,7 +137,7 @@ def demo_with_api_key():
     api_key = os.environ.get('CRYPTO_NEWS_API_KEY')
     if not api_key:
         print("Set CRYPTO_NEWS_API_KEY environment variable")
-        print("Get your free key at: https://free-crypto-news.vercel.app/developers")
+        print("Get your free key at: https://crypto-data-aggregator.modelcontextprotocol.name/developers")
         return
     
     # Make authenticated request

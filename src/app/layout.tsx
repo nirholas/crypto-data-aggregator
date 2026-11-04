@@ -51,7 +51,7 @@ export const metadata: Metadata = {
     address: false,
     telephone: false,
   },
-  metadataBase: new URL('https://crypto-data-aggregator.vercel.app'),
+  metadataBase: new URL('https://crypto-data-aggregator.modelcontextprotocol.name'),
   alternates: {
     canonical: '/',
     languages: {
@@ -79,7 +79,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Crypto Data Aggregator',
     description: 'Real-time cryptocurrency market data, DeFi analytics, and portfolio tracking.',
-    url: 'https://crypto-data-aggregator.vercel.app',
+    url: 'https://crypto-data-aggregator.modelcontextprotocol.name',
     siteName: 'Crypto Data Aggregator',
     type: 'website',
     locale: 'en_US',
@@ -218,7 +218,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               name: 'Crypto Data Aggregator',
               description:
                 'Real-time cryptocurrency market data aggregator for 10,000+ coins and 200+ DeFi protocols',
-              url: 'https://crypto-data-aggregator.vercel.app',
+              url: 'https://crypto-data-aggregator.modelcontextprotocol.name',
               applicationCategory: 'FinanceApplication',
               operatingSystem: 'Web',
               offers: {

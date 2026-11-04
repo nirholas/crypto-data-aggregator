@@ -29,16 +29,16 @@ function generateRSS(articles: any[], title: string, description: string, feedUr
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>${escapeXml(title)}</title>
-    <link>https://free-crypto-news.vercel.app</link>
+    <link>https://crypto-data-aggregator.modelcontextprotocol.name</link>
     <description>${escapeXml(description)}</description>
     <language>en-us</language>
     <lastBuildDate>${new Date().toUTCString()}</lastBuildDate>
     <atom:link href="${escapeXml(feedUrl)}" rel="self" type="application/rss+xml"/>
     <ttl>5</ttl>
     <image>
-      <url>https://free-crypto-news.vercel.app/icon.png</url>
+      <url>https://crypto-data-aggregator.modelcontextprotocol.name/icon.png</url>
       <title>${escapeXml(title)}</title>
-      <link>https://free-crypto-news.vercel.app</link>
+      <link>https://crypto-data-aggregator.modelcontextprotocol.name</link>
     </image>
     ${items}
   </channel>
@@ -61,19 +61,19 @@ export async function GET(request: NextRequest) {
         data = await getDefiNews(limit);
         title = 'Free Crypto News - DeFi Feed';
         description = 'DeFi news aggregated from top crypto sources';
-        feedUrl = 'https://free-crypto-news.vercel.app/api/rss?feed=defi';
+        feedUrl = 'https://crypto-data-aggregator.modelcontextprotocol.name/api/rss?feed=defi';
         break;
       case 'bitcoin':
         data = await getBitcoinNews(limit);
         title = 'Free Crypto News - Bitcoin Feed';
         description = 'Bitcoin news aggregated from top crypto sources';
-        feedUrl = 'https://free-crypto-news.vercel.app/api/rss?feed=bitcoin';
+        feedUrl = 'https://crypto-data-aggregator.modelcontextprotocol.name/api/rss?feed=bitcoin';
         break;
       default:
         data = await getLatestNews(limit);
         title = 'Free Crypto News - All Sources';
         description = 'Crypto news aggregated from 7 top sources - 100% FREE';
-        feedUrl = 'https://free-crypto-news.vercel.app/api/rss';
+        feedUrl = 'https://crypto-data-aggregator.modelcontextprotocol.name/api/rss';
     }
     
     const rss = generateRSS(data.articles, title, description, feedUrl);

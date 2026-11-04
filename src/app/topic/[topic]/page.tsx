@@ -130,7 +130,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       title: `${info?.title || topic} - Crypto Data Aggregator`,
       description: info?.description || `Latest news about ${topic}`,
       type: 'website',
-      url: `https://crypto-data-aggregator.vercel.app/topic/${topic}`,
+      url: `https://crypto-data-aggregator.modelcontextprotocol.name/topic/${topic}`,
     },
   };
 }
@@ -146,9 +146,9 @@ export default async function TopicPage({ params }: Props) {
 
   // Breadcrumb data for enhanced SEO
   const breadcrumbs = [
-    { name: 'Home', url: 'https://crypto-data-aggregator.vercel.app' },
-    { name: 'Topics', url: 'https://crypto-data-aggregator.vercel.app/topics' },
-    { name: info?.title || topic, url: `https://crypto-data-aggregator.vercel.app/topic/${topic}` },
+    { name: 'Home', url: 'https://crypto-data-aggregator.modelcontextprotocol.name' },
+    { name: 'Topics', url: 'https://crypto-data-aggregator.modelcontextprotocol.name/topics' },
+    { name: info?.title || topic, url: `https://crypto-data-aggregator.modelcontextprotocol.name/topic/${topic}` },
   ];
 
   return (

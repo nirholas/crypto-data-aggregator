@@ -187,14 +187,14 @@ export const metadata: Metadata = {
     address: false,
     telephone: false,
   },
-  metadataBase: new URL('https://crypto-data-aggregator.vercel.app'),
+  metadataBase: new URL('https://crypto-data-aggregator.modelcontextprotocol.name'),
   alternates: {
     canonical: '/',
   },
   openGraph: {
     title: 'Crypto Data Aggregator',
     description: 'Real-time cryptocurrency market data, DeFi analytics, and portfolio tracking.',
-    url: 'https://crypto-data-aggregator.vercel.app',
+    url: 'https://crypto-data-aggregator.modelcontextprotocol.name',
     siteName: 'Crypto Data Aggregator',
     type: 'website',
     locale: 'en_US',

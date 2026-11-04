@@ -25,7 +25,7 @@
 احصل على أخبار العملات المشفرة في الوقت الفعلي من 7 مصادر رئيسية باستدعاء API واحد.
 
 ```bash
-curl https://news-crypto.vercel.app/api/news
+curl https://crypto-data-aggregator.modelcontextprotocol.name/api/news
 ```
 
 ---
@@ -77,13 +77,13 @@ npm install && npm run dev
 
 ```bash
 # الحصول على جميع الأخبار الدولية
-curl "https://news-crypto.vercel.app/api/news/international"
+curl "https://crypto-data-aggregator.modelcontextprotocol.name/api/news/international"
 
 # الحصول على أخبار كورية مترجمة للإنجليزية
-curl "https://news-crypto.vercel.app/api/news/international?language=ko&translate=true"
+curl "https://crypto-data-aggregator.modelcontextprotocol.name/api/news/international?language=ko&translate=true"
 
 # الحصول على أخبار منطقة آسيا
-curl "https://news-crypto.vercel.app/api/news/international?region=asia&limit=20"
+curl "https://crypto-data-aggregator.modelcontextprotocol.name/api/news/international?region=asia&limit=20"
 ```
 
 ### الميزات
@@ -119,7 +119,7 @@ Free Crypto News هو **PWA قابل للتثبيت بالكامل** يعمل د
 ### تثبيت التطبيق
 
 **سطح المكتب (Chrome/Edge):**
-1. قم بزيارة [news-crypto.vercel.app](https://news-crypto.vercel.app)
+1. قم بزيارة [crypto-data-aggregator.modelcontextprotocol.name](https://crypto-data-aggregator.modelcontextprotocol.name)
 2. انقر على أيقونة التثبيت (⊕) في شريط URL
 3. انقر "تثبيت"
 
@@ -235,23 +235,23 @@ Free Crypto News هو **PWA قابل للتثبيت بالكامل** يعمل د
 
 ```bash
 # الحصول على آخر الأخبار
-curl "https://news-crypto.vercel.app/api/news"
+curl "https://crypto-data-aggregator.modelcontextprotocol.name/api/news"
 
 # البحث في الأخبار
-curl "https://news-crypto.vercel.app/api/search?q=ethereum"
+curl "https://crypto-data-aggregator.modelcontextprotocol.name/api/search?q=ethereum"
 
 # الحصول على ملخص AI
-curl "https://news-crypto.vercel.app/api/digest"
+curl "https://crypto-data-aggregator.modelcontextprotocol.name/api/digest"
 
 # الحصول على مؤشر الخوف والطمع
-curl "https://news-crypto.vercel.app/api/fear-greed"
+curl "https://crypto-data-aggregator.modelcontextprotocol.name/api/fear-greed"
 ```
 
 ### استخدام JavaScript
 
 ```javascript
 // الحصول على آخر الأخبار
-const response = await fetch('https://news-crypto.vercel.app/api/news');
+const response = await fetch('https://crypto-data-aggregator.modelcontextprotocol.name/api/news');
 const data = await response.json();
 
 console.log(data.articles);
@@ -264,7 +264,7 @@ console.log(data.articles);
 import requests
 
 # الحصول على آخر الأخبار
-response = requests.get('https://news-crypto.vercel.app/api/news')
+response = requests.get('https://crypto-data-aggregator.modelcontextprotocol.name/api/news')
 data = response.json()
 
 for article in data['articles'][:5]:
@@ -357,7 +357,7 @@ MIT License - راجع ملف [LICENSE](LICENSE).
 <p align="center">
   صُنع بـ ❤️ لمجتمع العملات المشفرة
   <br>
-  <a href="https://news-crypto.vercel.app">news-crypto.vercel.app</a>
+  <a href="https://crypto-data-aggregator.modelcontextprotocol.name">crypto-data-aggregator.modelcontextprotocol.name</a>
 </p>
 
 </div>

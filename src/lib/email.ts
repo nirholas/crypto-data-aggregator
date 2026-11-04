@@ -59,7 +59,7 @@ const RESEND_API_KEY = process.env.RESEND_API_KEY || '';
 const RESEND_API_URL = 'https://api.resend.com';
 const DEFAULT_FROM = process.env.EMAIL_FROM || 'Crypto News <alerts@cryptonews.app>';
 const APP_NAME = process.env.NEXT_PUBLIC_APP_NAME || 'Crypto Data Aggregator';
-const APP_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://crypto-data-aggregator.vercel.app';
+const APP_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://crypto-data-aggregator.modelcontextprotocol.name';
 
 // Rate limiting
 const EMAIL_RATE_LIMIT = 100; // per minute

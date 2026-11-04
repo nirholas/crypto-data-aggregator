@@ -2,7 +2,7 @@
  * Free Crypto News API Client for React Native
  */
 
-const BASE_URL = 'https://news-crypto.vercel.app';
+const BASE_URL = 'https://crypto-data-aggregator.modelcontextprotocol.name';
 
 export interface Article {
   title: string;

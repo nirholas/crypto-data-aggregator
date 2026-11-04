@@ -257,7 +257,7 @@ export function addDeprecationHeaders(
 export const V1_DEPRECATION = {
   deprecationDate: '@2026-01-24',
   sunsetDate: 'Sat, 25 Jul 2026 00:00:00 GMT', // 6 months from now
-  migrationLink: 'https://crypto-data-aggregator.vercel.app/docs/swagger',
+  migrationLink: 'https://crypto-data-aggregator.modelcontextprotocol.name/docs/swagger',
 };
 
 /**

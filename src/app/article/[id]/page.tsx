@@ -151,10 +151,10 @@ export default async function ArticlePage({ params }: Props) {
 
   // Breadcrumb data for structured data
   const breadcrumbs = [
-    { name: 'Home', url: 'https://free-crypto-news.vercel.app' },
+    { name: 'Home', url: 'https://crypto-data-aggregator.modelcontextprotocol.name' },
     {
       name: article.source,
-      url: `https://free-crypto-news.vercel.app/source/${article.source_key}`,
+      url: `https://crypto-data-aggregator.modelcontextprotocol.name/source/${article.source_key}`,
     },
     {
       name: article.title.slice(0, 50) + (article.title.length > 50 ? '...' : ''),
@@ -420,7 +420,7 @@ export default async function ArticlePage({ params }: Props) {
                 <h2 className="font-bold text-lg mb-4">📤 Share</h2>
                 <div className="flex flex-wrap gap-2">
                   <a
-                    href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(article.title)}&url=${encodeURIComponent(`https://free-crypto-news.vercel.app/article/${article.id}`)}`}
+                    href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(article.title)}&url=${encodeURIComponent(`https://crypto-data-aggregator.modelcontextprotocol.name/article/${article.id}`)}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex-1 py-2 px-4 bg-background text-text-primary rounded-lg text-center text-sm font-medium hover:bg-surface-hover transition"
@@ -428,7 +428,7 @@ export default async function ArticlePage({ params }: Props) {
                     𝕏 Post
                   </a>
                   <a
-                    href={`https://t.me/share/url?url=${encodeURIComponent(`https://free-crypto-news.vercel.app/article/${article.id}`)}&text=${encodeURIComponent(article.title)}`}
+                    href={`https://t.me/share/url?url=${encodeURIComponent(`https://crypto-data-aggregator.modelcontextprotocol.name/article/${article.id}`)}&text=${encodeURIComponent(article.title)}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex-1 py-2 px-4 bg-primary text-white rounded-lg text-center text-sm font-medium hover:bg-primary/90 transition"
@@ -438,7 +438,7 @@ export default async function ArticlePage({ params }: Props) {
                 </div>
                 <button
                   className="w-full mt-3 py-2 px-4 bg-surface text-text-secondary rounded-lg text-sm font-medium hover:bg-surface-hover transition"
-                  data-copy-url={`https://free-crypto-news.vercel.app/article/${article.id}`}
+                  data-copy-url={`https://crypto-data-aggregator.modelcontextprotocol.name/article/${article.id}`}
                 >
                   📋 Copy Link
                 </button>

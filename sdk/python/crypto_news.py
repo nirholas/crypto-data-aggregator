@@ -47,7 +47,7 @@ class RateLimitError(CryptoNewsError):
 class CryptoNews:
     """Free Crypto News API client."""
     
-    BASE_URL = "https://free-crypto-news.vercel.app"
+    BASE_URL = "https://crypto-data-aggregator.modelcontextprotocol.name"
     
     def __init__(
         self,

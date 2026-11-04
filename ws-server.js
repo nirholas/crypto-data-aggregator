@@ -23,7 +23,7 @@ const http = require('http');
 const PORT = process.env.PORT || 8080;
 const POLL_INTERVAL = 30000; // 30 seconds
 const ALERT_EVAL_INTERVAL = 30000; // 30 seconds for alert evaluation
-const NEWS_API = process.env.NEWS_API || 'https://free-crypto-news.vercel.app';
+const NEWS_API = process.env.NEWS_API || 'https://crypto-data-aggregator.modelcontextprotocol.name';
 
 // =============================================================================
 // MESSAGE TYPES

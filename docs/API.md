@@ -66,16 +66,16 @@ All endpoints are prefixed with `/api/` and return JSON responses.
 
 ```bash
 # Get top coins - no API key needed!
-curl https://crypto-data-aggregator.vercel.app/api/v2/coins
+curl https://crypto-data-aggregator.modelcontextprotocol.name/api/v2/coins
 
 # Get Bitcoin price
-curl https://crypto-data-aggregator.vercel.app/api/v2/coin/bitcoin
+curl https://crypto-data-aggregator.modelcontextprotocol.name/api/v2/coin/bitcoin
 
 # Get global market data
-curl https://crypto-data-aggregator.vercel.app/api/v2/global
+curl https://crypto-data-aggregator.modelcontextprotocol.name/api/v2/global
 
 # Search for coins
-curl "https://crypto-data-aggregator.vercel.app/api/v2/search?query=eth"
+curl "https://crypto-data-aggregator.modelcontextprotocol.name/api/v2/search?query=eth"
 ```
 
 ---
@@ -95,15 +95,15 @@ Premium endpoints (`/api/v1/*` and `/api/premium/*`) require authentication:
 
 #### Method 1: API Key
 
-Get a free API key at [/developers](https://free-crypto-news.vercel.app/developers).
+Get a free API key at [/developers](https://crypto-data-aggregator.modelcontextprotocol.name/developers).
 
 ```bash
 # Header (recommended)
 curl -H "X-API-Key: cda_free_xxxxx" \
-  https://free-crypto-news.vercel.app/api/v1/coins
+  https://crypto-data-aggregator.modelcontextprotocol.name/api/v1/coins
 
 # Query parameter
-curl "https://free-crypto-news.vercel.app/api/v1/coins?api_key=cda_free_xxxxx"
+curl "https://crypto-data-aggregator.modelcontextprotocol.name/api/v1/coins?api_key=cda_free_xxxxx"
 ```
 
 #### Method 2: x402 Micropayments
@@ -112,13 +112,13 @@ Pay-per-request using USDC on Base network. No subscription required.
 
 ```bash
 # Request returns 402 with payment requirements
-curl -i https://free-crypto-news.vercel.app/api/v1/coins
+curl -i https://crypto-data-aggregator.modelcontextprotocol.name/api/v1/coins
 # Response: 402 Payment Required
 # Header: X-PAYMENT-REQUIRED: <base64-encoded-requirements>
 
 # Send payment header
 curl -H "X-PAYMENT: <base64-encoded-payment>" \
-  https://free-crypto-news.vercel.app/api/v1/coins
+  https://crypto-data-aggregator.modelcontextprotocol.name/api/v1/coins
 ```
 
 See [AUTHENTICATION.md](AUTHENTICATION.md) for detailed documentation.
@@ -167,7 +167,7 @@ When rate limited, you'll receive:
 
 The v2 API is our latest, most stable API with consistent response formats, rate limiting, and OpenAPI documentation.
 
-**Base URL**: `https://crypto-data-aggregator.vercel.app/api/v2`
+**Base URL**: `https://crypto-data-aggregator.modelcontextprotocol.name/api/v2`
 
 ### V2 Endpoints Overview
 
@@ -1159,11 +1159,11 @@ GET /api/v1/coins
 ```bash
 # With API key
 curl -H "X-API-Key: cda_free_xxxxx" \
-  "https://free-crypto-news.vercel.app/api/v1/coins?per_page=10"
+  "https://crypto-data-aggregator.modelcontextprotocol.name/api/v1/coins?per_page=10"
 
 # With x402 payment
 curl -H "X-PAYMENT: <payment-header>" \
-  "https://free-crypto-news.vercel.app/api/v1/coins"
+  "https://crypto-data-aggregator.modelcontextprotocol.name/api/v1/coins"
 ```
 
 #### Response
@@ -1223,7 +1223,7 @@ GET /api/v1/historical/:coinId
 
 ```bash
 curl -H "X-API-Key: cda_free_xxxxx" \
-  "https://free-crypto-news.vercel.app/api/v1/historical/bitcoin?days=30"
+  "https://crypto-data-aggregator.modelcontextprotocol.name/api/v1/historical/bitcoin?days=30"
 ```
 
 ---
@@ -1252,7 +1252,7 @@ GET /api/v1/export
 
 ```bash
 curl -H "X-API-Key: cda_free_xxxxx" \
-  "https://free-crypto-news.vercel.app/api/v1/export?coin=bitcoin&format=csv&days=90"
+  "https://crypto-data-aggregator.modelcontextprotocol.name/api/v1/export?coin=bitcoin&format=csv&days=90"
 ```
 
 ---
@@ -1273,7 +1273,7 @@ GET /api/v1/gas
 
 ```bash
 curl -H "X-API-Key: cda_free_xxxxx" \
-  "https://free-crypto-news.vercel.app/api/v1/gas"
+  "https://crypto-data-aggregator.modelcontextprotocol.name/api/v1/gas"
 ```
 
 #### Response
@@ -1323,7 +1323,7 @@ GET /api/v1/defi
 
 ```bash
 curl -H "X-API-Key: cda_free_xxxxx" \
-  "https://free-crypto-news.vercel.app/api/v1/defi?limit=10"
+  "https://crypto-data-aggregator.modelcontextprotocol.name/api/v1/defi?limit=10"
 ```
 
 ---
@@ -1342,7 +1342,7 @@ GET /api/v1/usage
 
 ```bash
 curl -H "X-API-Key: cda_free_xxxxx" \
-  "https://free-crypto-news.vercel.app/api/v1/usage"
+  "https://crypto-data-aggregator.modelcontextprotocol.name/api/v1/usage"
 ```
 
 #### Response

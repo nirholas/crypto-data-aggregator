@@ -8,7 +8,7 @@
  *   <div class="crypto-ticker-label">📰 CRYPTO</div>
  *   <div class="crypto-ticker-track"></div>
  * </div>
- * <script src="https://nirholas.github.io/free-crypto-news/widget/ticker.js"></script>
+ * <script src="https://cdn.jsdelivr.net/gh/nirholas/crypto-data-aggregator@main/widget/ticker.js"></script>
  */
 (function() {
   // Inject CSS
@@ -112,7 +112,7 @@
 
   // Ticker implementation
   window.CryptoTicker = {
-    API_BASE: 'https://free-crypto-news.vercel.app',
+    API_BASE: 'https://crypto-data-aggregator.modelcontextprotocol.name',
     
     async init(selector, options = {}) {
       const container = document.querySelector(selector);

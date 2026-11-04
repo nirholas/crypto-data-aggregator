@@ -23,7 +23,7 @@
  *   }`);
  */
 
-const DEFAULT_BASE_URL = 'https://crypto-data-aggregator.vercel.app';
+const DEFAULT_BASE_URL = 'https://crypto-data-aggregator.modelcontextprotocol.name';
 const API_VERSION = 'v2';
 
 /**

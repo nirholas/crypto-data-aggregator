@@ -81,7 +81,7 @@ Deploy the HTTP server to any cloud provider:
 ```bash
 # Deploy to Railway, Render, Fly.io, etc.
 # Set environment variable:
-# API_BASE=https://free-crypto-news.vercel.app
+# API_BASE=https://crypto-data-aggregator.modelcontextprotocol.name
 
 # The server will be accessible at your deployment URL
 # Use that URL + /sse as your ChatGPT app endpoint
@@ -188,14 +188,14 @@ For ChatGPT, be explicit about using the app and tool names:
 
 **Environment Variables:**
 - `PORT` - HTTP server port (default: 3001)
-- `API_BASE` - Backend API URL (default: https://free-crypto-news.vercel.app)
+- `API_BASE` - Backend API URL (default: https://crypto-data-aggregator.modelcontextprotocol.name)
 
 ## No API Key Required!
 
-This MCP server calls the free API at `free-crypto-news.vercel.app` - no authentication needed.
+This MCP server calls the free API at `crypto-data-aggregator.modelcontextprotocol.name` - no authentication needed.
 
 ## 📚 Related
 
-- **Main API:** https://free-crypto-news.vercel.app
-- **OpenAPI Docs:** https://free-crypto-news.vercel.app/api/docs
+- **Main API:** https://crypto-data-aggregator.modelcontextprotocol.name
+- **OpenAPI Docs:** https://crypto-data-aggregator.modelcontextprotocol.name/api/docs
 - **GitHub:** https://github.com/nirholas/free-crypto-news

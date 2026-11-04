@@ -176,21 +176,21 @@ export default function AboutPage() {
                 <div>
                   <p className="text-text-muted text-sm mb-2">Get latest news:</p>
                   <code className="block bg-surface p-3 rounded-lg text-gain text-sm overflow-x-auto">
-                    curl https://free-crypto-news.vercel.app/api/news?limit=10
+                    curl https://crypto-data-aggregator.modelcontextprotocol.name/api/news?limit=10
                   </code>
                 </div>
 
                 <div>
                   <p className="text-text-muted text-sm mb-2">Search news:</p>
                   <code className="block bg-surface p-3 rounded-lg text-gain text-sm overflow-x-auto">
-                    curl https://free-crypto-news.vercel.app/api/search?q=bitcoin
+                    curl https://crypto-data-aggregator.modelcontextprotocol.name/api/search?q=bitcoin
                   </code>
                 </div>
 
                 <div>
                   <p className="text-text-muted text-sm mb-2">Get Bitcoin news:</p>
                   <code className="block bg-surface p-3 rounded-lg text-gain text-sm overflow-x-auto">
-                    curl https://free-crypto-news.vercel.app/api/bitcoin?limit=5
+                    curl https://crypto-data-aggregator.modelcontextprotocol.name/api/bitcoin?limit=5
                   </code>
                 </div>
               </div>
