@@ -146,9 +146,12 @@
     "prettier": "^3.8.1",
     "tailwindcss": "^4.1.18",
     "typescript": "^5.0.0",
-    "vitest": "^4.0.17"
+    "vitest": "^4.1.11"
   },
   "engines": {
     "node": ">=18.0.0"
+  },
+  "overrides": {
+    "minimatch@^10": "^11.0.1"
   }
 }
