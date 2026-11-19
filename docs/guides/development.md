@@ -19,7 +19,7 @@ Set up your local development environment and learn the development workflow.
 
 ```bash
 # Clone the repository
-git clone https://github.com/manicinc/crypto-data-aggregator.git
+git clone https://github.com/nirholas/crypto-data-aggregator.git
 cd crypto-data-aggregator
 
 # Install dependencies

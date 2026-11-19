@@ -85,7 +85,7 @@ export default function SettingsScreen() {
           title: 'GitHub Repository',
           subtitle: 'Star us on GitHub',
           type: 'link' as const,
-          onPress: () => openLink('https://github.com/AItoolsbyai/free-crypto-news'),
+          onPress: () => openLink('https://github.com/nirholas/crypto-data-aggregator'),
         },
         {
           id: 'website',
