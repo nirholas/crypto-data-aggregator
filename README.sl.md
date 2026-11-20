@@ -118,7 +118,7 @@ Vse AI funkcije so **BREZPLAČNE** prek Groq:
 | Python     | `pip install fcn-sdk`           |
 | JavaScript | `npm install @fcn/sdk`          |
 | TypeScript | `npm install @fcn/sdk`          |
-| Go         | `go get github.com/fcn/sdk-go`  |
+| Go         | `go get github.com/nirholas/crypto-data-aggregator/sdk/go`  |
 | Rust       | `cargo add fcn-sdk`             |
 
 ---

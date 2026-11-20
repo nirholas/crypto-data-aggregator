@@ -145,7 +145,7 @@ npm start
 
 - **API**: https://crypto-data-aggregator.modelcontextprotocol.name
 - **Dokumentaatio**: https://crypto-data-aggregator.modelcontextprotocol.name/docs
-- **GitHub**: https://github.com/AItoolsbyai/free-crypto-news
+- **GitHub**: https://github.com/nirholas/crypto-data-aggregator
 
 ---
 

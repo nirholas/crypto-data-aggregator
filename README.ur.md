@@ -120,7 +120,7 @@ Free Crypto News ایک **مکمل انسٹال ہونے والا PWA** ہے ج�
 | Python     | `pip install fcn-sdk`           |
 | JavaScript | `npm install @fcn/sdk`          |
 | TypeScript | `npm install @fcn/sdk`          |
-| Go         | `go get github.com/fcn/sdk-go`  |
+| Go         | `go get github.com/nirholas/crypto-data-aggregator/sdk/go`  |
 | Rust       | `cargo add fcn-sdk`             |
 
 ---
